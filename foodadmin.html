@@ -1,0 +1,470 @@
+ash
+
+cat > /mnt/user-data/outputs/food-admin.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zestora Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    :root {
+      --brand: #E8521A; --brand-light: #FFF1EB; --brand-dark: #C03E10;
+      --surface: #FAF9F6; --card: #FFFFFF; --border: rgba(0,0,0,0.08);
+      --text: #1A1208; --muted: #7A7068; --success: #2E7D32; --danger: #C62828;
+      --radius: 14px; --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--text); }
+
+    nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--brand); }
+    .logo span { color: var(--text); }
+    .admin-badge { background: var(--brand-light); color: var(--brand); font-size: 0.75rem; font-weight: 600; padding: 4px 10px; border-radius: 50px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: var(--card); padding: 0 2rem; }
+    .tab { padding: 0.8rem 1.25rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; color: var(--muted); border-bottom: 2px solid transparent; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+    .tab.active { color: var(--brand); border-bottom-color: var(--brand); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; }
+    .stat-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 5px; }
+    .stat-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--text); }
+    .stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+    /* FORM */
+    .form-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .form-card h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    @media(max-width:600px){ .form-grid { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 0.78rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select, textarea { padding: 0.6rem 0.85rem; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; background: #fff; width: 100%; }
+    input:focus, select:focus, textarea:focus { border-color: var(--brand); }
+    textarea { resize: vertical; min-height: 80px; }
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .btn-primary { background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 0.6rem 1.5rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    .btn-secondary { background: #fff; color: var(--text); border: 1.5px solid var(--border); border-radius: 8px; padding: 0.6rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; }
+    .btn-secondary:hover { border-color: var(--muted); }
+
+    /* FOOD LIST */
+    .food-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+    .food-item { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+    .food-item img { width: 100%; height: 140px; object-fit: cover; }
+    .food-item-body { padding: 0.85rem; }
+    .food-item-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .food-item-meta { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.15rem; }
+    .food-item-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+    .btn-edit { background: #FFF8E1; color: #F57F17; border: none; border-radius: 6px; padding: 0.35rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+    .btn-del { background: #FFEBEE; color: var(--danger); border: none; border-radius: 6px; padding: 0.35rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+    /* ORDERS */
+    .orders-controls { display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .orders-controls input { flex: 1; min-width: 180px; padding: 0.55rem 0.85rem; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; outline: none; }
+    .orders-controls input:focus { border-color: var(--brand); }
+    .order-row { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1rem 1.25rem; margin-bottom: 0.75rem; }
+    .order-row-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .order-id { font-weight: 700; font-size: 0.9rem; }
+    .order-customer { font-size: 0.82rem; color: var(--muted); }
+    .order-details { display: flex; gap: 1.5rem; font-size: 0.82rem; color: var(--muted); flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .order-items-str { font-size: 0.8rem; color: var(--muted); }
+    .status-select { padding: 0.3rem 0.65rem; border: 1.5px solid var(--border); border-radius: 6px; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; cursor: pointer; outline: none; background: #fff; }
+    .status-badge { font-size: 0.73rem; font-weight: 600; padding: 3px 10px; border-radius: 50px; white-space: nowrap; }
+    .status-pending { background: #FFF8E1; color: #F57F17; }
+    .status-confirmed { background: #E3F2FD; color: #1565C0; }
+    .status-preparing { background: #FFF3E0; color: #E65100; }
+    .status-out_for_delivery { background: #E8F5E9; color: #2E7D32; }
+    .status-delivered { background: #E8F5E9; color: var(--success); }
+    .status-cancelled { background: #FFEBEE; color: var(--danger); }
+    .order-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .btn-update { background: var(--brand); color: #fff; border: none; border-radius: 6px; padding: 0.35rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+    .btn-tele { background: #E3F2FD; color: #1565C0; border: none; border-radius: 6px; padding: 0.35rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+
+    /* IMAGE PREVIEW */
+    .img-preview { width: 100%; height: 160px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); margin-top: 8px; display: none; }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(80px); background: #1A1208; color: #fff; padding: 0.7rem 1.4rem; border-radius: 50px; font-size: 0.88rem; font-weight: 500; z-index: 999; transition: transform 0.3s cubic-bezier(.34,1.56,.64,1); white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+    .refresh-btn { background: var(--brand-light); color: var(--brand); border: 1.5px solid var(--brand); border-radius: 8px; padding: 0.4rem 0.9rem; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+
+    footer { text-align: center; padding: 1.5rem; font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 2rem; }
+
+    /* LOGIN */
+    .login-screen { position: fixed; inset: 0; background: var(--surface); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .login-box { background: var(--card); border-radius: 20px; border: 1px solid var(--border); padding: 2.5rem; width: 100%; max-width: 360px; text-align: center; }
+    .login-box h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--brand); margin-bottom: 0.25rem; }
+    .login-box p { color: var(--muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
+    .login-box input { margin-bottom: 0.75rem; }
+    .login-btn { width: 100%; background: var(--brand); color: #fff; border: none; border-radius: 8px; padding: 0.7rem; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+    .login-error { color: var(--danger); font-size: 0.8rem; margin-top: 0.5rem; display: none; }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h2>Zestora</h2>
+    <p>Admin Panel — Sign in to continue</p>
+    <input type="text" id="loginUser" placeholder="Username"/>
+    <input type="password" id="loginPass" placeholder="Password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Invalid credentials</div>
+  </div>
+</div>
+
+<nav>
+  <div class="logo">Zes<span>tora</span> <span style="font-family:'DM Sans';font-size:0.9rem;color:var(--muted)">Admin</span></div>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span class="admin-badge"><i class="ti ti-shield-check"></i> Admin</span>
+    <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.85rem;display:flex;align-items:center;gap:4px"><i class="ti ti-logout"></i> Logout</button>
+  </div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('dashboard',this)"><i class="ti ti-dashboard"></i> Dashboard</div>
+  <div class="tab" onclick="switchTab('menu',this)"><i class="ti ti-tools-kitchen-2"></i> Menu</div>
+  <div class="tab" onclick="switchTab('orders',this)"><i class="ti ti-receipt"></i> Orders</div>
+</div>
+
+<main>
+  <!-- DASHBOARD -->
+  <div class="tab-panel active" id="tab-dashboard">
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-label"><i class="ti ti-receipt"></i> Total Orders</div><div class="stat-val" id="sTotalOrders">—</div></div>
+      <div class="stat-card"><div class="stat-label"><i class="ti ti-clock"></i> Pending</div><div class="stat-val" id="sPending">—</div></div>
+      <div class="stat-card"><div class="stat-label"><i class="ti ti-currency-rupee"></i> Revenue</div><div class="stat-val" id="sRevenue">—</div></div>
+      <div class="stat-card"><div class="stat-label"><i class="ti ti-bowl"></i> Menu Items</div><div class="stat-val" id="sMenuItems">—</div></div>
+    </div>
+    <div id="recentOrders"></div>
+  </div>
+
+  <!-- MENU MANAGEMENT -->
+  <div class="tab-panel" id="tab-menu">
+    <div class="form-card">
+      <h2 id="formTitle">Add New Food Item</h2>
+      <input type="hidden" id="editId"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Food Name *</label>
+          <input type="text" id="fName" placeholder="e.g. Butter Chicken"/>
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" id="fPrice" placeholder="e.g. 280"/>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" id="fCategory" placeholder="e.g. Main Course, Starters…"/>
+        </div>
+        <div class="form-group">
+          <label>Rating (1–5)</label>
+          <input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1"/>
+        </div>
+        <div class="form-group full">
+          <label>Description *</label>
+          <textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Image URL *</label>
+          <input type="url" id="fImage" placeholder="https://…" oninput="previewImage(this.value)"/>
+          <img id="imgPreview" class="img-preview"/>
+        </div>
+        <div class="form-group">
+          <label>Prep Time</label>
+          <input type="text" id="fPrepTime" placeholder="e.g. 20–25 min"/>
+        </div>
+        <div class="form-group">
+          <label>Calories</label>
+          <input type="text" id="fCalories" placeholder="e.g. 480 kcal"/>
+        </div>
+        <div class="form-group" style="flex-direction:row;align-items:center;gap:8px">
+          <input type="checkbox" id="fVeg" style="width:18px;height:18px;accent-color:var(--success)"/>
+          <label for="fVeg" style="text-transform:none;font-size:0.88rem;letter-spacing:0">Vegetarian</label>
+        </div>
+        <div class="form-group" style="flex-direction:row;align-items:center;gap:8px">
+          <input type="checkbox" id="fBestseller" style="width:18px;height:18px;accent-color:var(--brand)"/>
+          <label for="fBestseller" style="text-transform:none;font-size:0.88rem;letter-spacing:0">Mark as Bestseller</label>
+        </div>
+        <div class="form-group" style="flex-direction:row;align-items:center;gap:8px">
+          <input type="checkbox" id="fSpicy" style="width:18px;height:18px;accent-color:#E65100"/>
+          <label for="fSpicy" style="text-transform:none;font-size:0.88rem;letter-spacing:0">Spicy</label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveFood()"><i class="ti ti-check"></i> Save Item</button>
+        <button class="btn-secondary" onclick="resetForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <h2>Menu Items</h2>
+      <button class="refresh-btn" onclick="loadFoods()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div class="food-grid" id="foodGrid">
+      <div style="color:var(--muted);font-size:0.88rem">Loading…</div>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="tab-panel" id="tab-orders">
+    <div class="section-header">
+      <h2>All Orders</h2>
+      <button class="refresh-btn" onclick="loadOrders()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div class="orders-controls">
+      <input type="text" id="orderSearch" placeholder="Search by name or email…" oninput="filterOrders()"/>
+      <select id="orderStatusFilter" onchange="filterOrders()" style="padding:0.55rem 0.85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;outline:none;background:#fff">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="preparing">Preparing</option>
+        <option value="out_for_delivery">Out for Delivery</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div id="ordersContainer"><div style="color:var(--muted);font-size:0.88rem">Loading…</div></div>
+  </div>
+</main>
+
+<footer>© 2025 Zestora Admin Panel. All rights reserved.</footer>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain: "multi-service-app-77dd8.firebaseapp.com",
+  projectId: "multi-service-app-77dd8",
+  storageBucket: "multi-service-app-77dd8.appspot.com",
+  messagingSenderId: "123732555482",
+  appId: "1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const BOT_TOKEN = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT_ID = "5547663296";
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "zestora2025";
+
+let allOrders = [];
+
+// LOGIN
+window.doLogin = function() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('loginScreen').style.display = 'none';
+    loadDashboard(); loadFoods(); loadOrders();
+  } else { document.getElementById('loginError').style.display='block'; }
+};
+window.logout = function() { document.getElementById('loginScreen').style.display='flex'; };
+
+// TABS
+window.switchTab = function(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+};
+
+// DASHBOARD
+async function loadDashboard() {
+  const [foodSnap, orderSnap] = await Promise.all([getDocs(collection(db,"foods")), getDocs(collection(db,"food_orders"))]);
+  const orders = orderSnap.docs.map(d=>({id:d.id,...d.data()}));
+  const pending = orders.filter(o=>o.status==='pending'||!o.status).length;
+  const revenue = orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(+o.total||0),0);
+  document.getElementById('sTotalOrders').textContent = orders.length;
+  document.getElementById('sPending').textContent = pending;
+  document.getElementById('sRevenue').textContent = '₹'+revenue.toLocaleString('en-IN');
+  document.getElementById('sMenuItems').textContent = foodSnap.size;
+
+  const recent = orders.sort((a,b)=>b.timestamp-a.timestamp).slice(0,5);
+  document.getElementById('recentOrders').innerHTML = `<div class="section-header"><h2>Recent Orders</h2></div>` +
+    (recent.length ? recent.map(o=>`<div class="order-row"><div class="order-row-header"><div><div class="order-id">${o.orderId||'Order'} — ${o.name}</div><div class="order-customer">${o.email} · ${o.mobile}</div></div><span class="status-badge status-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div><div class="order-details"><span>₹${o.total||0}</span><span>${new Date(o.timestamp).toLocaleString()}</span></div></div>`).join('') : '<p style="color:var(--muted)">No orders yet.</p>');
+}
+
+// FOODS
+window.loadFoods = async function() {
+  const snap = await getDocs(collection(db,"foods"));
+  const grid = document.getElementById('foodGrid');
+  if (!snap.size) { grid.innerHTML='<p style="color:var(--muted)">No items yet. Add one above.</p>'; return; }
+  grid.innerHTML = snap.docs.map(d=>{
+    const f={id:d.id,...d.data()};
+    return `<div class="food-item">
+      <img src="${f.image||''}" alt="${f.name}" onerror="this.style.display='none'" loading="lazy"/>
+      <div class="food-item-body">
+        <div class="food-item-name">${f.name}</div>
+        <div class="food-item-meta">₹${f.price} · ${f.category||'Uncategorised'} · ${f.veg?'🥦 Veg':'🍖 Non-veg'}${f.bestseller?' · 🔥':''}</div>
+        <div class="food-item-meta" style="margin-top:3px;-webkit-line-clamp:2;-webkit-box-orient:vertical;display:-webkit-box;overflow:hidden">${f.description||''}</div>
+        <div class="food-item-actions">
+          <button class="btn-edit" onclick="editFood('${d.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-del" onclick="deleteFood('${d.id}')"><i class="ti ti-trash"></i> Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.previewImage = function(url) {
+  const img = document.getElementById('imgPreview');
+  if (url) { img.src=url; img.style.display='block'; }
+  else img.style.display='none';
+};
+
+window.saveFood = async function() {
+  const id = document.getElementById('editId').value;
+  const data = {
+    name: document.getElementById('fName').value.trim(),
+    price: document.getElementById('fPrice').value.trim(),
+    description: document.getElementById('fDesc').value.trim(),
+    image: document.getElementById('fImage').value.trim(),
+    category: document.getElementById('fCategory').value.trim(),
+    rating: document.getElementById('fRating').value.trim(),
+    prepTime: document.getElementById('fPrepTime').value.trim(),
+    calories: document.getElementById('fCalories').value.trim(),
+    veg: document.getElementById('fVeg').checked,
+    bestseller: document.getElementById('fBestseller').checked,
+    spicy: document.getElementById('fSpicy').checked,
+  };
+  if (!data.name || !data.price || !data.image) return showToast('Name, price, and image are required');
+  try {
+    if (id) { await updateDoc(doc(db,"foods",id), data); showToast('Item updated!'); }
+    else { await addDoc(collection(db,"foods"), {...data, createdAt: serverTimestamp()}); showToast('Item added!'); }
+    resetForm(); loadFoods();
+  } catch(e) { showToast('Error saving item'); }
+};
+
+window.editFood = async function(id) {
+  const snap = await getDocs(collection(db,"foods"));
+  const d = snap.docs.find(x=>x.id===id);
+  if (!d) return;
+  const f = d.data();
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = f.name||'';
+  document.getElementById('fPrice').value = f.price||'';
+  document.getElementById('fDesc').value = f.description||'';
+  document.getElementById('fImage').value = f.image||'';
+  document.getElementById('fCategory').value = f.category||'';
+  document.getElementById('fRating').value = f.rating||'';
+  document.getElementById('fPrepTime').value = f.prepTime||'';
+  document.getElementById('fCalories').value = f.calories||'';
+  document.getElementById('fVeg').checked = !!f.veg;
+  document.getElementById('fBestseller').checked = !!f.bestseller;
+  document.getElementById('fSpicy').checked = !!f.spicy;
+  previewImage(f.image);
+  document.getElementById('formTitle').textContent = 'Edit: ' + f.name;
+  switchTab('menu', document.querySelector('[onclick*="menu"]'));
+  document.querySelector('.form-card').scrollIntoView({behavior:'smooth'});
+};
+
+window.resetForm = function() {
+  ['editId','fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCalories'].forEach(id => document.getElementById(id).value='');
+  ['fVeg','fBestseller','fSpicy'].forEach(id => document.getElementById(id).checked=false);
+  document.getElementById('imgPreview').style.display='none';
+  document.getElementById('formTitle').textContent='Add New Food Item';
+};
+
+window.deleteFood = async function(id) {
+  if (!confirm('Delete this item?')) return;
+  await deleteDoc(doc(db,"foods",id)); showToast('Deleted'); loadFoods();
+};
+
+// ORDERS
+window.loadOrders = async function() {
+  const snap = await getDocs(collection(db,"food_orders"));
+  allOrders = snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
+  renderOrders(allOrders);
+};
+
+window.filterOrders = function() {
+  const q = document.getElementById('orderSearch').value.toLowerCase();
+  const s = document.getElementById('orderStatusFilter').value;
+  let list = allOrders;
+  if (q) list = list.filter(o => (o.name||'').toLowerCase().includes(q) || (o.email||'').toLowerCase().includes(q) || (o.orderId||'').toLowerCase().includes(q));
+  if (s) list = list.filter(o => (o.status||'pending') === s);
+  renderOrders(list);
+};
+
+function renderOrders(list) {
+  const c = document.getElementById('ordersContainer');
+  if (!list.length) { c.innerHTML='<p style="color:var(--muted)">No orders found.</p>'; return; }
+  c.innerHTML = list.map(o => {
+    const items = (o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ');
+    return `<div class="order-row">
+      <div class="order-row-header">
+        <div>
+          <div class="order-id">${o.orderId||'—'} <span class="status-badge status-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>
+          <div class="order-customer">${o.name} · ${o.email} · ${o.mobile}</div>
+        </div>
+        <div style="text-align:right;font-size:0.8rem;color:var(--muted)">${new Date(o.timestamp).toLocaleString()}</div>
+      </div>
+      <div class="order-details">
+        <span><i class="ti ti-map-pin" style="font-size:0.9rem;vertical-align:-1px"></i> ${o.address||'—'}</span>
+        <span><i class="ti ti-currency-rupee" style="font-size:0.9rem;vertical-align:-1px"></i> ₹${o.total||0}</span>
+        <span><i class="ti ti-credit-card" style="font-size:0.9rem;vertical-align:-1px"></i> ${o.payment||'—'}</span>
+      </div>
+      <div class="order-items-str">${items}</div>
+      ${o.notes?`<div style="font-size:0.78rem;color:var(--muted);margin-top:4px">📝 ${o.notes}</div>`:''}
+      <div class="order-actions" style="margin-top:0.75rem">
+        <select class="status-select" id="sel-${o.docId}">
+          ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}
+        </select>
+        <button class="btn-update" onclick="updateStatus('${o.docId}','${o.email}','${o.name}')">Update</button>
+        <button class="btn-tele" onclick="notifyCustomer('${o.docId}')"><i class="ti ti-send"></i> Notify</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.updateStatus = async function(docId, email, name) {
+  const status = document.getElementById('sel-'+docId).value;
+  await updateDoc(doc(db,"food_orders",docId), {status});
+  showToast(`Order updated to: ${status.replace('_',' ')}`);
+  loadOrders(); loadDashboard();
+
+  const msg = `🍽️ *Zestora Order Update*\n\nHi ${name}! Your order status has been updated to: *${status.replace('_',' ').toUpperCase()}* 🎉\n\nThank you for ordering from Zestora!`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({chat_id:CHAT_ID, text:msg, parse_mode:'Markdown'})
+  });
+};
+
+window.notifyCustomer = async function(docId) {
+  const o = allOrders.find(x=>x.docId===docId);
+  if (!o) return;
+  const msg = `📦 *Order ${o.orderId}* is currently: *${(o.status||'pending').replace('_',' ').toUpperCase()}*\n\n🛒 Items: ${(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}\n💰 Total: ₹${o.total||0}\n📍 ${o.address}`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({chat_id:CHAT_ID, text:msg, parse_mode:'Markdown'})
+  });
+  showToast('Notification sent!');
+};
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+window.showToast = showToast;
+</script>
+</body>
+</html>
