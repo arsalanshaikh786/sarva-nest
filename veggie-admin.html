@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>HariyaLi Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    :root {
+      --green:#2D7A4F;--green-light:#E8F5EE;--green-dark:#1E5C39;
+      --accent:#F4A228;--accent-light:#FEF3E2;
+      --surface:#F4FAF6;--card:#FFFFFF;--border:rgba(45,122,79,0.12);
+      --text:#1A2E1F;--muted:#637A6B;--danger:#C0392B;--danger-light:#FDEDEC;
+      --warn:#E67E22;--warn-light:#FEF9E7;--info:#1565C0;--info-light:#E3F2FD;
+      --radius:14px;--safe-bottom:env(safe-area-inset-bottom,0px);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Nunito',sans-serif;background:var(--surface);color:var(--text);min-height:100vh;}
+
+    /* ── LOGIN ── */
+    .login-screen{position:fixed;inset:0;background:var(--surface);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
+    .login-box{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
+    .login-logo{font-family:'Lora',serif;font-size:1.7rem;color:var(--green);margin-bottom:.25rem;display:flex;align-items:center;justify-content:center;gap:8px;}
+    .login-logo-icon{width:38px;height:38px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+    .login-box p{color:var(--muted);font-size:.85rem;margin-bottom:1.5rem;}
+    .login-input{width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;margin-bottom:.6rem;transition:border-color .2s;}
+    .login-input:focus{border-color:var(--green);}
+    .login-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:10px;padding:.75rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;}
+    .login-error{color:var(--danger);font-size:.8rem;margin-top:.5rem;display:none;}
+
+    /* ── TOP NAV ── */
+    .top-nav{position:sticky;top:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;}
+    .nav-logo{font-family:'Lora',serif;font-size:1.25rem;color:var(--green);display:flex;align-items:center;gap:6px;}
+    .nav-logo-icon{width:28px;height:28px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.85rem;}
+    .admin-badge{background:var(--green-light);color:var(--green);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:50px;}
+    .logout-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.82rem;font-family:'Nunito',sans-serif;font-weight:600;display:flex;align-items:center;gap:4px;}
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);}
+    .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.6rem;font-weight:700;transition:color .2s;text-transform:uppercase;letter-spacing:.3px;}
+    .bnav-item.active{color:var(--green);}
+    .bnav-item i{font-size:1.25rem;}
+
+    /* ── PAGES ── */
+    .page{display:none;padding-bottom:calc(70px + var(--safe-bottom));}
+    .page.active{display:block;}
+    main{padding:1rem;}
+
+    /* ── STAT CARDS ── */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;}
+    .stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;}
+    .stat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-bottom:.6rem;}
+    .stat-label{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem;}
+    .stat-val{font-family:'Lora',serif;font-size:1.7rem;color:var(--text);}
+    .stat-sub{font-size:.72rem;color:var(--muted);margin-top:2px;}
+
+    /* ── SECTION HEADER ── */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+    .section-title{font-family:'Lora',serif;font-size:1.1rem;}
+    .refresh-btn{background:var(--green-light);color:var(--green);border:1.5px solid var(--green);border-radius:8px;padding:.35rem .75rem;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+    /* ── ORDER CARD ── */
+    .order-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;margin-bottom:.75rem;}
+    .order-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;}
+    .order-id{font-weight:800;font-size:.88rem;}
+    .order-customer{font-size:.75rem;color:var(--muted);margin-top:2px;}
+    .status-badge{font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:50px;white-space:nowrap;flex-shrink:0;}
+    .status-pending{background:var(--warn-light);color:var(--warn);}
+    .status-confirmed{background:var(--info-light);color:var(--info);}
+    .status-preparing{background:#F3E5F5;color:#6A1B9A;}
+    .status-out_for_delivery{background:var(--green-light);color:var(--green);}
+    .status-delivered{background:var(--green-light);color:var(--green-dark);}
+    .status-cancelled{background:var(--danger-light);color:var(--danger);}
+    .order-meta{display:flex;gap:.75rem;font-size:.75rem;color:var(--muted);flex-wrap:wrap;margin-bottom:.4rem;}
+    .order-meta span{display:flex;align-items:center;gap:3px;}
+    .order-items-str{font-size:.75rem;color:var(--muted);margin-bottom:.6rem;line-height:1.4;}
+    .order-slot{background:var(--accent-light);color:var(--accent);font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:3px;margin-bottom:.6rem;}
+    .order-actions{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+    .status-select{flex:1;min-width:140px;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:.8rem;cursor:pointer;outline:none;background:#fff;}
+    .update-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:.4rem .85rem;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+    .notify-btn{background:var(--info-light);color:var(--info);border:none;border-radius:8px;padding:.4rem .75rem;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;}
+
+    /* ── SEARCH/FILTER BAR ── */
+    .filter-bar{display:flex;gap:.5rem;margin-bottom:.9rem;flex-wrap:wrap;}
+    .filter-bar input{flex:1;min-width:160px;padding:.55rem .85rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Nunito',sans-serif;font-size:.85rem;outline:none;}
+    .filter-bar input:focus{border-color:var(--green);}
+    .filter-bar select{padding:.5rem .75rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Nunito',sans-serif;font-size:.82rem;outline:none;background:#fff;cursor:pointer;color:var(--muted);}
+
+    /* ── VEGGIE FORM ── */
+    .form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.25rem;margin-bottom:1rem;}
+    .form-card h2{font-family:'Lora',serif;font-size:1.1rem;margin-bottom:1rem;}
+    .form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:.6rem;}
+    label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+    .form-input{padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;background:#fff;width:100%;}
+    .form-input:focus{border-color:var(--green);}
+    textarea.form-input{resize:vertical;min-height:70px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+    .form-grid .full{grid-column:1/-1;}
+    .checkbox-row{display:flex;align-items:center;gap:6px;margin-bottom:.4rem;}
+    .checkbox-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--green);}
+    .checkbox-row label{text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:600;}
+    .img-preview{width:100%;height:140px;border-radius:9px;object-fit:cover;border:1px solid var(--border);margin-top:6px;display:none;}
+    .form-actions{display:flex;gap:.6rem;margin-top:.75rem;flex-wrap:wrap;}
+    .btn-primary{background:var(--green);color:#fff;border:none;border-radius:9px;padding:.6rem 1.25rem;font-family:'Nunito',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;}
+    .btn-secondary{background:#fff;color:var(--text);border:1.5px solid var(--border);border-radius:9px;padding:.6rem 1rem;font-family:'Nunito',sans-serif;font-size:.88rem;cursor:pointer;font-weight:600;}
+
+    /* ── VEGGIE GRID ── */
+    .veggie-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+    @media(min-width:480px){.veggie-grid{grid-template-columns:repeat(3,1fr);}}
+    .veggie-item{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+    .veggie-item img{width:100%;height:90px;object-fit:cover;}
+    .veggie-item-body{padding:.65rem;}
+    .veggie-item-name{font-weight:700;font-size:.85rem;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .veggie-item-meta{font-size:.72rem;color:var(--muted);margin-bottom:.5rem;}
+    .veggie-item-actions{display:flex;gap:.35rem;}
+    .btn-edit{background:var(--warn-light);color:var(--warn);border:none;border-radius:6px;padding:.3rem .6rem;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+    .btn-del{background:var(--danger-light);color:var(--danger);border:none;border-radius:6px;padding:.3rem .6rem;font-family:'Nunito',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+
+    /* ── RECENT ORDER MINI ── */
+    .recent-mini{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.75rem;}
+    .recent-mini-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+    .dot-pending{background:var(--warn);}
+    .dot-confirmed{background:var(--info);}
+    .dot-preparing{background:#8E44AD;}
+    .dot-out_for_delivery{background:var(--green);}
+    .dot-delivered{background:var(--green-dark);}
+    .dot-cancelled{background:var(--danger);}
+    .recent-mini-info{flex:1;min-width:0;}
+    .recent-mini-name{font-weight:700;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .recent-mini-sub{font-size:.72rem;color:var(--muted);}
+    .recent-mini-price{font-family:'Lora',serif;font-size:.95rem;font-weight:700;flex-shrink:0;}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:calc(70px + var(--safe-bottom) + .75rem);left:1rem;right:1rem;background:var(--text);color:#fff;padding:.7rem 1.1rem;border-radius:12px;font-size:.85rem;font-weight:600;z-index:500;transition:all .3s cubic-bezier(.34,1.56,.64,1);opacity:0;transform:translateY(20px);pointer-events:none;text-align:center;}
+    .toast.show{opacity:1;transform:translateY(0);}
+
+    /* ── SKELETON ── */
+    .skeleton{background:linear-gradient(90deg,#eaf3ec 25%,#ddeee1 50%,#eaf3ec 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo"><div class="login-logo-icon">🌿</div> HariyaLi</div>
+    <p>Admin Panel · Sign in to continue</p>
+    <input class="login-input" type="text" id="loginUser" placeholder="Username"/>
+    <input class="login-input" type="password" id="loginPass" placeholder="Password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Invalid credentials</div>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-logo"><div class="nav-logo-icon">🌿</div> HariyaLi</div>
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <span class="admin-badge">Admin</span>
+    <button class="logout-btn" onclick="logout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>
+</div>
+
+<!-- PAGES -->
+<div class="page active" id="pageDashboard">
+  <main>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card"><div class="stat-icon" style="background:var(--green-light)">📦</div><div class="stat-label">Total Orders</div><div class="stat-val" id="sTotalOrders">—</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:var(--warn-light)">⏳</div><div class="stat-label">Pending</div><div class="stat-val" id="sPending">—</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:var(--accent-light)">₹</div><div class="stat-label">Revenue</div><div class="stat-val" id="sRevenue">—</div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#F3E5F5">🥕</div><div class="stat-label">Products</div><div class="stat-val" id="sProducts">—</div></div>
+    </div>
+    <div class="section-header">
+      <div class="section-title">Recent Orders</div>
+      <button class="refresh-btn" onclick="loadDashboard()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div id="recentOrdersList"></div>
+  </main>
+</div>
+
+<div class="page" id="pageProducts">
+  <main>
+    <div class="form-card">
+      <h2 id="formTitle">Add New Product</h2>
+      <input type="hidden" id="editId"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" class="form-input" id="fName" placeholder="e.g. Spinach"/>
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="e.g. 25"/>
+        </div>
+        <div class="form-group">
+          <label>MRP (₹)</label>
+          <input type="number" class="form-input" id="fMrp" placeholder="e.g. 35"/>
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <input type="text" class="form-input" id="fUnit" placeholder="e.g. 500g, 1 kg, bunch"/>
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" class="form-input" id="fCategory" placeholder="Vegetables, Leafy Greens…"/>
+        </div>
+        <div class="form-group">
+          <label>Rating</label>
+          <input type="number" class="form-input" id="fRating" placeholder="4.8" min="1" max="5" step="0.1"/>
+        </div>
+        <div class="form-group full">
+          <label>Description *</label>
+          <textarea class="form-input" id="fDesc" placeholder="Freshness, origin, taste, uses…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Image URL *</label>
+          <input type="url" class="form-input" id="fImage" placeholder="https://…" oninput="previewImg(this.value)"/>
+          <img id="imgPreview" class="img-preview"/>
+        </div>
+        <div class="form-group">
+          <label>Origin</label>
+          <input type="text" class="form-input" id="fOrigin" placeholder="e.g. Nashik, Pune"/>
+        </div>
+        <div class="form-group">
+          <label>Shelf Life</label>
+          <input type="text" class="form-input" id="fShelf" placeholder="e.g. 3–4 days"/>
+        </div>
+        <div class="form-group">
+          <label>Freshness %</label>
+          <input type="number" class="form-input" id="fFreshness" placeholder="85" min="0" max="100"/>
+        </div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="fOrganic"/><label for="fOrganic">🌿 Organic</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="fSale"/><label for="fSale">🏷️ On Sale</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="fSeasonal"/><label for="fSeasonal">☀️ Seasonal</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="fLeafy"/><label for="fLeafy">🥬 Leafy Green</label></div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveProduct()"><i class="ti ti-check"></i> Save Product</button>
+        <button class="btn-secondary" onclick="resetForm()">Cancel</button>
+      </div>
+    </div>
+    <div class="section-header">
+      <div class="section-title">All Products</div>
+      <button class="refresh-btn" onclick="loadProducts()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div class="veggie-grid" id="veggieGrid">
+      <div style="grid-column:1/-1;color:var(--muted);font-size:.88rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<div class="page" id="pageOrders">
+  <main>
+    <div class="section-header">
+      <div class="section-title">All Orders</div>
+      <button class="refresh-btn" onclick="loadOrders()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="orderSearch" placeholder="Search name, email, ID…" oninput="filterOrders()"/>
+      <select id="orderStatusFilter" onchange="filterOrders()">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="preparing">Preparing</option>
+        <option value="out_for_delivery">Out for Delivery</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+    <div id="ordersContainer"><div style="color:var(--muted);font-size:.88rem">Loading…</div></div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bnav-item active" id="bnav-dashboard" onclick="switchPage('dashboard')">
+    <i class="ti ti-dashboard"></i>Dash
+  </div>
+  <div class="bnav-item" id="bnav-products" onclick="switchPage('products')">
+    <i class="ti ti-basket"></i>Products
+  </div>
+  <div class="bnav-item" id="bnav-orders" onclick="switchPage('orders')">
+    <i class="ti ti-receipt"></i>Orders
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const BOT_TOKEN = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT_ID = "5547663296";
+const ADMIN_USER = "admin", ADMIN_PASS = "hariyali2025";
+
+let allOrders = [];
+
+// ── AUTH ──
+window.doLogin = function() {
+  const u = document.getElementById('loginUser').value;
+  const p = document.getElementById('loginPass').value;
+  if (u === ADMIN_USER && p === ADMIN_PASS) {
+    document.getElementById('loginScreen').style.display = 'none';
+    loadDashboard(); loadProducts(); loadOrders();
+  } else { document.getElementById('loginError').style.display = 'block'; }
+};
+window.logout = function() { document.getElementById('loginScreen').style.display = 'flex'; };
+
+// ── PAGE SWITCH ──
+window.switchPage = function(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + page[0].toUpperCase() + page.slice(1)).classList.add('active');
+  document.getElementById('bnav-' + page).classList.add('active');
+};
+
+// ── DASHBOARD ──
+window.loadDashboard = async function() {
+  const [vegSnap, orderSnap] = await Promise.all([
+    getDocs(collection(db,"vegetables")),
+    getDocs(collection(db,"veg_orders"))
+  ]);
+  const orders = orderSnap.docs.map(d=>({docId:d.id,...d.data()}));
+  const pending = orders.filter(o=>!o.status||o.status==='pending').length;
+  const revenue = orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(+o.total||0),0);
+  document.getElementById('sTotalOrders').textContent = orders.length;
+  document.getElementById('sPending').textContent = pending;
+  document.getElementById('sRevenue').textContent = '₹'+revenue.toLocaleString('en-IN');
+  document.getElementById('sProducts').textContent = vegSnap.size;
+
+  const recent = orders.sort((a,b)=>b.timestamp-a.timestamp).slice(0,8);
+  const dotClass = s => 'recent-mini-dot dot-'+(s||'pending');
+  document.getElementById('recentOrdersList').innerHTML = recent.length
+    ? recent.map(o=>`<div class="recent-mini">
+        <div class="${dotClass(o.status)}"></div>
+        <div class="recent-mini-info">
+          <div class="recent-mini-name">${o.orderId||'Order'} · ${o.name}</div>
+          <div class="recent-mini-sub">${(o.status||'pending').replace('_',' ')} · ${o.slot||''} · ${new Date(o.timestamp).toLocaleDateString()}</div>
+        </div>
+        <div class="recent-mini-price">₹${o.total||0}</div>
+      </div>`).join('')
+    : '<p style="color:var(--muted);font-size:.88rem">No orders yet.</p>';
+};
+
+// ── PRODUCTS ──
+window.loadProducts = async function() {
+  const snap = await getDocs(collection(db,"vegetables"));
+  const grid = document.getElementById('veggieGrid');
+  if (!snap.size) { grid.innerHTML='<div style="grid-column:1/-1;color:var(--muted);font-size:.88rem;text-align:center;padding:1.5rem">No products yet. Add one above.</div>'; return; }
+  grid.innerHTML = snap.docs.map(d=>{
+    const v = {id:d.id,...d.data()};
+    const hasSale = +v.mrp > +v.price;
+    return `<div class="veggie-item">
+      <img src="${v.image||''}" alt="${v.name}" onerror="this.style.display='none'" loading="lazy"/>
+      <div class="veggie-item-body">
+        <div class="veggie-item-name">${v.name}</div>
+        <div class="veggie-item-meta">₹${v.price}${hasSale?` <span style="text-decoration:line-through;font-size:.65rem">₹${v.mrp}</span>`:''} · ${v.unit||''}<br/>${v.category||''} ${v.organic?'· 🌿':''}${v.seasonal?'· ☀️':''}</div>
+        <div class="veggie-item-actions">
+          <button class="btn-edit" onclick="editProduct('${d.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-del" onclick="deleteProduct('${d.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.previewImg = function(url) {
+  const img = document.getElementById('imgPreview');
+  if (url) { img.src=url; img.style.display='block'; } else img.style.display='none';
+};
+
+window.saveProduct = async function() {
+  const id = document.getElementById('editId').value;
+  const data = {
+    name: document.getElementById('fName').value.trim(),
+    price: document.getElementById('fPrice').value.trim(),
+    mrp: document.getElementById('fMrp').value.trim(),
+    unit: document.getElementById('fUnit').value.trim(),
+    category: document.getElementById('fCategory').value.trim(),
+    rating: document.getElementById('fRating').value.trim(),
+    description: document.getElementById('fDesc').value.trim(),
+    image: document.getElementById('fImage').value.trim(),
+    origin: document.getElementById('fOrigin').value.trim(),
+    shelfLife: document.getElementById('fShelf').value.trim(),
+    freshness: document.getElementById('fFreshness').value.trim(),
+    organic: document.getElementById('fOrganic').checked,
+    sale: document.getElementById('fSale').checked,
+    seasonal: document.getElementById('fSeasonal').checked,
+    leafy: document.getElementById('fLeafy').checked,
+    tags: [
+      document.getElementById('fOrganic').checked ? 'organic' : '',
+      document.getElementById('fLeafy').checked ? 'leafy' : '',
+      document.getElementById('fSeasonal').checked ? 'seasonal' : '',
+      document.getElementById('fSale').checked ? 'sale' : '',
+    ].filter(Boolean),
+  };
+  if (!data.name || !data.price || !data.image) return showToast('Name, price, and image are required');
+  try {
+    if (id) { await updateDoc(doc(db,"vegetables",id), data); showToast('Product updated! ✅'); }
+    else { await addDoc(collection(db,"vegetables"), {...data, createdAt: serverTimestamp()}); showToast('Product added! 🥕'); }
+    resetForm(); loadProducts();
+  } catch(e) { showToast('Error saving product'); }
+};
+
+window.editProduct = async function(id) {
+  const snap = await getDocs(collection(db,"vegetables"));
+  const d = snap.docs.find(x=>x.id===id);
+  if (!d) return;
+  const v = d.data();
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value = v.name||'';
+  document.getElementById('fPrice').value = v.price||'';
+  document.getElementById('fMrp').value = v.mrp||'';
+  document.getElementById('fUnit').value = v.unit||'';
+  document.getElementById('fCategory').value = v.category||'';
+  document.getElementById('fRating').value = v.rating||'';
+  document.getElementById('fDesc').value = v.description||'';
+  document.getElementById('fImage').value = v.image||'';
+  document.getElementById('fOrigin').value = v.origin||'';
+  document.getElementById('fShelf').value = v.shelfLife||'';
+  document.getElementById('fFreshness').value = v.freshness||'';
+  document.getElementById('fOrganic').checked = !!v.organic;
+  document.getElementById('fSale').checked = !!v.sale;
+  document.getElementById('fSeasonal').checked = !!v.seasonal;
+  document.getElementById('fLeafy').checked = !!v.leafy;
+  previewImg(v.image);
+  document.getElementById('formTitle').textContent = 'Edit: '+v.name;
+  switchPage('products');
+  setTimeout(()=>document.querySelector('.form-card').scrollIntoView({behavior:'smooth'}), 100);
+};
+
+window.resetForm = function() {
+  ['editId','fName','fPrice','fMrp','fUnit','fCategory','fRating','fDesc','fImage','fOrigin','fShelf','fFreshness'].forEach(id=>document.getElementById(id).value='');
+  ['fOrganic','fSale','fSeasonal','fLeafy'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('imgPreview').style.display='none';
+  document.getElementById('formTitle').textContent='Add New Product';
+};
+
+window.deleteProduct = async function(id) {
+  if (!confirm('Delete this product?')) return;
+  await deleteDoc(doc(db,"vegetables",id));
+  showToast('Deleted 🗑️'); loadProducts();
+};
+
+// ── ORDERS ──
+window.loadOrders = async function() {
+  const snap = await getDocs(collection(db,"veg_orders"));
+  allOrders = snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
+  renderOrders(allOrders);
+};
+
+window.filterOrders = function() {
+  const q = document.getElementById('orderSearch').value.toLowerCase();
+  const s = document.getElementById('orderStatusFilter').value;
+  let list = allOrders;
+  if (q) list = list.filter(o=>(o.name||'').toLowerCase().includes(q)||(o.email||'').toLowerCase().includes(q)||(o.orderId||'').toLowerCase().includes(q)||(o.mobile||'').includes(q));
+  if (s) list = list.filter(o=>(o.status||'pending')===s);
+  renderOrders(list);
+};
+
+function renderOrders(list) {
+  const c = document.getElementById('ordersContainer');
+  if (!list.length) { c.innerHTML='<p style="color:var(--muted);font-size:.88rem">No orders found.</p>'; return; }
+  c.innerHTML = list.map(o => {
+    const items = (o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ');
+    return `<div class="order-card">
+      <div class="order-top">
+        <div>
+          <div class="order-id">${o.orderId||'—'}</div>
+          <div class="order-customer">${o.name} · ${o.email}</div>
+          <div class="order-customer">📱 ${o.mobile}</div>
+        </div>
+        <span class="status-badge status-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span>
+      </div>
+      ${o.slot?`<div class="order-slot"><i class="ti ti-clock" style="font-size:.8rem"></i> Slot: ${o.slot}</div>`:''}
+      <div class="order-meta">
+        <span><i class="ti ti-map-pin"></i>${o.address||'—'}</span>
+        <span><i class="ti ti-currency-rupee"></i>₹${o.total||0}</span>
+        <span><i class="ti ti-credit-card"></i>${o.payment||'—'}</span>
+      </div>
+      <div class="order-items-str">🥦 ${items}</div>
+      ${o.notes?`<div style="font-size:.75rem;color:var(--muted);margin-bottom:.4rem">📝 ${o.notes}</div>`:''}
+      <div style="font-size:.72rem;color:var(--muted);margin-bottom:.6rem">${new Date(o.timestamp).toLocaleString()}</div>
+      <div class="order-actions">
+        <select class="status-select" id="sel-${o.docId}">
+          ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}
+        </select>
+        <button class="update-btn" onclick="updateStatus('${o.docId}','${o.name}')">Update</button>
+        <button class="notify-btn" onclick="notifyTelegram('${o.docId}')"><i class="ti ti-send"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.updateStatus = async function(docId, name) {
+  const status = document.getElementById('sel-'+docId).value;
+  await updateDoc(doc(db,"veg_orders",docId), {status});
+  showToast(`Updated: ${status.replace('_',' ')} ✅`);
+  loadOrders(); loadDashboard();
+  const msg = `🌿 *HariyaLi Order Update*\n\nHi ${name}! Your order status is now: *${status.replace('_',' ').toUpperCase()}*\n\nThank you for choosing HariyaLi! 🥕`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})});
+};
+
+window.notifyTelegram = async function(docId) {
+  const o = allOrders.find(x=>x.docId===docId);
+  if (!o) return;
+  const msg = `📦 *Order ${o.orderId}* — ${o.name}\nStatus: *${(o.status||'pending').replace('_',' ').toUpperCase()}*\n🛒 ${(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}\n💰 ₹${o.total} · Slot: ${o.slot||'—'}\n📍 ${o.address}`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})});
+  showToast('Telegram notification sent! 📨');
+};
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 2800);
+}
+window.showToast = showToast;
+</script>
+</body>
+</html>
