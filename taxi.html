@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0"/>
+<title>SwiftRide – Book Rides</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+  --bg:#0A0A0F;--surface:#111118;--card:#161620;--card2:#1C1C28;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --yellow:#FFD60A;--ydim:rgba(255,214,10,0.1);--yglow:rgba(255,214,10,0.2);
+  --green:#00D68F;--gdim:rgba(0,214,143,0.1);
+  --red:#FF4444;--rdim:rgba(255,68,68,0.1);
+  --blue:#4F8EF7;--bdim:rgba(79,142,247,0.1);
+  --text:#F2F2FF;--muted:#6B6B8A;--muted2:#9999BB;
+  --radius:18px;--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+input,select,textarea,button{font-family:'Space Grotesk',sans-serif;}
+
+/* TOAST */
+#toast{position:fixed;top:68px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--card2);color:var(--text);border:1px solid var(--border2);padding:11px 20px;border-radius:50px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:all .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;max-width:90vw;text-align:center;pointer-events:none;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.success{border-color:var(--green);color:var(--green);}
+#toast.error{border-color:var(--red);color:var(--red);}
+#toast.warn{border-color:var(--yellow);color:var(--yellow);}
+
+/* TOP BAR */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:300;height:56px;background:rgba(10,10,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1rem;}
+.logo{font-family:'Unbounded',sans-serif;font-size:1.2rem;font-weight:900;color:var(--yellow);}
+.logo span{color:var(--text);}
+.topbar-right{display:flex;align-items:center;gap:.5rem;}
+.loc-pill{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--border2);padding:5px 10px;border-radius:50px;font-size:11px;font-weight:600;color:var(--muted2);cursor:pointer;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.loc-pill i{color:var(--yellow);font-size:.9rem;flex-shrink:0;}
+.user-av{width:34px;height:34px;border-radius:50%;background:var(--ydim);border:1.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:var(--yellow);cursor:pointer;flex-shrink:0;}
+
+/* PAGES */
+.page{display:none;padding-top:56px;padding-bottom:calc(66px + var(--sb));}
+.page.active{display:block;}
+
+/* BOTTOM NAV */
+.bnav-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;background:rgba(17,17,24,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.58rem;font-weight:600;text-transform:uppercase;letter-spacing:.4px;transition:color .2s;}
+.bnav i{font-size:1.25rem;}
+.bnav.active{color:var(--yellow);}
+
+/* MAP */
+.map-wrap{position:relative;width:100%;height:260px;background:var(--card);overflow:hidden;}
+.map-grid{position:absolute;inset:0;background-image:linear-gradient(var(--ydim) 1px,transparent 1px),linear-gradient(90deg,var(--ydim) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;}
+.map-overlay{position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--bg));pointer-events:none;}
+.my-pin{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:var(--yellow);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 8px var(--yglow);z-index:2;}
+.pulse-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:50px;height:50px;border-radius:50%;border:2px solid var(--yellow);animation:pring 2s ease-out infinite;opacity:0;}
+@keyframes pring{0%{transform:translate(-50%,-50%) scale(.5);opacity:.8;}100%{transform:translate(-50%,-50%) scale(2.5);opacity:0;}}
+
+/* BOOKING CARD */
+.book-card{background:var(--card);border:1px solid var(--border2);border-radius:20px 20px 0 0;margin-top:-18px;position:relative;z-index:10;padding:1.1rem 1rem;}
+.book-title{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.9rem;}
+
+/* LOC INPUTS */
+.loc-box{background:var(--card2);border-radius:14px;overflow:hidden;border:1px solid var(--border);}
+.loc-row{display:flex;align-items:center;gap:.6rem;padding:.7rem .85rem;position:relative;}
+.loc-row+.loc-row{border-top:1px solid var(--border);}
+.ldot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ldot-g{background:var(--green);}
+.ldot-y{background:var(--yellow);}
+.loc-row input{flex:1;background:transparent;border:none;outline:none;font-size:.88rem;color:var(--text);min-height:0;}
+.loc-row input::placeholder{color:var(--muted);}
+.swap-btn{background:var(--card);border:1px solid var(--border2);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted2);font-size:.8rem;transition:.2s;flex-shrink:0;}
+.swap-btn:active{background:var(--ydim);color:var(--yellow);}
+
+/* VEHICLE CARDS */
+.veh-section-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:.9rem 0 .5rem;}
+.veh-scroll{display:flex;gap:.55rem;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.veh-scroll::-webkit-scrollbar{display:none;}
+.vcard{flex-shrink:0;background:var(--card2);border:1.5px solid var(--border);border-radius:13px;padding:.65rem .75rem;text-align:center;cursor:pointer;transition:all .18s;min-width:82px;}
+.vcard.active{border-color:var(--yellow);background:var(--ydim);}
+.vcard:active{transform:scale(.95);}
+.vemoji{font-size:1.5rem;display:block;margin-bottom:.2rem;}
+.vname{font-size:.7rem;font-weight:700;color:var(--text);}
+.vprice{font-size:.62rem;color:var(--muted);margin-top:1px;}
+.veta{font-size:.6rem;color:var(--green);font-weight:600;margin-top:1px;}
+
+/* NOW/SCHEDULE */
+.sched-row{display:flex;gap:.45rem;margin-top:.75rem;}
+.sched-btn{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:9px;padding:.55rem;font-size:.75rem;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .18s;}
+.sched-btn.active{border-color:var(--yellow);color:var(--yellow);background:var(--ydim);}
+
+/* COUPON ROW */
+.coup-row{display:flex;gap:.45rem;margin-top:.7rem;}
+.coup-input{flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:9px;padding:.58rem .8rem;font-size:.82rem;color:var(--text);outline:none;}
+.coup-input::placeholder{color:var(--muted);}
+.coup-input:focus{border-color:var(--yellow);}
+.coup-btn{background:var(--ydim);color:var(--yellow);border:1.5px solid var(--yellow);border-radius:9px;padding:.55rem .85rem;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+
+/* FARE + BOOK */
+.fare-line{text-align:center;font-size:.72rem;color:var(--muted);margin:.5rem 0;}
+.fare-line b{color:var(--yellow);}
+.book-btn{width:100%;background:var(--yellow);color:#000;border:none;border-radius:13px;padding:.95rem;font-family:'Unbounded',sans-serif;font-size:.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;box-shadow:0 8px 30px var(--yglow);transition:.2s;margin-top:.4rem;}
+.book-btn:active{transform:scale(.98);opacity:.9;}
+.book-btn:disabled{background:var(--card2);color:var(--muted);box-shadow:none;cursor:not-allowed;}
+.pay-row{display:flex;justify-content:center;gap:.4rem;margin-top:.5rem;flex-wrap:wrap;}
+.pay-chip{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--muted2);background:var(--card2);padding:4px 10px;border-radius:50px;cursor:pointer;border:1px solid transparent;}
+.pay-chip i{color:var(--yellow);font-size:.8rem;}
+.pay-chip.selected{border-color:var(--yellow);color:var(--yellow);}
+
+/* PROMOS */
+.promo-scroll{display:flex;gap:.6rem;overflow-x:auto;scrollbar-width:none;padding:0 1rem 2px;}
+.promo-scroll::-webkit-scrollbar{display:none;}
+.pcard{flex-shrink:0;width:220px;border-radius:14px;padding:.9rem 1rem;position:relative;overflow:hidden;cursor:pointer;}
+.pcard.c1{background:linear-gradient(135deg,#1a1a3e,#2d1a6e);}
+.pcard.c2{background:linear-gradient(135deg,#1a2e1a,#0d4a2a);}
+.pcard.c3{background:linear-gradient(135deg,#3e1a1a,#6e1a1a);}
+.ptitle{font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.15rem;}
+.psub{font-size:.65rem;color:rgba(255,255,255,.65);}
+.pcode{margin-top:.5rem;background:rgba(255,255,255,.12);border-radius:6px;padding:.2rem .5rem;font-size:.62rem;font-weight:700;color:#fff;display:inline-block;letter-spacing:.5px;}
+.pemoji{position:absolute;right:.65rem;bottom:.4rem;font-size:1.8rem;opacity:.45;}
+
+/* SECTION HEADERS */
+.sec-hdr{padding:.8rem 1rem .35rem;display:flex;align-items:center;justify-content:space-between;}
+.sec-title{font-family:'Unbounded',sans-serif;font-size:.8rem;font-weight:700;}
+.sec-link{font-size:.7rem;color:var(--yellow);font-weight:700;cursor:pointer;}
+
+/* FINDING OVERLAY */
+.finding-ov{position:fixed;inset:0;background:rgba(10,10,15,.96);z-index:500;display:none;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;}
+.finding-ov.show{display:flex;}
+.radar{width:130px;height:130px;position:relative;margin-bottom:1.5rem;}
+.rring{position:absolute;border-radius:50%;border:1.5px solid var(--yellow);animation:rp 2s ease-out infinite;}
+.rring:nth-child(1){inset:0;animation-delay:0s;}
+.rring:nth-child(2){inset:18px;animation-delay:.5s;}
+.rring:nth-child(3){inset:36px;animation-delay:1s;}
+.rcenter{position:absolute;inset:50px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+@keyframes rp{0%{opacity:.8;transform:scale(1);}100%{opacity:0;transform:scale(1.35);}}
+.find-title{font-family:'Unbounded',sans-serif;font-size:1.05rem;font-weight:700;color:var(--yellow);margin-bottom:.4rem;}
+.find-sub{color:var(--muted2);font-size:.82rem;max-width:260px;line-height:1.6;}
+.find-cancel{background:var(--card2);color:var(--red);border:1.5px solid var(--rdim);border-radius:50px;padding:.6rem 1.5rem;font-size:.82rem;font-weight:700;cursor:pointer;margin-top:1.5rem;}
+
+/* DRIVER SHEET */
+.driver-sheet{position:fixed;bottom:0;left:0;right:0;z-index:500;background:var(--card);border-radius:22px 22px 0 0;padding:1.1rem 1.1rem calc(1.1rem + var(--sb));display:none;border-top:1px solid var(--border2);box-shadow:0 -20px 60px rgba(0,0,0,.5);animation:slideUp .35s cubic-bezier(.32,.72,0,1);}
+.driver-sheet.show{display:block;}
+@keyframes slideUp{from{transform:translateY(60px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
+.dhandle{width:40px;height:4px;background:var(--border2);border-radius:50px;margin:0 auto .85rem;}
+.eta-bar{background:var(--gdim);border:1px solid var(--green);border-radius:10px;padding:.6rem .85rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;}
+.eta-lbl{font-size:.68rem;color:var(--muted2);}
+.eta-val{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:700;color:var(--green);}
+.driver-row{display:flex;align-items:center;gap:.85rem;margin-bottom:.85rem;}
+.drv-av{width:52px;height:52px;border-radius:50%;background:var(--card2);border:2px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+.drv-name{font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;}
+.drv-stars{display:flex;align-items:center;gap:3px;font-size:.7rem;color:var(--yellow);font-weight:600;margin-top:2px;}
+.drv-veh{font-size:.7rem;color:var(--muted2);margin-top:2px;}
+.drv-plate{background:var(--card2);border:1px solid var(--border2);color:var(--text);font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:5px;letter-spacing:1px;margin-top:3px;display:inline-block;}
+.otp-box{background:var(--ydim);border:1.5px solid var(--yellow);border-radius:11px;padding:.7rem .9rem;display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;}
+.otp-lbl{font-size:.65rem;color:var(--muted2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.otp-num{font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:900;color:var(--yellow);letter-spacing:6px;}
+.drv-actions{display:flex;gap:.45rem;}
+.drv-btn{flex:1;background:var(--card2);border:1.5px solid var(--border2);border-radius:11px;padding:.6rem;font-size:.72rem;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;}
+.drv-btn.primary{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.drv-btn.danger{color:var(--red);border-color:var(--rdim);}
+.complete-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:11px;padding:.8rem;font-family:'Unbounded',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;margin-top:.75rem;}
+
+/* RIDES HISTORY */
+.rides-list{padding:0 1rem;display:flex;flex-direction:column;gap:.6rem;}
+.ride-item{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:.9rem;}
+.ride-top{display:flex;align-items:flex-start;gap:0;}
+.ride-icon{width:36px;height:36px;border-radius:11px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;margin-right:.6rem;}
+.ride-info{flex:1;min-width:0;}
+.ride-route{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ride-date{font-size:.68rem;color:var(--muted);margin-top:1px;}
+.ride-fare{font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;color:var(--yellow);flex-shrink:0;}
+.ride-meta{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.5rem;}
+.rmchip{background:var(--card2);border-radius:50px;padding:2px 7px;font-size:.62rem;font-weight:700;color:var(--muted2);}
+.rstatus{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:50px;}
+.s-done{background:var(--gdim);color:var(--green);}
+.s-cancel{background:var(--rdim);color:var(--red);}
+.s-ongoing{background:var(--ydim);color:var(--yellow);}
+.ride-btns{display:flex;gap:.35rem;margin-top:.6rem;}
+.ribtn{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:.3rem .65rem;font-size:.68rem;font-weight:700;color:var(--muted2);cursor:pointer;display:flex;align-items:center;gap:3px;}
+
+/* WALLET */
+.wallet-hero{background:linear-gradient(135deg,#1a1a2e,#16213e);margin:1rem;border-radius:var(--radius);padding:1.4rem;border:1px solid var(--border2);position:relative;overflow:hidden;}
+.wallet-hero::before{content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;border-radius:50%;background:var(--yglow);}
+.wbal-lbl{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.25rem;}
+.wbal{font-family:'Unbounded',sans-serif;font-size:2rem;font-weight:900;color:var(--yellow);}
+.wcb{font-size:.72rem;color:var(--muted2);margin-top:.15rem;}
+.wactions{display:flex;gap:.45rem;margin-top:1rem;}
+.wbtn{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:.6rem;font-size:.72rem;font-weight:700;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:.18s;}
+.wbtn.primary{background:var(--yellow);color:#000;border-color:var(--yellow);}
+.wbtn:active{opacity:.85;}
+.amt-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:0 1rem .6rem;}
+.amt-chip{background:var(--card);border:1.5px solid var(--border);border-radius:9px;padding:.6rem;text-align:center;font-size:.78rem;font-weight:700;cursor:pointer;transition:.18s;color:var(--text);}
+.amt-chip.active{border-color:var(--yellow);background:var(--ydim);color:var(--yellow);}
+.amt-chip:active{transform:scale(.96);}
+.txn-list{padding:0 1rem;display:flex;flex-direction:column;gap:.45rem;}
+.txn-item{background:var(--card);border-radius:11px;border:1px solid var(--border);padding:.7rem .85rem;display:flex;align-items:center;gap:.7rem;}
+.txn-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.txn-info{flex:1;}
+.txn-title{font-size:.8rem;font-weight:600;}
+.txn-date{font-size:.65rem;color:var(--muted);margin-top:1px;}
+.txn-amt{font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;}
+.tc{color:var(--green);}
+.td{color:var(--red);}
+
+/* PROFILE */
+.prof-hero{background:var(--card);border-radius:var(--radius);margin:1rem;padding:1.4rem;border:1px solid var(--border);text-align:center;}
+.prof-av{width:68px;height:68px;border-radius:50%;background:var(--ydim);border:2.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:1.7rem;font-weight:900;color:var(--yellow);margin:0 auto .85rem;}
+.prof-name{font-family:'Unbounded',sans-serif;font-size:1.05rem;font-weight:700;}
+.prof-phone{font-size:.78rem;color:var(--muted2);margin-top:.2rem;}
+.prof-badges{display:flex;justify-content:center;gap:.4rem;margin-top:.65rem;flex-wrap:wrap;}
+.pbadge{background:var(--card2);border:1px solid var(--border2);border-radius:50px;padding:.25rem .65rem;font-size:.65rem;font-weight:700;color:var(--muted2);}
+.pbadge.gold{border-color:var(--yellow);color:var(--yellow);}
+.pstats{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem;margin:.7rem 0 0;}
+.pstat{background:var(--card2);border-radius:11px;padding:.65rem .4rem;text-align:center;}
+.pstat-v{font-family:'Unbounded',sans-serif;font-size:1rem;font-weight:700;color:var(--yellow);}
+.pstat-l{font-size:.6rem;color:var(--muted);margin-top:2px;font-weight:700;}
+.menu-list{padding:0 1rem;display:flex;flex-direction:column;gap:.35rem;margin-top:.5rem;}
+.menu-item{background:var(--card);border-radius:11px;border:1px solid var(--border);padding:.8rem .9rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;transition:.18s;}
+.menu-item:active{background:var(--card2);}
+.menu-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;}
+.menu-txt{flex:1;font-size:.82rem;font-weight:600;}
+.menu-sub{font-size:.67rem;color:var(--muted);margin-top:1px;}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:600;display:none;align-items:flex-end;}
+.overlay.show{display:flex;}
+.sheet{background:var(--card);border-radius:22px 22px 0 0;width:100%;padding:1.4rem 1.2rem calc(1.4rem + var(--sb));animation:slideUp .3s ease;max-height:90vh;overflow-y:auto;}
+.sheet-handle{width:40px;height:4px;background:var(--border2);border-radius:50px;margin:0 auto .85rem;}
+.sheet-title{font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:.3rem;}
+.sheet-sub{font-size:.78rem;color:var(--muted2);margin-bottom:1.1rem;}
+
+/* FORM */
+.flabel{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.3rem;display:block;}
+.finput{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:.62rem .85rem;font-size:.88rem;color:var(--text);outline:none;margin-bottom:.55rem;}
+.finput::placeholder{color:var(--muted);}
+.finput:focus{border-color:var(--yellow);}
+select.finput{cursor:pointer;}
+select.finput option{background:var(--card);}
+.frow{display:flex;gap:.45rem;}
+.fbtn{flex:1;border:none;border-radius:10px;padding:.8rem;font-family:'Unbounded',sans-serif;font-size:.8rem;font-weight:700;cursor:pointer;}
+.fbtn.primary{background:var(--yellow);color:#000;}
+.fbtn.sec{background:var(--card2);color:var(--muted2);}
+
+/* RATING */
+.stars-wrap{display:flex;justify-content:center;gap:.4rem;margin:.7rem 0;}
+.star{font-size:1.8rem;background:none;border:none;cursor:pointer;transition:.2s;color:var(--border2);}
+.star.lit{color:var(--yellow);}
+.star:active{transform:scale(1.2);}
+.rtags{display:flex;flex-wrap:wrap;gap:.35rem;justify-content:center;margin-bottom:.8rem;}
+.rtag{background:var(--card2);border:1.5px solid var(--border);border-radius:50px;padding:.3rem .7rem;font-size:.68rem;font-weight:700;color:var(--muted2);cursor:pointer;transition:.18s;}
+.rtag.active{border-color:var(--yellow);color:var(--yellow);background:var(--ydim);}
+.submit-rat{width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.82rem;font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;}
+
+/* OTP BOXES */
+.otp-inputs{display:flex;gap:.5rem;margin-bottom:.7rem;}
+.otp-input{flex:1;background:var(--card2);border:1.5px solid var(--border2);border-radius:11px;padding:.7rem .4rem;font-size:1.25rem;font-weight:700;text-align:center;color:var(--text);outline:none;aspect-ratio:1;}
+.otp-input:focus{border-color:var(--yellow);}
+
+/* SOS */
+.sos-btn{position:fixed;right:1rem;bottom:calc(78px + var(--sb));z-index:250;width:46px;height:46px;background:var(--red);border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:900;color:#fff;cursor:pointer;box-shadow:0 4px 20px rgba(255,68,68,.45);font-family:'Unbounded',sans-serif;letter-spacing:.3px;}
+.sos-btn::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:2px solid rgba(255,68,68,.3);animation:sosp 2s ease-out infinite;}
+@keyframes sosp{0%{transform:scale(1);opacity:.8;}100%{transform:scale(1.5);opacity:0;}}
+
+/* SPINNER */
+.spin{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(0,0,0,.2);border-top-color:#000;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+/* CAT CHIPS */
+.cat-scroll{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:0 1rem 2px;}
+.cat-scroll::-webkit-scrollbar{display:none;}
+.cat{flex-shrink:0;display:flex;align-items:center;gap:4px;background:var(--card);border:1.5px solid var(--border);border-radius:50px;padding:.38rem .8rem;font-size:.72rem;font-weight:700;color:var(--muted2);cursor:pointer;transition:all .18s;}
+.cat.active{border-color:var(--yellow);background:var(--ydim);color:var(--yellow);}
+.cat:active{transform:scale(.95);}
+
+/* LIVE TRACKING MAP */
+.track-map{width:100%;height:200px;border-radius:14px;overflow:hidden;background:var(--card2);border:1px solid var(--border);position:relative;margin-bottom:.75rem;}
+.track-map-grid{position:absolute;inset:0;background-image:linear-gradient(var(--ydim) 1px,transparent 1px),linear-gradient(90deg,var(--ydim) 1px,transparent 1px);background-size:24px 24px;}
+.track-pin-home{position:absolute;top:40%;left:30%;width:14px;height:14px;background:var(--green);border-radius:50%;border:2px solid #fff;}
+.track-pin-dest{position:absolute;top:55%;left:70%;width:14px;height:14px;background:var(--yellow);border-radius:50%;border:2px solid #fff;}
+.track-car{position:absolute;font-size:1.2rem;animation:carAnim 5s linear infinite;}
+@keyframes carAnim{0%{top:40%;left:30%;}50%{top:48%;left:52%;}100%{top:55%;left:70%;}}
+.track-route-svg{position:absolute;inset:0;width:100%;height:100%;}
+
+/* EMERGENCY CONTACTS */
+.ec-item{background:var(--card);border-radius:11px;border:1px solid var(--border);padding:.75rem .9rem;display:flex;align-items:center;gap:.7rem;margin-bottom:.45rem;}
+.ec-av{width:36px;height:36px;border-radius:50%;background:var(--bdim);border:1px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.ec-info{flex:1;}
+.ec-name{font-size:.82rem;font-weight:600;}
+.ec-phone{font-size:.68rem;color:var(--muted);margin-top:1px;}
+.ec-call{background:var(--gdim);color:var(--green);border:1px solid var(--green);border-radius:8px;padding:.3rem .65rem;font-size:.68rem;font-weight:700;cursor:pointer;}
+
+/* QUICKLINKS */
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;padding:0 1rem;margin-bottom:.5rem;}
+.qlink{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.7rem .3rem;text-align:center;cursor:pointer;transition:.18s;}
+.qlink:active{background:var(--ydim);border-color:var(--yellow);}
+.qlink-icon{font-size:1.2rem;margin-bottom:.25rem;}
+.qlink-label{font-size:.6rem;font-weight:700;color:var(--muted2);}
+
+/* NOTIFICATION BADGE */
+.notif-badge{background:var(--red);color:#fff;border-radius:50%;width:16px;height:16px;font-size:.55rem;font-weight:900;display:flex;align-items:center;justify-content:center;position:absolute;top:-4px;right:-4px;}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+<button class="sos-btn" onclick="triggerSOS()">SOS</button>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">Swift<span>Ride</span></div>
+  <div class="topbar-right">
+    <div class="loc-pill" id="locPill" onclick="detectLocation()">
+      <i class="ti ti-map-pin"></i>
+      <span id="locText">Locating…</span>
+    </div>
+    <div style="position:relative">
+      <div class="user-av" id="userAv" onclick="switchPage('profile')">?</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ HOME PAGE ══════ -->
+<div class="page active" id="pageHome">
+  <div class="map-wrap" id="mapWrap">
+    <div class="map-grid"></div>
+    <div class="pulse-ring"></div>
+    <div class="my-pin"></div>
+    <div class="map-overlay"></div>
+  </div>
+
+  <div class="book-card">
+    <div class="book-title">Where to? 🚗</div>
+    <div class="loc-box">
+      <div class="loc-row">
+        <div class="ldot ldot-g"></div>
+        <input type="text" id="pickupIn" placeholder="Pickup location" autocomplete="off"/>
+        <button class="swap-btn" onclick="swapLocs()" title="Swap"><i class="ti ti-arrows-up-down"></i></button>
+      </div>
+      <div style="height:1px;background:var(--border);margin-left:1.5rem;"></div>
+      <div class="loc-row">
+        <div class="ldot ldot-y"></div>
+        <input type="text" id="dropIn" placeholder="Drop location" autocomplete="off"/>
+      </div>
+    </div>
+    <div id="suggestions" style="background:var(--card2);border:1px solid var(--border);border-radius:11px;margin-top:4px;display:none;max-height:160px;overflow-y:auto;"></div>
+
+    <div class="veh-section-label">Select Ride Type</div>
+    <div class="veh-scroll" id="vehScroll">
+      <div class="vcard active" data-type="auto" data-base="45" data-eta="3" onclick="selVeh(this)">
+        <span class="vemoji">🛺</span><div class="vname">Auto</div><div class="vprice">₹45–80</div><div class="veta">~3 min</div>
+      </div>
+      <div class="vcard" data-type="bike" data-base="25" data-eta="2" onclick="selVeh(this)">
+        <span class="vemoji">🏍️</span><div class="vname">Bike</div><div class="vprice">₹25–50</div><div class="veta">~2 min</div>
+      </div>
+      <div class="vcard" data-type="mini" data-base="80" data-eta="5" onclick="selVeh(this)">
+        <span class="vemoji">🚗</span><div class="vname">Mini</div><div class="vprice">₹80–150</div><div class="veta">~5 min</div>
+      </div>
+      <div class="vcard" data-type="sedan" data-base="120" data-eta="6" onclick="selVeh(this)">
+        <span class="vemoji">🚙</span><div class="vname">Sedan</div><div class="vprice">₹120–220</div><div class="veta">~6 min</div>
+      </div>
+      <div class="vcard" data-type="suv" data-base="180" data-eta="8" onclick="selVeh(this)">
+        <span class="vemoji">🚐</span><div class="vname">SUV</div><div class="vprice">₹180–350</div><div class="veta">~8 min</div>
+      </div>
+      <div class="vcard" data-type="ev" data-base="60" data-eta="7" onclick="selVeh(this)">
+        <span class="vemoji">⚡</span><div class="vname">EV Cab</div><div class="vprice">₹60–110</div><div class="veta">~7 min</div>
+      </div>
+    </div>
+
+    <div class="sched-row">
+      <button class="sched-btn active" id="nowBtn" onclick="setNow()"><i class="ti ti-bolt"></i> Ride Now</button>
+      <button class="sched-btn" id="schedBtn" onclick="openSched()"><i class="ti ti-calendar"></i> Schedule</button>
+    </div>
+
+    <div class="coup-row">
+      <input type="text" class="coup-input" id="couponIn" placeholder="Promo code" autocomplete="off"/>
+      <button class="coup-btn" onclick="applyCoupon()">Apply</button>
+    </div>
+
+    <div class="fare-line">Estimated fare: <b id="fareEst">₹45–80</b> · <b id="etaEst" style="color:var(--green)">~3 min away</b></div>
+    <div class="fare-line" id="distLine" style="display:none">Distance: <b id="distEst" style="color:var(--muted2)">calculating…</b></div>
+
+    <button class="book-btn" id="bookBtn" onclick="bookRide()">
+      <i class="ti ti-car"></i> Book 🛺 Auto
+    </button>
+
+    <div class="pay-row">
+      <div class="pay-chip selected" id="payChipWallet" onclick="selPay('wallet')"><i class="ti ti-wallet"></i> <span id="payWalletLbl">SwiftPay ₹250</span></div>
+      <div class="pay-chip" id="payChipUPI" onclick="selPay('upi')"><i class="ti ti-brand-google-pay"></i> UPI</div>
+      <div class="pay-chip" id="payChipCash" onclick="selPay('cash')"><i class="ti ti-cash"></i> Cash</div>
+      <div class="pay-chip" id="payChipCard" onclick="selPay('card')"><i class="ti ti-credit-card"></i> Card</div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div class="sec-hdr" style="margin-top:.3rem">
+    <div class="sec-title">Quick Access</div>
+  </div>
+  <div class="quick-grid">
+    <div class="qlink" onclick="quickBook('home')"><div class="qlink-icon">🏠</div><div class="qlink-label">Home</div></div>
+    <div class="qlink" onclick="quickBook('work')"><div class="qlink-icon">💼</div><div class="qlink-label">Work</div></div>
+    <div class="qlink" onclick="switchPage('rides')"><div class="qlink-icon">📋</div><div class="qlink-label">My Rides</div></div>
+    <div class="qlink" onclick="openSupport()"><div class="qlink-icon">🎧</div><div class="qlink-label">Support</div></div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <div class="sec-hdr">
+    <div class="sec-title">Ride Categories</div>
+  </div>
+  <div class="cat-scroll">
+    <div class="cat active" onclick="setCat(this,'all')"><i class="ti ti-grid"></i> All</div>
+    <div class="cat" onclick="setCat(this,'airport')"><i class="ti ti-plane"></i> Airport</div>
+    <div class="cat" onclick="setCat(this,'outstation')"><i class="ti ti-road"></i> Outstation</div>
+    <div class="cat" onclick="setCat(this,'rental')"><i class="ti ti-clock"></i> Hourly</div>
+    <div class="cat" onclick="setCat(this,'shared')"><i class="ti ti-users"></i> Shared</div>
+    <div class="cat" onclick="setCat(this,'goods')"><i class="ti ti-package"></i> Parcel</div>
+  </div>
+
+  <!-- PROMOS -->
+  <div class="sec-hdr" style="margin-top:.6rem">
+    <div class="sec-title">Offers</div>
+    <span class="sec-link" onclick="showToast('All offers coming soon','warn')">See all</span>
+  </div>
+  <div class="promo-scroll">
+    <div class="pcard c1" onclick="applyCode('FIRST50')">
+      <div class="ptitle">50% off first ride</div><div class="psub">New users only</div>
+      <div class="pcode">FIRST50</div><div class="pemoji">🎉</div>
+    </div>
+    <div class="pcard c2" onclick="applyCode('GOGREEN')">
+      <div class="ptitle">₹100 off EV ride</div><div class="psub">Go green today</div>
+      <div class="pcode">GOGREEN</div><div class="pemoji">⚡</div>
+    </div>
+    <div class="pcard c3" onclick="applyCode('RIDE3WIN')">
+      <div class="ptitle">₹30 cashback</div><div class="psub">3 rides this week</div>
+      <div class="pcode">RIDE3WIN</div><div class="pemoji">💸</div>
+    </div>
+  </div>
+  <div style="height:.5rem"></div>
+</div>
+
+<!-- ══════ RIDES PAGE ══════ -->
+<div class="page" id="pageRides">
+  <div class="sec-hdr" style="padding-top:1.1rem">
+    <div class="sec-title">My Rides</div>
+    <span class="sec-link" onclick="loadRidesFromDB()">Refresh</span>
+  </div>
+  <div style="display:flex;gap:.4rem;overflow-x:auto;scrollbar-width:none;padding:0 1rem .7rem">
+    <div id="filterAll" style="flex-shrink:0;background:var(--yellow);color:#000;border-radius:50px;padding:.28rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer" onclick="filterRides('all',this)">All</div>
+    <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);color:var(--muted2);border-radius:50px;padding:.28rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer" onclick="filterRides('completed',this)">Completed</div>
+    <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);color:var(--muted2);border-radius:50px;padding:.28rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer" onclick="filterRides('cancelled',this)">Cancelled</div>
+  </div>
+  <div class="rides-list" id="ridesList"></div>
+</div>
+
+<!-- ══════ WALLET PAGE ══════ -->
+<div class="page" id="pageWallet">
+  <div class="wallet-hero">
+    <div class="wbal-lbl">SwiftPay Balance</div>
+    <div class="wbal" id="walBal">₹250</div>
+    <div class="wcb">Promo cashback: ₹<span id="cbAvail">0</span> available</div>
+    <div class="wactions">
+      <button class="wbtn primary" onclick="openAddMoney()"><i class="ti ti-plus"></i> Add Money</button>
+      <button class="wbtn" onclick="showToast('Transfer coming soon','warn')"><i class="ti ti-send"></i> Transfer</button>
+      <button class="wbtn" onclick="showToast('Statements coming soon','warn')"><i class="ti ti-receipt"></i> Statement</button>
+    </div>
+  </div>
+  <div style="padding:0 1rem .3rem;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Quick Add</div>
+  <div class="amt-grid">
+    <div class="amt-chip" onclick="selAmt(this,100)">₹100</div>
+    <div class="amt-chip" onclick="selAmt(this,200)">₹200</div>
+    <div class="amt-chip active" onclick="selAmt(this,500)">₹500</div>
+    <div class="amt-chip" onclick="selAmt(this,1000)">₹1,000</div>
+    <div class="amt-chip" onclick="selAmt(this,2000)">₹2,000</div>
+    <div class="amt-chip" onclick="selCustomAmt()">Custom</div>
+  </div>
+  <div style="padding:0 1rem .75rem">
+    <div style="display:flex;gap:.4rem;margin-bottom:.55rem;overflow-x:auto;scrollbar-width:none;">
+      <div class="pay-chip selected" id="wPayUPI" onclick="selWalletPay('upi')" style="flex-shrink:0"><i class="ti ti-brand-google-pay"></i> UPI</div>
+      <div class="pay-chip" id="wPayCard" onclick="selWalletPay('card')" style="flex-shrink:0"><i class="ti ti-credit-card"></i> Card</div>
+      <div class="pay-chip" id="wPayNet" onclick="selWalletPay('net')" style="flex-shrink:0"><i class="ti ti-building-bank"></i> Net Banking</div>
+    </div>
+    <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.82rem;font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer" onclick="addMoney()">Add ₹<span id="selAmt">500</span></button>
+  </div>
+  <div class="sec-hdr"><div class="sec-title">Transactions</div></div>
+  <div class="txn-list" id="txnList"></div>
+</div>
+
+<!-- ══════ PROFILE PAGE ══════ -->
+<div class="page" id="pageProfile">
+  <div class="prof-hero" style="margin-top:1rem">
+    <div class="prof-av" id="profAv">?</div>
+    <div class="prof-name" id="profName">Guest User</div>
+    <div class="prof-phone" id="profPhone">Login to continue</div>
+    <div class="prof-badges">
+      <span class="pbadge gold">⭐ <span id="profRating">—</span> Rider Rating</span>
+      <span class="pbadge">🏅 <span id="profTrips">0</span> Trips</span>
+      <span class="pbadge" id="verBadge">✅ Verified</span>
+    </div>
+    <div class="pstats">
+      <div class="pstat"><div class="pstat-v" id="pstatRides">0</div><div class="pstat-l">Rides</div></div>
+      <div class="pstat"><div class="pstat-v">₹<span id="pstatSaved">0</span></div><div class="pstat-l">Saved</div></div>
+      <div class="pstat"><div class="pstat-v" id="pstatRating">—</div><div class="pstat-l">Rating</div></div>
+    </div>
+  </div>
+
+  <div id="loginCard" style="display:block;margin:1rem;background:var(--card);border-radius:var(--radius);border:1px solid var(--ydim);padding:1.1rem;text-align:center;">
+    <div style="font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;margin-bottom:.35rem">Sign in to access rides & wallet</div>
+    <div style="font-size:.75rem;color:var(--muted2);margin-bottom:.9rem">Your data is secure & private</div>
+    <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.82rem;font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;" onclick="openLogin()">Login / Register</button>
+  </div>
+
+  <div class="menu-list">
+    <div class="menu-item" onclick="openEditProfile()">
+      <div class="menu-icon" style="background:var(--bdim)"><i class="ti ti-user" style="color:var(--blue)"></i></div>
+      <div><div class="menu-txt">Edit Profile</div><div class="menu-sub">Name, email, photo</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" onclick="switchPage('wallet')">
+      <div class="menu-icon" style="background:var(--ydim)"><i class="ti ti-wallet" style="color:var(--yellow)"></i></div>
+      <div><div class="menu-txt">SwiftPay Wallet</div><div class="menu-sub">Balance: <span id="menuWalBal">₹250</span></div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" onclick="openEmergency()">
+      <div class="menu-icon" style="background:var(--rdim)"><i class="ti ti-shield-check" style="color:var(--red)"></i></div>
+      <div><div class="menu-txt">Safety & Emergency</div><div class="menu-sub">Trusted contacts, SOS</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" onclick="openReferral()">
+      <div class="menu-icon" style="background:var(--gdim)"><i class="ti ti-gift" style="color:var(--green)"></i></div>
+      <div><div class="menu-txt">Refer & Earn</div><div class="menu-sub">₹50 per friend. Code: <b id="refCode">—</b></div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" onclick="openSupport()">
+      <div class="menu-icon" style="background:rgba(155,89,245,.1)"><i class="ti ti-headset" style="color:#9B59F5"></i></div>
+      <div><div class="menu-txt">Help & Support</div><div class="menu-sub">24/7 customer care</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" onclick="openFeedback()">
+      <div class="menu-icon" style="background:var(--gdim)"><i class="ti ti-star" style="color:var(--green)"></i></div>
+      <div><div class="menu-txt">Rate the App</div><div class="menu-sub">Share feedback</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+    <div class="menu-item" id="logoutItem" style="display:none" onclick="logoutUser()">
+      <div class="menu-icon" style="background:var(--rdim)"><i class="ti ti-logout" style="color:var(--red)"></i></div>
+      <div class="menu-txt" style="color:var(--red)">Logout</div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.85rem;margin-left:auto"></i>
+    </div>
+  </div>
+  <div style="height:.5rem"></div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav-bar">
+  <div class="bnav active" id="bnav-home" onclick="switchPage('home')"><i class="ti ti-home"></i>Home</div>
+  <div class="bnav" id="bnav-rides" onclick="switchPage('rides')"><i class="ti ti-receipt"></i>Rides</div>
+  <div class="bnav" id="bnav-wallet" onclick="switchPage('wallet')"><i class="ti ti-wallet"></i>Wallet</div>
+  <div class="bnav" id="bnav-profile" onclick="switchPage('profile')"><i class="ti ti-user"></i>Profile</div>
+</nav>
+
+<!-- FINDING OVERLAY -->
+<div class="finding-ov" id="findOv">
+  <div class="radar">
+    <div class="rring"></div><div class="rring"></div><div class="rring"></div>
+    <div class="rcenter" id="radarEmoji">🚗</div>
+  </div>
+  <div class="find-title">Finding your driver…</div>
+  <div class="find-sub">Looking for the nearest <span id="findType">Auto</span> near you. Usually 15–30 seconds.</div>
+  <button class="find-cancel" onclick="cancelFinding()"><i class="ti ti-x"></i> Cancel</button>
+</div>
+
+<!-- DRIVER FOUND SHEET -->
+<div class="driver-sheet" id="driverSheet">
+  <div class="dhandle"></div>
+  <div class="track-map">
+    <div class="track-map-grid"></div>
+    <svg class="track-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path d="M30 40 Q52 48 70 55" stroke="var(--yellow)" stroke-width=".8" fill="none" stroke-dasharray="3 2"/>
+    </svg>
+    <div class="track-pin-home"></div>
+    <div class="track-pin-dest"></div>
+    <div class="track-car" id="trackCar">🚗</div>
+  </div>
+  <div class="eta-bar">
+    <div><div class="eta-lbl">Driver arriving in</div><div class="eta-val" id="etaCountdown">4 min</div></div>
+    <div style="text-align:right"><div class="eta-lbl">Distance</div><div style="font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;color:var(--text)" id="driverDist">~1.2 km</div></div>
+  </div>
+  <div class="driver-row">
+    <div class="drv-av" id="drvAv">👨</div>
+    <div>
+      <div class="drv-name" id="drvName">Rajesh Kumar</div>
+      <div class="drv-stars"><i class="ti ti-star-filled"></i> <span id="drvRating">4.8</span> · <span id="drvTrips">1,234</span> trips</div>
+      <div class="drv-veh" id="drvVeh">🛺 Bajaj RE Auto</div>
+      <div class="drv-plate" id="drvPlate">MH 19 AB 1234</div>
+    </div>
+  </div>
+  <div class="otp-box">
+    <div>
+      <div class="otp-lbl">Share OTP with driver</div>
+      <div class="otp-num" id="rideOTP">4829</div>
+    </div>
+    <i class="ti ti-shield-lock" style="font-size:1.5rem;color:var(--yellow);opacity:.6"></i>
+  </div>
+  <div class="drv-actions">
+    <button class="drv-btn" onclick="callDriver()"><i class="ti ti-phone"></i> Call</button>
+    <button class="drv-btn" onclick="chatDriver()"><i class="ti ti-message"></i> Chat</button>
+    <button class="drv-btn" onclick="shareRide()"><i class="ti ti-share"></i> Share</button>
+    <button class="drv-btn danger" onclick="cancelRide()"><i class="ti ti-x"></i> Cancel</button>
+  </div>
+  <button class="complete-btn" onclick="completeRide()">✅ Mark as Completed (Simulated)</button>
+</div>
+
+<!-- RATING OVERLAY -->
+<div class="overlay" id="ratingOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="text-align:center">
+      <div class="sheet-title">Rate Your Ride ⭐</div>
+      <div class="sheet-sub" id="rateSub">How was your experience?</div>
+      <div class="stars-wrap" id="starsWrap">
+        <button class="star lit" onclick="setRating(1)">★</button>
+        <button class="star lit" onclick="setRating(2)">★</button>
+        <button class="star lit" onclick="setRating(3)">★</button>
+        <button class="star lit" onclick="setRating(4)">★</button>
+        <button class="star lit" onclick="setRating(5)">★</button>
+      </div>
+    </div>
+    <div class="rtags">
+      <div class="rtag" onclick="toggleTag(this)">Clean vehicle</div>
+      <div class="rtag" onclick="toggleTag(this)">Safe driving</div>
+      <div class="rtag" onclick="toggleTag(this)">On time</div>
+      <div class="rtag" onclick="toggleTag(this)">Friendly</div>
+      <div class="rtag" onclick="toggleTag(this)">AC working</div>
+      <div class="rtag" onclick="toggleTag(this)">Good route</div>
+    </div>
+    <textarea class="finput" placeholder="Any feedback? (optional)" style="min-height:65px;margin-bottom:.7rem"></textarea>
+    <button class="submit-rat" onclick="submitRating()">Submit Rating</button>
+  </div>
+</div>
+
+<!-- SCHEDULE OVERLAY -->
+<div class="overlay" id="schedOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">📅 Schedule a Ride</div>
+    <div class="sheet-sub">Book in advance up to 7 days</div>
+    <label class="flabel">Pickup Date</label>
+    <input type="date" class="finput" id="schedDate"/>
+    <label class="flabel">Pickup Time</label>
+    <input type="time" class="finput" id="schedTime"/>
+    <label class="flabel">Repeat</label>
+    <select class="finput" id="schedRepeat">
+      <option value="no">No repeat</option>
+      <option value="daily">Daily</option>
+      <option value="weekdays">Weekdays</option>
+      <option value="weekly">Weekly</option>
+    </select>
+    <div class="frow">
+      <button class="fbtn sec" onclick="closeSched()">Cancel</button>
+      <button class="fbtn primary" onclick="confirmSched()">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN OVERLAY -->
+<div class="overlay" id="loginOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div id="phonePhase">
+      <div class="sheet-title">Welcome to SwiftRide 🚗</div>
+      <div class="sheet-sub">Enter your mobile number</div>
+      <div style="display:flex;gap:.4rem;margin-bottom:.55rem">
+        <div style="background:var(--card2);border:1.5px solid var(--border2);border-radius:10px;padding:.6rem .8rem;font-size:.85rem;font-weight:700;color:var(--muted2);white-space:nowrap">🇮🇳 +91</div>
+        <input type="tel" class="finput" id="phoneIn" placeholder="10-digit mobile" maxlength="10" inputmode="numeric" style="margin-bottom:0;flex:1"/>
+      </div>
+      <div style="font-size:.68rem;color:var(--muted);text-align:center;margin:.5rem 0">By continuing you agree to our Terms & Privacy Policy</div>
+      <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.85rem;font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="sendOTP()">Send OTP</button>
+      <div style="text-align:center;font-size:.72rem;color:var(--muted);margin:.8rem 0">— or —</div>
+      <div style="display:flex;gap:.4rem">
+        <button style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:.65rem;font-size:.75rem;font-weight:700;color:var(--text);cursor:pointer" onclick="showToast('Google login coming soon','warn')">🔵 Google</button>
+        <button style="flex:1;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;padding:.65rem;font-size:.75rem;font-weight:700;color:var(--text);cursor:pointer" onclick="showToast('Apple login coming soon','warn')">🍎 Apple</button>
+      </div>
+    </div>
+    <div id="otpPhase" style="display:none">
+      <div class="sheet-title">Verify OTP 🔐</div>
+      <div class="sheet-sub">4-digit code sent to +91 <span id="otpPhoneShow"></span></div>
+      <div class="otp-inputs">
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" id="o1"/>
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" id="o2"/>
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" id="o3"/>
+        <input type="tel" class="otp-input" maxlength="1" inputmode="numeric" id="o4"/>
+      </div>
+      <div style="font-size:.72rem;color:var(--muted);text-align:center;margin-bottom:.7rem">
+        Didn't get it? <span style="color:var(--yellow);font-weight:700;cursor:pointer" id="resendBtn" onclick="resendOTP()">Resend OTP</span>
+        <span id="resendTimer" style="color:var(--muted)"></span>
+      </div>
+      <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.85rem;font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="verifyOTP()">Verify & Continue</button>
+      <button style="width:100%;background:none;border:none;color:var(--muted2);font-size:.78rem;font-weight:700;cursor:pointer;padding:.5rem;margin-top:.4rem" onclick="backPhone()">← Change Number</button>
+    </div>
+    <div id="namePhase" style="display:none">
+      <div class="sheet-title">Almost there! 🎉</div>
+      <div class="sheet-sub">Tell us your name</div>
+      <input type="text" class="finput" id="nameIn" placeholder="Your full name"/>
+      <input type="email" class="finput" id="emailIn" placeholder="Email (optional)"/>
+      <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.85rem;font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer" onclick="completeReg()">Let's Ride! 🚗</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMERGENCY OVERLAY -->
+<div class="overlay" id="emergencyOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">🛡️ Safety & Emergency</div>
+    <div class="sheet-sub">Add trusted contacts to share your ride</div>
+    <div id="ecList">
+      <div class="ec-item">
+        <div class="ec-av">👩</div>
+        <div class="ec-info"><div class="ec-name">Mom</div><div class="ec-phone">+91 98765 43210</div></div>
+        <button class="ec-call" onclick="callEC('+919876543210')"><i class="ti ti-phone"></i> Call</button>
+      </div>
+    </div>
+    <button style="width:100%;background:var(--card2);border:1.5px solid var(--border2);border-radius:11px;padding:.75rem;font-size:.82rem;font-weight:700;color:var(--text);cursor:pointer;margin-top:.4rem;margin-bottom:.75rem" onclick="addEC()">+ Add Emergency Contact</button>
+    <div style="background:var(--rdim);border:1px solid var(--red);border-radius:11px;padding:.9rem;text-align:center;cursor:pointer" onclick="triggerSOS()">
+      <div style="font-family:'Unbounded',sans-serif;font-size:.95rem;font-weight:700;color:var(--red)">🚨 Send SOS Alert</div>
+      <div style="font-size:.72rem;color:var(--muted2);margin-top:.2rem">Alerts all emergency contacts & admin</div>
+    </div>
+    <button class="fbtn sec" style="width:100%;margin-top:.6rem" onclick="closeOv('emergencyOv')">Close</button>
+  </div>
+</div>
+
+<!-- EDIT PROFILE OVERLAY -->
+<div class="overlay" id="editOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Edit Profile</div>
+    <label class="flabel">Full Name</label>
+    <input type="text" class="finput" id="editName"/>
+    <label class="flabel">Email</label>
+    <input type="email" class="finput" id="editEmail"/>
+    <label class="flabel">Gender</label>
+    <select class="finput" id="editGender">
+      <option value="">Prefer not to say</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+      <option value="other">Other</option>
+    </select>
+    <label class="flabel">Home Address</label>
+    <input type="text" class="finput" id="editHome"/>
+    <label class="flabel">Work Address</label>
+    <input type="text" class="finput" id="editWork"/>
+    <div class="frow">
+      <button class="fbtn sec" onclick="closeOv('editOv')">Cancel</button>
+      <button class="fbtn primary" onclick="saveProfile()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUPPORT OVERLAY -->
+<div class="overlay" id="supportOv">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Help & Support</div>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:.75rem">
+      <div class="menu-item" onclick="window.open('tel:+919307320279')">
+        <div class="menu-icon" style="background:var(--gdim)"><i class="ti ti-phone" style="color:var(--green)"></i></div>
+        <div><div class="menu-txt">Call Support</div><div class="menu-sub">24/7 helpline</div></div>
+      </div>
+      <div class="menu-item" onclick="window.open('https://wa.me/919307320279')">
+        <div class="menu-icon" style="background:var(--gdim)"><i class="ti ti-brand-whatsapp" style="color:var(--green)"></i></div>
+        <div><div class="menu-txt">WhatsApp Support</div><div class="menu-sub">Chat with us</div></div>
+      </div>
+      <div class="menu-item" onclick="window.open('mailto:support@swiftride.in')">
+        <div class="menu-icon" style="background:var(--bdim)"><i class="ti ti-mail" style="color:var(--blue)"></i></div>
+        <div><div class="menu-txt">Email Support</div><div class="menu-sub">support@swiftride.in</div></div>
+      </div>
+    </div>
+    <button class="fbtn sec" style="width:100%" onclick="closeOv('supportOv')">Close</button>
+  </div>
+</div>
+
+<!-- REFERRAL OVERLAY -->
+<div class="overlay" id="refOv">
+  <div class="sheet" style="text-align:center">
+    <div class="sheet-handle"></div>
+    <div style="font-size:2.5rem;margin-bottom:.5rem">🎁</div>
+    <div class="sheet-title">Refer & Earn ₹50</div>
+    <div class="sheet-sub">Share your code. Friend gets ₹30, you get ₹50!</div>
+    <div style="background:var(--ydim);border:2px dashed var(--yellow);border-radius:14px;padding:1rem;margin:1rem 0">
+      <div style="font-size:.7rem;color:var(--muted);margin-bottom:.3rem">Your Referral Code</div>
+      <div style="font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:900;color:var(--yellow);letter-spacing:3px" id="refCodeBig">—</div>
+    </div>
+    <button style="width:100%;background:var(--yellow);color:#000;border:none;border-radius:11px;padding:.82rem;font-family:'Unbounded',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;margin-bottom:.5rem" onclick="shareRef()">Share Referral Link</button>
+    <button class="fbtn sec" style="width:100%" onclick="closeOv('refOv')">Close</button>
+  </div>
+</div>
+
+<div id="recaptcha-container"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(FC);
+const db=getFirestore(app);
+const auth=getAuth(app);
+const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT="5547663296";
+window._db=db;window._auth=auth;
+
+window.setupRecaptcha=function(){if(!window.recaptchaVerifier){window.recaptchaVerifier=new RecaptchaVerifier(auth,'recaptcha-container',{size:'invisible',callback:()=>{}}); }};
+window.firebaseSendOTP=async function(phone){try{window.setupRecaptcha();const r=await signInWithPhoneNumber(auth,'+91'+phone,window.recaptchaVerifier);window.confirmationResult=r;return true;}catch(e){return false;}};
+window.firebaseVerifyOTP=async function(otp){try{if(window.confirmationResult){const r=await window.confirmationResult.confirm(otp);return r.user;}return null;}catch(e){return null;}};
+
+onAuthStateChanged(auth,async(user)=>{if(user){window._firebaseUser=user;try{const q=query(collection(db,'riders'),where('uid','==',user.uid));const s=await getDocs(q);if(!s.empty){const d=s.docs[0].data();window.state.user={...window.state.user,...d,uid:user.uid};localStorage.setItem('swiftride_user',JSON.stringify(window.state.user));}}catch(e){}window.updateUI();}});
+
+window.saveRiderProfile=async function(data){try{await addDoc(collection(db,'riders'),{...data,createdAt:Date.now()});}catch(e){}};
+window.saveBooking=async function(data){try{const r=await addDoc(collection(db,'ride_bookings'),{...data,timestamp:Date.now()});return r.id;}catch(e){return null;}};
+window.loadRidesFromDB=async function(){try{const uid=window.state.user?.uid||window.state.user?.phone;if(!uid){renderRidesLocal();return;}const q=query(collection(db,'ride_bookings'),where('riderId','==',uid),orderBy('timestamp','desc'),limit(30));const s=await getDocs(q);const rides=s.docs.map(d=>({id:d.id,...d.data()}));if(rides.length>0){window.state.rideHistory=rides;renderRides(rides);}else{renderRidesLocal();}}catch(e){renderRidesLocal();}};
+window.sendTelegram=async function(msg){try{await fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:msg,parse_mode:'Markdown'})});}catch(e){}};
+window.reverseGeocode=async function(lat,lon){try{const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);const d=await r.json();return d.display_name?.split(',').slice(0,3).join(', ')||'Current Location';}catch(e){return'Current Location';}};
+window.geocodePlace=async function(q){try{const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&countrycodes=in`);return await r.json();}catch(e){return[];}};
+window.calcDistance=function(lat1,lon1,lat2,lon2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180,a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));};
+</script>
+
+<script>
+window.state={
+  user:JSON.parse(localStorage.getItem('swiftride_user')||'null'),
+  wallet:parseInt(localStorage.getItem('swiftride_wallet')||'250'),
+  cashback:parseInt(localStorage.getItem('swiftride_cashback')||'0'),
+  selectedVeh:{type:'auto',base:45,eta:3,name:'Auto',emoji:'🛺'},
+  payMethod:'wallet',currentRide:null,rating:5,schedMode:false,schedInfo:null,
+  selAmt:500,rideHistory:JSON.parse(localStorage.getItem('swiftride_rides')||'[]'),
+  txHistory:JSON.parse(localStorage.getItem('swiftride_txn')||'[]'),
+  coords:null,dropCoords:null,couponDiscount:0,couponCode:'',walletPayMethod:'upi',etaInterval:null,filterStatus:'all',
+};
+
+const COUPONS={FIRST50:50,GOGREEN:100,RIDE3WIN:30,SWIFT20:20};
+const DRIVERS=[
+  {name:'Rajesh Kumar',rating:'4.9',trips:'1,234',veh:'Bajaj RE Auto',plate:'MH 19 AB 1234',av:'👨',emoji:'🛺'},
+  {name:'Suresh Patil',rating:'4.7',trips:'876',veh:'Honda Activa',plate:'MH 19 CD 5678',av:'🧔',emoji:'🏍️'},
+  {name:'Amit Sharma',rating:'4.8',trips:'2,109',veh:'Maruti WagonR',plate:'MH 19 EF 9012',av:'👦',emoji:'🚗'},
+  {name:'Deepak Yadav',rating:'4.6',trips:'445',veh:'Hyundai i20',plate:'MH 19 GH 3456',av:'🙍',emoji:'🚙'},
+  {name:'Ravi Singh',rating:'4.9',trips:'3,456',veh:'Toyota Innova',plate:'MH 19 IJ 7890',av:'👴',emoji:'🚐'},
+  {name:'Priya Nair',rating:'5.0',trips:'987',veh:'Tata Nexon EV',plate:'MH 19 KL 1357',av:'👩',emoji:'⚡'},
+];
+
+function init(){updateUI();renderRidesLocal();renderTxns();initOTPBoxes();detectLocation();initAutocomplete();const today=new Date().toISOString().split('T')[0];const sd=document.getElementById('schedDate');if(sd)sd.min=today;}
+
+window.detectLocation=async function(){document.getElementById('locText').textContent='Locating…';if(!navigator.geolocation){document.getElementById('locText').textContent='Akole, MH';document.getElementById('pickupIn').value='Akole, Maharashtra';return;}navigator.geolocation.getCurrentPosition(async pos=>{const{latitude:lat,longitude:lon}=pos.coords;state.coords={lat,lon};const name=await window.reverseGeocode(lat,lon);document.getElementById('locText').textContent=name.split(',')[0];document.getElementById('pickupIn').value=name;embedMap(lat,lon);},()=>{document.getElementById('locText').textContent='Akole, MH';document.getElementById('pickupIn').value='Akole, Maharashtra';},{timeout:8000});};
+
+function embedMap(lat,lon){const w=document.getElementById('mapWrap');const f=document.createElement('iframe');f.src=`https://www.openstreetmap.org/export/embed.html?bbox=${lon-0.02},${lat-0.02},${lon+0.02},${lat+0.02}&layer=mapnik&marker=${lat},${lon}`;f.style.cssText='width:100%;height:100%;border:none;opacity:0.6;filter:grayscale(60%) invert(90%) hue-rotate(180deg);';f.loading='lazy';w.innerHTML='';w.appendChild(f);const pin=document.createElement('div');pin.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:18px;height:18px;background:var(--yellow);border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 8px rgba(255,214,10,0.2);z-index:2;';w.appendChild(pin);const ov=document.createElement('div');ov.style.cssText='position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--bg));pointer-events:none;';w.appendChild(ov);}
+
+function initAutocomplete(){let timer=null;['pickupIn','dropIn'].forEach(id=>{const el=document.getElementById(id);el.addEventListener('input',()=>{clearTimeout(timer);const v=el.value.trim();if(v.length<3){hideSugg();return;}timer=setTimeout(()=>fetchSugg(v,id),400);});});}
+async function fetchSugg(q,inputId){const results=await window.geocodePlace(q);if(!results.length){hideSugg();return;}const sugg=document.getElementById('suggestions');sugg.style.display='block';sugg.innerHTML=results.slice(0,5).map(r=>`<div onclick="selectSugg('${inputId}','${r.display_name.replace(/'/g,"&#39;")}',${r.lat},${r.lon})" style="padding:.65rem .9rem;font-size:.82rem;color:var(--text);cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.5rem"><i class="ti ti-map-pin" style="color:var(--yellow);font-size:.85rem;flex-shrink:0"></i>${r.display_name.split(',').slice(0,3).join(', ')}</div>`).join('');}
+window.selectSugg=function(inputId,name,lat,lon){document.getElementById(inputId).value=name.split(',').slice(0,3).join(', ');if(inputId==='pickupIn'){state.coords={lat:parseFloat(lat),lon:parseFloat(lon)};}else{state.dropCoords={lat:parseFloat(lat),lon:parseFloat(lon)};}hideSugg();if(state.coords&&state.dropCoords)calcFare();};
+function hideSugg(){document.getElementById('suggestions').style.display='none';}
+document.addEventListener('click',e=>{if(!e.target.closest('#suggestions')&&!e.target.closest('#pickupIn')&&!e.target.closest('#dropIn'))hideSugg();});
+
+function calcFare(){if(!state.coords||!state.dropCoords)return;const dist=Math.max(1,window.calcDistance(state.coords.lat,state.coords.lon,state.dropCoords.lat,state.dropCoords.lon));const ratePerKm={auto:12,bike:8,mini:18,sedan:22,suv:28,ev:15};const rate=ratePerKm[state.selectedVeh.type]||12;const min=Math.round(state.selectedVeh.base+rate*dist*0.8-state.couponDiscount);const max=Math.round(state.selectedVeh.base+rate*dist*1.2);document.getElementById('fareEst').textContent='₹'+min+'–₹'+max;document.getElementById('distLine').style.display='block';document.getElementById('distEst').textContent=dist.toFixed(1)+' km';}
+
+window.selVeh=function(el){document.querySelectorAll('.vcard').forEach(c=>c.classList.remove('active'));el.classList.add('active');state.selectedVeh={type:el.dataset.type,base:parseInt(el.dataset.base),eta:parseInt(el.dataset.eta),name:el.querySelector('.vname').textContent,emoji:el.querySelector('.vemoji').textContent};document.getElementById('fareEst').textContent='₹'+el.dataset.base+' onwards';document.getElementById('etaEst').textContent='~'+el.dataset.eta+' min';document.getElementById('bookBtn').innerHTML=`<i class="ti ti-car"></i> Book ${state.selectedVeh.emoji} ${state.selectedVeh.name}`;document.getElementById('radarEmoji').textContent=state.selectedVeh.emoji;document.getElementById('findType').textContent=state.selectedVeh.name;if(state.coords&&state.dropCoords)calcFare();};
+
+window.swapLocs=function(){const p=document.getElementById('pickupIn'),d=document.getElementById('dropIn');[p.value,d.value]=[d.value,p.value];[state.coords,state.dropCoords]=[state.dropCoords,state.coords];showToast('Locations swapped','');};
+
+window.applyCoupon=function(){const code=document.getElementById('couponIn').value.trim().toUpperCase();if(!code){showToast('Enter a coupon code','warn');return;}if(COUPONS[code]){if(state.couponCode===code){showToast('Coupon already applied','warn');return;}state.couponDiscount=COUPONS[code];state.couponCode=code;document.getElementById('couponIn').style.borderColor='var(--green)';showToast('✅ ₹'+COUPONS[code]+' discount applied!','success');if(state.coords&&state.dropCoords)calcFare();}else{showToast('Invalid coupon code ❌','error');}};
+window.applyCode=function(code){document.getElementById('couponIn').value=code;applyCoupon();};
+
+window.selPay=function(method){state.payMethod=method;document.querySelectorAll('.pay-chip').forEach(c=>c.classList.remove('selected'));const map={wallet:'payChipWallet',upi:'payChipUPI',cash:'payChipCash',card:'payChipCard'};document.getElementById(map[method])?.classList.add('selected');};
+window.selWalletPay=function(m){state.walletPayMethod=m;['wPayUPI','wPayCard','wPayNet'].forEach(id=>document.getElementById(id)?.classList.remove('selected'));const map={upi:'wPayUPI',card:'wPayCard',net:'wPayNet'};document.getElementById(map[m])?.classList.add('selected');};
+
+window.quickBook=function(type){const addr=type==='home'?state.user?.home:state.user?.work;if(!addr){showToast('Set your '+(type==='home'?'Home':'Work')+' address in profile first','warn');openEditProfile();return;}document.getElementById('dropIn').value=addr;showToast((type==='home'?'🏠 Home':'💼 Work')+' set as destination','success');};
+
+window.bookRide=async function(){const pickup=document.getElementById('pickupIn').value.trim();const drop=document.getElementById('dropIn').value.trim();if(!pickup){showToast('Enter pickup location','error');document.getElementById('pickupIn').focus();return;}if(!drop){showToast('Enter drop location','error');document.getElementById('dropIn').focus();return;}if(!state.user){openLogin();showToast('Please login to book a ride','warn');return;}
+const btn=document.getElementById('bookBtn');btn.disabled=true;btn.innerHTML=`<span class="spin"></span> Finding ${state.selectedVeh.name}…`;document.getElementById('findOv').classList.add('show');document.body.style.overflow='hidden';
+const dist=(state.coords&&state.dropCoords)?window.calcDistance(state.coords.lat,state.coords.lon,state.dropCoords.lat,state.dropCoords.lon).toFixed(1):'N/A';const rideId='SR'+Date.now().toString().slice(-6);
+const rideData={riderId:state.user.uid||state.user.phone,riderName:state.user.name,phone:state.user.phone,pickup,drop,pickupCoords:state.coords||{},dropCoords:state.dropCoords||{},distance:dist,vehicle:state.selectedVeh.type,vehicleName:state.selectedVeh.name,vehicleEmoji:state.selectedVeh.emoji,baseFare:state.selectedVeh.base,coupon:state.couponCode||'',discount:state.couponDiscount,payMethod:state.payMethod,scheduled:state.schedInfo||null,status:'finding_driver',rideId};
+const docId=await window.saveBooking(rideData);rideData.docId=docId;
+const msg=`🚗 *New SwiftRide Booking — ${rideId}*\n\n👤 *${rideData.riderName}* | 📱 ${rideData.phone}\n📍 From: ${pickup}\n🏁 To: ${drop}\n📏 Distance: ${dist} km\n🚘 Vehicle: ${state.selectedVeh.emoji} ${rideData.vehicleName}\n💳 Payment: ${state.payMethod.toUpperCase()}\n${state.couponCode?`🎟 Coupon: ${state.couponCode} (-₹${state.couponDiscount})`:''}${state.schedInfo?`\n📅 Scheduled: ${state.schedInfo}`:''}\n⏰ ${new Date().toLocaleString()}`;
+window.sendTelegram(msg);
+setTimeout(()=>{document.getElementById('findOv').classList.remove('show');document.body.style.overflow='';btn.disabled=false;btn.innerHTML=`<i class="ti ti-car"></i> Book ${state.selectedVeh.emoji} ${state.selectedVeh.name}`;state.currentRide=rideData;state.couponDiscount=0;state.couponCode='';document.getElementById('couponIn').value='';document.getElementById('couponIn').style.borderColor='';showDriverFound();},3000);};
+
+function showDriverFound(){const driver=DRIVERS[Math.floor(Math.random()*DRIVERS.length)];state.currentDriver=driver;document.getElementById('drvAv').textContent=driver.av;document.getElementById('drvName').textContent=driver.name;document.getElementById('drvRating').textContent=driver.rating;document.getElementById('drvTrips').textContent=driver.trips;document.getElementById('drvVeh').textContent=driver.emoji+' '+driver.veh;document.getElementById('drvPlate').textContent=driver.plate;document.getElementById('trackCar').textContent=state.selectedVeh.emoji;const otp=Math.floor(1000+Math.random()*9000).toString();document.getElementById('rideOTP').textContent=otp;state.currentRide.otp=otp;state.currentRide.driver=driver;clearInterval(state.etaInterval);let secs=state.selectedVeh.eta*60;updateETA(secs);state.etaInterval=setInterval(()=>{secs--;if(secs<=0){clearInterval(state.etaInterval);document.getElementById('etaCountdown').textContent='🟢 Arrived!';}else updateETA(secs);},1000);document.getElementById('driverSheet').classList.add('show');showToast('Driver found! '+driver.name+' is coming 🎉','success');}
+function updateETA(secs){const m=Math.floor(secs/60),s=secs%60;document.getElementById('etaCountdown').textContent=(m>0?m+' min ':'')+s+' sec';}
+
+window.cancelFinding=function(){document.getElementById('findOv').classList.remove('show');document.body.style.overflow='';const btn=document.getElementById('bookBtn');btn.disabled=false;btn.innerHTML=`<i class="ti ti-car"></i> Book ${state.selectedVeh.emoji} ${state.selectedVeh.name}`;showToast('Booking cancelled','warn');};
+window.cancelRide=function(){if(!confirm('Cancel this ride? Cancellation charges may apply.'))return;clearInterval(state.etaInterval);document.getElementById('driverSheet').classList.remove('show');if(state.currentRide){const ride={...state.currentRide,status:'cancelled',fare:'₹0',timestamp:Date.now()};addToHistory(ride);window.sendTelegram(`❌ *Ride Cancelled*\nRide ID: ${state.currentRide.rideId}\nRider: ${state.currentRide.riderName}\n${state.currentRide.pickup} → ${state.currentRide.drop}`);}state.currentRide=null;showToast('Ride cancelled','warn');};
+window.completeRide=function(){clearInterval(state.etaInterval);document.getElementById('driverSheet').classList.remove('show');if(!state.currentRide)return;const dist=parseFloat(state.currentRide.distance)||5;const ratePerKm={auto:12,bike:8,mini:18,sedan:22,suv:28,ev:15};const rate=ratePerKm[state.currentRide.vehicle]||12;const fare=Math.round(state.currentRide.baseFare+rate*dist-state.currentRide.discount);if(state.payMethod==='wallet'){state.wallet=Math.max(0,state.wallet-fare);localStorage.setItem('swiftride_wallet',state.wallet);addTxn({title:'Ride to '+(state.currentRide.drop?.split(',')[0]||'destination'),date:new Date().toLocaleString(),amount:-fare,icon:'🚗',type:'debit'});}const cb=Math.round(fare*0.05);state.cashback+=cb;localStorage.setItem('swiftride_cashback',state.cashback);const ride={...state.currentRide,status:'completed',fare:'₹'+fare,actualFare:fare,timestamp:Date.now(),driver:state.currentDriver?.name};addToHistory(ride);updateUI();window.sendTelegram(`✅ *Ride Completed*\nRide ID: ${state.currentRide.rideId}\nRider: ${state.currentRide.riderName}\n${state.currentRide.pickup} → ${state.currentRide.drop}\n💰 Fare: ₹${fare}\n👨 Driver: ${state.currentDriver?.name}`);document.getElementById('rateSub').textContent=`How was your ride with ${state.currentDriver?.name||'your driver'}?`;document.getElementById('ratingOv').classList.add('show');state.currentRide=null;};
+
+function addToHistory(ride){state.rideHistory.unshift(ride);localStorage.setItem('swiftride_rides',JSON.stringify(state.rideHistory.slice(0,50)));}
+window.filterRides=function(status,el){state.filterStatus=status;const list=status==='all'?state.rideHistory:state.rideHistory.filter(r=>r.status===status);renderRides(list);};
+function renderRidesLocal(){renderRides(state.rideHistory);}
+function renderRides(list){const el=document.getElementById('ridesList');const sample=list.length>0?list:[{rideId:'SR001234',pickup:'Akole Bus Stand',drop:'Sangamner Market',vehicleName:'Auto',vehicleEmoji:'🛺',fare:'₹65',actualFare:65,status:'completed',timestamp:Date.now()-86400000,driver:'Rajesh Kumar'},{rideId:'SR001235',pickup:'Akole College',drop:'Rajur, Ahmednagar',vehicleName:'Mini Cab',vehicleEmoji:'🚗',fare:'₹120',actualFare:120,status:'completed',timestamp:Date.now()-172800000},{rideId:'SR001236',pickup:'My Home',drop:'Nashik Bus Stand',vehicleName:'Sedan',vehicleEmoji:'🚙',fare:'₹0',status:'cancelled',timestamp:Date.now()-259200000}];if(!sample.length){el.innerHTML=`<div style="text-align:center;padding:3rem 1rem;color:var(--muted)"><i class="ti ti-car-off" style="font-size:2.5rem;display:block;margin-bottom:.5rem;opacity:.3"></i><p style="font-size:.85rem">No rides yet. Book your first ride!</p></div>`;return;}el.innerHTML=sample.slice(0,20).map(r=>`<div class="ride-item"><div class="ride-top"><div class="ride-icon">${r.vehicleEmoji||'🚗'}</div><div class="ride-info"><div class="ride-route">${r.pickup||'—'} → ${r.drop||'—'}</div><div class="ride-date">${new Date(r.timestamp||Date.now()).toLocaleString()}${r.driver?' · '+r.driver:''}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-left:.5rem"><div class="ride-fare">${r.fare||'₹0'}</div><span class="rstatus ${r.status==='completed'?'s-done':r.status==='cancelled'?'s-cancel':'s-ongoing'}">${(r.status||'—').replace('_',' ')}</span></div></div><div class="ride-meta"><span class="rmchip">${r.vehicleName||'Ride'}</span><span class="rmchip">${r.rideId||'—'}</span>${r.status==='completed'?`<span class="rmchip" style="color:var(--yellow)">⭐ Rated</span>`:''}</div><div class="ride-btns"><button class="ribtn" onclick="rebookRide('${(r.pickup||'').replace(/'/g,"\\'")}','${(r.drop||'').replace(/'/g,"\\'")}')"><i class="ti ti-refresh"></i> Rebook</button><button class="ribtn" onclick="showToast('Receipt: ${r.rideId} — ${r.fare}','')"><i class="ti ti-receipt"></i> Receipt</button>${r.status==='completed'?`<button class="ribtn" style="color:var(--yellow)" onclick="openRating()"><i class="ti ti-star"></i> Rate</button>`:''}</div></div>`).join('');}
+window.rebookRide=function(pickup,drop){document.getElementById('pickupIn').value=pickup;document.getElementById('dropIn').value=drop;switchPage('home');showToast('Locations prefilled — tap Book!','success');};
+
+function addTxn(txn){state.txHistory.unshift(txn);localStorage.setItem('swiftride_txn',JSON.stringify(state.txHistory.slice(0,100)));renderTxns();}
+function renderTxns(){const el=document.getElementById('txnList');const sample=state.txHistory.length>0?state.txHistory:[{title:'Wallet Recharge',date:'Yesterday',amount:+500,icon:'💳',type:'credit'},{title:'Promo Cashback',date:'Mon',amount:+30,icon:'🎁',type:'credit'},{title:'Ride to Sangamner',date:'Sun',amount:-65,icon:'🚗',type:'debit'}];el.innerHTML=sample.map(t=>`<div class="txn-item"><div class="txn-icon" style="background:${t.type==='credit'?'var(--gdim)':'var(--rdim)'}">${t.icon}</div><div class="txn-info"><div class="txn-title">${t.title}</div><div class="txn-date">${t.date}</div></div><div class="txn-amt ${t.type==='credit'?'tc':'td'}">${t.type==='credit'?'+':'-'}₹${Math.abs(t.amount)}</div></div>`).join('');}
+window.selAmt=function(el,amt){document.querySelectorAll('.amt-chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');state.selAmt=amt;document.getElementById('selAmt').textContent=amt>0?amt.toLocaleString():'Custom';};
+window.selCustomAmt=function(){const amt=parseInt(prompt('Enter amount to add (₹):')||'0');if(amt>0&&amt<=50000){state.selAmt=amt;document.getElementById('selAmt').textContent=amt.toLocaleString();}else if(amt>50000)showToast('Maximum ₹50,000 per transaction','warn');};
+window.openAddMoney=function(){if(!state.user){openLogin();showToast('Login to add money','warn');return;}document.getElementById('selAmt').textContent=state.selAmt.toLocaleString();};
+window.addMoney=function(){if(!state.user){openLogin();showToast('Login to add money','warn');return;}const amt=state.selAmt;if(!amt||amt<=0){showToast('Select an amount','warn');return;}state.wallet+=amt;localStorage.setItem('swiftride_wallet',state.wallet);addTxn({title:'Wallet Recharge via '+state.walletPayMethod.toUpperCase(),date:new Date().toLocaleString(),amount:+amt,icon:'💳',type:'credit'});updateUI();showToast('₹'+amt+' added to SwiftPay! 💰','success');window.sendTelegram&&window.sendTelegram(`💰 *Wallet Recharge*\n${state.user.name} added ₹${amt} via ${state.walletPayMethod}\nNew balance: ₹${state.wallet}`);};
+
+window.openRating=function(){document.getElementById('ratingOv').classList.add('show');};
+window.setRating=function(n){document.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('lit',i<n));state.rating=n;};
+window.toggleTag=function(el){el.classList.toggle('active');};
+window.submitRating=function(){document.getElementById('ratingOv').classList.remove('show');const cb=5;state.wallet+=cb;state.cashback+=cb;localStorage.setItem('swiftride_wallet',state.wallet);addTxn({title:'Rating Bonus Cashback',date:new Date().toLocaleString(),amount:+cb,icon:'⭐',type:'credit'});updateUI();showToast('Thanks for rating! ₹5 cashback added ⭐','success');};
+
+window.openSched=function(){document.getElementById('schedOv').classList.add('show');};
+window.closeSched=function(){document.getElementById('schedOv').classList.remove('show');document.getElementById('schedBtn').classList.remove('active');document.getElementById('nowBtn').classList.add('active');state.schedMode=false;state.schedInfo=null;};
+window.setNow=function(){closeSched();};
+window.confirmSched=function(){const d=document.getElementById('schedDate').value,t=document.getElementById('schedTime').value;if(!d||!t){showToast('Please select date and time','error');return;}state.schedMode=true;state.schedInfo=d+' at '+t;document.getElementById('schedOv').classList.remove('show');document.getElementById('schedBtn').classList.add('active');document.getElementById('nowBtn').classList.remove('active');document.getElementById('bookBtn').innerHTML=`<i class="ti ti-calendar"></i> Schedule for ${d} ${t}`;showToast('Scheduled for '+d+' at '+t,'success');};
+
+let resendCountdown=null;
+window.openLogin=function(){document.getElementById('loginOv').classList.add('show');};
+window.sendOTP=async function(){const phone=document.getElementById('phoneIn').value.trim();if(!/^[6-9]\d{9}$/.test(phone)){showToast('Enter valid 10-digit mobile number','error');return;}document.getElementById('phoneIn').disabled=true;showToast('Sending OTP…','');const sent=await window.firebaseSendOTP(phone);document.getElementById('phoneIn').disabled=false;document.getElementById('phonePhase').style.display='none';document.getElementById('otpPhase').style.display='block';document.getElementById('otpPhoneShow').textContent=phone;if(sent){showToast('OTP sent to +91 '+phone,'success');}else{showToast('Demo mode: OTP is 1234','warn');setTimeout(()=>{['o1','o2','o3','o4'].forEach((id,i)=>document.getElementById(id).value='1234'[i]);},500);}startResendTimer();};
+function startResendTimer(){let secs=30;document.getElementById('resendBtn').style.display='none';document.getElementById('resendTimer').textContent=' ('+secs+'s)';resendCountdown=setInterval(()=>{secs--;if(secs<=0){clearInterval(resendCountdown);document.getElementById('resendBtn').style.display='';document.getElementById('resendTimer').textContent='';}else{document.getElementById('resendTimer').textContent=' ('+secs+'s)';}},1000);}
+window.resendOTP=async function(){const phone=document.getElementById('phoneIn').value.trim();const sent=await window.firebaseSendOTP(phone);showToast(sent?'OTP resent!':'Demo OTP: 1234','success');startResendTimer();};
+window.verifyOTP=async function(){const otp=['o1','o2','o3','o4'].map(id=>document.getElementById(id).value).join('');if(otp.length<4){showToast('Enter complete 4-digit OTP','error');return;}showToast('Verifying…','');const user=await window.firebaseVerifyOTP(otp);if(user){window._firebaseUser=user;const phone=document.getElementById('phoneIn').value.trim();state.user={phone,uid:user.uid,name:localStorage.getItem('swiftride_name')||''};if(!state.user.name){document.getElementById('otpPhase').style.display='none';document.getElementById('namePhase').style.display='block';}else{finishLogin();}}else{if(otp==='1234'){const phone=document.getElementById('phoneIn').value.trim();state.user={phone,name:localStorage.getItem('swiftride_name')||'',uid:'demo_'+phone};if(!state.user.name){document.getElementById('otpPhase').style.display='none';document.getElementById('namePhase').style.display='block';}else{finishLogin();}}else{showToast('Invalid OTP. Try again.','error');}}};
+window.completeReg=function(){const name=document.getElementById('nameIn').value.trim(),email=document.getElementById('emailIn').value.trim();if(!name){showToast('Please enter your name','error');return;}state.user={...state.user,name,email};localStorage.setItem('swiftride_name',name);window.saveRiderProfile&&window.saveRiderProfile({name,email,phone:state.user.phone,uid:state.user.uid,createdAt:Date.now()});finishLogin();};
+function finishLogin(){localStorage.setItem('swiftride_user',JSON.stringify(state.user));document.getElementById('loginOv').classList.remove('show');resetLoginPhases();updateUI();showToast('Welcome, '+state.user.name+'! 🚗','success');window.sendTelegram(`👤 *New User Login*\n${state.user.name} | +91 ${state.user.phone}\n⏰ ${new Date().toLocaleString()}`);}
+function resetLoginPhases(){document.getElementById('phonePhase').style.display='block';document.getElementById('otpPhase').style.display='none';document.getElementById('namePhase').style.display='none';document.getElementById('phoneIn').value='';['o1','o2','o3','o4'].forEach(id=>document.getElementById(id).value='');}
+window.backPhone=function(){document.getElementById('otpPhase').style.display='none';document.getElementById('phonePhase').style.display='block';};
+window.logoutUser=function(){if(!confirm('Logout of SwiftRide?'))return;state.user=null;localStorage.removeItem('swiftride_user');if(window._auth)window._auth.signOut?.();updateUI();switchPage('home');showToast('Logged out. See you soon!','');};
+
+function initOTPBoxes(){['o1','o2','o3','o4'].forEach((id,i,arr)=>{const el=document.getElementById(id);if(!el)return;el.addEventListener('input',()=>{el.value=el.value.slice(-1);if(el.value&&i<arr.length-1)document.getElementById(arr[i+1]).focus();});el.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!el.value&&i>0)document.getElementById(arr[i-1]).focus();});});}
+
+window.openEditProfile=function(){if(!state.user){openLogin();return;}document.getElementById('editName').value=state.user.name||'';document.getElementById('editEmail').value=state.user.email||'';document.getElementById('editHome').value=state.user.home||'';document.getElementById('editWork').value=state.user.work||'';document.getElementById('editOv').classList.add('show');};
+window.saveProfile=function(){const name=document.getElementById('editName').value.trim();if(!name){showToast('Name cannot be empty','error');return;}state.user={...state.user,name,email:document.getElementById('editEmail').value.trim(),home:document.getElementById('editHome').value.trim(),work:document.getElementById('editWork').value.trim(),gender:document.getElementById('editGender').value};localStorage.setItem('swiftride_user',JSON.stringify(state.user));localStorage.setItem('swiftride_name',name);closeOv('editOv');updateUI();showToast('Profile saved ✅','success');};
+
+window.openEmergency=function(){document.getElementById('emergencyOv').classList.add('show');};
+window.callEC=function(num){window.open('tel:'+num);};
+window.addEC=function(){const name=prompt('Contact name:');const num=prompt('Phone number:');if(name&&num)showToast(name+' added as emergency contact','success');};
+window.triggerSOS=function(){showToast('🚨 SOS Alert sent! Stay calm.','error');const msg=`🚨 *SOS ALERT — SwiftRide*\n\nUser: ${state.user?.name||'Unknown'}\nPhone: ${state.user?.phone||'—'}\nTime: ${new Date().toLocaleString()}\n\nPlease check immediately!`;window.sendTelegram&&window.sendTelegram(msg);};
+
+window.openReferral=function(){if(!state.user){openLogin();return;}const code='SWIFT'+(state.user.phone||'').slice(-4);document.getElementById('refCode').textContent=code;document.getElementById('refCodeBig').textContent=code;document.getElementById('refOv').classList.add('show');};
+window.shareRef=function(){const code=document.getElementById('refCodeBig').textContent;if(navigator.share){navigator.share({title:'SwiftRide',text:`Use my code ${code} to get ₹30 off your first ride on SwiftRide! 🚗`,url:'https://swiftride.in'});}else{navigator.clipboard.writeText(`SwiftRide promo code: ${code} — Get ₹30 off!`);showToast('Referral code copied!','success');}};
+
+window.openSupport=function(){document.getElementById('supportOv').classList.add('show');};
+window.openFeedback=function(){showToast('Thank you for your feedback!','success');};
+window.setCat=function(el,cat){document.querySelectorAll('.cat').forEach(c=>c.classList.remove('active'));el.classList.add('active');const tips={airport:'Airport pickup/drop ready!',outstation:'Outstation rides available',rental:'Book by the hour — flexible!',shared:'Find riders going your way',goods:'Parcel/Goods delivery ready',all:'All ride types'};showToast(tips[cat]||'','');};
+window.callDriver=function(){showToast('Calling '+state.currentDriver?.name+'…','');};
+window.chatDriver=function(){showToast('In-app chat coming soon','warn');};
+window.shareRide=function(){if(!state.currentRide)return;const txt=`Tracking my SwiftRide — ${state.currentRide.pickup} → ${state.currentRide.drop} | OTP: ${state.currentRide.otp}`;if(navigator.share)navigator.share({title:'SwiftRide',text:txt});else{navigator.clipboard?.writeText(txt);showToast('Ride details copied!','success');}};
+window.closeOv=function(id){document.getElementById(id)?.classList.remove('show');};
+document.querySelectorAll('.overlay').forEach(ov=>{ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('show');});});
+
+window.updateUI=function(){const bal='₹'+state.wallet;document.getElementById('walBal').textContent=bal;document.getElementById('menuWalBal').textContent=bal;document.getElementById('payWalletLbl').textContent='SwiftPay '+bal;document.getElementById('cbAvail').textContent=state.cashback;if(state.user){const init=(state.user.name||'R')[0].toUpperCase();document.getElementById('userAv').textContent=init;document.getElementById('profAv').textContent=init;document.getElementById('profName').textContent=state.user.name||'Rider';document.getElementById('profPhone').textContent='+91 '+(state.user.phone||'');document.getElementById('pstatRides').textContent=state.rideHistory.filter(r=>r.status==='completed').length;document.getElementById('pstatSaved').textContent=state.cashback;document.getElementById('pstatRating').textContent=state.rating||'5.0';document.getElementById('profRating').textContent=state.rating||'5.0';document.getElementById('profTrips').textContent=state.rideHistory.length;document.getElementById('loginCard').style.display='none';document.getElementById('logoutItem').style.display='flex';const rc='SWIFT'+(state.user.phone||'').slice(-4);document.getElementById('refCode').textContent=rc;}else{document.getElementById('userAv').textContent='?';document.getElementById('profAv').textContent='?';document.getElementById('profName').textContent='Guest User';document.getElementById('profPhone').textContent='Login to continue';document.getElementById('loginCard').style.display='block';document.getElementById('logoutItem').style.display='none';}};
+
+window.switchPage=function(page){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('active'));const pg=document.getElementById('page'+page[0].toUpperCase()+page.slice(1));if(pg)pg.classList.add('active');const bn=document.getElementById('bnav-'+page);if(bn)bn.classList.add('active');if(page==='rides')loadRidesFromDB();};
+
+window.showToast=function(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+(type||'');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);};
+
+window.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>

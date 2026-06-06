@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SwiftRide — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@700;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+  --bg:#070710;--surface:#0D0D1A;--card:#111120;--card2:#171728;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --yellow:#FFD60A;--ydim:rgba(255,214,10,0.08);--yglow:rgba(255,214,10,0.15);
+  --green:#00D68F;--gdim:rgba(0,214,143,0.08);
+  --red:#FF4444;--rdim:rgba(255,68,68,0.08);
+  --blue:#4F8EF7;--bdim:rgba(79,142,247,0.08);
+  --purple:#A855F7;--pdim:rgba(168,85,247,0.08);
+  --orange:#FF8C00;--odim:rgba(255,140,0,0.08);
+  --text:#F0F0FF;--muted:#5A5A7A;--muted2:#8888AA;
+  --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;}
+input,select,button{font-family:'Space Grotesk',sans-serif;}
+a{text-decoration:none;color:inherit;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);min-height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:100;}
+.sb-logo{padding:1.2rem 1.1rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.55rem;}
+.sb-logo-text{font-family:'Unbounded',sans-serif;font-size:.9rem;font-weight:900;color:var(--yellow);}
+.sb-logo-text span{color:var(--text);}
+.sb-badge{font-size:.5rem;background:var(--red);color:#fff;border-radius:4px;padding:2px 5px;font-weight:900;letter-spacing:.5px;margin-left:.2rem;}
+.sb-nav{flex:1;padding:.8rem 0;overflow-y:auto;}
+.sb-section{font-size:.55rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:.4rem 1.1rem .2rem;}
+.sb-item{display:flex;align-items:center;gap:.6rem;padding:.6rem 1.1rem;font-size:.82rem;font-weight:600;color:var(--muted2);cursor:pointer;border-left:3px solid transparent;transition:all .18s;margin:.05rem 0;}
+.sb-item:hover{color:var(--text);background:var(--card);}
+.sb-item.active{color:var(--yellow);background:var(--ydim);border-left-color:var(--yellow);}
+.sb-item i{font-size:1rem;flex-shrink:0;}
+.sb-count{margin-left:auto;background:var(--red);color:#fff;border-radius:50px;padding:1px 7px;font-size:.6rem;font-weight:700;}
+.sb-count.green{background:var(--green);}
+.sb-bottom{padding:.8rem;border-top:1px solid var(--border);}
+.sb-user{display:flex;align-items:center;gap:.6rem;padding:.55rem .6rem;background:var(--card);border-radius:9px;cursor:pointer;}
+.sb-av{width:30px;height:30px;border-radius:50%;background:var(--ydim);border:1.5px solid var(--yellow);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:var(--yellow);}
+.sb-uname{font-size:.78rem;font-weight:700;flex:1;}
+.sb-urole{font-size:.6rem;color:var(--muted2);}
+
+/* MAIN */
+.main{margin-left:var(--sidebar);flex:1;min-height:100vh;display:flex;flex-direction:column;}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.5rem;gap:1rem;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;flex:1;}
+.tb-search{flex:1;max-width:280px;background:var(--card);border:1px solid var(--border2);border-radius:8px;padding:.45rem .8rem;display:flex;align-items:center;gap:.4rem;}
+.tb-search input{background:none;border:none;outline:none;font-size:.82rem;color:var(--text);flex:1;}
+.tb-search input::placeholder{color:var(--muted);}
+.tb-icon{width:34px;height:34px;border-radius:8px;background:var(--card);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted2);position:relative;transition:.18s;}
+.tb-icon:hover{color:var(--text);}
+.tb-notif{width:8px;height:8px;background:var(--red);border-radius:50%;position:absolute;top:5px;right:5px;}
+.content{padding:1.5rem;flex:1;}
+
+/* PAGE SECTIONS */
+.page-sec{display:none;}
+.page-sec.active{display:block;}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;position:relative;overflow:hidden;cursor:pointer;transition:.18s;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.stat-card::before{content:'';position:absolute;top:-20px;right:-20px;width:70px;height:70px;border-radius:50%;opacity:.4;}
+.sc-g::before{background:var(--green);}
+.sc-y::before{background:var(--yellow);}
+.sc-b::before{background:var(--blue);}
+.sc-r::before{background:var(--red);}
+.sc-p::before{background:var(--purple);}
+.stat-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.7rem;}
+.stat-val{font-family:'Unbounded',sans-serif;font-size:1.5rem;font-weight:900;margin-bottom:.15rem;}
+.stat-lbl{font-size:.7rem;color:var(--muted2);font-weight:600;}
+.stat-delta{font-size:.65rem;font-weight:700;margin-top:.3rem;}
+.delta-up{color:var(--green);}
+.delta-down{color:var(--red);}
+
+/* TABLE */
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;}
+.table-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:1px solid var(--border);}
+.table-title{font-family:'Unbounded',sans-serif;font-size:.8rem;font-weight:700;}
+.table-actions{display:flex;gap:.5rem;}
+.t-btn{background:var(--card2);border:1px solid var(--border2);border-radius:7px;padding:.35rem .75rem;font-size:.72rem;font-weight:700;color:var(--muted2);cursor:pointer;display:flex;align-items:center;gap:3px;transition:.18s;}
+.t-btn:hover{color:var(--text);}
+.t-btn.primary{background:var(--ydim);color:var(--yellow);border-color:rgba(255,214,10,.3);}
+table{width:100%;border-collapse:collapse;}
+thead{background:var(--card2);}
+th{padding:.65rem 1rem;font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;text-align:left;white-space:nowrap;}
+td{padding:.7rem 1rem;font-size:.8rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+.status-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:50px;font-size:.65rem;font-weight:700;}
+.sp-active{background:var(--gdim);color:var(--green);}
+.sp-pending{background:var(--ydim);color:var(--yellow);}
+.sp-cancel{background:var(--rdim);color:var(--red);}
+.sp-offline{background:var(--border);color:var(--muted2);}
+.sp-completed{background:var(--bdim);color:var(--blue);}
+.action-btns{display:flex;gap:.3rem;}
+.ab{background:none;border:1px solid var(--border2);border-radius:6px;padding:.28rem .55rem;font-size:.68rem;font-weight:700;color:var(--muted2);cursor:pointer;transition:.18s;}
+.ab:hover{color:var(--text);border-color:var(--border2);}
+.ab.approve{color:var(--green);border-color:rgba(0,214,143,.3);}
+.ab.reject{color:var(--red);border-color:rgba(255,68,68,.3);}
+
+/* CHARTS */
+.chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.1rem;}
+.chart-title{font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:700;margin-bottom:1rem;}
+.bar-chart{display:flex;align-items:flex-end;gap:.4rem;height:120px;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.bar{width:100%;background:var(--ydim);border-radius:4px 4px 0 0;border:1px solid rgba(255,214,10,.2);transition:.3s;}
+.bar.highlight{background:var(--yellow);border-color:var(--yellow);}
+.bar-lbl{font-size:.58rem;color:var(--muted);font-weight:600;}
+.bar-val{font-size:.6rem;color:var(--muted2);font-weight:700;}
+.donut-wrap{position:relative;width:120px;height:120px;margin:0 auto 1rem;}
+.donut-svg{transform:rotate(-90deg);}
+.donut-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.donut-val{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;color:var(--text);}
+.donut-sub{font-size:.58rem;color:var(--muted2);}
+.legend{display:flex;flex-direction:column;gap:.4rem;margin-top:.5rem;}
+.leg-item{display:flex;align-items:center;gap:.5rem;font-size:.72rem;font-weight:600;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+
+/* MAP OVERVIEW */
+.map-overview{width:100%;height:220px;border-radius:11px;background:var(--card2);border:1px solid var(--border);position:relative;overflow:hidden;margin-bottom:1rem;}
+.map-bg{position:absolute;inset:0;background-image:linear-gradient(rgba(255,214,10,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,214,10,.04) 1px,transparent 1px);background-size:30px 30px;}
+.map-driver-dot{position:absolute;width:10px;height:10px;border-radius:50%;border:2px solid #fff;cursor:pointer;}
+.map-driver-dot::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid;animation:dp 2s infinite;}
+@keyframes dp{0%{transform:scale(1);opacity:.6;}100%{transform:scale(2);opacity:0;}}
+.map-legend{position:absolute;bottom:.5rem;right:.5rem;background:rgba(17,17,32,.9);border-radius:8px;padding:.4rem .6rem;display:flex;flex-direction:column;gap:.25rem;}
+.ml-item{display:flex;align-items:center;gap:.35rem;font-size:.6rem;color:var(--muted2);}
+
+/* TOAST */
+#toast{position:fixed;top:1rem;right:1rem;background:var(--card2);border:1px solid var(--border2);padding:10px 18px;border-radius:9px;font-size:.8rem;font-weight:600;z-index:9999;opacity:0;transition:.3s;pointer-events:none;}
+#toast.show{opacity:1;}
+#toast.success{border-color:var(--green);color:var(--green);}
+#toast.error{border-color:var(--red);color:var(--red);}
+#toast.warn{border-color:var(--yellow);color:var(--yellow);}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+.fgroup{display:flex;flex-direction:column;gap:.3rem;}
+.flabel{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.finput{background:var(--card2);border:1.5px solid var(--border2);border-radius:9px;padding:.6rem .85rem;font-size:.85rem;color:var(--text);outline:none;width:100%;}
+.finput:focus{border-color:var(--yellow);}
+select.finput option{background:var(--card);}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-bg.show{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem;border-bottom:1px solid var(--border);}
+.modal-title{font-family:'Unbounded',sans-serif;font-size:.88rem;font-weight:700;}
+.modal-close{background:none;border:none;color:var(--muted2);cursor:pointer;font-size:1.1rem;}
+.modal-body{padding:1.2rem;}
+.modal-footer{padding:.9rem 1.2rem;border-top:1px solid var(--border);display:flex;gap:.5rem;justify-content:flex-end;}
+.btn{border:none;border-radius:8px;padding:.6rem 1.2rem;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.btn-primary{background:var(--yellow);color:#000;}
+.btn-sec{background:var(--card2);color:var(--muted2);}
+.btn-danger{background:var(--rdim);color:var(--red);border:1px solid rgba(255,68,68,.3);}
+
+/* LIVE FEED */
+.feed-list{display:flex;flex-direction:column;gap:.45rem;max-height:320px;overflow-y:auto;}
+.feed-item{background:var(--card2);border-radius:9px;padding:.6rem .85rem;display:flex;align-items:flex-start;gap:.6rem;border-left:3px solid transparent;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:none;}}
+.feed-item.ride{border-left-color:var(--yellow);}
+.feed-item.signup{border-left-color:var(--green);}
+.feed-item.sos{border-left-color:var(--red);}
+.feed-item.complete{border-left-color:var(--blue);}
+.feed-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;}
+.feed-text{flex:1;font-size:.78rem;font-weight:600;}
+.feed-sub{font-size:.65rem;color:var(--muted2);margin-top:1px;}
+.feed-time{font-size:.6rem;color:var(--muted);white-space:nowrap;}
+
+/* MINI KPIs */
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem;}
+.kpi{background:var(--card2);border-radius:10px;padding:.7rem .85rem;border:1px solid var(--border);}
+.kpi-val{font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;}
+.kpi-lbl{font-size:.62rem;color:var(--muted2);margin-top:2px;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:.3s;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .chart-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:50px;}
+
+/* LOGIN SCREEN */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:18px;padding:2rem;width:100%;max-width:380px;text-align:center;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div style="font-size:2rem;margin-bottom:.5rem">🚗</div>
+    <div style="font-family:'Unbounded',sans-serif;font-size:1.1rem;font-weight:900;color:var(--yellow);margin-bottom:.2rem">SwiftRide</div>
+    <div style="font-size:.75rem;color:var(--muted2);margin-bottom:1.5rem">Admin Control Panel</div>
+    <div style="text-align:left;margin-bottom:.4rem"><label class="flabel">Username</label></div>
+    <input type="text" class="finput" id="adminUser" placeholder="admin" style="margin-bottom:.7rem"/>
+    <div style="text-align:left;margin-bottom:.4rem"><label class="flabel">Password</label></div>
+    <input type="password" class="finput" id="adminPass" placeholder="••••••••" style="margin-bottom:1rem"/>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:.8rem;font-size:.85rem" onclick="adminLogin()">Login to Dashboard</button>
+    <div style="font-size:.65rem;color:var(--muted);margin-top:.8rem">Default: admin / swift@2024</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <div style="width:28px;height:28px;background:var(--yellow);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.85rem">🚗</div>
+    <div>
+      <div class="sb-logo-text">Swift<span>Ride</span></div>
+      <div style="font-size:.55rem;color:var(--muted);font-weight:700">ADMIN PANEL <span class="sb-badge">LIVE</span></div>
+    </div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-section">Main</div>
+    <div class="sb-item active" onclick="showPage('dashboard',this)"><i class="ti ti-dashboard"></i> Dashboard</div>
+    <div class="sb-item" onclick="showPage('rides',this)"><i class="ti ti-car"></i> All Rides <span class="sb-count" id="sbRideCount">0</span></div>
+    <div class="sb-item" onclick="showPage('drivers',this)"><i class="ti ti-steering-wheel"></i> Drivers <span class="sb-count green" id="sbDriverCount">0</span></div>
+    <div class="sb-item" onclick="showPage('riders',this)"><i class="ti ti-users"></i> Riders</div>
+    <div class="sb-section">Finance</div>
+    <div class="sb-item" onclick="showPage('payments',this)"><i class="ti ti-credit-card"></i> Payments</div>
+    <div class="sb-item" onclick="showPage('coupons',this)"><i class="ti ti-tag"></i> Coupons</div>
+    <div class="sb-section">Operations</div>
+    <div class="sb-item" onclick="showPage('map',this)"><i class="ti ti-map"></i> Live Map</div>
+    <div class="sb-item" onclick="showPage('sos',this)"><i class="ti ti-shield-exclamation"></i> SOS Alerts <span class="sb-count" id="sbSOSCount">0</span></div>
+    <div class="sb-item" onclick="showPage('reports',this)"><i class="ti ti-chart-bar"></i> Reports</div>
+    <div class="sb-section">Settings</div>
+    <div class="sb-item" onclick="showPage('settings',this)"><i class="ti ti-settings"></i> Settings</div>
+    <div class="sb-item" onclick="showPage('notifications',this)"><i class="ti ti-bell"></i> Push Notify</div>
+    <div class="sb-item" onclick="adminLogout()" style="color:var(--red)"><i class="ti ti-logout"></i> Logout</div>
+  </div>
+  <div class="sb-bottom">
+    <div class="sb-user">
+      <div class="sb-av">A</div>
+      <div><div class="sb-uname">Admin</div><div class="sb-urole">Super Admin</div></div>
+      <i class="ti ti-chevron-right" style="color:var(--muted);font-size:.75rem;margin-left:auto"></i>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="topbar">
+    <button style="display:none;background:none;border:none;color:var(--text);font-size:1.2rem;cursor:pointer" id="menuBtn" onclick="document.getElementById('sidebar').classList.toggle('open')"><i class="ti ti-menu-2"></i></button>
+    <div class="topbar-title" id="pageTitle">Dashboard</div>
+    <div class="tb-search">
+      <i class="ti ti-search" style="color:var(--muted);font-size:.9rem"></i>
+      <input type="text" placeholder="Search rides, drivers, riders…" id="globalSearch" oninput="handleSearch(this.value)"/>
+    </div>
+    <div class="tb-icon" onclick="refreshData()" title="Refresh"><i class="ti ti-refresh"></i></div>
+    <div class="tb-icon" onclick="showPage('sos',null)" title="SOS Alerts">
+      <i class="ti ti-bell"></i>
+      <div class="tb-notif" id="notifDot" style="display:none"></div>
+    </div>
+    <div class="tb-icon" style="background:var(--ydim);border-color:rgba(255,214,10,.3)">
+      <span style="font-size:.7rem;font-weight:700;color:var(--yellow)">A</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════ DASHBOARD ══════ -->
+    <div class="page-sec active" id="sec-dashboard">
+      <div class="stats-grid">
+        <div class="stat-card sc-y" onclick="showPage('rides',null)">
+          <div class="stat-icon" style="background:var(--ydim)"><i class="ti ti-car" style="color:var(--yellow)"></i></div>
+          <div class="stat-val" id="statTotalRides">0</div>
+          <div class="stat-lbl">Total Rides Today</div>
+          <div class="stat-delta delta-up" id="statRidesDelta">↑ 0 from yesterday</div>
+        </div>
+        <div class="stat-card sc-g" onclick="showPage('drivers',null)">
+          <div class="stat-icon" style="background:var(--gdim)"><i class="ti ti-steering-wheel" style="color:var(--green)"></i></div>
+          <div class="stat-val" id="statActiveDrivers">0</div>
+          <div class="stat-lbl">Active Drivers</div>
+          <div class="stat-delta delta-up">Online now</div>
+        </div>
+        <div class="stat-card sc-b">
+          <div class="stat-icon" style="background:var(--bdim)"><i class="ti ti-currency-rupee" style="color:var(--blue)"></i></div>
+          <div class="stat-val" id="statRevenue">₹0</div>
+          <div class="stat-lbl">Revenue Today</div>
+          <div class="stat-delta delta-up" id="statRevDelta">↑ 0% from yesterday</div>
+        </div>
+        <div class="stat-card sc-r" onclick="showPage('riders',null)">
+          <div class="stat-icon" style="background:var(--rdim)"><i class="ti ti-users" style="color:var(--red)"></i></div>
+          <div class="stat-val" id="statTotalUsers">0</div>
+          <div class="stat-lbl">Total Riders</div>
+          <div class="stat-delta delta-up">Registered users</div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <!-- Bar chart -->
+        <div class="chart-card">
+          <div class="chart-title">📊 Weekly Ride Volume</div>
+          <div class="bar-chart" id="barChart"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:.4rem">
+            <span style="font-size:.6rem;color:var(--muted)">Mon</span>
+            <span style="font-size:.6rem;color:var(--muted)">Tue</span>
+            <span style="font-size:.6rem;color:var(--muted)">Wed</span>
+            <span style="font-size:.6rem;color:var(--muted)">Thu</span>
+            <span style="font-size:.6rem;color:var(--muted)">Fri</span>
+            <span style="font-size:.6rem;color:var(--muted)">Sat</span>
+            <span style="font-size:.6rem;color:var(--muted)">Today</span>
+          </div>
+        </div>
+        <!-- Donut chart -->
+        <div class="chart-card">
+          <div class="chart-title">🚗 Vehicle Distribution</div>
+          <div class="donut-wrap">
+            <svg class="donut-svg" width="120" height="120" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--border2)" stroke-width="18"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--yellow)" stroke-width="18" stroke-dasharray="113 170" stroke-dashoffset="0" id="d1"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--green)" stroke-width="18" stroke-dasharray="57 226" stroke-dashoffset="-113" id="d2"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--blue)" stroke-width="18" stroke-dasharray="45 238" stroke-dashoffset="-170" id="d3"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--purple)" stroke-width="18" stroke-dasharray="30 253" stroke-dashoffset="-215" id="d4"/>
+              <circle cx="60" cy="60" r="45" fill="none" stroke="var(--orange)" stroke-width="18" stroke-dasharray="38 245" stroke-dashoffset="-245" id="d5"/>
+            </svg>
+            <div class="donut-label"><div class="donut-val" id="donutTotal">0</div><div class="donut-sub">rides</div></div>
+          </div>
+          <div class="legend">
+            <div class="leg-item"><div class="leg-dot" style="background:var(--yellow)"></div>Auto <span style="margin-left:auto;font-size:.65rem;color:var(--muted2)">40%</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Bike <span style="margin-left:auto;font-size:.65rem;color:var(--muted2)">20%</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>Mini <span style="margin-left:auto;font-size:.65rem;color:var(--muted2)">16%</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>Sedan <span style="margin-left:auto;font-size:.65rem;color:var(--muted2)">11%</span></div>
+            <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div>Other <span style="margin-left:auto;font-size:.65rem;color:var(--muted2)">13%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent rides + Live feed -->
+      <div style="display:grid;grid-template-columns:1.4fr 1fr;gap:1rem">
+        <div class="table-card">
+          <div class="table-hdr">
+            <div class="table-title">Recent Bookings</div>
+            <button class="t-btn primary" onclick="showPage('rides',null)">View All</button>
+          </div>
+          <table id="dashRidesTable">
+            <thead><tr><th>Ride ID</th><th>Rider</th><th>Route</th><th>Status</th><th>Fare</th></tr></thead>
+            <tbody id="dashRidesBody"></tbody>
+          </table>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">🔴 Live Activity Feed</div>
+          <div class="feed-list" id="liveFeed"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ ALL RIDES ══════ -->
+    <div class="page-sec" id="sec-rides">
+      <div class="kpi-row">
+        <div class="kpi"><div class="kpi-val" style="color:var(--yellow)" id="krTotal">0</div><div class="kpi-lbl">Total Rides</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--green)" id="krCompleted">0</div><div class="kpi-lbl">Completed</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--red)" id="krCancelled">0</div><div class="kpi-lbl">Cancelled</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-hdr">
+          <div class="table-title">All Ride Bookings</div>
+          <div class="table-actions">
+            <select class="finput" style="font-size:.72rem;padding:.3rem .6rem;margin:0" id="rideStatusFilter" onchange="filterRideTable()">
+              <option value="">All Status</option>
+              <option value="finding_driver">Finding Driver</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+            <button class="t-btn" onclick="exportCSV()"><i class="ti ti-download"></i> Export</button>
+            <button class="t-btn primary" onclick="refreshData()"><i class="ti ti-refresh"></i> Refresh</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Ride ID</th><th>Rider</th><th>Phone</th><th>From → To</th><th>Vehicle</th><th>Distance</th><th>Fare</th><th>Status</th><th>Payment</th><th>Time</th><th>Actions</th></tr></thead>
+            <tbody id="allRidesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ DRIVERS ══════ -->
+    <div class="page-sec" id="sec-drivers">
+      <div class="table-card">
+        <div class="table-hdr">
+          <div class="table-title">Driver Management</div>
+          <div class="table-actions">
+            <button class="t-btn primary" onclick="openAddDriver()"><i class="ti ti-plus"></i> Add Driver</button>
+            <button class="t-btn" onclick="refreshData()"><i class="ti ti-refresh"></i> Refresh</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Driver</th><th>Phone</th><th>Vehicle</th><th>Plate</th><th>Rating</th><th>Rides</th><th>Earnings</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="driversBody">
+              <tr><td colspan="9" style="text-align:center;color:var(--muted);padding:2rem">Loading drivers from Firestore…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ RIDERS ══════ -->
+    <div class="page-sec" id="sec-riders">
+      <div class="table-card">
+        <div class="table-hdr">
+          <div class="table-title">Rider Management</div>
+          <div class="table-actions">
+            <button class="t-btn" onclick="exportCSV('riders')"><i class="ti ti-download"></i> Export</button>
+            <button class="t-btn primary" onclick="refreshData()"><i class="ti ti-refresh"></i> Refresh</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Rides</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="ridersBody">
+              <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">Loading riders from Firestore…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ PAYMENTS ══════ -->
+    <div class="page-sec" id="sec-payments">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem">
+        <div class="stat-card sc-g"><div class="stat-icon" style="background:var(--gdim)"><i class="ti ti-currency-rupee" style="color:var(--green)"></i></div><div class="stat-val" id="payTotal">₹0</div><div class="stat-lbl">Total Revenue</div></div>
+        <div class="stat-card sc-y"><div class="stat-icon" style="background:var(--ydim)"><i class="ti ti-wallet" style="color:var(--yellow)"></i></div><div class="stat-val" id="payWallet">₹0</div><div class="stat-lbl">Wallet Payments</div></div>
+        <div class="stat-card sc-b"><div class="stat-icon" style="background:var(--bdim)"><i class="ti ti-brand-google-pay" style="color:var(--blue)"></i></div><div class="stat-val" id="payUPI">₹0</div><div class="stat-lbl">UPI Payments</div></div>
+        <div class="stat-card sc-r"><div class="stat-icon" style="background:var(--rdim)"><i class="ti ti-cash" style="color:var(--red)"></i></div><div class="stat-val" id="payCash">₹0</div><div class="stat-lbl">Cash Payments</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-hdr"><div class="table-title">Payment Transactions</div></div>
+        <table>
+          <thead><tr><th>Ride ID</th><th>Rider</th><th>Amount</th><th>Method</th><th>Status</th><th>Time</th></tr></thead>
+          <tbody id="paymentsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ COUPONS ══════ -->
+    <div class="page-sec" id="sec-coupons">
+      <div class="table-card">
+        <div class="table-hdr">
+          <div class="table-title">Coupon Management</div>
+          <button class="t-btn primary" onclick="openAddCoupon()"><i class="ti ti-plus"></i> Create Coupon</button>
+        </div>
+        <table>
+          <thead><tr><th>Code</th><th>Discount</th><th>Type</th><th>Uses</th><th>Valid Till</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="couponsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════ LIVE MAP ══════ -->
+    <div class="page-sec" id="sec-map">
+      <div class="chart-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <div class="chart-title">🗺️ Live Driver Map</div>
+          <div style="display:flex;gap:.5rem">
+            <span class="status-pill sp-active"><span style="width:6px;height:6px;background:var(--green);border-radius:50%;display:inline-block"></span> Online</span>
+            <span class="status-pill sp-pending"><span style="width:6px;height:6px;background:var(--yellow);border-radius:50%;display:inline-block"></span> On Ride</span>
+            <span class="status-pill sp-offline"><span style="width:6px;height:6px;background:var(--muted);border-radius:50%;display:inline-block"></span> Offline</span>
+          </div>
+        </div>
+        <div class="map-overview" id="liveMap">
+          <div class="map-bg"></div>
+          <div class="map-legend">
+            <div class="ml-item"><span style="width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block"></span> Active drivers</div>
+            <div class="ml-item"><span style="width:8px;height:8px;background:var(--yellow);border-radius:50%;display:inline-block"></span> On ride</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-top:1rem" id="mapStats"></div>
+      </div>
+    </div>
+
+    <!-- ══════ SOS ALERTS ══════ -->
+    <div class="page-sec" id="sec-sos">
+      <div class="table-card">
+        <div class="table-hdr"><div class="table-title">🚨 SOS Alerts & Safety</div><button class="t-btn" onclick="clearSOSAlerts()">Clear All</button></div>
+        <div id="sosList" style="padding:1rem"></div>
+      </div>
+    </div>
+
+    <!-- ══════ REPORTS ══════ -->
+    <div class="page-sec" id="sec-reports">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem">
+        <div class="kpi"><div class="kpi-val" style="color:var(--yellow)" id="rpAvgFare">₹0</div><div class="kpi-lbl">Avg Fare per Ride</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--green)" id="rpAvgDist">0 km</div><div class="kpi-lbl">Avg Distance</div></div>
+        <div class="kpi"><div class="kpi-val" style="color:var(--blue)" id="rpPeakHour">—</div><div class="kpi-lbl">Peak Hour</div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">📈 Hourly Ride Distribution (Today)</div>
+        <div class="bar-chart" id="hourlyChart" style="height:100px"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:.4rem;overflow:hidden">
+          <span style="font-size:.55rem;color:var(--muted)">12am</span>
+          <span style="font-size:.55rem;color:var(--muted)">4am</span>
+          <span style="font-size:.55rem;color:var(--muted)">8am</span>
+          <span style="font-size:.55rem;color:var(--muted)">12pm</span>
+          <span style="font-size:.55rem;color:var(--muted)">4pm</span>
+          <span style="font-size:.55rem;color:var(--muted)">8pm</span>
+          <span style="font-size:.55rem;color:var(--muted)">12am</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ SETTINGS ══════ -->
+    <div class="page-sec" id="sec-settings">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="chart-card">
+          <div class="chart-title">⚙️ Fare Configuration</div>
+          <div class="form-grid">
+            <div class="fgroup"><label class="flabel">Auto Base Fare (₹)</label><input class="finput" type="number" value="45" id="cfgAutoBase"/></div>
+            <div class="fgroup"><label class="flabel">Auto Rate/km (₹)</label><input class="finput" type="number" value="12" id="cfgAutoKm"/></div>
+            <div class="fgroup"><label class="flabel">Bike Base Fare (₹)</label><input class="finput" type="number" value="25" id="cfgBikeBase"/></div>
+            <div class="fgroup"><label class="flabel">Bike Rate/km (₹)</label><input class="finput" type="number" value="8" id="cfgBikeKm"/></div>
+            <div class="fgroup"><label class="flabel">Mini Base Fare (₹)</label><input class="finput" type="number" value="80" id="cfgMiniBase"/></div>
+            <div class="fgroup"><label class="flabel">Mini Rate/km (₹)</label><input class="finput" type="number" value="18" id="cfgMiniKm"/></div>
+            <div class="fgroup"><label class="flabel">Surge Multiplier</label><input class="finput" type="number" value="1.0" step="0.1" id="cfgSurge"/></div>
+            <div class="fgroup"><label class="flabel">Cancellation Fee (₹)</label><input class="finput" type="number" value="20" id="cfgCancel"/></div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:1rem" onclick="saveFareConfig()"><i class="ti ti-device-floppy"></i> Save Config</button>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">🔔 App Settings</div>
+          <div style="display:flex;flex-direction:column;gap:.7rem">
+            <div class="fgroup"><label class="flabel">Support Phone</label><input class="finput" type="tel" value="+919307320279" id="cfgPhone"/></div>
+            <div class="fgroup"><label class="flabel">Support Email</label><input class="finput" type="email" value="support@swiftride.in" id="cfgEmail"/></div>
+            <div class="fgroup"><label class="flabel">Telegram Bot Token</label><input class="finput" value="7458392373:AAFfQ-C-AZL…" id="cfgTG"/></div>
+            <div class="fgroup"><label class="flabel">Service Area Radius (km)</label><input class="finput" type="number" value="25" id="cfgRadius"/></div>
+          </div>
+          <button class="btn btn-primary" style="margin-top:1rem" onclick="saveAppSettings()"><i class="ti ti-device-floppy"></i> Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════ NOTIFICATIONS ══════ -->
+    <div class="page-sec" id="sec-notifications">
+      <div class="chart-card" style="max-width:600px">
+        <div class="chart-title">📣 Send Push Notification</div>
+        <div class="fgroup" style="margin-bottom:.7rem"><label class="flabel">Target Audience</label>
+          <select class="finput" id="notifTarget">
+            <option>All Riders</option><option>All Drivers</option><option>Active Users (last 7 days)</option><option>Specific User</option>
+          </select>
+        </div>
+        <div class="fgroup" style="margin-bottom:.7rem"><label class="flabel">Notification Title</label><input class="finput" placeholder="e.g. 50% off this weekend!" id="notifTitle"/></div>
+        <div class="fgroup" style="margin-bottom:.7rem"><label class="flabel">Message</label><textarea class="finput" style="min-height:80px" placeholder="Enter your message…" id="notifMsg"></textarea></div>
+        <div class="fgroup" style="margin-bottom:.9rem"><label class="flabel">Promo Code (optional)</label><input class="finput" placeholder="e.g. FLASH50" id="notifCode"/></div>
+        <button class="btn btn-primary" style="padding:.75rem 1.5rem" onclick="sendNotification()"><i class="ti ti-send"></i> Send via Telegram</button>
+      </div>
+    </div>
+
+  </div><!-- content -->
+</div><!-- main -->
+
+<!-- ADD DRIVER MODAL -->
+<div class="modal-bg" id="addDriverModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Add New Driver</div>
+      <button class="modal-close" onclick="closeModal('addDriverModal')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fgroup"><label class="flabel">Full Name</label><input class="finput" id="drvName" placeholder="Rajesh Kumar"/></div>
+        <div class="fgroup"><label class="flabel">Phone</label><input class="finput" id="drvPhone" placeholder="9876543210" type="tel"/></div>
+        <div class="fgroup"><label class="flabel">Vehicle Type</label>
+          <select class="finput" id="drvVehType"><option>Auto</option><option>Bike</option><option>Mini</option><option>Sedan</option><option>SUV</option><option>EV</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Vehicle Model</label><input class="finput" id="drvVehModel" placeholder="Bajaj RE Auto"/></div>
+        <div class="fgroup"><label class="flabel">Plate Number</label><input class="finput" id="drvPlateNo" placeholder="MH 19 AB 1234"/></div>
+        <div class="fgroup"><label class="flabel">City</label><input class="finput" id="drvCity" placeholder="Akole"/></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sec" onclick="closeModal('addDriverModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addDriver()">Add Driver</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD COUPON MODAL -->
+<div class="modal-bg" id="addCouponModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Create Coupon</div>
+      <button class="modal-close" onclick="closeModal('addCouponModal')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fgroup"><label class="flabel">Coupon Code</label><input class="finput" id="cpCode" placeholder="SUMMER50"/></div>
+        <div class="fgroup"><label class="flabel">Discount Amount (₹)</label><input class="finput" id="cpDiscount" type="number" placeholder="50"/></div>
+        <div class="fgroup"><label class="flabel">Type</label>
+          <select class="finput" id="cpType"><option>Flat Discount</option><option>Percentage</option><option>Cashback</option></select>
+        </div>
+        <div class="fgroup"><label class="flabel">Max Uses</label><input class="finput" id="cpMaxUses" type="number" placeholder="100"/></div>
+        <div class="fgroup"><label class="flabel">Valid From</label><input class="finput" type="date" id="cpFrom"/></div>
+        <div class="fgroup"><label class="flabel">Valid Till</label><input class="finput" type="date" id="cpTill"/></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-sec" onclick="closeModal('addCouponModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createCoupon()">Create</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, orderBy, limit, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(FC);
+const db=getFirestore(app);
+window._db=db;
+
+const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT="5547663296";
+
+window.sendTelegram=async function(msg){try{await fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:msg,parse_mode:'Markdown'})});}catch(e){}};
+
+// Load all bookings
+window.loadBookings=async function(){
+  try{
+    const q=query(collection(db,'ride_bookings'),orderBy('timestamp','desc'),limit(200));
+    const snap=await getDocs(q);
+    window.allBookings=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderDashboard();
+    renderRidesTable();
+    renderPayments();
+    updateSidebarCounts();
+  }catch(e){console.error(e);}
+};
+
+window.loadRiders=async function(){
+  try{
+    const snap=await getDocs(collection(db,'riders'));
+    window.allRiders=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderRiders();
+    document.getElementById('statTotalUsers').textContent=window.allRiders.length;
+  }catch(e){}
+};
+
+window.loadDrivers=async function(){
+  try{
+    const snap=await getDocs(collection(db,'drivers'));
+    window.allDrivers=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderDrivers();
+    document.getElementById('statActiveDrivers').textContent=window.allDrivers.filter(d=>d.status==='online').length||window.allDrivers.length;
+    document.getElementById('sbDriverCount').textContent=window.allDrivers.length;
+    updateLiveMap();
+  }catch(e){
+    // Demo drivers if none in DB
+    window.allDrivers=demoDrivers();
+    renderDrivers();
+    document.getElementById('statActiveDrivers').textContent=window.allDrivers.filter(d=>d.status==='online').length;
+    updateLiveMap();
+  }
+};
+
+window.addDriver=async function(){
+  const name=document.getElementById('drvName').value.trim();
+  const phone=document.getElementById('drvPhone').value.trim();
+  if(!name||!phone){showToast('Fill all required fields','error');return;}
+  try{
+    const data={name,phone,vehicleType:document.getElementById('drvVehType').value,vehicleModel:document.getElementById('drvVehModel').value,plate:document.getElementById('drvPlateNo').value,city:document.getElementById('drvCity').value,status:'offline',rating:5.0,totalRides:0,earnings:0,createdAt:Date.now()};
+    await addDoc(collection(db,'drivers'),data);
+    showToast('Driver added successfully!','success');
+    closeModal('addDriverModal');
+    loadDrivers();
+    sendTelegram(`👨‍✈️ *New Driver Added*\n${name} | ${phone}\n${data.vehicleType}: ${data.vehicleModel}\nPlate: ${data.plate}`);
+  }catch(e){showToast('Error adding driver','error');}
+};
+</script>
+
+<script>
+const ADMIN_USER='admin';
+const ADMIN_PASS='swift@2024';
+window.allBookings=[];
+window.allRiders=[];
+window.allDrivers=[];
+let sosAlerts=JSON.parse(localStorage.getItem('sr_sos')||'[]');
+let coupons=[
+  {code:'FIRST50',discount:50,type:'Flat Discount',uses:12,maxUses:100,from:'2025-01-01',till:'2025-12-31',active:true},
+  {code:'GOGREEN',discount:100,type:'Flat Discount',uses:5,maxUses:50,from:'2025-01-01',till:'2025-06-30',active:true},
+  {code:'RIDE3WIN',discount:30,type:'Flat Discount',uses:34,maxUses:200,from:'2025-01-01',till:'2025-12-31',active:true},
+];
+let feedItems=[];
+
+function demoDrivers(){return[
+  {name:'Rajesh Kumar',phone:'9876543210',vehicleType:'Auto',vehicleModel:'Bajaj RE',plate:'MH19AB1234',rating:4.9,totalRides:1234,earnings:45600,status:'online',city:'Akole'},
+  {name:'Suresh Patil',phone:'9765432109',vehicleType:'Bike',vehicleModel:'Honda Activa',plate:'MH19CD5678',rating:4.7,totalRides:876,earnings:28900,status:'on_ride',city:'Akole'},
+  {name:'Priya Nair',phone:'9654321098',vehicleType:'EV',vehicleModel:'Tata Nexon EV',plate:'MH19KL1357',rating:5.0,totalRides:987,earnings:62100,status:'online',city:'Sangamner'},
+  {name:'Amit Sharma',phone:'9543210987',vehicleType:'Mini',vehicleModel:'Maruti WagonR',plate:'MH19EF9012',rating:4.8,totalRides:2109,earnings:89400,status:'offline',city:'Akole'},
+  {name:'Ravi Singh',phone:'9432109876',vehicleType:'SUV',vehicleModel:'Toyota Innova',plate:'MH19IJ7890',rating:4.9,totalRides:3456,earnings:142000,status:'on_ride',city:'Nashik'},
+];}
+
+// Login
+window.adminLogin=function(){
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPass').value;
+  if(u===ADMIN_USER&&p===ADMIN_PASS){
+    document.getElementById('loginScreen').style.display='none';
+    initAdmin();
+    showToast('Welcome back, Admin!','success');
+  }else{showToast('Invalid credentials','error');}
+};
+window.adminLogout=function(){document.getElementById('loginScreen').style.display='flex';showToast('Logged out','');};
+
+document.getElementById('adminPass')?.addEventListener('keydown',e=>{if(e.key==='Enter')adminLogin();});
+
+function initAdmin(){
+  loadBookings();loadRiders();loadDrivers();
+  renderBarChart();renderHourlyChart();
+  renderCoupons();renderLiveFeed();renderSOSAlerts();
+  renderMapStats();
+  // Live feed interval
+  setInterval(()=>{
+    const demos=['🚗 New ride booked: Akole → Sangamner','🏍️ Bike ride completed','👤 New user registered','⚡ EV ride started','✅ Ride #SR'+Math.floor(Math.random()*9999)+' completed'];
+    const types=['ride','signup','complete','ride','complete'];
+    const i=Math.floor(Math.random()*demos.length);
+    addFeedItem(demos[i],types[i]);
+  },8000);
+}
+
+function renderDashboard(){
+  const b=window.allBookings;
+  const today=new Date().toDateString();
+  const todayRides=b.filter(r=>new Date(r.timestamp).toDateString()===today);
+  document.getElementById('statTotalRides').textContent=todayRides.length||b.length;
+  document.getElementById('statRidesDelta').textContent='↑ '+b.length+' total bookings';
+  const revenue=b.filter(r=>r.status==='completed').reduce((s,r)=>s+(r.actualFare||r.baseFare||0),0);
+  document.getElementById('statRevenue').textContent='₹'+revenue.toLocaleString();
+  document.getElementById('statRevDelta').textContent='₹'+(revenue/Math.max(1,b.length)).toFixed(0)+' avg fare';
+  document.getElementById('donutTotal').textContent=b.length;
+  // Render recent 5 rides
+  const tb=document.getElementById('dashRidesBody');
+  const rows=b.slice(0,5);
+  if(!rows.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:1.5rem">No bookings yet</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>`<tr><td style="font-family:monospace;font-size:.75rem;color:var(--yellow)">${r.rideId||'—'}</td><td>${r.riderName||'—'}</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${(r.pickup||'').split(',')[0]} → ${(r.drop||'').split(',')[0]}</td><td><span class="status-pill ${statusClass(r.status)}">${(r.status||'—').replace('_',' ')}</span></td><td style="color:var(--yellow);font-weight:700">₹${r.actualFare||r.baseFare||'—'}</td></tr>`).join('');
+  // Completed count
+  document.getElementById('krCompleted').textContent=b.filter(r=>r.status==='completed').length;
+  document.getElementById('krCancelled').textContent=b.filter(r=>r.status==='cancelled').length;
+  document.getElementById('krTotal').textContent=b.length;
+}
+
+function statusClass(s){return s==='completed'?'sp-completed':s==='cancelled'?'sp-cancel':s==='finding_driver'?'sp-pending':s==='active'?'sp-active':'sp-offline';}
+
+function renderRidesTable(){
+  const b=window.allBookings;
+  const tbody=document.getElementById('allRidesBody');
+  if(!b.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:2rem">No ride bookings found in Firestore</td></tr>';return;}
+  tbody.innerHTML=b.map(r=>`<tr>
+    <td style="font-family:monospace;font-size:.72rem;color:var(--yellow)">${r.rideId||r.id?.slice(0,8)||'—'}</td>
+    <td>${r.riderName||'—'}</td>
+    <td style="font-size:.72rem;color:var(--muted2)">${r.phone||'—'}</td>
+    <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem">${(r.pickup||'').split(',')[0]} → ${(r.drop||'').split(',')[0]}</td>
+    <td>${r.vehicleEmoji||''} ${r.vehicleName||r.vehicle||'—'}</td>
+    <td>${r.distance||'—'} km</td>
+    <td style="color:var(--yellow);font-weight:700">₹${r.actualFare||r.baseFare||'—'}</td>
+    <td><span class="status-pill ${statusClass(r.status)}">${(r.status||'—').replace('_',' ')}</span></td>
+    <td style="text-transform:uppercase;font-size:.7rem">${r.payMethod||'—'}</td>
+    <td style="font-size:.7rem;color:var(--muted2)">${r.timestamp?new Date(r.timestamp).toLocaleString():'-'}</td>
+    <td><div class="action-btns"><button class="ab" onclick="viewRide('${r.id}')">View</button><button class="ab reject" onclick="cancelRideAdmin('${r.id}')">Cancel</button></div></td>
+  </tr>`).join('');
+}
+
+function renderDrivers(){
+  const d=window.allDrivers.length?window.allDrivers:demoDrivers();
+  document.getElementById('driversBody').innerHTML=d.map(r=>`<tr>
+    <td style="font-weight:700">${r.name}</td>
+    <td style="font-size:.75rem">${r.phone}</td>
+    <td>${r.vehicleType}</td>
+    <td style="font-family:monospace;font-size:.72rem">${r.plate||'—'}</td>
+    <td style="color:var(--yellow)">⭐ ${r.rating||'5.0'}</td>
+    <td>${(r.totalRides||0).toLocaleString()}</td>
+    <td style="color:var(--green)">₹${(r.earnings||0).toLocaleString()}</td>
+    <td><span class="status-pill ${r.status==='online'?'sp-active':r.status==='on_ride'?'sp-pending':'sp-offline'}">${r.status||'offline'}</span></td>
+    <td><div class="action-btns"><button class="ab" onclick="editDriver('${r.id||r.name}')">Edit</button><button class="ab approve" onclick="toggleDriverStatus('${r.id||r.name}','${r.status}')">Toggle</button><button class="ab reject" onclick="removeDriver('${r.id||r.name}')">Remove</button></div></td>
+  </tr>`).join('');
+  document.getElementById('sbDriverCount').textContent=d.length;
+}
+
+function renderRiders(){
+  const r=window.allRiders;
+  if(!r.length){document.getElementById('ridersBody').innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem">No riders found in Firestore</td></tr>';return;}
+  document.getElementById('ridersBody').innerHTML=r.map(u=>`<tr>
+    <td style="font-weight:700">${u.name||'—'}</td>
+    <td>+91 ${u.phone||'—'}</td>
+    <td style="font-size:.75rem">${u.email||'—'}</td>
+    <td>${window.allBookings.filter(b=>b.riderId===u.uid||b.riderId===u.phone).length}</td>
+    <td style="font-size:.72rem;color:var(--muted2)">${u.createdAt?new Date(u.createdAt).toLocaleDateString():'—'}</td>
+    <td><span class="status-pill sp-active">Active</span></td>
+    <td><div class="action-btns"><button class="ab" onclick="viewRider('${u.id}')">View</button><button class="ab reject" onclick="banRider('${u.id}')">Ban</button></div></td>
+  </tr>`).join('');
+}
+
+function renderPayments(){
+  const b=window.allBookings.filter(r=>r.status==='completed');
+  let total=0,wallet=0,upi=0,cash=0;
+  b.forEach(r=>{const f=r.actualFare||r.baseFare||0;total+=f;if(r.payMethod==='wallet')wallet+=f;else if(r.payMethod==='upi')upi+=f;else if(r.payMethod==='cash')cash+=f;});
+  document.getElementById('payTotal').textContent='₹'+total.toLocaleString();
+  document.getElementById('payWallet').textContent='₹'+wallet.toLocaleString();
+  document.getElementById('payUPI').textContent='₹'+upi.toLocaleString();
+  document.getElementById('payCash').textContent='₹'+cash.toLocaleString();
+  const tbody=document.getElementById('paymentsBody');
+  if(!b.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem">No completed payments yet</td></tr>';return;}
+  tbody.innerHTML=b.slice(0,50).map(r=>`<tr>
+    <td style="font-family:monospace;font-size:.72rem;color:var(--yellow)">${r.rideId||'—'}</td>
+    <td>${r.riderName||'—'}</td>
+    <td style="color:var(--green);font-weight:700">₹${r.actualFare||r.baseFare||'—'}</td>
+    <td style="text-transform:uppercase;font-size:.72rem">${r.payMethod||'—'}</td>
+    <td><span class="status-pill sp-completed">Paid</span></td>
+    <td style="font-size:.7rem;color:var(--muted2)">${r.timestamp?new Date(r.timestamp).toLocaleString():'-'}</td>
+  </tr>`).join('');
+}
+
+function renderCoupons(){
+  document.getElementById('couponsBody').innerHTML=coupons.map((c,i)=>`<tr>
+    <td style="font-family:monospace;font-weight:700;color:var(--yellow)">${c.code}</td>
+    <td>₹${c.discount}</td>
+    <td>${c.type}</td>
+    <td>${c.uses}/${c.maxUses}</td>
+    <td>${c.till}</td>
+    <td><span class="status-pill ${c.active?'sp-active':'sp-offline'}">${c.active?'Active':'Inactive'}</span></td>
+    <td><div class="action-btns"><button class="ab" onclick="toggleCoupon(${i})">${c.active?'Disable':'Enable'}</button><button class="ab reject" onclick="deleteCoupon(${i})">Delete</button></div></td>
+  </tr>`).join('');
+}
+
+function renderBarChart(){
+  const vals=[42,58,35,67,89,72,Math.floor(Math.random()*60+30)];
+  const max=Math.max(...vals);
+  const c=document.getElementById('barChart');
+  c.innerHTML=vals.map((v,i)=>`<div class="bar-wrap"><div class="bar ${i===6?'highlight':''}" style="height:${(v/max)*100}%"></div><div class="bar-val">${v}</div></div>`).join('');
+}
+
+function renderHourlyChart(){
+  const vals=[2,0,1,0,3,8,15,22,18,12,10,14,18,20,16,13,18,24,28,22,16,10,6,3];
+  const max=Math.max(...vals);
+  const c=document.getElementById('hourlyChart');
+  const peak=vals.indexOf(max);
+  c.innerHTML=vals.map((v,i)=>`<div class="bar-wrap"><div class="bar ${i===peak?'highlight':''}" style="height:${Math.max(4,(v/max)*100)}%"></div></div>`).join('');
+  const peakHour=peak<12?peak+' AM':(peak-12||12)+' PM';
+  document.getElementById('rpPeakHour').textContent=peakHour;
+  const b=window.allBookings;
+  const done=b.filter(r=>r.status==='completed');
+  document.getElementById('rpAvgFare').textContent='₹'+(done.reduce((s,r)=>s+(r.actualFare||r.baseFare||0),0)/Math.max(1,done.length)).toFixed(0);
+  document.getElementById('rpAvgDist').textContent=(done.reduce((s,r)=>s+(parseFloat(r.distance)||0),0)/Math.max(1,done.length)).toFixed(1)+' km';
+}
+
+function updateLiveMap(){
+  const map=document.getElementById('liveMap');
+  document.querySelectorAll('.map-driver-dot').forEach(d=>d.remove());
+  const drivers=window.allDrivers.length?window.allDrivers:demoDrivers();
+  drivers.forEach((d,i)=>{
+    const dot=document.createElement('div');
+    dot.className='map-driver-dot';
+    const top=20+Math.random()*60, left=10+Math.random()*80;
+    const col=d.status==='online'?'var(--green)':d.status==='on_ride'?'var(--yellow)':'var(--muted)';
+    dot.style.cssText=`top:${top}%;left:${left}%;background:${col};`;
+    dot.style.setProperty('--dc',col);
+    dot.style.cssText+=`--dc:${col};`;
+    dot.title=d.name+' — '+d.status;
+    dot.onclick=()=>showToast(d.name+' · '+d.vehicleType+' · '+d.status,'');
+    map.appendChild(dot);
+  });
+}
+
+function renderMapStats(){
+  const d=window.allDrivers.length?window.allDrivers:demoDrivers();
+  const online=d.filter(x=>x.status==='online').length;
+  const onRide=d.filter(x=>x.status==='on_ride').length;
+  const offline=d.filter(x=>x.status==='offline').length;
+  document.getElementById('mapStats').innerHTML=`
+    <div class="kpi"><div class="kpi-val" style="color:var(--green)">${online}</div><div class="kpi-lbl">Online Drivers</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--yellow)">${onRide}</div><div class="kpi-lbl">On Ride</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--muted)">${offline}</div><div class="kpi-lbl">Offline</div></div>
+    <div class="kpi"><div class="kpi-val" style="color:var(--blue)">${d.length}</div><div class="kpi-lbl">Total Drivers</div></div>
+  `;
+}
+
+function renderLiveFeed(){
+  const initial=[
+    {text:'App started — Admin logged in',sub:'System',type:'complete',time:'just now'},
+    {text:'Loading Firestore data…',sub:'Database',type:'ride',time:'1s ago'},
+  ];
+  initial.forEach(f=>addFeedItem(f.text,f.type,f.sub,f.time));
+}
+
+function addFeedItem(text,type='ride',sub='',time=''){
+  const feed=document.getElementById('liveFeed');
+  const icons={ride:'🚗',signup:'👤',sos:'🚨',complete:'✅'};
+  const colors={ride:'var(--ydim)',signup:'var(--gdim)',sos:'var(--rdim)',complete:'var(--bdim)'};
+  const now=time||new Date().toLocaleTimeString();
+  const div=document.createElement('div');
+  div.className='feed-item '+type;
+  div.innerHTML=`<div class="feed-icon" style="background:${colors[type]||'var(--ydim)'}">${icons[type]||'📋'}</div><div style="flex:1"><div class="feed-text">${text}</div><div class="feed-sub">${sub||now}</div></div><div class="feed-time">${time?now:''}</div>`;
+  feed.insertBefore(div,feed.firstChild);
+  while(feed.children.length>15)feed.removeChild(feed.lastChild);
+}
+
+function renderSOSAlerts(){
+  const el=document.getElementById('sosList');
+  if(!sosAlerts.length){el.innerHTML='<div style="text-align:center;color:var(--muted);padding:2rem;font-size:.82rem">No SOS alerts</div>';return;}
+  el.innerHTML=sosAlerts.map((s,i)=>`<div style="background:var(--rdim);border:1px solid rgba(255,68,68,.3);border-radius:11px;padding:.9rem 1rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.8rem">
+    <div style="font-size:1.3rem">🚨</div>
+    <div style="flex:1"><div style="font-weight:700;color:var(--red)">${s.user||'Unknown User'}</div><div style="font-size:.72rem;color:var(--muted2)">📱 ${s.phone||'—'} · ${s.time||'—'}</div></div>
+    <div style="display:flex;gap:.4rem"><button class="ab approve" onclick="resolveSOSAlert(${i})">Resolve</button><button class="ab" onclick="window.open('tel:${s.phone||''}')">Call</button></div>
+  </div>`).join('');
+  document.getElementById('sbSOSCount').textContent=sosAlerts.length;
+  document.getElementById('notifDot').style.display=sosAlerts.length?'block':'none';
+}
+
+function updateSidebarCounts(){
+  document.getElementById('sbRideCount').textContent=window.allBookings.length;
+}
+
+window.showPage=function(page,el){
+  document.querySelectorAll('.page-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+page)?.classList.add('active');
+  if(el)el.classList.add('active');
+  document.getElementById('pageTitle').textContent=page[0].toUpperCase()+page.slice(1);
+};
+
+window.filterRideTable=function(){const filter=document.getElementById('rideStatusFilter').value;const b=filter?window.allBookings.filter(r=>r.status===filter):window.allBookings;/* re-render filtered */const tbody=document.getElementById('allRidesBody');tbody.innerHTML=b.map(r=>`<tr><td style="font-family:monospace;font-size:.72rem;color:var(--yellow)">${r.rideId||r.id?.slice(0,8)||'—'}</td><td>${r.riderName||'—'}</td><td style="font-size:.72rem;color:var(--muted2)">${r.phone||'—'}</td><td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.75rem">${(r.pickup||'').split(',')[0]} → ${(r.drop||'').split(',')[0]}</td><td>${r.vehicleEmoji||''} ${r.vehicleName||r.vehicle||'—'}</td><td>${r.distance||'—'} km</td><td style="color:var(--yellow);font-weight:700">₹${r.actualFare||r.baseFare||'—'}</td><td><span class="status-pill ${statusClass(r.status)}">${(r.status||'—').replace('_',' ')}</span></td><td style="text-transform:uppercase;font-size:.7rem">${r.payMethod||'—'}</td><td style="font-size:.7rem;color:var(--muted2)">${r.timestamp?new Date(r.timestamp).toLocaleString():'-'}</td><td><div class="action-btns"><button class="ab" onclick="viewRide('${r.id}')">View</button></div></td></tr>`).join('');};
+
+window.refreshData=function(){loadBookings();loadRiders();loadDrivers();renderBarChart();showToast('Data refreshed','success');};
+window.handleSearch=function(v){if(!v)return;const b=window.allBookings.filter(r=>r.riderName?.toLowerCase().includes(v.toLowerCase())||r.rideId?.includes(v)||r.phone?.includes(v));if(b.length){showPage('rides',null);window.allBookings=b;renderRidesTable();}};
+window.exportCSV=function(type='bookings'){const data=type==='riders'?window.allRiders:window.allBookings;if(!data.length){showToast('No data to export','warn');return;}const csv=Object.keys(data[0]).join(',')+'\n'+data.map(r=>Object.values(r).map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='swiftride_'+type+'_'+Date.now()+'.csv';a.click();showToast('Exported '+data.length+' records','success');};
+window.viewRide=function(id){const r=window.allBookings.find(b=>b.id===id);if(r)alert(JSON.stringify(r,null,2));};
+window.cancelRideAdmin=function(id){if(confirm('Cancel this ride?'))showToast('Ride cancelled (admin)','warn');};
+window.viewRider=function(id){const r=window.allRiders.find(u=>u.id===id);if(r)alert(JSON.stringify(r,null,2));};
+window.banRider=function(id){if(confirm('Ban this rider?'))showToast('Rider banned','warn');};
+window.editDriver=function(id){showToast('Edit driver: '+id,'');};
+window.toggleDriverStatus=function(id,status){showToast('Driver status toggled','success');};
+window.removeDriver=function(id){if(confirm('Remove this driver?'))showToast('Driver removed','warn');};
+window.openAddDriver=function(){document.getElementById('addDriverModal').classList.add('show');};
+window.openAddCoupon=function(){document.getElementById('addCouponModal').classList.add('show');};
+window.closeModal=function(id){document.getElementById(id).classList.remove('show');};
+window.toggleCoupon=function(i){coupons[i].active=!coupons[i].active;renderCoupons();showToast('Coupon '+(coupons[i].active?'enabled':'disabled'),'success');};
+window.deleteCoupon=function(i){if(confirm('Delete coupon '+coupons[i].code+'?')){coupons.splice(i,1);renderCoupons();}};
+window.createCoupon=function(){const code=document.getElementById('cpCode').value.trim().toUpperCase();const disc=parseInt(document.getElementById('cpDiscount').value);if(!code||!disc){showToast('Fill all fields','error');return;}coupons.push({code,discount:disc,type:document.getElementById('cpType').value,uses:0,maxUses:parseInt(document.getElementById('cpMaxUses').value)||100,from:document.getElementById('cpFrom').value,till:document.getElementById('cpTill').value,active:true});renderCoupons();closeModal('addCouponModal');showToast('Coupon '+code+' created!','success');};
+window.saveFareConfig=function(){showToast('Fare configuration saved','success');};
+window.saveAppSettings=function(){showToast('App settings saved','success');};
+window.resolveSOSAlert=function(i){sosAlerts.splice(i,1);localStorage.setItem('sr_sos',JSON.stringify(sosAlerts));renderSOSAlerts();showToast('SOS alert resolved','success');};
+window.clearSOSAlerts=function(){sosAlerts=[];localStorage.setItem('sr_sos','[]');renderSOSAlerts();};
+window.sendNotification=function(){const title=document.getElementById('notifTitle').value.trim();const msg=document.getElementById('notifMsg').value.trim();const target=document.getElementById('notifTarget').value;const code=document.getElementById('notifCode').value;if(!title||!msg){showToast('Fill title and message','error');return;}sendTelegram(`📣 *SwiftRide Notification*\n*To:* ${target}\n*Title:* ${title}\n*Message:* ${msg}${code?'\n🎟 Promo: '+code:''}`);showToast('Notification sent via Telegram!','success');};
+
+document.querySelectorAll('.modal-bg').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});});
+
+window.showToast=function(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='show '+(type||'');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3000);};
+
+// Load SOS from Telegram messages (webhook simulation)
+function loadSOSFromStorage(){const saved=JSON.parse(localStorage.getItem('sr_sos')||'[]');sosAlerts=saved;renderSOSAlerts();}
+loadSOSFromStorage();
+</script>
+</body>
+</html>
