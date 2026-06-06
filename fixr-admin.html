@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Fixr Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+  <style>
+    :root{
+      --bg:#0F1117;--surface:#181C27;--card:#1E2333;--card2:#232840;--border:rgba(255,255,255,0.07);
+      --yellow:#F5C518;--yellow-dim:#2A2510;--yellow-border:rgba(245,197,24,0.25);
+      --blue:#3B82F6;--blue-dim:#0D1929;
+      --text:#F0F2F8;--muted:#7A8099;--danger:#EF4444;--danger-dim:rgba(239,68,68,.1);
+      --success:#22C55E;--success-dim:rgba(34,197,94,.1);
+      --warn:#F59E0B;--warn-dim:rgba(245,158,11,.1);
+      --purple:#A855F7;--purple-dim:rgba(168,85,247,.1);
+      --radius:14px;--safe-bottom:env(safe-area-inset-bottom,0px);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+    /* ── LOGIN ── */
+    .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
+    .login-box{background:var(--surface);border-radius:20px;border:1px solid var(--border);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
+    .login-logo{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--yellow);letter-spacing:-1.5px;margin-bottom:.2rem;}
+    .login-sub{color:var(--muted);font-size:.82rem;margin-bottom:1.5rem;}
+    .login-input{width:100%;padding:.65rem .9rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;background:var(--card);color:var(--text);margin-bottom:.6rem;transition:border-color .2s;}
+    .login-input::placeholder{color:var(--muted);}
+    .login-input:focus{border-color:var(--yellow);}
+    .login-btn{width:100%;background:var(--yellow);color:#0F1117;border:none;border-radius:10px;padding:.75rem;font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;cursor:pointer;}
+    .login-error{color:var(--danger);font-size:.8rem;margin-top:.5rem;display:none;}
+
+    /* ── TOP NAV ── */
+    .top-nav{position:sticky;top:0;z-index:100;background:rgba(15,17,23,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;}
+    .nav-logo{font-family:'Syne',sans-serif;font-size:1.35rem;font-weight:800;color:var(--yellow);letter-spacing:-1px;}
+    .nav-logo span{color:var(--text);}
+    .nav-right{display:flex;align-items:center;gap:.75rem;}
+    .admin-badge{background:var(--yellow-dim);border:1px solid var(--yellow-border);color:var(--yellow);font-size:.68rem;font-weight:700;padding:3px 9px;border-radius:50px;}
+    .logout-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.82rem;font-family:'Inter',sans-serif;font-weight:600;display:flex;align-items:center;gap:3px;}
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);}
+    .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.58rem;font-weight:700;transition:color .2s;text-transform:uppercase;letter-spacing:.3px;}
+    .bnav-item.active{color:var(--yellow);}
+    .bnav-item i{font-size:1.25rem;}
+
+    /* ── PAGES ── */
+    .page{display:none;padding-bottom:calc(70px + var(--safe-bottom));}
+    .page.active{display:block;}
+    main{padding:1rem;}
+
+    /* ── STATS ── */
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem;}
+    .stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;}
+    .stat-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.55rem;}
+    .stat-label{font-size:.65rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:.15rem;}
+    .stat-val{font-family:'Syne',sans-serif;font-size:1.65rem;font-weight:800;color:var(--text);}
+    .stat-sub{font-size:.68rem;color:var(--muted);margin-top:2px;}
+
+    /* ── SECTION HEADER ── */
+    .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+    .section-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;}
+    .refresh-btn{background:var(--yellow-dim);color:var(--yellow);border:1px solid var(--yellow-border);border-radius:8px;padding:.32rem .7rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+    /* ── RECENT MINI CARD ── */
+    .recent-mini{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.85rem;margin-bottom:.55rem;display:flex;align-items:center;gap:.75rem;}
+    .rtype-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .dot-plumber{background:var(--blue);}
+    .dot-electrician{background:var(--yellow);}
+    .dot-mixed{background:var(--purple);}
+    .recent-mini-info{flex:1;min-width:0;}
+    .recent-mini-id{font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .recent-mini-sub{font-size:.7rem;color:var(--muted);margin-top:1px;}
+    .recent-mini-price{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;color:var(--yellow);flex-shrink:0;}
+
+    /* ── STATUS BADGES ── */
+    .status-badge{font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:50px;white-space:nowrap;flex-shrink:0;}
+    .status-pending{background:var(--warn-dim);color:var(--warn);}
+    .status-confirmed{background:var(--blue-dim);color:var(--blue);}
+    .status-in_progress{background:var(--purple-dim);color:var(--purple);}
+    .status-completed{background:var(--success-dim);color:var(--success);}
+    .status-cancelled{background:var(--danger-dim);color:var(--danger);}
+
+    /* ── BOOKING CARDS ── */
+    .booking-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1rem;margin-bottom:.7rem;border-left:3px solid var(--border);}
+    .booking-card.has-plumber{border-left-color:var(--blue);}
+    .booking-card.has-electrician{border-left-color:var(--yellow);}
+    .booking-card.has-mixed{border-left-color:var(--purple);}
+    .bc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.5rem;margin-bottom:.5rem;}
+    .bc-id{font-family:'Syne',sans-serif;font-weight:800;font-size:.88rem;}
+    .bc-customer{font-size:.72rem;color:var(--muted);margin-top:2px;}
+    .bc-meta{display:flex;gap:.6rem;flex-wrap:wrap;font-size:.72rem;color:var(--muted);margin-bottom:.4rem;}
+    .bc-meta span{display:flex;align-items:center;gap:3px;}
+    .bc-services{font-size:.74rem;color:var(--muted);margin-bottom:.35rem;line-height:1.5;}
+    .bc-slot{background:var(--yellow-dim);border:1px solid var(--yellow-border);color:var(--yellow);font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:3px;margin-bottom:.5rem;}
+    .bc-notes{font-size:.72rem;color:var(--muted);margin-bottom:.4rem;font-style:italic;}
+    .bc-time{font-size:.68rem;color:var(--muted);margin-bottom:.6rem;}
+    .bc-actions{display:flex;gap:.45rem;align-items:center;flex-wrap:wrap;}
+    .status-select{flex:1;min-width:130px;padding:.38rem .55rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;outline:none;background:var(--card);color:var(--text);}
+    .status-select option{background:var(--card);}
+    .update-btn{background:var(--yellow);color:#0F1117;border:none;border-radius:8px;padding:.38rem .8rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:800;cursor:pointer;white-space:nowrap;}
+    .notify-btn{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(59,130,246,.2);border-radius:8px;padding:.38rem .65rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;}
+    .assign-btn{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,.2);border-radius:8px;padding:.38rem .65rem;font-family:'Syne',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;}
+
+    /* ── FILTER BAR ── */
+    .filter-bar{display:flex;gap:.5rem;margin-bottom:.85rem;flex-wrap:wrap;}
+    .filter-bar input{flex:1;min-width:150px;padding:.52rem .8rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Inter',sans-serif;font-size:.83rem;outline:none;background:var(--card);color:var(--text);}
+    .filter-bar input::placeholder{color:var(--muted);}
+    .filter-bar input:focus{border-color:var(--yellow);}
+    .filter-bar select{padding:.48rem .7rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Inter',sans-serif;font-size:.8rem;outline:none;background:var(--card);cursor:pointer;color:var(--muted);}
+    .filter-bar select option{background:var(--card);}
+
+    /* ── SERVICE FORM ── */
+    .form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.2rem;margin-bottom:1rem;}
+    .form-card-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;margin-bottom:.9rem;display:flex;align-items:center;gap:6px;}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;}
+    .form-grid .full{grid-column:1/-1;}
+    .form-group{display:flex;flex-direction:column;gap:3px;}
+    label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+    .form-input{padding:.58rem .78rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;background:var(--surface);color:var(--text);width:100%;}
+    .form-input::placeholder{color:var(--muted);}
+    .form-input:focus{border-color:var(--yellow);}
+    textarea.form-input{resize:vertical;min-height:68px;}
+    select.form-input{cursor:pointer;}
+    select.form-input option{background:var(--card);}
+    .includes-input{width:100%;padding:.55rem .78rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Inter',sans-serif;font-size:.85rem;outline:none;background:var(--surface);color:var(--text);margin-bottom:.4rem;}
+    .includes-input::placeholder{color:var(--muted);}
+    .includes-input:focus{border-color:var(--yellow);}
+    .checkbox-row{display:flex;align-items:center;gap:6px;margin-bottom:.35rem;}
+    .checkbox-row input[type=checkbox]{width:17px;height:17px;accent-color:var(--yellow);}
+    .checkbox-row label{text-transform:none;font-size:.85rem;letter-spacing:0;font-weight:600;color:var(--text);}
+    .img-preview{width:100%;height:130px;border-radius:9px;object-fit:cover;border:1px solid var(--border);margin-top:6px;display:none;}
+    .form-actions{display:flex;gap:.55rem;margin-top:.75rem;flex-wrap:wrap;}
+    .btn-primary{background:var(--yellow);color:#0F1117;border:none;border-radius:9px;padding:.58rem 1.2rem;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:5px;}
+    .btn-secondary{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:9px;padding:.58rem 1rem;font-family:'Syne',sans-serif;font-size:.85rem;cursor:pointer;font-weight:700;}
+
+    /* ── SERVICE GRID ── */
+    .service-grid{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;}
+    @media(min-width:480px){.service-grid{grid-template-columns:repeat(3,1fr);}}
+    .svc-item{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+    .svc-item.plumber{border-top:2px solid var(--blue);}
+    .svc-item.electrician{border-top:2px solid var(--yellow);}
+    .svc-item img{width:100%;height:80px;object-fit:cover;}
+    .svc-item-body{padding:.6rem;}
+    .svc-item-name{font-family:'Syne',sans-serif;font-weight:800;font-size:.82rem;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .svc-item-meta{font-size:.68rem;color:var(--muted);margin-bottom:.45rem;line-height:1.5;}
+    .svc-type-chip{font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:50px;display:inline-block;margin-bottom:.3rem;}
+    .chip-plumber{background:var(--blue-dim);color:var(--blue);}
+    .chip-electrician{background:var(--yellow-dim);color:var(--yellow);}
+    .svc-item-actions{display:flex;gap:.3rem;}
+    .btn-edit{background:var(--warn-dim);color:var(--warn);border:none;border-radius:6px;padding:.28rem .55rem;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+    .btn-del{background:var(--danger-dim);color:var(--danger);border:none;border-radius:6px;padding:.28rem .55rem;font-family:'Syne',sans-serif;font-size:.68rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+    /* ── TOAST ── */
+    .toast{position:fixed;bottom:calc(70px + var(--safe-bottom) + .75rem);left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.7rem 1.1rem;border-radius:12px;font-size:.85rem;font-weight:600;z-index:500;transition:all .3s cubic-bezier(.34,1.56,.64,1);opacity:0;transform:translateY(20px);pointer-events:none;text-align:center;}
+    .toast.show{opacity:1;transform:translateY(0);}
+
+    /* ── SKELETON ── */
+    .skeleton{background:linear-gradient(90deg,#1E2333 25%,#252A3A 50%,#1E2333 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
+    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+    /* ── TECHNICIAN ASSIGN SHEET ── */
+    .assign-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:400;display:none;align-items:flex-end;}
+    .assign-overlay.open{display:flex;}
+    .assign-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;padding:1.25rem;padding-bottom:calc(1.25rem + var(--safe-bottom));animation:slideUp .25s cubic-bezier(.32,.72,0,1);}
+    @keyframes slideUp{from{transform:translateY(40px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
+    .assign-handle{width:40px;height:4px;background:var(--border);border-radius:50px;margin:0 auto .9rem;}
+    .assign-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;margin-bottom:.9rem;}
+    .tech-list{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem;}
+    .tech-item{background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:.75rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;transition:border-color .2s;}
+    .tech-item:active{border-color:var(--yellow);}
+    .tech-avatar{width:38px;height:38px;border-radius:50%;background:var(--yellow-dim);border:2px solid var(--yellow-border);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+    .tech-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;}
+    .tech-type{font-size:.7rem;color:var(--muted);}
+    .tech-status{font-size:.68rem;font-weight:700;padding:2px 7px;border-radius:50px;margin-left:auto;flex-shrink:0;}
+    .tech-available{background:var(--success-dim);color:var(--success);}
+    .tech-busy{background:var(--danger-dim);color:var(--danger);}
+    .assign-close-btn{width:100%;background:var(--card);color:var(--muted);border:1.5px solid var(--border);border-radius:10px;padding:.65rem;font-family:'Syne',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;}
+  </style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Fix<span style="color:var(--text)">r</span></div>
+    <div class="login-sub">Admin Panel · Sign in to continue</div>
+    <input class="login-input" type="text" id="loginUser" placeholder="Username" autocomplete="off"/>
+    <input class="login-input" type="password" id="loginPass" placeholder="Password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Invalid credentials. Try again.</div>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="nav-logo">Fix<span>r</span></div>
+  <div class="nav-right">
+    <span class="admin-badge"><i class="ti ti-shield-check" style="font-size:.75rem"></i> Admin</span>
+    <button class="logout-btn" onclick="logout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>
+</div>
+
+<!-- ── DASHBOARD PAGE ── -->
+<div class="page active" id="pageDashboard">
+  <main>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--yellow-dim)"><i class="ti ti-receipt" style="color:var(--yellow)"></i></div>
+        <div class="stat-label">Total Bookings</div>
+        <div class="stat-val" id="sTotalBookings">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--warn-dim)"><i class="ti ti-clock" style="color:var(--warn)"></i></div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-val" id="sPending">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--success-dim)"><i class="ti ti-currency-rupee" style="color:var(--success)"></i></div>
+        <div class="stat-label">Revenue</div>
+        <div class="stat-val" id="sRevenue">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--blue-dim)"><i class="ti ti-tool" style="color:var(--blue)"></i></div>
+        <div class="stat-label">Services</div>
+        <div class="stat-val" id="sServices">—</div>
+      </div>
+    </div>
+
+    <!-- TYPE BREAKDOWN -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem;">
+      <div class="stat-card" style="border-top:2px solid var(--blue)">
+        <div class="stat-label" style="color:var(--blue)"><i class="ti ti-droplet"></i> Plumbing</div>
+        <div class="stat-val" id="sPlumbing">—</div>
+        <div class="stat-sub">bookings</div>
+      </div>
+      <div class="stat-card" style="border-top:2px solid var(--yellow)">
+        <div class="stat-label" style="color:var(--yellow)"><i class="ti ti-bolt"></i> Electrical</div>
+        <div class="stat-val" id="sElectrical">—</div>
+        <div class="stat-sub">bookings</div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">Recent Bookings</div>
+      <button class="refresh-btn" onclick="loadDashboard()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div id="recentList"></div>
+  </main>
+</div>
+
+<!-- ── SERVICES PAGE ── -->
+<div class="page" id="pageServices">
+  <main>
+    <!-- ADD/EDIT FORM -->
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-plus" style="color:var(--yellow)"></i> <span id="formTitle">Add New Service</span></div>
+      <input type="hidden" id="editId"/>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Service Name *</label>
+          <input type="text" class="form-input" id="fName" placeholder="e.g. Pipe Leak Repair"/>
+        </div>
+        <div class="form-group">
+          <label>Type *</label>
+          <select class="form-input" id="fType">
+            <option value="">Select type</option>
+            <option value="plumber">🔧 Plumbing</option>
+            <option value="electrician">⚡ Electrical</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="e.g. 349"/>
+        </div>
+        <div class="form-group">
+          <label>Duration</label>
+          <input type="text" class="form-input" id="fDuration" placeholder="e.g. 1–2 hrs"/>
+        </div>
+        <div class="form-group">
+          <label>Warranty</label>
+          <input type="text" class="form-input" id="fWarranty" placeholder="e.g. 30 days"/>
+        </div>
+        <div class="form-group">
+          <label>Rating</label>
+          <input type="number" class="form-input" id="fRating" placeholder="4.8" min="1" max="5" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>Bookings Count</label>
+          <input type="text" class="form-input" id="fBookings" placeholder="e.g. 2.1k+"/>
+        </div>
+        <div class="form-group full">
+          <label>Description *</label>
+          <textarea class="form-input" id="fDesc" placeholder="Describe the service…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Image URL *</label>
+          <input type="url" class="form-input" id="fImage" placeholder="https://…" oninput="previewImg(this.value)"/>
+          <img id="imgPreview" class="img-preview"/>
+        </div>
+        <div class="form-group full">
+          <label>What's Included (comma-separated)</label>
+          <input type="text" class="form-input" id="fIncludes" placeholder="Leak detection, Joint sealing, Pressure test, Cleanup"/>
+        </div>
+      </div>
+      <div style="margin-top:.6rem">
+        <div class="checkbox-row"><input type="checkbox" id="fPopular"/><label for="fPopular">🔥 Mark as Popular</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="fUrgent"/><label for="fUrgent">🚨 Urgent / Emergency</label></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveService()"><i class="ti ti-check"></i> Save Service</button>
+        <button class="btn-secondary" onclick="resetForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <div class="section-title">All Services</div>
+      <button class="refresh-btn" onclick="loadServices()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div class="service-grid" id="serviceGrid">
+      <div style="grid-column:1/-1;color:var(--muted);font-size:.85rem;text-align:center;padding:1rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<!-- ── BOOKINGS PAGE ── -->
+<div class="page" id="pageBookings">
+  <main>
+    <div class="section-header">
+      <div class="section-title">All Bookings</div>
+      <button class="refresh-btn" onclick="loadBookings()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="bookingSearch" placeholder="Search name, email, ID…" oninput="filterBookings()"/>
+      <select id="bookingStatusFilter" onchange="filterBookings()">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="in_progress">In Progress</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="bookingTypeFilter" onchange="filterBookings()">
+        <option value="">All types</option>
+        <option value="plumber">Plumbing</option>
+        <option value="electrician">Electrical</option>
+      </select>
+    </div>
+    <div id="bookingsContainer">
+      <div style="color:var(--muted);font-size:.85rem;text-align:center;padding:1rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bnav-item active" id="bnav-dashboard" onclick="switchPage('dashboard')">
+    <i class="ti ti-dashboard"></i>Dash
+  </div>
+  <div class="bnav-item" id="bnav-services" onclick="switchPage('services')">
+    <i class="ti ti-tool"></i>Services
+  </div>
+  <div class="bnav-item" id="bnav-bookings" onclick="switchPage('bookings')">
+    <i class="ti ti-receipt"></i>Bookings
+  </div>
+</div>
+
+<!-- ASSIGN TECHNICIAN SHEET -->
+<div class="assign-overlay" id="assignOverlay" onclick="closeAssign(event)">
+  <div class="assign-sheet">
+    <div class="assign-handle"></div>
+    <div class="assign-title">⚡ Assign Technician</div>
+    <div class="tech-list" id="techList"></div>
+    <button class="assign-close-btn" onclick="closeAssignSheet()">Cancel</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+const BOT_TOKEN="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT_ID="5547663296";
+const ADMIN_USER="admin", ADMIN_PASS="fixr2025";
+
+let allBookings=[], currentAssignDocId='';
+
+const TECHNICIANS=[
+  {id:'t1',name:'Ravi Kumar',type:'Plumber',avatar:'🔧',available:true},
+  {id:'t2',name:'Suresh Patil',type:'Plumber',avatar:'🪛',available:true},
+  {id:'t3',name:'Amit Joshi',type:'Electrician',avatar:'⚡',available:true},
+  {id:'t4',name:'Deepak Yadav',type:'Electrician',avatar:'🔌',available:false},
+  {id:'t5',name:'Manoj Singh',type:'Plumber + Electrician',avatar:'🛠',available:true},
+];
+
+// ── AUTH ──
+window.doLogin=function(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  if(u===ADMIN_USER&&p===ADMIN_PASS){
+    document.getElementById('loginScreen').style.display='none';
+    loadDashboard(); loadServices(); loadBookings();
+  }else{document.getElementById('loginError').style.display='block';}
+};
+window.logout=function(){document.getElementById('loginScreen').style.display='flex';};
+
+// ── PAGE SWITCH ──
+window.switchPage=function(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page'+page[0].toUpperCase()+page.slice(1)).classList.add('active');
+  document.getElementById('bnav-'+page).classList.add('active');
+};
+
+// ── DASHBOARD ──
+window.loadDashboard=async function(){
+  const[svcSnap,bkSnap]=await Promise.all([getDocs(collection(db,"services")),getDocs(collection(db,"fixr_bookings"))]);
+  const bookings=bkSnap.docs.map(d=>({docId:d.id,...d.data()}));
+  const pending=bookings.filter(b=>!b.status||b.status==='pending').length;
+  const revenue=bookings.filter(b=>b.status!=='cancelled').reduce((s,b)=>s+(+b.total||0),0);
+
+  // count types
+  let plumbingCount=0,electricalCount=0;
+  bookings.forEach(b=>{
+    const svcs=b.services||[];
+    const hasP=svcs.some(s=>s.type==='plumber');
+    const hasE=svcs.some(s=>s.type==='electrician');
+    if(hasP) plumbingCount++;
+    if(hasE) electricalCount++;
+  });
+
+  document.getElementById('sTotalBookings').textContent=bookings.length;
+  document.getElementById('sPending').textContent=pending;
+  document.getElementById('sRevenue').textContent='₹'+revenue.toLocaleString('en-IN');
+  document.getElementById('sServices').textContent=svcSnap.size||8;
+  document.getElementById('sPlumbing').textContent=plumbingCount;
+  document.getElementById('sElectrical').textContent=electricalCount;
+
+  const recent=bookings.sort((a,b)=>b.timestamp-a.timestamp).slice(0,8);
+  document.getElementById('recentList').innerHTML=recent.length
+    ?recent.map(b=>{
+      const svcs=b.services||[];
+      const hasP=svcs.some(s=>s.type==='plumber');
+      const hasE=svcs.some(s=>s.type==='electrician');
+      const dotClass=hasP&&hasE?'dot-mixed':hasE?'dot-electrician':'dot-plumber';
+      return `<div class="recent-mini">
+        <div class="rtype-dot ${dotClass}"></div>
+        <div class="recent-mini-info">
+          <div class="recent-mini-id">${b.bookingId||'—'} · ${b.name}</div>
+          <div class="recent-mini-sub">${(b.status||'pending').replace('_',' ')} · ${b.slot||''} · ${new Date(b.timestamp).toLocaleDateString()}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="recent-mini-price">₹${b.total||0}</div>
+          <span class="status-badge status-${b.status||'pending'}">${(b.status||'pending').replace('_',' ')}</span>
+        </div>
+      </div>`;
+    }).join('')
+    :'<p style="color:var(--muted);font-size:.85rem">No bookings yet.</p>';
+};
+
+// ── SERVICES ──
+window.loadServices=async function(){
+  const snap=await getDocs(collection(db,"services"));
+  const grid=document.getElementById('serviceGrid');
+  if(!snap.size){grid.innerHTML='<div style="grid-column:1/-1;color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">No services yet. Add one above.</div>';return;}
+  grid.innerHTML=snap.docs.map(d=>{
+    const s={id:d.id,...d.data()};
+    return `<div class="svc-item ${s.type}">
+      <img src="${s.image||''}" alt="${s.name}" onerror="this.style.display='none'" loading="lazy"/>
+      <div class="svc-item-body">
+        <span class="svc-type-chip chip-${s.type}">${s.type==='plumber'?'🔧 Plumbing':'⚡ Electrical'}</span>
+        <div class="svc-item-name">${s.name}</div>
+        <div class="svc-item-meta">₹${s.price} · ${s.duration||'1–2 hrs'}${s.popular?' · 🔥':''}</div>
+        <div class="svc-item-actions">
+          <button class="btn-edit" onclick="editService('${d.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-del" onclick="deleteService('${d.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.previewImg=function(url){
+  const img=document.getElementById('imgPreview');
+  if(url){img.src=url;img.style.display='block';}else img.style.display='none';
+};
+
+window.saveService=async function(){
+  const id=document.getElementById('editId').value;
+  const includesRaw=document.getElementById('fIncludes').value.trim();
+  const data={
+    name:document.getElementById('fName').value.trim(),
+    type:document.getElementById('fType').value,
+    price:document.getElementById('fPrice').value.trim(),
+    duration:document.getElementById('fDuration').value.trim(),
+    warranty:document.getElementById('fWarranty').value.trim(),
+    rating:document.getElementById('fRating').value.trim(),
+    bookings:document.getElementById('fBookings').value.trim(),
+    desc:document.getElementById('fDesc').value.trim(),
+    image:document.getElementById('fImage').value.trim(),
+    includes:includesRaw?includesRaw.split(',').map(s=>s.trim()).filter(Boolean):[],
+    popular:document.getElementById('fPopular').checked,
+    urgent:document.getElementById('fUrgent').checked,
+  };
+  if(!data.name||!data.type||!data.price||!data.image) return showToast('Name, type, price & image required');
+  try{
+    if(id){await updateDoc(doc(db,"services",id),data);showToast('Service updated ✅');}
+    else{await addDoc(collection(db,"services"),{...data,createdAt:serverTimestamp()});showToast('Service added ⚡');}
+    resetForm(); loadServices();
+  }catch(e){showToast('Error saving service');}
+};
+
+window.editService=async function(id){
+  const snap=await getDocs(collection(db,"services"));
+  const d=snap.docs.find(x=>x.id===id);
+  if(!d) return;
+  const s=d.data();
+  document.getElementById('editId').value=id;
+  document.getElementById('fName').value=s.name||'';
+  document.getElementById('fType').value=s.type||'';
+  document.getElementById('fPrice').value=s.price||'';
+  document.getElementById('fDuration').value=s.duration||'';
+  document.getElementById('fWarranty').value=s.warranty||'';
+  document.getElementById('fRating').value=s.rating||'';
+  document.getElementById('fBookings').value=s.bookings||'';
+  document.getElementById('fDesc').value=s.desc||'';
+  document.getElementById('fImage').value=s.image||'';
+  document.getElementById('fIncludes').value=(s.includes||[]).join(', ');
+  document.getElementById('fPopular').checked=!!s.popular;
+  document.getElementById('fUrgent').checked=!!s.urgent;
+  previewImg(s.image);
+  document.getElementById('formTitle').textContent='Edit: '+s.name;
+  switchPage('services');
+  setTimeout(()=>document.querySelector('.form-card').scrollIntoView({behavior:'smooth'}),100);
+};
+
+window.resetForm=function(){
+  ['editId','fName','fPrice','fDuration','fWarranty','fRating','fBookings','fDesc','fImage','fIncludes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fType').value='';
+  ['fPopular','fUrgent'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('imgPreview').style.display='none';
+  document.getElementById('formTitle').textContent='Add New Service';
+};
+
+window.deleteService=async function(id){
+  if(!confirm('Delete this service?')) return;
+  await deleteDoc(doc(db,"services",id));
+  showToast('Service deleted 🗑️'); loadServices();
+};
+
+// ── BOOKINGS ──
+window.loadBookings=async function(){
+  const snap=await getDocs(collection(db,"fixr_bookings"));
+  allBookings=snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
+  renderBookings(allBookings);
+};
+
+window.filterBookings=function(){
+  const q=document.getElementById('bookingSearch').value.toLowerCase();
+  const st=document.getElementById('bookingStatusFilter').value;
+  const ty=document.getElementById('bookingTypeFilter').value;
+  let list=allBookings;
+  if(q) list=list.filter(b=>(b.name||'').toLowerCase().includes(q)||(b.email||'').toLowerCase().includes(q)||(b.bookingId||'').toLowerCase().includes(q)||(b.mobile||'').includes(q));
+  if(st) list=list.filter(b=>(b.status||'pending')===st);
+  if(ty) list=list.filter(b=>(b.services||[]).some(s=>s.type===ty));
+  renderBookings(list);
+};
+
+function getCardType(b){
+  const svcs=b.services||[];
+  const hasP=svcs.some(s=>s.type==='plumber');
+  const hasE=svcs.some(s=>s.type==='electrician');
+  if(hasP&&hasE) return 'has-mixed';
+  if(hasE) return 'has-electrician';
+  return 'has-plumber';
+}
+
+function renderBookings(list){
+  const c=document.getElementById('bookingsContainer');
+  if(!list.length){c.innerHTML='<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">No bookings found.</p>';return;}
+  c.innerHTML=list.map(b=>{
+    const svcStr=(b.services||[]).map(s=>`${s.type==='plumber'?'🔧':'⚡'} ${s.name} ×${s.qty}`).join(' · ');
+    const cardType=getCardType(b);
+    return `<div class="booking-card ${cardType}">
+      <div class="bc-top">
+        <div>
+          <div class="bc-id">${b.bookingId||'—'}</div>
+          <div class="bc-customer">${b.name} · ${b.email}</div>
+          <div class="bc-customer">📱 ${b.mobile}</div>
+        </div>
+        <span class="status-badge status-${b.status||'pending'}">${(b.status||'pending').replace('_',' ')}</span>
+      </div>
+      ${b.slot?`<div class="bc-slot"><i class="ti ti-clock" style="font-size:.75rem"></i> ${b.slot}</div>`:''}
+      <div class="bc-meta">
+        <span><i class="ti ti-map-pin"></i>${b.address||'—'}</span>
+        <span><i class="ti ti-currency-rupee"></i>₹${b.total||0}</span>
+        <span><i class="ti ti-credit-card"></i>${b.payment||'—'}</span>
+        ${b.technician?`<span><i class="ti ti-user"></i>${b.technician}</span>`:''}
+      </div>
+      <div class="bc-services">🛠 ${svcStr}</div>
+      ${b.notes?`<div class="bc-notes">📝 "${b.notes}"</div>`:''}
+      <div class="bc-time">${new Date(b.timestamp).toLocaleString()}</div>
+      <div class="bc-actions">
+        <select class="status-select" id="sel-${b.docId}">
+          ${['pending','confirmed','in_progress','completed','cancelled'].map(s=>`<option value="${s}" ${b.status===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}
+        </select>
+        <button class="update-btn" onclick="updateStatus('${b.docId}','${b.name}')">Update</button>
+        <button class="notify-btn" onclick="notifyTelegram('${b.docId}')"><i class="ti ti-send"></i></button>
+        <button class="assign-btn" onclick="openAssign('${b.docId}')"><i class="ti ti-user-plus"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.updateStatus=async function(docId,name){
+  const status=document.getElementById('sel-'+docId).value;
+  await updateDoc(doc(db,"fixr_bookings",docId),{status});
+  showToast(`Status → ${status.replace('_',' ')} ✅`);
+  loadBookings(); loadDashboard();
+  const statusEmoji={pending:'⏳',confirmed:'✅',in_progress:'🔧',completed:'🎉',cancelled:'❌'};
+  const msg=`${statusEmoji[status]||'📋'} *Fixr Booking Update*\n\nHi ${name}! Your booking status is now:\n*${status.replace('_',' ').toUpperCase()}*\n\nThank you for choosing Fixr! 🛠`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})});
+};
+
+window.notifyTelegram=async function(docId){
+  const b=allBookings.find(x=>x.docId===docId);
+  if(!b) return;
+  const msg=`📋 *Booking ${b.bookingId}* — ${b.name}\nStatus: *${(b.status||'pending').replace('_',' ').toUpperCase()}*\n🛠 ${(b.services||[]).map(s=>`${s.name} ×${s.qty}`).join(', ')}\n💰 ₹${b.total} · ${b.slot||'—'}\n📍 ${b.address}`;
+  await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})});
+  showToast('Notification sent! 📨');
+};
+
+// ── ASSIGN TECHNICIAN ──
+window.openAssign=function(docId){
+  currentAssignDocId=docId;
+  const techList=document.getElementById('techList');
+  techList.innerHTML=TECHNICIANS.map(t=>`
+    <div class="tech-item" onclick="assignTech('${t.id}','${t.name}')">
+      <div class="tech-avatar">${t.avatar}</div>
+      <div style="flex:1;min-width:0">
+        <div class="tech-name">${t.name}</div>
+        <div class="tech-type">${t.type}</div>
+      </div>
+      <span class="tech-status ${t.available?'tech-available':'tech-busy'}">${t.available?'Available':'Busy'}</span>
+    </div>`).join('');
+  document.getElementById('assignOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+};
+
+window.assignTech=async function(techId,techName){
+  await updateDoc(doc(db,"fixr_bookings",currentAssignDocId),{technician:techName,status:'confirmed'});
+  showToast(`Assigned to ${techName} ✅`);
+  closeAssignSheet(); loadBookings(); loadDashboard();
+  const b=allBookings.find(x=>x.docId===currentAssignDocId);
+  if(b){
+    const msg=`👷 *Technician Assigned*\n\nHi ${b.name}! Your booking *${b.bookingId}* has been confirmed.\n\n🔧 Technician: *${techName}*\n🕐 Slot: ${b.slot||'—'}\n\nThey'll arrive on time. Thank you for choosing Fixr! ⚡`;
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'Markdown'})});
+  }
+};
+
+window.closeAssignSheet=function(){
+  document.getElementById('assignOverlay').classList.remove('open');
+  document.body.style.overflow='';
+};
+window.closeAssign=function(e){if(e.target===document.getElementById('assignOverlay')) closeAssignSheet();};
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+window.showToast=showToast;
+</script>
+</body>
+</html>
