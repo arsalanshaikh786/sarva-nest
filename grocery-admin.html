@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>BasketCart Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+  --bg:#0C0D10;--surface:#13151A;--card:#1A1C24;--card2:#21242E;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  --orange:#FF6B2B;--orange-dim:rgba(255,107,43,0.1);--orange-border:rgba(255,107,43,0.25);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.1);
+  --yellow:#F5A623;--yellow-dim:rgba(245,166,35,0.1);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.1);
+  --blue:#4F8EF7;--blue-dim:rgba(79,142,247,0.1);
+  --purple:#9B59F5;--purple-dim:rgba(155,89,245,0.1);
+  --text:#F0F2F8;--muted:#6B6B8A;--muted2:#9999BB;
+  --radius:14px;--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* LOGIN */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
+.login-box{background:var(--surface);border-radius:20px;border:1px solid var(--border2);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
+.login-logo{font-family:'Fraunces',serif;font-size:1.7rem;font-weight:800;color:var(--orange);margin-bottom:.2rem;}
+.login-logo span{color:var(--text);}
+.login-sub{color:var(--muted2);font-size:.8rem;margin-bottom:1.5rem;}
+.login-input{width:100%;padding:.65rem .9rem;border:1.5px solid var(--border2);border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.9rem;outline:none;background:var(--card);color:var(--text);margin-bottom:.6rem;}
+.login-input::placeholder{color:var(--muted);}
+.login-input:focus{border-color:var(--orange);}
+.login-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:10px;padding:.75rem;font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;cursor:pointer;}
+.login-error{color:var(--red);font-size:.78rem;margin-top:.5rem;display:none;}
+
+/* TOP NAV */
+.topnav{position:sticky;top:0;z-index:200;background:rgba(12,13,16,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;}
+.nav-logo{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:800;color:var(--orange);}
+.nav-logo span{color:var(--text);}
+.nav-right{display:flex;align-items:center;gap:.65rem;}
+.admin-badge{background:var(--orange-dim);border:1px solid var(--orange-border);color:var(--orange);font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:50px;}
+.logout-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;display:flex;align-items:center;gap:3px;}
+
+/* BOTTOM NAV */
+.bnav-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.57rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;transition:color .2s;}
+.bnav i{font-size:1.2rem;}
+.bnav.active{color:var(--orange);}
+
+/* PAGES */
+.page{display:none;padding-bottom:calc(70px + var(--sb));}
+.page.active{display:block;}
+main{padding:1rem;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.9rem;}
+.stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;}
+.stat-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;margin-bottom:.5rem;}
+.stat-label{font-size:.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.15rem;}
+.stat-val{font-family:'Fraunces',serif;font-size:1.6rem;font-weight:800;color:var(--text);line-height:1;}
+.stat-sub{font-size:.65rem;color:var(--muted);margin-top:2px;}
+
+/* SECTION HEADERS */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.65rem;}
+.sec-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;}
+.refresh-btn{background:var(--orange-dim);color:var(--orange);border:1px solid var(--orange-border);border-radius:8px;padding:.3rem .65rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;}
+
+/* RECENT MINI */
+.recent-mini{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.8rem;margin-bottom:.5rem;display:flex;align-items:center;gap:.65rem;}
+.rm-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.rm-info{flex:1;min-width:0;}
+.rm-id{font-weight:700;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rm-sub{font-size:.68rem;color:var(--muted);margin-top:1px;}
+.rm-price{font-family:'Fraunces',serif;font-size:.9rem;font-weight:700;color:var(--orange);flex-shrink:0;}
+
+/* STATUS BADGES */
+.sbadge{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:50px;white-space:nowrap;}
+.s-pending{background:var(--yellow-dim);color:var(--yellow);}
+.s-confirmed{background:var(--blue-dim);color:var(--blue);}
+.s-packing{background:var(--purple-dim);color:var(--purple);}
+.s-out_for_delivery{background:var(--green-dim);color:var(--green);}
+.s-delivered{background:var(--green-dim);color:var(--green);}
+.s-cancelled{background:var(--red-dim);color:var(--red);}
+
+/* ORDER CARDS */
+.order-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;margin-bottom:.65rem;border-left:3px solid var(--border);}
+.order-card.urgent{border-left-color:var(--orange);}
+.oc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;margin-bottom:.45rem;}
+.oc-id{font-weight:800;font-size:.85rem;}
+.oc-cust{font-size:.7rem;color:var(--muted);margin-top:2px;}
+.oc-meta{display:flex;gap:.55rem;flex-wrap:wrap;font-size:.7rem;color:var(--muted);margin-bottom:.35rem;}
+.oc-meta span{display:flex;align-items:center;gap:2px;}
+.oc-items{font-size:.72rem;color:var(--muted);margin-bottom:.35rem;line-height:1.5;}
+.oc-slot{background:var(--orange-dim);border:1px solid var(--orange-border);color:var(--orange);font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:50px;display:inline-flex;align-items:center;gap:3px;margin-bottom:.45rem;}
+.oc-notes{font-size:.68rem;color:var(--muted);margin-bottom:.35rem;font-style:italic;}
+.oc-time{font-size:.65rem;color:var(--muted);margin-bottom:.55rem;}
+.oc-actions{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;}
+.status-select{flex:1;min-width:120px;padding:.38rem .5rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;outline:none;background:var(--card);color:var(--text);}
+.status-select option{background:var(--card);}
+.update-btn{background:var(--orange);color:#fff;border:none;border-radius:8px;padding:.38rem .75rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;}
+.notify-btn{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(79,142,247,.2);border-radius:8px;padding:.38rem .6rem;font-size:.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:2px;}
+.del-btn{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:.38rem .6rem;font-size:.72rem;font-weight:700;cursor:pointer;}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:.45rem;margin-bottom:.8rem;flex-wrap:wrap;}
+.filter-bar input{flex:1;min-width:140px;padding:.5rem .78rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;outline:none;background:var(--card);color:var(--text);}
+.filter-bar input::placeholder{color:var(--muted);}
+.filter-bar input:focus{border-color:var(--orange);}
+.filter-bar select{padding:.45rem .65rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;outline:none;background:var(--card);cursor:pointer;color:var(--muted);}
+.filter-bar select option{background:var(--card);}
+
+/* PRODUCT FORM */
+.form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.1rem;margin-bottom:.9rem;}
+.form-card-title{font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:5px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.form-grid .full{grid-column:1/-1;}
+.form-group{display:flex;flex-direction:column;gap:3px;}
+label{font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.form-input{padding:.55rem .75rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.86rem;outline:none;background:var(--surface);color:var(--text);width:100%;}
+.form-input::placeholder{color:var(--muted);}
+.form-input:focus{border-color:var(--orange);}
+textarea.form-input{resize:vertical;min-height:66px;}
+select.form-input{cursor:pointer;}
+select.form-input option{background:var(--card);}
+.checkbox-row{display:flex;align-items:center;gap:6px;margin-bottom:.35rem;}
+.checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--orange);}
+.checkbox-row label{text-transform:none;font-size:.84rem;letter-spacing:0;font-weight:600;color:var(--text);}
+.img-preview{width:100%;height:120px;border-radius:9px;object-fit:cover;border:1px solid var(--border);margin-top:5px;display:none;}
+.form-actions{display:flex;gap:.5rem;margin-top:.65rem;flex-wrap:wrap;}
+.btn-primary{background:var(--orange);color:#fff;border:none;border-radius:9px;padding:.55rem 1.1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.btn-secondary{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:9px;padding:.55rem .9rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;cursor:pointer;font-weight:600;}
+
+/* PRODUCT GRID */
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+@media(min-width:480px){.prod-grid{grid-template-columns:repeat(3,1fr);}}
+.pg-item{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+.pg-img{width:100%;height:80px;object-fit:cover;}
+.pg-body{padding:.6rem;}
+.pg-name{font-weight:700;font-size:.8rem;margin-bottom:.12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pg-meta{font-size:.68rem;color:var(--muted);margin-bottom:.4rem;line-height:1.5;}
+.pg-cat{font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:50px;display:inline-block;margin-bottom:.3rem;background:var(--orange-dim);color:var(--orange);}
+.pg-actions{display:flex;gap:.3rem;}
+.btn-edit{background:var(--yellow-dim);color:var(--yellow);border:none;border-radius:6px;padding:.28rem .52rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.65rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:2px;}
+.btn-del{background:var(--red-dim);color:var(--red);border:none;border-radius:6px;padding:.28rem .52rem;font-size:.65rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* LOW STOCK ALERT */
+.low-stock-item{background:var(--card);border-radius:11px;border:1px solid var(--border);border-left:3px solid var(--yellow);padding:.7rem .85rem;margin-bottom:.45rem;display:flex;align-items:center;gap:.65rem;}
+.ls-icon{width:32px;height:32px;border-radius:8px;background:var(--yellow-dim);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0;}
+.ls-info{flex:1;}
+.ls-name{font-size:.82rem;font-weight:600;}
+.ls-stock{font-size:.68rem;color:var(--yellow);font-weight:700;margin-top:1px;}
+.restock-btn{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(245,166,35,.25);border-radius:7px;padding:.28rem .6rem;font-size:.65rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+
+/* ANALYTICS CARDS */
+.analytics-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.9rem;}
+.analytics-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;}
+.ac-label{font-size:.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.25rem;}
+.ac-val{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:800;}
+.ac-sub{font-size:.65rem;margin-top:3px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(70px + var(--sb) + .65rem);left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.68rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+.toast.warn{background:var(--yellow);color:var(--text);}
+
+/* SPINNER */
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+
+/* SKELETON */
+.skeleton{background:linear-gradient(90deg,#1A1C24 25%,#21242E 50%,#1A1C24 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Basket<span>Cart</span></div>
+    <div class="login-sub">Admin Panel · Sign in to manage</div>
+    <input class="login-input" type="text" id="loginUser" placeholder="Username" autocomplete="off"/>
+    <input class="login-input" type="password" id="loginPass" placeholder="Password"/>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="loginError">Invalid credentials. Try again.</div>
+  </div>
+</div>
+
+<!-- TOP NAV -->
+<div class="topnav">
+  <div class="nav-logo">Basket<span>Cart</span></div>
+  <div class="nav-right">
+    <span class="admin-badge"><i class="ti ti-shield-check" style="font-size:.7rem"></i> Admin</span>
+    <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page active" id="pageDashboard">
+  <main>
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--orange-dim)"><i class="ti ti-receipt" style="color:var(--orange)"></i></div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-val" id="sTotalOrders">—</div>
+        <div class="stat-sub" id="sTodayOrders">Loading…</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--yellow-dim)"><i class="ti ti-clock" style="color:var(--yellow)"></i></div>
+        <div class="stat-label">Pending</div>
+        <div class="stat-val" id="sPending">—</div>
+        <div class="stat-sub">Need action</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--green-dim)"><i class="ti ti-currency-rupee" style="color:var(--green)"></i></div>
+        <div class="stat-label">Revenue</div>
+        <div class="stat-val" id="sRevenue">—</div>
+        <div class="stat-sub">All time</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:var(--blue-dim)"><i class="ti ti-package" style="color:var(--blue)"></i></div>
+        <div class="stat-label">Products</div>
+        <div class="stat-val" id="sProducts">—</div>
+        <div class="stat-sub">In catalogue</div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS ROW -->
+    <div class="analytics-row">
+      <div class="analytics-card">
+        <div class="ac-label">Avg. Order Value</div>
+        <div class="ac-val" id="avgOrderVal" style="color:var(--orange)">—</div>
+        <div class="ac-sub" style="color:var(--muted)">Per order</div>
+      </div>
+      <div class="analytics-card">
+        <div class="ac-label">Delivered Today</div>
+        <div class="ac-val" id="deliveredToday" style="color:var(--green)">—</div>
+        <div class="ac-sub" style="color:var(--green)">✅ Completed</div>
+      </div>
+    </div>
+
+    <!-- LOW STOCK ALERTS -->
+    <div class="sec-hdr">
+      <div class="sec-title">⚠️ Low Stock Alerts</div>
+      <button class="refresh-btn" onclick="loadDashboard()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div id="lowStockList">
+      <div class="low-stock-item">
+        <div class="ls-icon">🥛</div>
+        <div class="ls-info"><div class="ls-name">Full Cream Milk</div><div class="ls-stock">Only 3 units left!</div></div>
+        <button class="restock-btn" onclick="showToast('Restock request sent!','success')">Restock</button>
+      </div>
+      <div class="low-stock-item">
+        <div class="ls-icon">🍅</div>
+        <div class="ls-info"><div class="ls-name">Tomato 500g</div><div class="ls-stock">Only 5 units left!</div></div>
+        <button class="restock-btn" onclick="showToast('Restock request sent!','success')">Restock</button>
+      </div>
+    </div>
+
+    <!-- RECENT ORDERS -->
+    <div class="sec-hdr" style="margin-top:.5rem">
+      <div class="sec-title">Recent Orders</div>
+      <button class="refresh-btn" onclick="loadDashboard()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div id="recentOrdersList"></div>
+  </main>
+</div>
+
+<!-- PRODUCTS PAGE -->
+<div class="page" id="pageProducts">
+  <main>
+    <!-- ADD / EDIT FORM -->
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-plus" style="color:var(--orange)"></i> <span id="formTitle">Add New Product</span></div>
+      <input type="hidden" id="editId"/>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Product Name *</label>
+          <input type="text" class="form-input" id="fName" placeholder="e.g. Fresh Tomato"/>
+        </div>
+        <div class="form-group">
+          <label>Category *</label>
+          <select class="form-input" id="fCategory">
+            <option value="">Select</option>
+            <option value="Vegetables">🥦 Vegetables</option>
+            <option value="Fruits">🍎 Fruits</option>
+            <option value="Dairy">🥛 Dairy</option>
+            <option value="Grains">🌾 Grains</option>
+            <option value="Snacks">🍿 Snacks</option>
+            <option value="Beverages">🧃 Beverages</option>
+            <option value="Personal Care">🧴 Personal Care</option>
+            <option value="Household">🏠 Household</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Price (₹) *</label>
+          <input type="number" class="form-input" id="fPrice" placeholder="e.g. 28"/>
+        </div>
+        <div class="form-group">
+          <label>MRP (₹)</label>
+          <input type="number" class="form-input" id="fMrp" placeholder="e.g. 40"/>
+        </div>
+        <div class="form-group">
+          <label>Unit / Weight</label>
+          <input type="text" class="form-input" id="fUnit" placeholder="e.g. 500g, 1 kg, 1 litre"/>
+        </div>
+        <div class="form-group">
+          <label>Brand</label>
+          <input type="text" class="form-input" id="fBrand" placeholder="e.g. Amul, Local Farm"/>
+        </div>
+        <div class="form-group">
+          <label>Rating (1–5)</label>
+          <input type="number" class="form-input" id="fRating" placeholder="4.8" min="1" max="5" step="0.1"/>
+        </div>
+        <div class="form-group">
+          <label>Shelf Life</label>
+          <input type="text" class="form-input" id="fShelf" placeholder="e.g. 4–5 days"/>
+        </div>
+        <div class="form-group">
+          <label>Freshness %</label>
+          <input type="number" class="form-input" id="fFreshness" placeholder="85" min="0" max="100"/>
+        </div>
+        <div class="form-group">
+          <label>Stock Count</label>
+          <input type="number" class="form-input" id="fStock" placeholder="e.g. 50"/>
+        </div>
+        <div class="form-group full">
+          <label>Description *</label>
+          <textarea class="form-input" id="fDesc" placeholder="Product description, origin, usage…"></textarea>
+        </div>
+        <div class="form-group full">
+          <label>Image URL *</label>
+          <input type="url" class="form-input" id="fImage" placeholder="https://images.unsplash.com/…" oninput="previewImg(this.value)"/>
+          <img id="imgPreview" class="img-preview"/>
+        </div>
+      </div>
+      <div style="margin-top:.55rem">
+        <div class="checkbox-row"><input type="checkbox" id="fOrganic"/><label for="fOrganic">🌿 Organic</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="fFresh"/><label for="fFresh">⚡ Fresh Product</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="fLocal"/><label for="fLocal">📍 Locally Sourced</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="fFeatured"/><label for="fFeatured">🔥 Featured Product</label></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveProduct()"><i class="ti ti-check"></i> Save Product</button>
+        <button class="btn-secondary" onclick="resetForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title">All Products (<span id="prodCount">0</span>)</div>
+      <button class="refresh-btn" onclick="loadProducts()"><i class="ti ti-refresh"></i></button>
+    </div>
+
+    <!-- SEARCH PRODUCTS -->
+    <div style="margin-bottom:.75rem">
+      <input type="text" id="prodSearch" style="width:100%;padding:.52rem .8rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;outline:none;background:var(--card);color:var(--text);" placeholder="Search products…" oninput="filterProdGrid()" />
+    </div>
+
+    <div class="prod-grid" id="prodGrid">
+      <div style="grid-column:1/-1;color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<!-- ORDERS PAGE -->
+<div class="page" id="pageOrders">
+  <main>
+    <div class="sec-hdr">
+      <div class="sec-title">All Orders</div>
+      <button class="refresh-btn" onclick="loadOrders()"><i class="ti ti-refresh"></i> Refresh</button>
+    </div>
+    <div class="filter-bar">
+      <input type="text" id="orderSearch" placeholder="Search name, email, order ID…" oninput="filterOrders()"/>
+      <select id="statusFilter" onchange="filterOrders()">
+        <option value="">All statuses</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="packing">Packing</option>
+        <option value="out_for_delivery">Out for Delivery</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="slotFilter" onchange="filterOrders()">
+        <option value="">All slots</option>
+        <option value="7am–10am">7am – 10am</option>
+        <option value="10am–1pm">10am – 1pm</option>
+        <option value="2pm–5pm">2pm – 5pm</option>
+        <option value="5pm–8pm">5pm – 8pm</option>
+      </select>
+    </div>
+    <div id="ordersContainer">
+      <div style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav-bar">
+  <div class="bnav active" id="bnav-dashboard" onclick="switchPage('dashboard')"><i class="ti ti-dashboard"></i>Dash</div>
+  <div class="bnav" id="bnav-products" onclick="switchPage('products')"><i class="ti ti-basket"></i>Products</div>
+  <div class="bnav" id="bnav-orders" onclick="switchPage('orders')"><i class="ti ti-receipt"></i>Orders</div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(FC);
+const db=getFirestore(app);
+const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT="5547663296";
+
+window._db=db;
+const ADMIN_USER="admin",ADMIN_PASS="basketcart2025";
+
+let allOrders=[],allProds=[];
+
+// AUTH
+window.doLogin=function(){
+  const u=document.getElementById('loginUser').value.trim();
+  const p=document.getElementById('loginPass').value;
+  if(u===ADMIN_USER&&p===ADMIN_PASS){
+    document.getElementById('loginScreen').style.display='none';
+    loadDashboard();loadProducts();loadOrders();
+  }else{document.getElementById('loginError').style.display='block';}
+};
+window.doLogout=function(){document.getElementById('loginScreen').style.display='flex';};
+
+// PAGE SWITCH
+window.switchPage=function(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.bnav').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page'+page[0].toUpperCase()+page.slice(1)).classList.add('active');
+  document.getElementById('bnav-'+page).classList.add('active');
+};
+
+// DASHBOARD
+window.loadDashboard=async function(){
+  const[pSnap,oSnap]=await Promise.all([getDocs(collection(db,'grocery_products')),getDocs(collection(db,'grocery_orders'))]);
+  const orders=oSnap.docs.map(d=>({id:d.id,...d.data()}));
+  const pending=orders.filter(o=>!o.status||o.status==='pending').length;
+  const revenue=orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(+o.total||0),0);
+  const delivered=orders.filter(o=>o.status==='delivered').length;
+  const today=new Date().toDateString();
+  const todayOrders=orders.filter(o=>new Date(o.timestamp).toDateString()===today).length;
+  const avg=orders.length>0?(revenue/orders.length).toFixed(0):0;
+
+  document.getElementById('sTotalOrders').textContent=orders.length;
+  document.getElementById('sTodayOrders').textContent=todayOrders+' today';
+  document.getElementById('sPending').textContent=pending;
+  document.getElementById('sRevenue').textContent='₹'+revenue.toLocaleString('en-IN');
+  document.getElementById('sProducts').textContent=pSnap.size||0;
+  document.getElementById('avgOrderVal').textContent='₹'+avg;
+  document.getElementById('deliveredToday').textContent=delivered;
+
+  const recent=orders.sort((a,b)=>b.timestamp-a.timestamp).slice(0,6);
+  document.getElementById('recentOrdersList').innerHTML=recent.length?recent.map(o=>`
+    <div class="recent-mini">
+      <div class="rm-dot" style="background:${o.status==='pending'?'var(--yellow)':o.status==='delivered'?'var(--green)':o.status==='cancelled'?'var(--red)':'var(--orange)'}"></div>
+      <div class="rm-info">
+        <div class="rm-id">${o.orderId||'—'} · ${o.name}</div>
+        <div class="rm-sub">${(o.status||'pending').replace('_',' ')} · ${o.slot||''} · ${new Date(o.timestamp).toLocaleDateString()}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+        <div class="rm-price">₹${o.total||0}</div>
+        <span class="sbadge s-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span>
+      </div>
+    </div>`).join(''):'<p style="color:var(--muted);font-size:.82rem">No orders yet.</p>';
+};
+
+// PRODUCTS
+window.loadProducts=async function(){
+  const snap=await getDocs(collection(db,'grocery_products'));
+  allProds=snap.docs.map(d=>({id:d.id,...d.data()}));
+  document.getElementById('prodCount').textContent=allProds.length;
+  renderProdGrid(allProds);
+};
+
+window.filterProdGrid=function(){
+  const q=document.getElementById('prodSearch').value.toLowerCase();
+  const filtered=allProds.filter(p=>(p.name||'').toLowerCase().includes(q)||(p.category||'').toLowerCase().includes(q)||(p.brand||'').toLowerCase().includes(q));
+  renderProdGrid(filtered);
+};
+
+function renderProdGrid(list){
+  const el=document.getElementById('prodGrid');
+  if(!list.length){el.innerHTML='<div style="grid-column:1/-1;color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem">No products found. Add one above.</div>';return;}
+  el.innerHTML=list.map(p=>`<div class="pg-item">
+    <img class="pg-img" src="${p.image||''}" alt="${p.name}" onerror="this.style.display='none'" loading="lazy"/>
+    <div class="pg-body">
+      <span class="pg-cat">${p.category||'—'}</span>
+      <div class="pg-name">${p.name}</div>
+      <div class="pg-meta">₹${p.price}${+p.mrp>+p.price?` <span style="text-decoration:line-through;font-size:.62rem;color:var(--muted)">₹${p.mrp}</span>`:''} · ${p.unit||''}<br/>${p.brand||''}${p.organic?' · 🌿':''}${p.fresh?' · ⚡':''}</div>
+      <div class="pg-actions">
+        <button class="btn-edit" onclick="editProduct('${p.id}')"><i class="ti ti-edit"></i> Edit</button>
+        <button class="btn-del" onclick="deleteProduct('${p.id}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+window.previewImg=function(url){
+  const img=document.getElementById('imgPreview');
+  if(url){img.src=url;img.style.display='block';}else img.style.display='none';
+};
+
+window.saveProduct=async function(){
+  const id=document.getElementById('editId').value;
+  const data={
+    name:document.getElementById('fName').value.trim(),
+    category:document.getElementById('fCategory').value,
+    price:document.getElementById('fPrice').value.trim(),
+    mrp:document.getElementById('fMrp').value.trim(),
+    unit:document.getElementById('fUnit').value.trim(),
+    brand:document.getElementById('fBrand').value.trim(),
+    rating:document.getElementById('fRating').value.trim(),
+    shelfLife:document.getElementById('fShelf').value.trim(),
+    freshness:document.getElementById('fFreshness').value.trim(),
+    stock:document.getElementById('fStock').value.trim(),
+    desc:document.getElementById('fDesc').value.trim(),
+    image:document.getElementById('fImage').value.trim(),
+    organic:document.getElementById('fOrganic').checked,
+    fresh:document.getElementById('fFresh').checked,
+    local:document.getElementById('fLocal').checked,
+    featured:document.getElementById('fFeatured').checked,
+  };
+  if(!data.name||!data.category||!data.price||!data.image){showToast('Name, category, price & image required','error');return;}
+  try{
+    if(id){await updateDoc(doc(db,'grocery_products',id),data);showToast('Product updated ✅','success');}
+    else{await addDoc(collection(db,'grocery_products'),{...data,createdAt:serverTimestamp()});showToast('Product added! 🛒','success');}
+    resetForm();loadProducts();loadDashboard();
+  }catch(e){showToast('Error saving product','error');}
+};
+
+window.editProduct=async function(id){
+  const snap=await getDocs(collection(db,'grocery_products'));
+  const d=snap.docs.find(x=>x.id===id);if(!d)return;
+  const p=d.data();
+  document.getElementById('editId').value=id;
+  document.getElementById('fName').value=p.name||'';
+  document.getElementById('fCategory').value=p.category||'';
+  document.getElementById('fPrice').value=p.price||'';
+  document.getElementById('fMrp').value=p.mrp||'';
+  document.getElementById('fUnit').value=p.unit||'';
+  document.getElementById('fBrand').value=p.brand||'';
+  document.getElementById('fRating').value=p.rating||'';
+  document.getElementById('fShelf').value=p.shelfLife||'';
+  document.getElementById('fFreshness').value=p.freshness||'';
+  document.getElementById('fStock').value=p.stock||'';
+  document.getElementById('fDesc').value=p.desc||'';
+  document.getElementById('fImage').value=p.image||'';
+  document.getElementById('fOrganic').checked=!!p.organic;
+  document.getElementById('fFresh').checked=!!p.fresh;
+  document.getElementById('fLocal').checked=!!p.local;
+  document.getElementById('fFeatured').checked=!!p.featured;
+  previewImg(p.image);
+  document.getElementById('formTitle').textContent='Edit: '+p.name;
+  switchPage('products');
+  setTimeout(()=>document.querySelector('.form-card').scrollIntoView({behavior:'smooth'}),100);
+};
+
+window.resetForm=function(){
+  ['editId','fName','fPrice','fMrp','fUnit','fBrand','fRating','fShelf','fFreshness','fStock','fDesc','fImage'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCategory').value='';
+  ['fOrganic','fFresh','fLocal','fFeatured'].forEach(id=>document.getElementById(id).checked=false);
+  document.getElementById('imgPreview').style.display='none';
+  document.getElementById('formTitle').textContent='Add New Product';
+};
+
+window.deleteProduct=async function(id){
+  if(!confirm('Delete this product?'))return;
+  await deleteDoc(doc(db,'grocery_products',id));
+  showToast('Product deleted 🗑️','warn');loadProducts();loadDashboard();
+};
+
+// ORDERS
+window.loadOrders=async function(){
+  const snap=await getDocs(collection(db,'grocery_orders'));
+  allOrders=snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
+  renderOrders(allOrders);
+};
+
+window.filterOrders=function(){
+  const q=document.getElementById('orderSearch').value.toLowerCase();
+  const st=document.getElementById('statusFilter').value;
+  const sl=document.getElementById('slotFilter').value;
+  let list=allOrders;
+  if(q)list=list.filter(o=>(o.name||'').toLowerCase().includes(q)||(o.email||'').toLowerCase().includes(q)||(o.orderId||'').toLowerCase().includes(q)||(o.mobile||'').includes(q));
+  if(st)list=list.filter(o=>(o.status||'pending')===st);
+  if(sl)list=list.filter(o=>o.slot===sl);
+  renderOrders(list);
+};
+
+function renderOrders(list){
+  const c=document.getElementById('ordersContainer');
+  if(!list.length){c.innerHTML='<p style="color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem">No orders found.</p>';return;}
+  c.innerHTML=list.map(o=>{
+    const itemStr=(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(' · ');
+    const isUrgent=o.status==='pending'||o.status==='confirmed';
+    return `<div class="order-card ${isUrgent?'urgent':''}">
+      <div class="oc-top">
+        <div>
+          <div class="oc-id">${o.orderId||'—'}</div>
+          <div class="oc-cust">${o.name} · ${o.email}</div>
+          <div class="oc-cust">📱 ${o.mobile}</div>
+        </div>
+        <span class="sbadge s-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span>
+      </div>
+      ${o.slot?`<div class="oc-slot"><i class="ti ti-clock" style="font-size:.72rem"></i> ${o.slot}</div>`:''}
+      <div class="oc-meta">
+        <span><i class="ti ti-map-pin"></i>${(o.address||'—').slice(0,40)}…</span>
+        <span><i class="ti ti-currency-rupee"></i>₹${o.total||0}</span>
+        <span><i class="ti ti-credit-card"></i>${o.payment||'—'}</span>
+      </div>
+      <div class="oc-items">🛒 ${itemStr}</div>
+      ${o.notes?`<div class="oc-notes">📝 "${o.notes}"</div>`:''}
+      <div class="oc-time">${new Date(o.timestamp).toLocaleString()}</div>
+      <div class="oc-actions">
+        <select class="status-select" id="sel-${o.docId}">
+          ${['pending','confirmed','packing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.replace('_',' ')}</option>`).join('')}
+        </select>
+        <button class="update-btn" onclick="updateStatus('${o.docId}','${o.name}','${o.orderId||''}')">Update</button>
+        <button class="notify-btn" onclick="notifyCustomer('${o.docId}')"><i class="ti ti-send"></i></button>
+        <button class="del-btn" onclick="deleteOrder('${o.docId}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.updateStatus=async function(docId,name,orderId){
+  const status=document.getElementById('sel-'+docId).value;
+  await updateDoc(doc(db,'grocery_orders',docId),{status});
+  showToast(`${orderId} → ${status.replace('_',' ')} ✅`,'success');
+  loadOrders();loadDashboard();
+  const emoji={pending:'⏳',confirmed:'✅',packing:'📦',out_for_delivery:'🚴',delivered:'🎉',cancelled:'❌'};
+  const msg=`${emoji[status]||'📋'} *BasketCart Order Update*\n\nHi ${name}! Your order *${orderId}* is now:\n*${status.replace('_',' ').toUpperCase()}*\n\nThank you for shopping with BasketCart! 🛒`;
+  await sendTelegram(msg);
+};
+
+window.notifyCustomer=async function(docId){
+  const o=allOrders.find(x=>x.docId===docId);if(!o)return;
+  const msg=`📦 *Order ${o.orderId}* Update\nStatus: *${(o.status||'pending').replace('_',' ').toUpperCase()}*\n🛒 ${(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}\n💰 ₹${o.total} · Slot: ${o.slot||'—'}\n📍 ${o.address}`;
+  await sendTelegram(msg);
+  showToast('Telegram notification sent! 📨','success');
+};
+
+window.deleteOrder=async function(docId){
+  if(!confirm('Delete this order permanently?'))return;
+  await deleteDoc(doc(db,'grocery_orders',docId));
+  showToast('Order deleted 🗑️','warn');loadOrders();loadDashboard();
+};
+
+async function sendTelegram(msg){
+  try{await fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:msg,parse_mode:'Markdown'})});}catch(e){}
+}
+
+let toastTimer;
+window.showToast=function(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+};
+</script>
+</body>
+</html>
