@@ -1,6 +1,4 @@
-ash
 
-cat > /mnt/user-data/outputs/food-admin.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -178,13 +176,28 @@ cat > /mnt/user-data/outputs/food-admin.html << 'HTMLEOF'
         <div class="form-group full">
           <label>Description *</label>
           <textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea>
-        </div>
+        </div><div class="form-group full">
+  <label>Image URL *</label>
+  <input type="url" id="fImage" placeholder="https://…" oninput="previewImage(this.value)"/>
+  <img id="imgPreview" class="img-preview"/>
+</div>
         <div class="form-group full">
-          <label>Image URL *</label>
-          <input type="url" id="fImage" placeholder="https://…" oninput="previewImage(this.value)"/>
-          <img id="imgPreview" class="img-preview"/>
-        </div>
-        <div class="form-group">
+  <label>Food Image *</label>
+
+  <input type="file" id="imageFile" accept="image/*">
+
+  <button
+    type="button"
+    class="btn-secondary"
+    onclick="uploadToCloudinary()"
+    style="margin-top:10px">
+    Upload Image
+  </button>
+
+  <input type="hidden" id="fImage">
+
+  <img id="imgPreview" class="img-preview"/>
+</div>        <div class="form-group">
           <label>Prep Time</label>
           <input type="text" id="fPrepTime" placeholder="e.g. 20–25 min"/>
         </div>
@@ -246,6 +259,54 @@ cat > /mnt/user-data/outputs/food-admin.html << 'HTMLEOF'
 <div class="toast" id="toast"></div>
 
 <script type="module">
+window.uploadToCloudinary = async function () {
+
+  const file = document.getElementById("imageFile").files[0];
+
+  if (!file) {
+    showToast("Select image first");
+    return;
+  }
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+  formData.append("upload_preset", "ml_default");
+
+  try {
+
+    showToast("Uploading image...");
+
+    const response = await fetch(
+      "https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.error) {
+      showToast(data.error.message);
+      return;
+    }
+
+    document.getElementById("fImage").value =
+      data.secure_url;
+
+    previewImage(data.secure_url);
+
+    showToast("Image uploaded successfully ✅");
+
+  } catch (err) {
+
+    console.error(err);
+
+    showToast("Upload failed");
+
+  }
+};
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, orderBy, query } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
