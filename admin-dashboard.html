@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>Admin Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#F4F5F9;--surface:#fff;--surface2:#F0F1F7;
+  --text:#0F1117;--text2:#6B7280;--text3:#A0A8B5;
+  --border:#E5E7EF;
+  --purple:#6D28D9;--purple-bg:#EDE9FE;
+  --green:#059669;--green-bg:#ECFDF5;
+  --orange:#EA580C;--orange-bg:#FFF7ED;
+  --blue:#1D4ED8;--blue-bg:#EFF6FF;
+  --amber:#B45309;--amber-bg:#FFFBEB;
+  --red:#DC2626;--red-bg:#FEF2F2;
+  --r:14px;--rs:10px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);max-width:480px;margin:0 auto;min-height:100vh}
+
+/* topbar */
+.topbar{background:var(--surface);padding:44px 18px 14px;position:sticky;top:0;z-index:20;border-bottom:1px solid var(--border)}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:9px}
+.brand-icon{width:36px;height:36px;border-radius:10px;background:var(--red);display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
+.brand-t{font-size:16px;font-weight:700}
+.admin-pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--red-bg);color:var(--red)}
+.topbar-actions{display:flex;gap:7px}
+.icon-btn{width:36px;height:36px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.icon-btn svg{width:16px;height:16px;stroke:var(--text2);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.search-bar{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid transparent;border-radius:12px;padding:0 12px;height:40px;margin-bottom:10px;transition:border-color .2s}
+.search-bar:focus-within{border-color:var(--purple);background:#fff}
+.search-bar svg{width:14px;height:14px;stroke:var(--text3);stroke-width:2;fill:none;flex-shrink:0}
+.search-bar input{flex:1;border:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit;outline:none}
+.search-bar input::placeholder{color:var(--text3)}
+.filter-row{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+select{font-size:12px;padding:6px 10px;border-radius:9px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;outline:none;cursor:pointer;white-space:nowrap;flex-shrink:0}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;padding:14px 18px}
+.sc{background:var(--surface);border-radius:var(--rs);padding:13px 14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
+.sc-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sc-icon svg{width:18px;height:18px;stroke-width:1.8;fill:none;stroke-linecap:round}
+.sc-n{font-size:18px;font-weight:700;letter-spacing:-.5px}
+.sc-l{font-size:11px;color:var(--text2)}
+
+/* tabs */
+.tabs-wrap{background:var(--surface);padding:10px 18px;border-bottom:1px solid var(--border);display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
+.tabs-wrap::-webkit-scrollbar{display:none}
+.chip{padding:7px 14px;border-radius:999px;font-size:12px;font-weight:500;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;white-space:nowrap}
+.chip.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+
+/* order list */
+.olist{padding:0 18px 100px}
+
+/* order card */
+.ocard{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.ocard-head{padding:12px 14px 10px}
+.ocard-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.svc-row{display:flex;align-items:center;gap:8px}
+.svc-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.svc-icon svg{width:17px;height:17px;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.svc-name{font-size:13px;font-weight:600}
+.cust-name{font-size:12px;color:var(--text2);margin-top:1px}
+.badge{font-size:11px;font-weight:500;padding:4px 10px;border-radius:999px}
+.b-pending{background:var(--amber-bg);color:var(--amber)}
+.b-confirmed{background:var(--blue-bg);color:var(--blue)}
+.b-processing{background:var(--purple-bg);color:var(--purple)}
+.b-delivered{background:var(--green-bg);color:var(--green)}
+.b-cancelled{background:var(--red-bg);color:var(--red)}
+.b-default{background:var(--surface2);color:var(--text2)}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px}
+.mc{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)}
+.mc svg{width:11px;height:11px;stroke:var(--text3);stroke-width:2;fill:none}
+.ocard-items{padding:8px 14px;background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.irow{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text2)}
+.includes-chips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.inc-chip{font-size:10px;padding:2px 7px;background:var(--purple-bg);color:var(--purple);border-radius:5px}
+.ocard-foot{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.order-info{display:flex;flex-direction:column;gap:2px}
+.oid{font-size:11px;color:var(--text3)}
+.odate{font-size:11px;color:var(--text3)}
+.foot-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.ototal{font-size:13px;font-weight:700}
+.status-sel{font-size:11px;padding:5px 8px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);color:var(--text);font-family:inherit;cursor:pointer;outline:none}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1F2937;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;transition:transform .3s;white-space:nowrap;z-index:99}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.modal{background:var(--surface);border-radius:22px 22px 0 0;padding:24px 20px 40px;width:100%;max-width:480px}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{font-size:12px;color:var(--text2);display:block;margin-bottom:5px}
+.field input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:13px;font-family:inherit;outline:none;color:var(--text)}
+.field input:focus{border-color:var(--purple)}
+.modal-btns{display:flex;gap:9px;margin-top:20px}
+.btn-cancel{flex:1;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;cursor:pointer;color:var(--text2)}
+.btn-save{flex:2;padding:12px;border-radius:10px;border:none;background:var(--purple);color:#fff;font-size:13px;font-weight:600;cursor:pointer}
+
+/* empty / loader */
+.empty{text-align:center;padding:55px 28px 40px}
+.empty-icon{width:64px;height:64px;border-radius:18px;background:var(--purple-bg);margin:0 auto 14px;display:flex;align-items:center;justify-content:center}
+.empty-icon svg{width:28px;height:28px;stroke:var(--purple);stroke-width:1.5;fill:none}
+.empty-t{font-size:14px;font-weight:600;margin-bottom:5px}
+.empty-s{font-size:12px;color:var(--text2)}
+.loader{text-align:center;padding:55px 20px;color:var(--text2);font-size:13px}
+.spin{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:sp .7s linear infinite;margin:0 auto 10px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.err{margin:18px;background:var(--red-bg);border-radius:var(--r);padding:14px;font-size:12px;color:var(--red);line-height:1.6}
+.hidden{display:none!important}
+
+/* service mgmt */
+.svc-list{padding:0 18px;margin-bottom:12px}
+.svc-row-item{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--surface);border-radius:var(--rs);margin-bottom:8px;box-shadow:var(--shadow)}
+.svc-left{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500}
+.del-btn{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--red-bg);background:var(--red-bg);color:var(--red);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="brand-t">Admin</div>
+      <span class="admin-pill">Dashboard</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="showAddService()" title="New service add karo">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      </button>
+      <button class="icon-btn" onclick="loadAll()" title="Refresh">
+        <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="search-bar">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="searchInput" placeholder="Name, email, order ID search karo…" oninput="applyFilters()"/>
+  </div>
+  <div class="filter-row">
+    <select id="filterStatus" onchange="applyFilters()">
+      <option value="">All Status</option>
+      <option value="pending">Pending</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="processing">Processing</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <select id="filterSort" onchange="applyFilters()">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="amount">Highest amount</option>
+    </select>
+    <select id="filterDate" onchange="applyFilters()">
+      <option value="">All time</option>
+      <option value="today">Today</option>
+      <option value="week">This week</option>
+      <option value="month">This month</option>
+    </select>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats" id="statsRow">
+  <div class="sc">
+    <div class="sc-icon" style="background:#EDE9FE"><svg style="stroke:#6D28D9" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg></div>
+    <div><div class="sc-n" id="sAll">—</div><div class="sc-l">Total Orders</div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-icon" style="background:#FFFBEB"><svg style="stroke:#B45309" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
+    <div><div class="sc-n" id="sPend">—</div><div class="sc-l">Pending</div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-icon" style="background:#ECFDF5"><svg style="stroke:#059669" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+    <div><div class="sc-n" id="sDone">—</div><div class="sc-l">Delivered</div></div>
+  </div>
+  <div class="sc">
+    <div class="sc-icon" style="background:#EFF6FF"><svg style="stroke:#1D4ED8" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+    <div><div class="sc-n" id="sRev">—</div><div class="sc-l">Revenue</div></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs-wrap" id="tabsRow">
+  <button class="chip active" onclick="switchTab('all',this)">All</button>
+  <button class="chip" onclick="switchTab('food_orders',this)">🍔 Food</button>
+  <button class="chip" onclick="switchTab('grocery_orders',this)">🛒 Grocery</button>
+  <button class="chip" onclick="switchTab('vegetable_orders',this)">🥦 Veggies</button>
+  <button class="chip" onclick="switchTab('fixr_bookings',this)">🔧 Fixr</button>
+  <div id="extraChips"></div>
+</div>
+
+<!-- ORDER LIST -->
+<div class="olist" id="orderList">
+  <div class="loader"><div class="spin"></div>Orders load ho rahi hain…</div>
+</div>
+
+<!-- ADD SERVICE MODAL -->
+<div class="modal-bg hidden" id="svcModal">
+  <div class="modal">
+    <div class="modal-title">New Service Add Karo</div>
+    <div class="field">
+      <label>Collection Name (Firestore mein jaisa hai)</label>
+      <input id="f_col" placeholder="jaise: laundry_orders"/>
+    </div>
+    <div class="field">
+      <label>Service Label</label>
+      <input id="f_label" placeholder="jaise: Laundry"/>
+    </div>
+    <div class="field">
+      <label>Emoji</label>
+      <input id="f_emoji" placeholder="jaise: 👕" maxlength="4"/>
+    </div>
+    <div class="field">
+      <label>Color (hex)</label>
+      <input id="f_color" placeholder="#6D28D9"/>
+    </div>
+    <div style="margin-top:4px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:10px">Saved services:</div>
+      <div id="savedServices"></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="hideModal()">Cancel</button>
+      <button class="btn-save" onclick="saveService()">Save & Add</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+<script>
+const FB={
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+const BOT_TOKEN="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT_ID="5547663296";
+
+let fbApp,db;
+try{fbApp=firebase.app('adm');}catch(e){fbApp=firebase.initializeApp(FB,'adm');}
+db=firebase.firestore(fbApp);
+
+const SERVICES={
+  food_orders:     {label:'Food',     emoji:'🍔',color:'#EA580C',bg:'#FFF7ED'},
+  grocery_orders:  {label:'Grocery',  emoji:'🛒',color:'#059669',bg:'#ECFDF5'},
+  vegetable_orders:{label:'Veggies',  emoji:'🥦',color:'#16A34A',bg:'#F0FDF4'},
+  fixr_bookings:   {label:'Fixr',     emoji:'🔧',color:'#6D28D9',bg:'#EDE9FE'},
+};
+let extraServices={};
+let rawOrders=[], activeTab='all';
+const $=id=>document.getElementById(id);
+
+function tsMs(ts){
+  if(!ts)return 0;
+  if(ts.toMillis)return ts.toMillis();
+  if(typeof ts==='number')return ts;
+  return 0;
+}
+function fmtDate(ts){
+  if(!ts)return '—';
+  const d=ts.toDate?ts.toDate():new Date(ts);
+  return d.toLocaleDateString('en-IN',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function badgeClass(s){
+  const m={pending:'b-pending',confirmed:'b-confirmed',processing:'b-processing',delivered:'b-delivered',cancelled:'b-cancelled'};
+  return m[(s||'').toLowerCase()]||'b-default';
+}
+
+function showToast(msg){
+  const t=$('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+async function sendTelegram(msg){
+  try{
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:CHAT_ID,text:msg,parse_mode:'HTML'})
+    });
+  }catch(e){}
+}
+
+async function updateStatus(docId,col,newStatus,oldStatus){
+  try{
+    await db.collection(col).doc(docId).update({status:newStatus});
+    const o=rawOrders.find(x=>x._docId===docId);
+    if(o){
+      o.status=newStatus;
+      // Telegram notification
+      const svc={...SERVICES,...extraServices}[col]||{label:col,emoji:'📦'};
+      sendTelegram(`${svc.emoji} <b>Status Update</b>\n\n📋 Order: ${o.orderId||docId}\n👤 Customer: ${o.customerName||o.name||'—'}\n📧 ${o.email||'—'}\n\n${oldStatus} → <b>${newStatus}</b>`);
+    }
+    showToast('✅ Status updated');
+    applyFilters();
+  }catch(err){
+    showToast('❌ Update failed: '+err.message);
+  }
+}
+
+function renderCard(o){
+  const svcMap={...SERVICES,...extraServices};
+  const svc=svcMap[o._col]||{label:o._col,emoji:'📦',color:'#6B7280',bg:'#F0F1F7'};
+  const isFixr=o._col==='fixr_bookings';
+  const status=(o.status||'pending').toLowerCase();
+  const total=o.total||o.price||0;
+  const fee=o.deliveryFee||0;
+
+  let itemsHtml='';
+  if(isFixr){
+    itemsHtml=`<div class="ocard-items">
+      <div class="irow"><span>${o.name||'Service'}</span><span>${o.duration||''}</span></div>
+      ${(o.includes||[]).length?`<div class="includes-chips">${(o.includes||[]).map(x=>`<span class="inc-chip">${x}</span>`).join('')}</div>`:''}
+    </div>`;
+  } else if((o.cart||[]).length){
+    itemsHtml=`<div class="ocard-items">${(o.cart||[]).slice(0,3).map(i=>`
+      <div class="irow"><span>${i.name||''}</span><span>${i.qty||1}×₹${i.price||0}</span></div>`).join('')}
+      ${(o.cart||[]).length>3?`<div style="font-size:11px;color:var(--text3);padding-top:3px">+${(o.cart||[]).length-3} more items</div>`:''}
+    </div>`;
+  }
+
+  const chips=[];
+  if(o.slot)chips.push(`<span class="mc"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${o.slot}</span>`);
+  if(o.payment)chips.push(`<span class="mc"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>${(o.payment||'').toUpperCase()}</span>`);
+  if(o.mobile)chips.push(`<span class="mc"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>${o.mobile}</span>`);
+
+  const statusOpts=['pending','confirmed','processing','delivered','cancelled'].map(s=>`<option value="${s}" ${status===s?'selected':''}>${s}</option>`).join('');
+
+  return `<div class="ocard">
+    <div class="ocard-head">
+      <div class="ocard-top">
+        <div class="svc-row">
+          <div class="svc-icon" style="background:${svc.bg}">
+            <svg viewBox="0 0 24 24" style="stroke:${svc.color}">
+              ${isFixr?'<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>'
+                      :'<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>'}
+            </svg>
+          </div>
+          <div>
+            <div class="svc-name">${svc.emoji} ${svc.label}</div>
+            <div class="cust-name">${o.customerName||o.name||'Customer'} · ${o.email||'—'}</div>
+          </div>
+        </div>
+        <span class="badge ${badgeClass(status)}">${status}</span>
+      </div>
+      ${chips.length?`<div class="meta-row" style="margin-top:7px">${chips.join('')}</div>`:''}
+    </div>
+    ${itemsHtml}
+    <div class="ocard-foot">
+      <div class="order-info">
+        <span class="oid">#${o.orderId||o._docId||'—'}</span>
+        <span class="odate">${fmtDate(o.timestamp||o.bookingDate)}</span>
+      </div>
+      <div class="foot-right">
+        <span class="ototal" style="color:${svc.color}">₹${total}${fee?`+${fee}`:''}</span>
+        <select class="status-sel" onchange="updateStatus('${o._docId}','${o._col}',this.value,'${status}')">${statusOpts}</select>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderList(orders){
+  const el=$('orderList');
+  if(!orders.length){
+    el.innerHTML=`<div class="empty"><div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><div class="empty-t">Koi orders nahi</div><div class="empty-s">Filters change karo ya refresh karo</div></div>`;
+    return;
+  }
+  el.innerHTML=orders.map(renderCard).join('');
+}
+
+function applyFilters(){
+  const q=($('searchInput').value||'').toLowerCase();
+  const st=$('filterStatus').value;
+  const sort=$('filterSort').value;
+  const dateF=$('filterDate').value;
+  const now=Date.now();
+  const DAY=86400000;
+
+  let orders=rawOrders.filter(o=>activeTab==='all'||o._col===activeTab);
+  if(st)orders=orders.filter(o=>(o.status||'').toLowerCase()===st);
+  if(q)orders=orders.filter(o=>
+    (o.customerName||o.name||'').toLowerCase().includes(q)||
+    (o.email||'').toLowerCase().includes(q)||
+    (o.orderId||o._docId||'').toLowerCase().includes(q)||
+    (o.mobile||'').includes(q)
+  );
+  if(dateF){
+    orders=orders.filter(o=>{
+      const t=tsMs(o.timestamp||o.bookingDate);
+      if(dateF==='today')return t>now-DAY;
+      if(dateF==='week')return t>now-7*DAY;
+      if(dateF==='month')return t>now-30*DAY;
+      return true;
+    });
+  }
+  if(sort==='oldest')orders.sort((a,b)=>tsMs(a.timestamp||a.bookingDate)-tsMs(b.timestamp||b.bookingDate));
+  else if(sort==='amount')orders.sort((a,b)=>parseInt(b.total||b.price||0)-parseInt(a.total||a.price||0));
+  else orders.sort((a,b)=>tsMs(b.timestamp||b.bookingDate)-tsMs(a.timestamp||a.bookingDate));
+
+  // update stats for filtered
+  $('sAll').textContent=orders.length;
+  $('sPend').textContent=orders.filter(o=>o.status==='pending').length;
+  $('sDone').textContent=orders.filter(o=>o.status==='delivered').length;
+  const rev=orders.reduce((s,o)=>s+parseInt(o.total||o.price||0),0);
+  $('sRev').textContent='₹'+rev.toLocaleString('en-IN');
+  renderList(orders);
+}
+
+function switchTab(tab,el){
+  activeTab=tab;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function buildExtraChips(){
+  const base=['food_orders','grocery_orders','vegetable_orders','fixr_bookings'];
+  const cols=[...new Set(rawOrders.map(o=>o._col))].filter(c=>!base.includes(c));
+  const svcMap={...SERVICES,...extraServices};
+  $('extraChips').innerHTML=cols.map(c=>{
+    const s=svcMap[c]||{label:c,emoji:'📦'};
+    return `<button class="chip" onclick="switchTab('${c}',this)">${s.emoji} ${s.label}</button>`;
+  }).join('');
+}
+
+async function loadAll(){
+  $('orderList').innerHTML=`<div class="loader"><div class="spin"></div>Saare orders load ho rahe hain…</div>`;
+  rawOrders=[];
+
+  // load saved services
+  try{
+    const svSnap=await db.collection('admin_services').get();
+    svSnap.forEach(doc=>{
+      const d=doc.data();
+      if(d.collectionName)extraServices[d.collectionName]={label:d.label||d.collectionName,emoji:d.emoji||'📦',color:d.color||'#6B7280',bg:d.bg||'#F0F1F7',docId:doc.id};
+    });
+  }catch(e){}
+
+  const allCols=[...Object.keys(SERVICES),...Object.keys(extraServices)];
+  const snaps=await Promise.all(allCols.map(col=>
+    db.collection(col).limit(300).get().then(s=>({col,s})).catch(()=>null)
+  ));
+  snaps.forEach(res=>{
+    if(!res)return;
+    res.s.forEach(doc=>rawOrders.push({...doc.data(),_docId:doc.id,_col:res.col}));
+  });
+  rawOrders.sort((a,b)=>tsMs(b.timestamp||b.bookingDate)-tsMs(a.timestamp||a.bookingDate));
+  buildExtraChips();
+  applyFilters();
+}
+
+// ── Service modal ──────────────────────────────────
+function showAddService(){
+  renderSavedServices();
+  $('svcModal').classList.remove('hidden');
+}
+function hideModal(){$('svcModal').classList.add('hidden');}
+
+function renderSavedServices(){
+  const all={...extraServices};
+  const keys=Object.keys(all);
+  $('savedServices').innerHTML=keys.length?keys.map(k=>`
+    <div class="svc-row-item">
+      <div class="svc-left">${all[k].emoji} ${all[k].label} <span style="font-size:11px;color:var(--text3)">(${k})</span></div>
+      <button class="del-btn" onclick="deleteService('${k}','${all[k].docId||''}')">×</button>
+    </div>`).join(''):'<div style="font-size:12px;color:var(--text3)">Abhi koi extra service nahi</div>';
+}
+
+async function saveService(){
+  const col=$('f_col').value.trim();
+  const label=$('f_label').value.trim();
+  const emoji=$('f_emoji').value.trim()||'📦';
+  const color=$('f_color').value.trim()||'#6B7280';
+  if(!col||!label){showToast('Collection name aur label dono dalo');return;}
+  try{
+    const docRef=await db.collection('admin_services').add({collectionName:col,label,emoji,color,bg:color+'22',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    extraServices[col]={label,emoji,color,bg:color+'22',docId:docRef.id};
+    showToast('✅ '+label+' add ho gaya!');
+    $('f_col').value='';$('f_label').value='';$('f_emoji').value='';$('f_color').value='';
+    renderSavedServices();
+    loadAll();
+  }catch(err){showToast('Error: '+err.message);}
+}
+
+async function deleteService(col,docId){
+  if(!confirm('Hataana chahte ho?'))return;
+  try{
+    if(docId)await db.collection('admin_services').doc(docId).delete();
+    delete extraServices[col];
+    showToast('Service hata di');
+    renderSavedServices();
+    loadAll();
+  }catch(err){showToast('Error: '+err.message);}
+}
+
+// ── Real-time listener for new grocery orders ──────
+function setupNewOrderListener(){
+  const fiveMinAgo=new Date(Date.now()-5*60000);
+  db.collection('grocery_orders').where('timestamp','>',fiveMinAgo).onSnapshot(snap=>{
+    snap.docChanges().forEach(change=>{
+      if(change.type==='added'){
+        const d=change.doc.data();
+        sendTelegram(`🛒 <b>New Grocery Order!</b>\n\n📋 ID: ${d.orderId||change.doc.id}\n👤 ${d.customerName||d.name||'—'}\n📧 ${d.email||'—'}\n💰 ₹${d.total||0}\n🏠 ${d.address||'—'}`);
+      }
+    });
+  });
+  db.collection('food_orders').where('timestamp','>',fiveMinAgo).onSnapshot(snap=>{
+    snap.docChanges().forEach(change=>{
+      if(change.type==='added'){
+        const d=change.doc.data();
+        sendTelegram(`🍔 <b>New Food Order!</b>\n\n📋 ID: ${d.orderId||change.doc.id}\n👤 ${d.customerName||d.name||'—'}\n📧 ${d.email||'—'}\n💰 ₹${d.total||0}`);
+      }
+    });
+  });
+}
+
+loadAll();
+setupNewOrderListener();
+</script>
+</body>
+</html>
