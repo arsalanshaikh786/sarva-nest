@@ -256,6 +256,23 @@
           <div class="form-group"><label>Rating (1–5)</label><input type="number" id="rRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
           <div class="form-group"><label>Phone Number</label><input id="rPhone" placeholder="Contact number"/></div>
           <div class="form-group full"><label>Cover Image URL *</label><input id="rImage" placeholder="https://…" oninput="prvImg('rImgPrv',this.value)"/><img id="rImgPrv" class="img-preview"/></div>
+          <div class="form-group full">
+  <label>Food Image *</label>
+
+  <input type="file" id="imageFile" accept="image/*">
+
+  <button
+    type="button"
+    class="btn-secondary"
+    onclick="uploadToCloudinary()"
+    style="margin-top:10px">
+    Upload Image
+  </button>
+
+  <input type="hidden" id="fImage">
+
+  <img id="imgPreview" class="img-preview"/>
+</div>  
           <div class="form-group full"><label>Tags (comma separated)</label><input id="rTags" placeholder="e.g. Biryani, Curry, Tandoor"/></div>
           <div class="form-group inline"><input type="checkbox" id="rOpen" checked style="width:16px;height:16px;accent-color:var(--success)"/><label for="rOpen" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Currently Open</label></div>
           <div class="form-group inline"><input type="checkbox" id="rPopular" style="width:16px;height:16px;accent-color:var(--brand)"/><label for="rPopular" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Mark as Popular</label></div>
@@ -292,6 +309,23 @@
           <div class="form-group"><label>Rating (1–5)</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
           <div class="form-group full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea></div>
           <div class="form-group full"><label>Image URL *</label><input id="fImage" placeholder="https://…" oninput="prvImg('fImgPrv',this.value)"/><img id="fImgPrv" class="img-preview"/></div>
+          <div class="form-group full">
+  <label>Food Image *</label>
+
+  <input type="file" id="imageFile" accept="image/*">
+
+  <button
+    type="button"
+    class="btn-secondary"
+    onclick="uploadToCloudinary()"
+    style="margin-top:10px">
+    Upload Image
+  </button>
+
+  <input type="hidden" id="fImage">
+
+  <img id="imgPreview" class="img-preview"/>
+</div>  
           <div class="form-group"><label>Prep Time</label><input id="fPrepTime" placeholder="e.g. 20–25 min"/></div>
           <div class="form-group"><label>Calories</label><input id="fCal" placeholder="e.g. 480 kcal"/></div>
           <div class="form-group inline"><input type="checkbox" id="fVeg" style="width:16px;height:16px;accent-color:var(--success)"/><label for="fVeg" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Vegetarian</label></div>
