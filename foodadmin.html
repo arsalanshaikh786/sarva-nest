@@ -1,183 +1,198 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Zestora Admin Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
-  <style>
-    :root{
-      --brand:#E8521A;--brand-light:#FFF1EB;--brand-dark:#C03E10;
-      --surface:#F7F5F2;--card:#FFFFFF;--border:rgba(0,0,0,0.08);
-      --text:#1A1208;--muted:#7A7068;--success:#2E7D32;--danger:#C62828;
-      --radius:14px;--shadow:0 2px 16px rgba(0,0,0,0.07);
-    }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);display:flex;min-height:100vh}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Zestora Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+  --brand:#E8521A;--bl:#FFF1EB;--bd:#C03E10;
+  --sur:#F7F5F2;--card:#fff;--bdr:rgba(0,0,0,.08);
+  --txt:#1A1208;--mut:#7A7068;--ok:#2E7D32;--err:#C62828;
+  --r:14px;--sh:0 2px 16px rgba(0,0,0,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min-height:100vh}
 
-    /* ── SIDEBAR ── */
-    .sidebar{width:230px;background:var(--card);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;z-index:50}
-    .sb-logo{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border)}
-    .sb-logo .logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--brand)}
-    .sb-logo .logo span{color:var(--text)}
-    .sb-logo .sub{font-size:.72rem;color:var(--muted);margin-top:2px}
-    .sb-section{padding:.75rem 1rem .2rem;font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
-    .sb-item{display:flex;align-items:center;gap:10px;padding:.55rem 1rem;margin:.1rem .5rem;border-radius:10px;cursor:pointer;font-size:.88rem;color:var(--muted);transition:all .2s;position:relative}
-    .sb-item:hover{background:var(--surface);color:var(--text)}
-    .sb-item.active{background:var(--brand-light);color:var(--brand);font-weight:600}
-    .sb-item i{font-size:1rem;width:18px}
-    .sb-badge{margin-left:auto;background:var(--brand);color:#fff;font-size:.62rem;font-weight:700;min-width:18px;height:18px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 4px}
-    .sb-bottom{margin-top:auto;padding:.75rem;border-top:1px solid var(--border)}
-    .logout-btn{width:100%;background:none;border:1.5px solid var(--border);border-radius:8px;padding:.45rem;font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .2s}
-    .logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;background:var(--sur);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-box{background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:2rem 1.75rem;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh)}
+.login-box h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brand);margin-bottom:.2rem}
+.login-box p{font-size:.82rem;color:var(--mut);margin-bottom:1.25rem}
+.login-box input{width:100%;padding:.65rem 1rem;border:1.5px solid var(--bdr);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;margin-bottom:.6rem;transition:border-color .2s;-webkit-appearance:none}
+.login-box input:focus{border-color:var(--brand)}
+.login-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;touch-action:manipulation}
+.login-err{color:var(--err);font-size:.78rem;margin-top:.5rem;display:none}
 
-    /* ── MAIN ── */
-    .main{margin-left:230px;flex:1;display:flex;flex-direction:column;min-height:100vh}
-    .topbar{background:var(--card);border-bottom:1px solid var(--border);padding:.85rem 1.75rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:40}
-    .page-title{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700}
-    .topbar-actions{display:flex;gap:.65rem;align-items:center}
-    .tb-btn{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.45rem 1rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s}
-    .tb-btn:hover{background:var(--brand-dark)}
-    .tb-btn.outline{background:none;border:1.5px solid var(--border);color:var(--muted)}
-    .tb-btn.outline:hover{border-color:var(--brand);color:var(--brand)}
+/* ── TOPBAR (mobile-first) ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--card);border-bottom:1px solid var(--bdr);z-index:100;display:flex;align-items:center;padding:0 1rem;gap:.75rem}
+.menu-toggle{background:none;border:none;font-size:1.3rem;color:var(--txt);cursor:pointer;padding:4px;touch-action:manipulation}
+.topbar-logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand);flex:1}
+/* FIX: logo span now uses brand color, no color split */
+.topbar-logo span{color:var(--brand)}
+.topbar-right{display:flex;gap:.5rem;align-items:center}
+.tb-btn{background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:4px;touch-action:manipulation}
+.tb-btn:hover{border-color:var(--brand);color:var(--brand)}
 
-    /* ── CONTENT ── */
-    .content{padding:1.5rem 1.75rem;flex:1}
-    .sec{display:none}.sec.active{display:block}
+/* ── BOTTOM NAV (mobile) ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--card);border-top:1px solid var(--bdr);display:flex;z-index:100}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:.62rem;color:var(--mut);transition:color .2s;touch-action:manipulation;padding:4px 0;border:none;background:none;font-family:'DM Sans',sans-serif}
+.bnav-item i{font-size:1.3rem}
+.bnav-item.active{color:var(--brand)}
+.bnav-badge{position:absolute;top:-2px;right:-2px;background:var(--brand);color:#fff;font-size:.55rem;font-weight:700;min-width:15px;height:15px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 
-    /* ── LOGIN ── */
-    .login-screen{position:fixed;inset:0;background:var(--surface);z-index:200;display:flex;align-items:center;justify-content:center}
-    .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:360px;text-align:center;box-shadow:var(--shadow)}
-    .login-box h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brand);margin-bottom:.25rem}
-    .login-box p{font-size:.83rem;color:var(--muted);margin-bottom:1.5rem}
-    .login-box input{width:100%;padding:.65rem 1rem;border:1.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;outline:none;margin-bottom:.65rem;transition:border-color .2s}
-    .login-box input:focus{border-color:var(--brand)}
-    .login-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
-    .login-err{color:var(--danger);font-size:.78rem;margin-top:.5rem;display:none}
+/* ── SIDEBAR (desktop) ── */
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--card);border-right:1px solid var(--bdr);z-index:200;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.12)}
+.sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:199;display:none}
+.sb-overlay.show{display:block}
+.sb-head{padding:1rem 1.25rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+/* FIX: sidebar logo color consistent */
+.sb-head .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand)}
+.sb-head .logo span{color:var(--brand)}
+.sb-close{background:none;border:none;font-size:1.1rem;color:var(--mut);cursor:pointer;padding:4px}
+.sb-sec{padding:.6rem 1rem .15rem;font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:1.5px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:.55rem 1rem;margin:.1rem .4rem;border-radius:9px;cursor:pointer;font-size:.85rem;color:var(--mut);transition:all .18s;touch-action:manipulation}
+.sb-item:hover,.sb-item.active{background:var(--bl);color:var(--brand);font-weight:600}
+.sb-item i{font-size:.95rem;width:16px}
+.sb-badge{margin-left:auto;background:var(--brand);color:#fff;font-size:.6rem;font-weight:700;min-width:17px;height:17px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 3px}
+.sb-bottom{margin-top:auto;padding:.65rem;border-top:1px solid var(--bdr)}
+.logout-btn{width:100%;background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.42rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.logout-btn:hover{border-color:var(--err);color:var(--err)}
 
-    /* ── STATS ── */
-    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
-    .stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.1rem 1.25rem}
-    .stat-lbl{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.4rem;display:flex;align-items:center;gap:4px}
-    .stat-val{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--text);line-height:1}
-    .stat-sub{font-size:.72rem;color:var(--muted);margin-top:.25rem}
+/* ── MAIN ── */
+.main{padding-top:58px;padding-bottom:68px;min-height:100vh}
+.content{padding:1rem}
+.sec{display:none}.sec.active{display:block}
 
-    /* ── FORM CARD ── */
-    .form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.5rem;margin-bottom:1.25rem}
-    .form-card-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between}
-    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
-    @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
-    .form-group{display:flex;flex-direction:column;gap:4px}
-    .form-group.full{grid-column:1/-1}
-    .form-group.inline{flex-direction:row;align-items:center;gap:8px}
-    label{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-    input,select,textarea{padding:.58rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;background:#fff;width:100%}
-    input:focus,select:focus,textarea:focus{border-color:var(--brand)}
-    textarea{resize:vertical;min-height:75px}
-    .form-actions{display:flex;gap:.65rem;margin-top:1rem;flex-wrap:wrap}
-    .btn-primary{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.58rem 1.4rem;font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;transition:background .2s}
-    .btn-primary:hover{background:var(--brand-dark)}
-    .btn-secondary{background:#fff;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:.58rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .2s}
-    .btn-secondary:hover{border-color:var(--muted)}
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
+.stat-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem 1rem}
+.stat-lbl{font-size:.65rem;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;display:flex;align-items:center;gap:3px}
+.stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--txt);line-height:1}
 
-    /* ── IMG PREVIEW ── */
-    .img-preview{width:100%;height:150px;border-radius:8px;object-fit:cover;border:1px solid var(--border);margin-top:6px;display:none}
+/* ── FORM CARD ── */
+.form-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:1.1rem;margin-bottom:1rem}
+.form-card-title{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.fg{display:flex;flex-direction:column;gap:3px}
+.fg.full{grid-column:1/-1}
+.fg.row{flex-direction:row;align-items:center;gap:8px}
+.fg label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+.fg input,.fg select,.fg textarea{padding:.55rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;transition:border-color .2s;background:#fff;width:100%;-webkit-appearance:none;color:var(--txt)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--brand)}
+.fg select{cursor:pointer}
+.fg textarea{resize:vertical;min-height:70px}
+.fg input[type=checkbox]{width:18px;height:18px;accent-color:var(--brand);cursor:pointer;flex-shrink:0}
+.fg.row label{text-transform:none;font-size:.86rem;font-weight:500;letter-spacing:0;cursor:pointer}
+.form-actions{display:flex;gap:.55rem;margin-top:.85rem;flex-wrap:wrap}
+.btn-pr{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.58rem 1.25rem;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;touch-action:manipulation}
+.btn-pr:hover{background:var(--bd)}
+.btn-pr:disabled{background:#ccc;cursor:default}
+.btn-sec{background:#fff;color:var(--txt);border:1.5px solid var(--bdr);border-radius:8px;padding:.58rem 1rem;font-family:'DM Sans',sans-serif;font-size:.86rem;cursor:pointer;transition:all .2s}
+.btn-sec:hover{border-color:var(--mut)}
+.img-preview{width:100%;height:130px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);margin-top:5px;display:none}
 
-    /* ── RESTAURANT CARDS ── */
-    .rest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
-    .rest-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;transition:box-shadow .2s}
-    .rest-card:hover{box-shadow:var(--shadow)}
-    .rest-card-img{width:100%;height:140px;object-fit:cover;background:#f0ede8;display:block}
-    .rest-card-body{padding:1rem}
-    .rest-card-name{font-weight:700;font-size:.95rem;margin-bottom:.2rem;display:flex;align-items:center;gap:.5rem}
-    .open-badge{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:50px}
-    .open-badge.open{background:#E8F5E9;color:#2E7D32}
-    .open-badge.closed{background:#FFEBEE;color:#C62828}
-    .rest-card-meta{font-size:.78rem;color:var(--muted);margin-bottom:.65rem;display:flex;gap:.75rem;flex-wrap:wrap}
-    .rest-card-id{font-size:.68rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2px 7px;font-family:monospace;display:inline-block;margin-bottom:.65rem;cursor:pointer}
-    .rest-card-id:hover{border-color:var(--brand);color:var(--brand)}
-    .rest-card-actions{display:flex;gap:.45rem;flex-wrap:wrap}
-    .btn-sm{border:1.5px solid var(--border);background:#fff;border-radius:7px;padding:.3rem .7rem;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .2s;color:var(--muted)}
-    .btn-sm:hover{border-color:var(--muted);color:var(--text)}
-    .btn-sm.edit{border-color:rgba(240,200,59,.4);color:#b8860b}
-    .btn-sm.edit:hover{background:#FFF8E1}
-    .btn-sm.del{border-color:rgba(198,40,40,.3);color:var(--danger)}
-    .btn-sm.del:hover{background:#FFEBEE}
-    .btn-sm.success{border-color:rgba(46,125,50,.3);color:var(--success)}
-    .btn-sm.success:hover{background:#E8F5E9}
-    .btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
-    .btn-sm.manage:hover{background:var(--brand-light)}
+/* ── ERROR/SUCCESS ALERTS ── */
+.alert{padding:.6rem .85rem;border-radius:8px;font-size:.82rem;font-weight:500;margin-bottom:.75rem;display:none;align-items:center;gap:6px}
+.alert.show{display:flex}
+.alert.err{background:#FFEBEE;color:var(--err);border:1px solid rgba(198,40,40,.2)}
+.alert.ok{background:#E8F5E9;color:var(--ok);border:1px solid rgba(46,125,50,.2)}
 
-    /* ── FOOD TABLE ── */
-    .sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem}
-    .sec-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:.5rem}
-    .food-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
-    .food-table{width:100%;border-collapse:collapse}
-    .food-table th{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;padding:.75rem 1rem;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;background:#fafaf9}
-    .food-table td{padding:.65rem 1rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.84rem;vertical-align:middle}
-    .food-table tr:last-child td{border-bottom:none}
-    .food-table tr:hover td{background:#fafaf9}
-    .food-img-thumb{width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
-    .food-name-cell{font-weight:600}
-    .food-desc-cell{font-size:.75rem;color:var(--muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .tag-pill{font-size:.65rem;padding:2px 7px;border-radius:50px;font-weight:600;display:inline-block}
-    .tag-veg{background:#E8F5E9;color:#2E7D32}
-    .tag-nonveg{background:#FFF1EB;color:var(--brand)}
-    .tag-bestseller{background:#FFF3E0;color:#E65100}
-    .tag-spicy{background:#FFF3E0;color:#E65100}
-    .rest-pill{font-size:.68rem;padding:2px 8px;border-radius:50px;background:var(--brand-light);color:var(--brand);font-weight:600;white-space:nowrap}
+/* ── RESTAURANT CARDS ── */
+.rest-grid{display:grid;grid-template-columns:1fr;gap:.85rem}
+@media(min-width:500px){.rest-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.rest-grid{grid-template-columns:repeat(3,1fr)}}
+.rest-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden}
+.rest-card img{width:100%;height:130px;object-fit:cover;display:block;background:#f0ede8}
+.rest-card-body{padding:.85rem}
+.rest-card-name{font-weight:700;font-size:.92rem;margin-bottom:.2rem;display:flex;align-items:center;gap:.4rem;flex-wrap:wrap}
+.ob{font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:50px}
+.ob.open{background:#E8F5E9;color:#2E7D32}
+.ob.closed{background:#FFEBEE;color:#C62828}
+.rest-card-meta{font-size:.74rem;color:var(--mut);margin-bottom:.55rem;display:flex;gap:.6rem;flex-wrap:wrap}
+.rest-card-id{font-size:.64rem;color:var(--mut);background:var(--sur);border:1px solid var(--bdr);border-radius:6px;padding:2px 6px;font-family:monospace;display:inline-block;margin-bottom:.55rem;cursor:pointer;word-break:break-all}
+.rest-card-actions{display:flex;gap:.4rem;flex-wrap:wrap}
+.btn-sm{border:1.5px solid var(--bdr);background:#fff;border-radius:7px;padding:.32rem .65rem;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:3px;color:var(--mut);touch-action:manipulation}
+.btn-sm.edit{border-color:rgba(240,200,59,.4);color:#9a7200}
+.btn-sm.del{border-color:rgba(198,40,40,.25);color:var(--err)}
+.btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
+.btn-sm.tog{border-color:rgba(46,125,50,.3);color:var(--ok)}
 
-    /* ── ORDERS TABLE ── */
-    .orders-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto}
-    .orders-table{width:100%;border-collapse:collapse;min-width:700px}
-    .orders-table th{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border);background:#fafaf9;white-space:nowrap}
-    .orders-table td{padding:.62rem 1rem;border-bottom:1px solid rgba(0,0,0,.04);font-size:.82rem;vertical-align:middle}
-    .orders-table tr:last-child td{border-bottom:none}
-    .orders-table tr:hover td{background:#fafaf9}
-    .status-sel{padding:.28rem .55rem;border:1.5px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;outline:none;background:#fff}
-    .status-badge{font-size:.68rem;font-weight:600;padding:2px 9px;border-radius:50px;white-space:nowrap}
-    .st-pending{background:#FFF8E1;color:#F57F17}
-    .st-confirmed{background:#E3F2FD;color:#1565C0}
-    .st-preparing{background:#FFF3E0;color:#E65100}
-    .st-out_for_delivery{background:#E8F5E9;color:#2E7D32}
-    .st-delivered{background:#E8F5E9;color:#2E7D32}
-    .st-cancelled{background:#FFEBEE;color:#C62828}
-    .order-id-cell{font-size:.72rem;font-family:monospace;color:var(--muted)}
-    .cust-cell-name{font-weight:600;font-size:.82rem}
-    .cust-cell-email{font-size:.72rem;color:var(--muted)}
+/* ── FOOD LIST (cards on mobile) ── */
+.food-list{display:flex;flex-direction:column;gap:.75rem}
+.food-item-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);display:flex;gap:.75rem;padding:.85rem;align-items:flex-start}
+.food-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bdr)}
+.food-item-body{flex:1;min-width:0}
+.food-item-name{font-weight:700;font-size:.88rem;margin-bottom:.15rem}
+.food-item-sub{font-size:.74rem;color:var(--mut);margin-bottom:.35rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.food-item-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.4rem}
+.tpill{font-size:.62rem;padding:1px 6px;border-radius:50px;font-weight:600}
+.tv{background:#E8F5E9;color:#2E7D32}
+.tn{background:#FFF1EB;color:var(--brand)}
+.tb{background:#FFF3E0;color:#E65100}
+.ts{background:#FFF3E0;color:#E65100}
+.rpill{font-size:.65rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:2px 7px;font-weight:600}
+.food-item-actions{display:flex;gap:.35rem;flex-wrap:wrap}
+.food-price-big{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;flex-shrink:0}
 
-    /* ── MODAL ── */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;display:none;align-items:center;justify-content:center;padding:1rem}
-    .modal-overlay.open{display:flex}
-    .modal-box{background:var(--card);border-radius:20px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:mUp .22s ease}
-    @keyframes mUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-    .modal-head{padding:1.25rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1}
-    .modal-head h3{font-family:'Playfair Display',serif;font-size:1.1rem}
-    .modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;transition:color .2s}
-    .modal-close:hover{color:var(--text)}
-    .modal-body{padding:1.25rem 1.5rem}
+/* ── ORDERS ── */
+.order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
+.oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.45rem;gap:.4rem;flex-wrap:wrap}
+.oc-id{font-weight:700;font-size:.82rem}
+.oc-sub{font-size:.7rem;color:var(--mut)}
+.st-badge{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:50px;white-space:nowrap}
+.st-pending{background:#FFF8E1;color:#F57F17}
+.st-confirmed{background:#E3F2FD;color:#1565C0}
+.st-preparing{background:#FFF3E0;color:#E65100}
+.st-out_for_delivery{background:#E8F5E9;color:#2E7D32}
+.st-delivered{background:#E8F5E9;color:var(--ok)}
+.st-cancelled{background:#FFEBEE;color:var(--err)}
+.oc-row{display:flex;gap:.5rem;font-size:.75rem;color:var(--mut);margin-bottom:.25rem;flex-wrap:wrap}
+.oc-items{font-size:.74rem;color:var(--mut);margin:.3rem 0}
+.oc-actions{display:flex;gap:.4rem;margin-top:.5rem;align-items:center;flex-wrap:wrap}
+.status-sel{padding:.3rem .55rem;border:1.5px solid var(--bdr);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;outline:none;background:#fff;-webkit-appearance:none;color:var(--txt)}
+.update-btn{background:var(--brand);color:#fff;border:none;border-radius:7px;padding:.3rem .7rem;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;touch-action:manipulation}
 
-    /* ── FILTER BAR ── */
-    .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-    .filter-bar input{flex:1;min-width:180px;padding:.5rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none}
-    .filter-bar input:focus{border-color:var(--brand)}
-    .filter-bar select{padding:.5rem .85rem;border:1.5px solid var(--border);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;background:#fff;cursor:pointer}
+/* ── SEC HEADER ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.4rem}
+.sec-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.85rem}
+.filter-bar input,.filter-bar select{flex:1;min-width:130px;padding:.48rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;background:#fff;-webkit-appearance:none;color:var(--txt)}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--brand)}
 
-    /* ── EMPTY ── */
-    .empty-state{text-align:center;padding:3rem 1rem;color:var(--muted)}
-    .empty-state i{font-size:2.5rem;display:block;margin-bottom:.5rem;opacity:.3}
-    .empty-state p{font-size:.85rem}
+/* ── MODAL ── */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:250;display:none;align-items:flex-end;justify-content:center}
+@media(min-width:600px){.modal-ov{align-items:center}}
+.modal-ov.open{display:flex}
+.modal-box{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-height:85vh;overflow-y:auto;animation:mUp .25s ease}
+@media(min-width:600px){.modal-box{border-radius:20px;max-width:480px;max-height:80vh}}
+@keyframes mUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:1rem 1.25rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1}
+.modal-head h3{font-family:'Playfair Display',serif;font-size:1rem}
+.modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--mut);padding:4px;border-radius:6px;touch-action:manipulation}
+.modal-body{padding:1rem 1.25rem}
 
-    /* ── TOAST ── */
-    .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#1A1208;color:#fff;padding:.65rem 1.1rem;border-radius:10px;font-size:.82rem;font-weight:500;z-index:999;transform:translateY(60px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:7px}
-    .toast.show{transform:translateY(0);opacity:1}
+/* ── EMPTY STATE ── */
+.empty-st{text-align:center;padding:2.5rem 1rem;color:var(--mut)}
+.empty-st i{font-size:2.2rem;display:block;margin-bottom:.4rem;opacity:.3}
+.empty-st p{font-size:.82rem}
 
-    @media(max-width:768px){
-      .sidebar{display:none}
-      .main{margin-left:0}
-    }
-  </style>
+/* ── TOAST ── */
+.toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:#fff;padding:.58rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(min-width:768px){
+  .bottom-nav{display:none}
+  .main{padding-top:58px;padding-bottom:0}
+  .toast{bottom:1.5rem}
+  .content{padding:1.5rem 1.75rem;max-width:1100px;margin:0 auto}
+}
+</style>
 </head>
 <body>
 
@@ -186,217 +201,177 @@
   <div class="login-box">
     <h2>Zestora</h2>
     <p>Admin Panel — Sign in</p>
-    <input type="text" id="lUser" placeholder="Username" autocomplete="off"/>
-    <input type="password" id="lPass" placeholder="Password"/>
+    <input type="text" id="lUser" placeholder="Username" autocomplete="off" autocapitalize="off"/>
+    <input type="password" id="lPass" placeholder="Password" autocomplete="current-password"/>
     <button class="login-btn" onclick="doLogin()">Sign In</button>
     <div class="login-err" id="loginErr">Wrong username or password</div>
-    <p style="font-size:.7rem;color:var(--muted);margin-top:.75rem">admin / zestora2025</p>
+    <p style="font-size:.68rem;color:var(--mut);margin-top:.65rem">admin / zestora2025</p>
   </div>
 </div>
 
+<!-- SIDEBAR OVERLAY -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="sb-logo">
-    <div class="logo">Zes<span>tora</span></div>
-    <div class="sub">Admin Panel</div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-head">
+    <!-- FIX: logo text now fully in brand color, no awkward split -->
+    <div class="logo">Zestora</div>
+    <button class="sb-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
-  <div class="sb-section">Overview</div>
-  <div class="sb-item active" onclick="showSec('dashboard',this)"><i class="ti ti-dashboard"></i> Dashboard</div>
-  <div class="sb-section">Management</div>
-  <div class="sb-item" onclick="showSec('restaurants',this)"><i class="ti ti-building-store"></i> Restaurants <span class="sb-badge" id="restCount">0</span></div>
-  <div class="sb-item" onclick="showSec('foods',this)"><i class="ti ti-tools-kitchen-2"></i> Food Items <span class="sb-badge" id="foodCount">0</span></div>
-  <div class="sb-item" onclick="showSec('orders',this)"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
+  <div class="sb-sec">Overview</div>
+  <div class="sb-item active" onclick="showSec('dashboard',this);closeSidebar()"><i class="ti ti-dashboard"></i> Dashboard</div>
+  <div class="sb-sec">Manage</div>
+  <div class="sb-item" onclick="showSec('restaurants',this);closeSidebar()"><i class="ti ti-building-store"></i> Restaurants <span class="sb-badge" id="restCount">0</span></div>
+  <div class="sb-item" onclick="showSec('foods',this);closeSidebar()"><i class="ti ti-tools-kitchen-2"></i> Food Items <span class="sb-badge" id="foodCount">0</span></div>
+  <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
   <div class="sb-bottom">
     <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
   </div>
 </aside>
 
-<!-- MAIN -->
-<div class="main">
-  <div class="topbar">
-    <div class="page-title" id="pageTitle">Dashboard</div>
-    <div class="topbar-actions">
-      <button class="tb-btn outline" onclick="refreshAll()"><i class="ti ti-refresh"></i> Refresh</button>
-    </div>
-  </div>
-
-  <div class="content">
-
-    <!-- ── DASHBOARD ── -->
-    <div class="sec active" id="sec-dashboard">
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants</div><div class="stat-val" id="d-rests">—</div></div>
-        <div class="stat-card"><div class="stat-lbl"><i class="ti ti-bowl" style="color:var(--brand)"></i> Food Items</div><div class="stat-val" id="d-foods">—</div></div>
-        <div class="stat-card"><div class="stat-lbl"><i class="ti ti-clock" style="color:#F57F17"></i> Pending Orders</div><div class="stat-val" id="d-pending">—</div></div>
-        <div class="stat-card"><div class="stat-lbl"><i class="ti ti-currency-rupee" style="color:var(--success)"></i> Total Revenue</div><div class="stat-val" id="d-rev">—</div></div>
-      </div>
-      <div class="sec-header"><div class="sec-title">Recent Orders</div></div>
-      <div class="orders-table-wrap">
-        <table class="orders-table">
-          <thead><tr><th>Order ID</th><th>Customer</th><th>Restaurant</th><th>Items</th><th>Total</th><th>Status</th><th>Time</th></tr></thead>
-          <tbody id="recentOrdersTbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ── RESTAURANTS ── -->
-    <div class="sec" id="sec-restaurants">
-      <!-- ADD/EDIT FORM -->
-      <div class="form-card">
-        <div class="form-card-title">
-          <span id="restFormTitle">Add New Restaurant</span>
-          <button class="btn-secondary" id="restCancelBtn" onclick="resetRestForm()" style="display:none;font-size:.78rem;padding:.35rem .75rem">Cancel Edit</button>
-        </div>
-        <input type="hidden" id="restEditId"/>
-        <div class="form-grid">
-          <div class="form-group"><label>Restaurant Name *</label><input id="rName" placeholder="e.g. Spice Garden"/></div>
-          <div class="form-group"><label>Cuisine Type *</label><input id="rCuisine" placeholder="e.g. North Indian, Chinese…"/></div>
-          <div class="form-group"><label>Area / Location</label><input id="rArea" placeholder="e.g. Koregaon Park"/></div>
-          <div class="form-group"><label>Delivery Time</label><input id="rTime" placeholder="e.g. 30–40 min"/></div>
-          <div class="form-group"><label>Rating (1–5)</label><input type="number" id="rRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
-          <div class="form-group"><label>Phone Number</label><input id="rPhone" placeholder="Contact number"/></div>
-          <div class="form-group full"><label>Cover Image URL *</label><input id="rImage" placeholder="https://…" oninput="prvImg('rImgPrv',this.value)"/><img id="rImgPrv" class="img-preview"/></div>
-          <div class="form-group full">
-  <label>Food Image *</label>
-
-  <input type="file" id="imageFile" accept="image/*">
-
-  <button
-    type="button"
-    class="btn-secondary"
-    onclick="uploadToCloudinary()"
-    style="margin-top:10px">
-    Upload Image
-  </button>
-
-  <input type="hidden" id="fImage">
-
-  <img id="imgPreview" class="img-preview"/>
-</div>  
-          <div class="form-group full"><label>Tags (comma separated)</label><input id="rTags" placeholder="e.g. Biryani, Curry, Tandoor"/></div>
-          <div class="form-group inline"><input type="checkbox" id="rOpen" checked style="width:16px;height:16px;accent-color:var(--success)"/><label for="rOpen" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Currently Open</label></div>
-          <div class="form-group inline"><input type="checkbox" id="rPopular" style="width:16px;height:16px;accent-color:var(--brand)"/><label for="rPopular" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Mark as Popular</label></div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-primary" onclick="saveRestaurant()"><i class="ti ti-check"></i> Save Restaurant</button>
-          <button class="btn-secondary" onclick="resetRestForm()">Reset</button>
-        </div>
-      </div>
-
-      <div class="sec-header">
-        <div class="sec-title"><i class="ti ti-building-store" style="color:var(--brand)"></i> All Restaurants</div>
-        <div style="font-size:.8rem;color:var(--muted)" id="restListMeta"></div>
-      </div>
-      <div class="rest-grid" id="restGrid"><div class="empty-state"><i class="ti ti-building-store"></i><p>No restaurants yet</p></div></div>
-    </div>
-
-    <!-- ── FOOD ITEMS ── -->
-    <div class="sec" id="sec-foods">
-      <!-- ADD/EDIT FORM -->
-      <div class="form-card">
-        <div class="form-card-title">
-          <span id="foodFormTitle">Add New Food Item</span>
-          <button class="btn-secondary" id="foodCancelBtn" onclick="resetFoodForm()" style="display:none;font-size:.78rem;padding:.35rem .75rem">Cancel Edit</button>
-        </div>
-        <input type="hidden" id="foodEditId"/>
-        <div class="form-grid">
-          <div class="form-group full"><label>Select Restaurant *</label>
-            <select id="fRestId"><option value="">— Select a restaurant —</option></select>
-          </div>
-          <div class="form-group"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken"/></div>
-          <div class="form-group"><label>Price (₹) *</label><input type="number" id="fPrice" placeholder="280"/></div>
-          <div class="form-group"><label>Category</label><input id="fCategory" placeholder="e.g. Main Course, Starters…"/></div>
-          <div class="form-group"><label>Rating (1–5)</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
-          <div class="form-group full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea></div>
-          <div class="form-group full"><label>Image URL *</label><input id="fImage" placeholder="https://…" oninput="prvImg('fImgPrv',this.value)"/><img id="fImgPrv" class="img-preview"/></div>
-          <div class="form-group full">
-  <label>Food Image *</label>
-
-  <input type="file" id="imageFile" accept="image/*">
-
-  <button
-    type="button"
-    class="btn-secondary"
-    onclick="uploadToCloudinary()"
-    style="margin-top:10px">
-    Upload Image
-  </button>
-
-  <input type="hidden" id="fImage">
-
-  <img id="imgPreview" class="img-preview"/>
-</div>  
-          <div class="form-group"><label>Prep Time</label><input id="fPrepTime" placeholder="e.g. 20–25 min"/></div>
-          <div class="form-group"><label>Calories</label><input id="fCal" placeholder="e.g. 480 kcal"/></div>
-          <div class="form-group inline"><input type="checkbox" id="fVeg" style="width:16px;height:16px;accent-color:var(--success)"/><label for="fVeg" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Vegetarian</label></div>
-          <div class="form-group inline"><input type="checkbox" id="fBest" style="width:16px;height:16px;accent-color:var(--brand)"/><label for="fBest" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Bestseller</label></div>
-          <div class="form-group inline"><input type="checkbox" id="fSpicy" style="width:16px;height:16px;accent-color:#E65100"/><label for="fSpicy" style="text-transform:none;font-size:.88rem;letter-spacing:0;font-weight:500">Spicy</label></div>
-        </div>
-        <div class="form-actions">
-          <button class="btn-primary" onclick="saveFood()"><i class="ti ti-check"></i> Save Food Item</button>
-          <button class="btn-secondary" onclick="resetFoodForm()">Reset</button>
-        </div>
-      </div>
-
-      <div class="sec-header">
-        <div class="sec-title"><i class="ti ti-tools-kitchen-2" style="color:var(--brand)"></i> Food Items</div>
-        <div class="filter-bar" style="margin-bottom:0">
-          <input id="foodSearch" placeholder="Search food name…" oninput="renderFoodTable()" style="width:180px;flex:none"/>
-          <select id="foodRestFilter" onchange="renderFoodTable()">
-            <option value="">All Restaurants</option>
-          </select>
-        </div>
-      </div>
-      <div class="food-table-wrap">
-        <table class="food-table">
-          <thead><tr><th>Image</th><th>Name</th><th>Restaurant</th><th>Category</th><th>Price</th><th>Tags</th><th>Actions</th></tr></thead>
-          <tbody id="foodTbody"><tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ── ORDERS ── -->
-    <div class="sec" id="sec-orders">
-      <div class="sec-header">
-        <div class="sec-title"><i class="ti ti-receipt" style="color:var(--brand)"></i> All Orders</div>
-        <div class="filter-bar" style="margin-bottom:0">
-          <input id="orderSearch" placeholder="Search name / email…" oninput="renderOrdersTable()"/>
-          <select id="orderStatusFilter" onchange="renderOrdersTable()">
-            <option value="">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="preparing">Preparing</option>
-            <option value="out_for_delivery">Out for Delivery</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-          <select id="orderRestFilter" onchange="renderOrdersTable()">
-            <option value="">All Restaurants</option>
-          </select>
-        </div>
-      </div>
-      <div class="orders-table-wrap">
-        <table class="orders-table">
-          <thead><tr><th>Order ID</th><th>Customer</th><th>Restaurant</th><th>Items</th><th>Total</th><th>Status</th><th>Payment</th><th>Time</th><th>Update</th></tr></thead>
-          <tbody id="ordersTbody"><tr><td colspan="9" style="text-align:center;padding:2rem;color:var(--muted)">Loading…</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="menu-toggle" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
+  <!-- FIX: logo name displayed as one word, consistent brand color -->
+  <div class="topbar-logo">Zestora</div>
+  <div class="topbar-right">
+    <button class="tb-btn" onclick="refreshAll()"><i class="ti ti-refresh"></i></button>
   </div>
 </div>
 
-<!-- MANAGE FOODS MODAL (per restaurant) -->
-<div class="modal-overlay" id="mgModal">
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="bnav-item active" id="bn-dashboard" onclick="showSec('dashboard',this)">
+    <i class="ti ti-dashboard"></i>Home
+  </button>
+  <button class="bnav-item" id="bn-restaurants" onclick="showSec('restaurants',this)">
+    <div style="position:relative;display:inline-block"><i class="ti ti-building-store"></i><span class="bnav-badge" id="rBadge">0</span></div>Rests
+  </button>
+  <button class="bnav-item" id="bn-foods" onclick="showSec('foods',this)">
+    <div style="position:relative;display:inline-block"><i class="ti ti-tools-kitchen-2"></i><span class="bnav-badge" id="fBadge">0</span></div>Foods
+  </button>
+  <button class="bnav-item" id="bn-orders" onclick="showSec('orders',this)">
+    <div style="position:relative;display:inline-block"><i class="ti ti-receipt"></i><span class="bnav-badge" id="oBadge">0</span></div>Orders
+  </button>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+ <div class="content">
+
+  <!-- ── DASHBOARD ── -->
+  <div class="sec active" id="sec-dashboard">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants</div><div class="stat-val" id="d-rests">—</div></div>
+      <div class="stat-card"><div class="stat-lbl"><i class="ti ti-bowl" style="color:var(--brand)"></i> Food Items</div><div class="stat-val" id="d-foods">—</div></div>
+      <div class="stat-card"><div class="stat-lbl"><i class="ti ti-clock" style="color:#F57F17"></i> Pending</div><div class="stat-val" id="d-pending">—</div></div>
+      <div class="stat-card"><div class="stat-lbl"><i class="ti ti-currency-rupee" style="color:var(--ok)"></i> Revenue</div><div class="stat-val" id="d-rev">—</div></div>
+    </div>
+    <div class="sec-head"><div class="sec-title">Recent Orders</div></div>
+    <div id="recentOrders"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
+  </div>
+
+  <!-- ── RESTAURANTS ── -->
+  <div class="sec" id="sec-restaurants">
+    <div id="restAlert" class="alert"></div>
+    <div class="form-card">
+      <div class="form-card-title">
+        <span id="restFormTitle">Add Restaurant</span>
+        <button class="btn-sec" id="restCancelBtn" onclick="resetRestForm()" style="display:none;font-size:.76rem;padding:.3rem .65rem">✕ Cancel</button>
+      </div>
+      <input type="hidden" id="restEditId"/>
+      <div class="form-grid">
+        <div class="fg"><label>Name *</label><input id="rName" placeholder="e.g. Spice Garden" autocapitalize="words"/></div>
+        <div class="fg"><label>Cuisine *</label><input id="rCuisine" placeholder="e.g. North Indian" autocapitalize="words"/></div>
+        <div class="fg"><label>Area</label><input id="rArea" placeholder="e.g. Koregaon Park" autocapitalize="words"/></div>
+        <div class="fg"><label>Delivery Time</label><input id="rTime" placeholder="e.g. 30–40 min"/></div>
+        <div class="fg"><label>Rating</label><input type="number" id="rRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric"/></div>
+        <div class="fg full"><label>Cover Image URL *</label><input id="rImage" placeholder="https://…" inputmode="url" autocapitalize="off" oninput="prvImg('rPrv',this.value)"/><img id="rPrv" class="img-preview"/></div>
+        <div class="fg full"><label>Tags (comma separated)</label><input id="rTags" placeholder="Biryani, Curry, Tandoor" autocapitalize="words"/></div>
+        <div class="fg row full"><input type="checkbox" id="rOpen" checked/><label for="rOpen">Currently Open</label></div>
+        <div class="fg row full"><input type="checkbox" id="rPop"/><label for="rPop">Mark as Popular 🔥</label></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-pr" id="restSaveBtn" onclick="saveRestaurant()"><i class="ti ti-check"></i> Save Restaurant</button>
+        <button class="btn-sec" onclick="resetRestForm()">Reset</button>
+      </div>
+    </div>
+    <div class="sec-head"><div class="sec-title"><i class="ti ti-building-store" style="color:var(--brand)"></i> All Restaurants</div></div>
+    <div class="rest-grid" id="restGrid"><div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet</p></div></div>
+  </div>
+
+  <!-- ── FOOD ITEMS ── -->
+  <div class="sec" id="sec-foods">
+    <div id="foodAlert" class="alert"></div>
+    <div class="form-card">
+      <div class="form-card-title">
+        <span id="foodFormTitle">Add Food Item</span>
+        <button class="btn-sec" id="foodCancelBtn" onclick="resetFoodForm()" style="display:none;font-size:.76rem;padding:.3rem .65rem">✕ Cancel</button>
+      </div>
+      <input type="hidden" id="foodEditId"/>
+      <div class="form-grid">
+        <div class="fg full"><label>Restaurant *</label>
+          <select id="fRestId"><option value="">— Select Restaurant —</option></select>
+        </div>
+        <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words"/></div>
+        <div class="fg"><label>Price (₹) *</label><input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01"/></div>
+        <div class="fg"><label>Category</label><input id="fCategory" placeholder="Main Course, Starters…" autocapitalize="words"/></div>
+        <div class="fg"><label>Rating</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1" inputmode="decimal"/></div>
+        <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea></div>
+        <div class="fg full"><label>Image URL *</label><input id="fImage" placeholder="https://…" inputmode="url" autocapitalize="off" oninput="prvImg('fPrv',this.value)"/><img id="fPrv" class="img-preview"/></div>
+        <div class="fg"><label>Prep Time</label><input id="fPrepTime" placeholder="20–25 min"/></div>
+        <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal"/></div>
+        <div class="fg row full"><input type="checkbox" id="fVeg"/><label for="fVeg">🥦 Vegetarian</label></div>
+        <div class="fg row full"><input type="checkbox" id="fBest"/><label for="fBest">🔥 Bestseller</label></div>
+        <div class="fg row full"><input type="checkbox" id="fSpicy"/><label for="fSpicy">🌶 Spicy</label></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-pr" id="foodSaveBtn" onclick="saveFood()"><i class="ti ti-check"></i> Save Food Item</button>
+        <button class="btn-sec" onclick="resetFoodForm()">Reset</button>
+      </div>
+    </div>
+    <div class="sec-head"><div class="sec-title"><i class="ti ti-tools-kitchen-2" style="color:var(--brand)"></i> All Food Items</div></div>
+    <div class="filter-bar">
+      <input id="foodSearch" placeholder="Search food…" oninput="renderFoods()"/>
+      <select id="foodRestFilter" onchange="renderFoods()"><option value="">All Restaurants</option></select>
+    </div>
+    <div class="food-list" id="foodList"><div class="empty-st"><i class="ti ti-bowl"></i><p>No food items yet</p></div></div>
+  </div>
+
+  <!-- ── ORDERS ── -->
+  <div class="sec" id="sec-orders">
+    <div class="sec-head"><div class="sec-title"><i class="ti ti-receipt" style="color:var(--brand)"></i> All Orders</div></div>
+    <div class="filter-bar">
+      <input id="orderSearch" placeholder="Search name / email…" oninput="renderOrders()"/>
+      <select id="orderStatusFilter" onchange="renderOrders()">
+        <option value="">All Status</option>
+        <option value="pending">Pending</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="preparing">Preparing</option>
+        <option value="out_for_delivery">Out for Delivery</option>
+        <option value="delivered">Delivered</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="orderRestFilter" onchange="renderOrders()"><option value="">All Restaurants</option></select>
+    </div>
+    <div id="ordersList"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
+  </div>
+
+ </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- MANAGE FOODS MODAL -->
+<div class="modal-ov" id="mgModal">
   <div class="modal-box">
     <div class="modal-head">
-      <h3 id="mgModalTitle">Manage Foods</h3>
+      <h3 id="mgTitle">Restaurant Foods</h3>
       <button class="modal-close" onclick="closeMg()"><i class="ti ti-x"></i></button>
     </div>
     <div class="modal-body">
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:.75rem">Food items linked to this restaurant:</p>
-      <div id="mgFoodList"></div>
-      <button class="btn-primary" style="margin-top:1rem;width:100%" onclick="goAddFoodForRest()"><i class="ti ti-plus"></i> Add food item to this restaurant</button>
+      <div id="mgList"></div>
+      <button class="btn-pr" style="width:100%;margin-top:.85rem;justify-content:center" onclick="goAddFood()"><i class="ti ti-plus"></i> Add Food to This Restaurant</button>
     </div>
   </div>
 </div>
@@ -404,59 +379,8 @@
 <div class="toast" id="toast"></div>
 
 <script type="module">
-  window.uploadToCloudinary = async function () {
-
-  const file = document.getElementById("imageFile").files[0];
-
-  if (!file) {
-    showToast("Select image first");
-    return;
-  }
-
-  const formData = new FormData();
-
-  formData.append("file", file);
-  formData.append("upload_preset", "ml_default");
-
-  try {
-
-    showToast("Uploading image...");
-
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
-
-    const data = await response.json();
-
-    if (data.error) {
-      showToast(data.error.message);
-      return;
-    }
-
-    document.getElementById("fImage").value =
-      data.secure_url;
-
-    previewImage(data.secure_url);
-
-    showToast("Image uploaded successfully ✅");
-
-  } catch (err) {
-
-    console.error(err);
-
-    showToast("Upload failed");
-
-  }
-};
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-  getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc,
-  doc, serverTimestamp, query, where
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
@@ -468,372 +392,622 @@ const cfg = {
 };
 const app = initializeApp(cfg);
 const db = getFirestore(app);
-
 const BOT = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT = "5547663296";
 
-let restaurants = [];   // [{id, ...data}]
-let foods = [];         // [{id, ...data}]
-let orders = [];        // [{id, ...data}]
-let mgRestId = null;    // currently managing restaurant id
+let restaurants=[], foods=[], orders=[], mgRestId=null, curSec='dashboard';
 
 // ── AUTH ──
-window.doLogin = function(){
-  const u=document.getElementById('lUser').value.trim();
-  const p=document.getElementById('lPass').value.trim();
-  if(u==='admin'&&p==='zestora2025'){
-    document.getElementById('loginScreen').style.display='none';
+window.doLogin = () => {
+  const u = document.getElementById('lUser').value.trim();
+  const p = document.getElementById('lPass').value.trim();
+  if(u === 'admin' && p === 'zestora2025'){
+    document.getElementById('loginScreen').style.display = 'none';
     loadAll();
-  } else { document.getElementById('loginErr').style.display='block'; }
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
 };
-window.doLogout=function(){ document.getElementById('loginScreen').style.display='flex'; };
-document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none') doLogin(); });
+window.doLogout = () => {
+  document.getElementById('loginScreen').style.display = 'flex';
+};
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
+});
+
+// ── SIDEBAR ──
+window.openSidebar  = () => { document.getElementById('sidebar').classList.add('open');    document.getElementById('sbOverlay').classList.add('show'); };
+window.closeSidebar = () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sbOverlay').classList.remove('show'); };
 
 // ── NAV ──
-window.showSec=function(id,el){
-  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sec-'+id).classList.add('active');
-  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
-  if(el) el.classList.add('active');
-  const titles={dashboard:'Dashboard',restaurants:'Restaurants',foods:'Food Items',orders:'Orders'};
-  document.getElementById('pageTitle').textContent=titles[id]||id;
+window.showSec = (id, el) => {
+  curSec = id;
+  document.querySelectorAll('.sec').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  if(el && el.classList.contains('sb-item')) el.classList.add('active');
+  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
+  const bn = document.getElementById('bn-' + id);
+  if(bn) bn.classList.add('active');
 };
 
-// ── LOAD ALL ──
+// ── LOAD ──
 async function loadAll(){
   await Promise.all([loadRestaurants(), loadFoods(), loadOrders()]);
-  renderDashboard();
 }
-window.refreshAll=loadAll;
+window.refreshAll = () => { showToast('Refreshing…'); loadAll().then(() => showToast('✅ Done')); };
 
 async function loadRestaurants(){
-  const snap=await getDocs(collection(db,'restaurants'));
-  restaurants=snap.docs.map(d=>({id:d.id,...d.data()}));
-  document.getElementById('restCount').textContent=restaurants.length;
-  document.getElementById('d-rests').textContent=restaurants.length;
+  try{
+    const snap = await getDocs(collection(db, 'restaurants'));
+    restaurants = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e){ restaurants = []; console.error('loadRestaurants:', e); }
+  const n = restaurants.length;
+  document.getElementById('restCount').textContent = n;
+  document.getElementById('rBadge').textContent = n;
+  document.getElementById('d-rests').textContent = n;
   populateRestDropdowns();
   renderRestGrid();
 }
+
 async function loadFoods(){
-  const snap=await getDocs(collection(db,'foods'));
-  foods=snap.docs.map(d=>({id:d.id,...d.data()}));
-  document.getElementById('foodCount').textContent=foods.length;
-  document.getElementById('d-foods').textContent=foods.length;
-  renderFoodTable();
+  try{
+    const snap = await getDocs(collection(db, 'foods'));
+    foods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e){ foods = []; console.error('loadFoods:', e); }
+  const n = foods.length;
+  document.getElementById('foodCount').textContent = n;
+  document.getElementById('fBadge').textContent = n;
+  document.getElementById('d-foods').textContent = n;
+  renderFoods();
 }
+
 async function loadOrders(){
-  const snap=await getDocs(collection(db,'food_orders'));
-  orders=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
-  const pending=orders.filter(o=>!o.status||o.status==='pending').length;
-  const rev=orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(+o.total||0),0);
-  document.getElementById('orderCount').textContent=orders.length;
-  document.getElementById('d-pending').textContent=pending;
-  document.getElementById('d-rev').textContent='₹'+rev.toLocaleString('en-IN');
+  try{
+    const snap = await getDocs(collection(db, 'food_orders'));
+    orders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  } catch(e){ orders = []; console.error('loadOrders:', e); }
+  const pending = orders.filter(o => !o.status || o.status === 'pending').length;
+  const rev = orders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+  document.getElementById('orderCount').textContent = orders.length;
+  document.getElementById('oBadge').textContent = orders.length;
+  document.getElementById('d-pending').textContent = pending;
+  document.getElementById('d-rev').textContent = '₹' + rev.toLocaleString('en-IN');
   renderRecentOrders();
-  renderOrdersTable();
+  renderOrders();
 }
 
 // ── DROPDOWNS ──
 function populateRestDropdowns(){
-  const opts='<option value="">— Select a restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
-  document.getElementById('fRestId').innerHTML=opts;
-  // food filter
-  document.getElementById('foodRestFilter').innerHTML='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
-  // order filter
-  document.getElementById('orderRestFilter').innerHTML='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+  const opts = '<option value="">— Select Restaurant —</option>' +
+    restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  document.getElementById('fRestId').innerHTML = opts;
+
+  const restOpt = '<option value="">All Restaurants</option>' +
+    restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  document.getElementById('foodRestFilter').innerHTML = restOpt;
+  document.getElementById('orderRestFilter').innerHTML = restOpt;
 }
 
-function getRestName(id){ const r=restaurants.find(x=>x.id===id); return r?r.name:'Unknown'; }
+// FIX: fall back to stored restaurantName if local array doesn't have it yet
+const getRestName = (id) => restaurants.find(r => r.id === id)?.name || '';
 
-// ── IMG PREVIEW ──
-window.prvImg=function(imgId,url){
-  const img=document.getElementById(imgId);
-  if(url){img.src=url;img.style.display='block';}else img.style.display='none';
+// ── IMAGE PREVIEW ──
+window.prvImg = (imgId, url) => {
+  const img = document.getElementById(imgId);
+  if(url && url.startsWith('http')){ img.src = url; img.style.display = 'block'; }
+  else img.style.display = 'none';
 };
 
-// ── RESTAURANT FORM ──
-window.saveRestaurant=async function(){
-  const id=document.getElementById('restEditId').value;
-  const data={
-    name:document.getElementById('rName').value.trim(),
-    cuisine:document.getElementById('rCuisine').value.trim(),
-    area:document.getElementById('rArea').value.trim(),
-    deliveryTime:document.getElementById('rTime').value.trim(),
-    rating:document.getElementById('rRating').value.trim(),
-    phone:document.getElementById('rPhone').value.trim(),
-    image:document.getElementById('rImage').value.trim(),
-    tags:document.getElementById('rTags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    isOpen:document.getElementById('rOpen').checked,
-    popular:document.getElementById('rPopular').checked,
-  };
-  if(!data.name||!data.cuisine) return showToast('Name and cuisine are required');
+// ── ALERT ──
+function showAlert(secId, msg, type = 'err'){
+  const el = document.getElementById(secId + 'Alert');
+  if(!el) return;
+  el.className = 'alert ' + type + ' show';
+  el.innerHTML = `<i class="ti ti-${type === 'err' ? 'alert-circle' : 'circle-check'}"></i> ${msg}`;
+  setTimeout(() => el.classList.remove('show'), 4500);
+}
+
+// ══════════════════════════════════════════════════════
+// ── RESTAURANT SAVE ──
+// FIX 1: validation errors now show alert AND stop saving (return inside try is caught by finally → button re-enabled)
+// FIX 2: rating stored as number, not string
+// FIX 3: image URL validation added
+// ══════════════════════════════════════════════════════
+window.saveRestaurant = async () => {
+  const btn = document.getElementById('restSaveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Saving…';
+
+  try {
+    const id      = document.getElementById('restEditId').value.trim();
+    const name    = document.getElementById('rName').value.trim();
+    const cuisine = document.getElementById('rCuisine').value.trim();
+    const image   = document.getElementById('rImage').value.trim();
+
+    // FIX: proper validation — all checks before any DB call
+    if(!name){
+      showAlert('rest', 'Restaurant name is required');
+      return; // finally still runs → button re-enabled ✓
+    }
+    if(!cuisine){
+      showAlert('rest', 'Cuisine type is required');
+      return;
+    }
+    if(!image){
+      showAlert('rest', 'Cover image URL is required');
+      return;
+    }
+    if(!image.startsWith('http')){
+      showAlert('rest', 'Image URL must start with http:// or https://');
+      return;
+    }
+
+    const tagsRaw = document.getElementById('rTags').value.trim();
+    // FIX: rating stored as a number, not a string
+    const ratingRaw = document.getElementById('rRating').value.trim();
+
+    const data = {
+      name,
+      cuisine,
+      area:         document.getElementById('rArea').value.trim(),
+      deliveryTime: document.getElementById('rTime').value.trim(),
+      rating:       ratingRaw ? parseFloat(ratingRaw) : null,   // ← FIX: number
+      phone:        document.getElementById('rPhone').value.trim(),
+      image,
+      tags:         tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
+      isOpen:       document.getElementById('rOpen').checked,
+      popular:      document.getElementById('rPop').checked,
+    };
+
+    if(id){
+      await updateDoc(doc(db, 'restaurants', id), data);
+      showToast('✅ Restaurant updated!');
+      showAlert('rest', 'Restaurant updated successfully!', 'ok');
+    } else {
+      await addDoc(collection(db, 'restaurants'), { ...data, createdAt: serverTimestamp() });
+      showToast('✅ Restaurant added!');
+      showAlert('rest', 'Restaurant added successfully!', 'ok');
+    }
+    resetRestForm();
+    await loadRestaurants();
+
+  } catch(e){
+    console.error('saveRestaurant error:', e);
+    showAlert('rest', 'Error: ' + e.message);
+    showToast('❌ Failed: ' + e.message);
+  } finally {
+    // FIX: always re-enable button, whether validation failed or DB threw
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-check"></i> Save Restaurant';
+  }
+};
+
+window.resetRestForm = () => {
+  document.getElementById('restEditId').value = '';
+  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags']
+    .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('rOpen').checked = true;
+  document.getElementById('rPop').checked  = false;
+  document.getElementById('rPrv').style.display = 'none';
+  document.getElementById('restFormTitle').textContent  = 'Add Restaurant';
+  document.getElementById('restCancelBtn').style.display = 'none';
+};
+
+window.editRestaurant = id => {
+  const r = restaurants.find(x => x.id === id);
+  if(!r) return;
+  document.getElementById('restEditId').value = id;
+  document.getElementById('rName').value    = r.name    || '';
+  document.getElementById('rCuisine').value = r.cuisine || '';
+  document.getElementById('rArea').value    = r.area    || '';
+  document.getElementById('rTime').value    = r.deliveryTime || '';
+  document.getElementById('rRating').value  = r.rating  != null ? r.rating : '';
+  document.getElementById('rPhone').value   = r.phone   || '';
+  document.getElementById('rImage').value   = r.image   || '';
+  document.getElementById('rTags').value    = (r.tags || []).join(', ');
+  document.getElementById('rOpen').checked  = !!r.isOpen;
+  document.getElementById('rPop').checked   = !!r.popular;
+  prvImg('rPrv', r.image);
+  document.getElementById('restFormTitle').textContent   = 'Edit: ' + r.name;
+  document.getElementById('restCancelBtn').style.display = 'block';
+  showSec('restaurants', null);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.deleteRestaurant = async id => {
+  const r = restaurants.find(x => x.id === id);
+  if(!confirm(`Delete "${r?.name}"? This won't delete linked food items.`)) return;
   try{
-    if(id){ await updateDoc(doc(db,'restaurants',id),data); showToast('Restaurant updated!'); }
-    else{ await addDoc(collection(db,'restaurants'),{...data,createdAt:serverTimestamp()}); showToast('Restaurant added!'); }
-    resetRestForm(); await loadRestaurants();
-  }catch(e){ showToast('Error: '+e.message); }
+    await deleteDoc(doc(db, 'restaurants', id));
+    showToast('Deleted');
+    await loadRestaurants();
+  } catch(e){ showToast('❌ Error: ' + e.message); }
 };
-window.resetRestForm=function(){
-  ['restEditId','rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('rOpen').checked=true;
-  document.getElementById('rPopular').checked=false;
-  document.getElementById('rImgPrv').style.display='none';
-  document.getElementById('restFormTitle').textContent='Add New Restaurant';
-  document.getElementById('restCancelBtn').style.display='none';
-};
-window.editRestaurant=function(id){
-  const r=restaurants.find(x=>x.id===id); if(!r) return;
-  document.getElementById('restEditId').value=id;
-  document.getElementById('rName').value=r.name||'';
-  document.getElementById('rCuisine').value=r.cuisine||'';
-  document.getElementById('rArea').value=r.area||'';
-  document.getElementById('rTime').value=r.deliveryTime||'';
-  document.getElementById('rRating').value=r.rating||'';
-  document.getElementById('rPhone').value=r.phone||'';
-  document.getElementById('rImage').value=r.image||'';
-  document.getElementById('rTags').value=(r.tags||[]).join(', ');
-  document.getElementById('rOpen').checked=!!r.isOpen;
-  document.getElementById('rPopular').checked=!!r.popular;
-  prvImg('rImgPrv',r.image);
-  document.getElementById('restFormTitle').textContent='Edit: '+r.name;
-  document.getElementById('restCancelBtn').style.display='block';
-  document.querySelector('#sec-restaurants .form-card').scrollIntoView({behavior:'smooth'});
-};
-window.deleteRestaurant=async function(id){
-  const r=restaurants.find(x=>x.id===id);
-  if(!confirm(`Delete "${r?.name}"? This won't delete its food items.`)) return;
-  await deleteDoc(doc(db,'restaurants',id)); showToast('Restaurant deleted'); await loadRestaurants();
-};
-window.toggleRestOpen=async function(id,val){
-  await updateDoc(doc(db,'restaurants',id),{isOpen:val});
-  showToast(val?'Restaurant opened':'Restaurant closed'); await loadRestaurants();
+
+window.toggleRestOpen = async (id, val) => {
+  try{
+    await updateDoc(doc(db, 'restaurants', id), { isOpen: val });
+    showToast(val ? '✅ Restaurant opened' : '🔒 Restaurant closed');
+    await loadRestaurants();
+  } catch(e){ showToast('❌ Error: ' + e.message); }
 };
 
 // ── RENDER RESTAURANTS ──
 function renderRestGrid(){
-  const grid=document.getElementById('restGrid');
-  document.getElementById('restListMeta').textContent=restaurants.length+' restaurants';
-  if(!restaurants.length){ grid.innerHTML='<div class="empty-state"><i class="ti ti-building-store"></i><p>No restaurants yet. Add one above.</p></div>'; return; }
-  grid.innerHTML=restaurants.map(r=>{
-    const fc=foods.filter(f=>f.restaurantId===r.id).length;
+  const grid = document.getElementById('restGrid');
+  if(!restaurants.length){
+    grid.innerHTML = '<div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet. Add one above.</p></div>';
+    return;
+  }
+  grid.innerHTML = restaurants.map(r => {
+    const fc = foods.filter(f => f.restaurantId === r.id).length;
     return `<div class="rest-card">
-      <img class="rest-card-img" src="${r.image||''}" alt="${r.name}" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'" loading="lazy"/>
+      <img src="${r.image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy"
+           onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'"/>
       <div class="rest-card-body">
-        <div class="rest-card-name">${r.name} <span class="open-badge ${r.isOpen?'open':'closed'}">${r.isOpen?'Open':'Closed'}</span>${r.popular?'<span style="font-size:.65rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 7px;font-weight:600">🔥</span>':''}</div>
-        <div class="rest-card-meta">
-          <span><i class="ti ti-category" style="font-size:.8rem"></i> ${r.cuisine||'—'}</span>
-          <span><i class="ti ti-map-pin" style="font-size:.8rem"></i> ${r.area||'—'}</span>
-          <span><i class="ti ti-clock" style="font-size:.8rem"></i> ${r.deliveryTime||'—'}</span>
-          <span><i class="ti ti-star" style="font-size:.8rem;color:#FFAB00"></i> ${r.rating||'—'}</span>
+        <div class="rest-card-name">
+          ${r.name}
+          <span class="ob ${r.isOpen ? 'open' : 'closed'}">${r.isOpen ? 'Open' : 'Closed'}</span>
+          ${r.popular ? '<span style="font-size:.6rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>' : ''}
         </div>
-        <div class="rest-card-id" title="Click to copy ID" onclick="copyId('${r.id}')">ID: ${r.id} <i class="ti ti-copy" style="font-size:.7rem"></i></div>
-        <div style="font-size:.75rem;color:var(--muted);margin-bottom:.6rem">${fc} food item${fc!==1?'s':''} linked</div>
+        <div class="rest-card-meta">
+          <span>${r.cuisine || ''}</span>
+          ${r.area        ? `<span>📍 ${r.area}</span>`         : ''}
+          ${r.deliveryTime? `<span>⏱ ${r.deliveryTime}</span>`  : ''}
+          ${r.rating != null ? `<span>⭐ ${r.rating}</span>`   : ''}
+        </div>
+        <div class="rest-card-id" title="Tap to copy ID" onclick="copyId('${r.id}')">
+          <i class="ti ti-copy" style="font-size:.7rem;vertical-align:-1px"></i> ID: ${r.id}
+        </div>
+        <div style="font-size:.72rem;color:var(--mut);margin-bottom:.5rem">
+          ${fc} food item${fc !== 1 ? 's' : ''} linked
+        </div>
         <div class="rest-card-actions">
-          <button class="btn-sm edit" onclick="editRestaurant('${r.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-sm edit"   onclick="editRestaurant('${r.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm manage" onclick="manageRestFoods('${r.id}')"><i class="ti ti-tools-kitchen-2"></i> Foods (${fc})</button>
-          <button class="btn-sm ${r.isOpen?'del':'success'}" onclick="toggleRestOpen('${r.id}',${!r.isOpen})">${r.isOpen?'<i class="ti ti-lock"></i> Close':'<i class="ti ti-lock-open"></i> Open'}</button>
-          <button class="btn-sm del" onclick="deleteRestaurant('${r.id}')"><i class="ti ti-trash"></i></button>
+          <button class="btn-sm tog"    onclick="toggleRestOpen('${r.id}',${!r.isOpen})">
+            ${r.isOpen ? '<i class="ti ti-lock"></i> Close' : '<i class="ti ti-lock-open"></i> Open'}
+          </button>
+          <button class="btn-sm del"    onclick="deleteRestaurant('${r.id}')"><i class="ti ti-trash"></i></button>
         </div>
       </div>
     </div>`;
   }).join('');
 }
 
-window.copyId=function(id){
-  navigator.clipboard.writeText(id).then(()=>showToast('Restaurant ID copied: '+id));
+window.copyId = id => {
+  navigator.clipboard.writeText(id).then(() => showToast('ID copied: ' + id.slice(0, 12) + '…'));
 };
 
 // ── MANAGE FOODS MODAL ──
-window.manageRestFoods=function(restId){
-  mgRestId=restId;
-  const r=restaurants.find(x=>x.id===restId);
-  document.getElementById('mgModalTitle').textContent='Foods — '+r?.name;
-  const rFoods=foods.filter(f=>f.restaurantId===restId);
-  const list=document.getElementById('mgFoodList');
-  if(!rFoods.length){ list.innerHTML='<div class="empty-state" style="padding:1.5rem"><i class="ti ti-bowl"></i><p>No food items linked yet</p></div>'; }
-  else{
-    list.innerHTML=rFoods.map(f=>`
-      <div style="display:flex;align-items:center;gap:.75rem;padding:.55rem 0;border-bottom:1px solid var(--border)">
-        <img src="${f.image||''}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--border)" onerror="this.style.display='none'"/>
-        <div style="flex:1">
-          <div style="font-weight:600;font-size:.85rem">${f.name}</div>
-          <div style="font-size:.75rem;color:var(--muted)">₹${f.price} · ${f.category||'—'} ${f.veg?'· 🥦':''}</div>
-        </div>
-        <button class="btn-sm del" onclick="deleteFoodFromModal('${f.id}')"><i class="ti ti-trash"></i></button>
-      </div>`).join('');
-  }
+window.manageRestFoods = id => {
+  mgRestId = id;
+  const r = restaurants.find(x => x.id === id);
+  document.getElementById('mgTitle').textContent = 'Foods — ' + (r?.name || '');
+  const list = foods.filter(f => f.restaurantId === id);
+  document.getElementById('mgList').innerHTML = list.length
+    ? list.map(f => `
+        <div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+          <img src="${f.image || ''}" style="width:42px;height:42px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)"
+               onerror="this.style.display='none'"/>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:600;font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
+            <div style="font-size:.72rem;color:var(--mut)">₹${f.price} · ${f.category || '—'}${f.veg ? ' · 🥦' : ''}</div>
+          </div>
+          <button class="btn-sm del" onclick="deleteFoodMg('${f.id}')"><i class="ti ti-trash"></i></button>
+        </div>`).join('')
+    : '<div class="empty-st" style="padding:1.5rem"><i class="ti ti-bowl"></i><p>No food items linked yet</p></div>';
   document.getElementById('mgModal').classList.add('open');
 };
-window.closeMg=function(){ document.getElementById('mgModal').classList.remove('open'); mgRestId=null; };
-document.getElementById('mgModal').addEventListener('click',e=>{ if(e.target===document.getElementById('mgModal')) closeMg(); });
-window.goAddFoodForRest=function(){
-  closeMg();
-  showSec('foods', document.querySelector('.sb-item:nth-child(7)'));
-  if(mgRestId) document.getElementById('fRestId').value=mgRestId;
-  document.querySelector('#sec-foods .form-card').scrollIntoView({behavior:'smooth'});
-};
-window.deleteFoodFromModal=async function(id){
-  if(!confirm('Delete this food item?')) return;
-  await deleteDoc(doc(db,'foods',id)); showToast('Deleted');
-  await loadFoods();
-  if(mgRestId) manageRestFoods(mgRestId);
+
+window.closeMg = () => { document.getElementById('mgModal').classList.remove('open'); };
+document.getElementById('mgModal').addEventListener('click', e => {
+  if(e.target === document.getElementById('mgModal')) closeMg();
+});
+
+window.goAddFood = () => {
+  const rid = mgRestId; closeMg();
+  showSec('foods', null);
+  if(rid){ document.getElementById('fRestId').value = rid; }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-// ── FOOD FORM ──
-window.saveFood=async function(){
-  const id=document.getElementById('foodEditId').value;
-  const restId=document.getElementById('fRestId').value;
-  const data={
-    restaurantId:restId,
-    restaurantName:getRestName(restId),
-    name:document.getElementById('fName').value.trim(),
-    price:document.getElementById('fPrice').value.trim(),
-    description:document.getElementById('fDesc').value.trim(),
-    image:document.getElementById('fImage').value.trim(),
-    category:document.getElementById('fCategory').value.trim(),
-    rating:document.getElementById('fRating').value.trim(),
-    prepTime:document.getElementById('fPrepTime').value.trim(),
-    calories:document.getElementById('fCal').value.trim(),
-    veg:document.getElementById('fVeg').checked,
-    bestseller:document.getElementById('fBest').checked,
-    spicy:document.getElementById('fSpicy').checked,
-  };
-  if(!restId) return showToast('Please select a restaurant first');
-  if(!data.name||!data.price||!data.image) return showToast('Name, price, and image are required');
+window.deleteFoodMg = async id => {
+  if(!confirm('Delete this food item?')) return;
   try{
-    if(id){ await updateDoc(doc(db,'foods',id),data); showToast('Food item updated!'); }
-    else{ await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()}); showToast('Food item added!'); }
-    resetFoodForm(); await loadFoods();
-  }catch(e){ showToast('Error: '+e.message); }
+    await deleteDoc(doc(db, 'foods', id));
+    await loadFoods();
+    manageRestFoods(mgRestId);
+    showToast('Deleted');
+  } catch(e){ showToast('❌ Error: ' + e.message); }
 };
-window.resetFoodForm=function(){
-  ['foodEditId','fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fRestId').value='';
-  ['fVeg','fBest','fSpicy'].forEach(id=>document.getElementById(id).checked=false);
-  document.getElementById('fImgPrv').style.display='none';
-  document.getElementById('foodFormTitle').textContent='Add New Food Item';
-  document.getElementById('foodCancelBtn').style.display='none';
+
+// ══════════════════════════════════════════════════════
+// ── FOOD SAVE ──
+// FIX 1: price stored as number (parseFloat), not string
+// FIX 2: rating stored as number, not string
+// FIX 3: restaurantName safely resolved — won't save "—" if lookup fails
+// FIX 4: button always re-enabled via finally even on validation early-return
+// ══════════════════════════════════════════════════════
+window.saveFood = async () => {
+  const btn = document.getElementById('foodSaveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Saving…';
+
+  try {
+    const editId = document.getElementById('foodEditId').value.trim();
+    const restId = document.getElementById('fRestId').value;
+    const name   = document.getElementById('fName').value.trim();
+    const priceRaw = document.getElementById('fPrice').value.trim();
+    const image  = document.getElementById('fImage').value.trim();
+    const desc   = document.getElementById('fDesc').value.trim();
+
+    // FIX: full validation before any DB work
+    if(!restId){
+      showAlert('food', 'Please select a restaurant first');
+      return;
+    }
+    if(!name){
+      showAlert('food', 'Food name is required');
+      return;
+    }
+    if(!priceRaw || isNaN(parseFloat(priceRaw))){
+      showAlert('food', 'A valid price is required');
+      return;
+    }
+    if(!image){
+      showAlert('food', 'Image URL is required');
+      return;
+    }
+    if(!image.startsWith('http')){
+      showAlert('food', 'Image URL must start with http:// or https://');
+      return;
+    }
+    if(!desc){
+      showAlert('food', 'Description is required');
+      return;
+    }
+
+    // FIX: resolve restaurant name safely
+    const resolvedRestName = getRestName(restId);
+    if(!resolvedRestName){
+      showAlert('food', 'Selected restaurant not found. Please reload and try again.');
+      return;
+    }
+
+    const ratingRaw = document.getElementById('fRating').value.trim();
+
+    const data = {
+      restaurantId:   restId,
+      restaurantName: resolvedRestName,           // FIX: never saves "—"
+      name,
+      price:          parseFloat(priceRaw),       // FIX: stored as number
+      description:    desc,
+      image,
+      category:       document.getElementById('fCategory').value.trim(),
+      rating:         ratingRaw ? parseFloat(ratingRaw) : null,  // FIX: number
+      prepTime:       document.getElementById('fPrepTime').value.trim(),
+      calories:       document.getElementById('fCal').value.trim(),
+      veg:            document.getElementById('fVeg').checked,
+      bestseller:     document.getElementById('fBest').checked,
+      spicy:          document.getElementById('fSpicy').checked,
+    };
+
+    if(editId){
+      await updateDoc(doc(db, 'foods', editId), data);
+      showToast('✅ Food item updated!');
+      showAlert('food', 'Food item updated successfully!', 'ok');
+    } else {
+      await addDoc(collection(db, 'foods'), { ...data, createdAt: serverTimestamp() });
+      showToast('✅ Food item added!');
+      showAlert('food', `Food item added to ${resolvedRestName}!`, 'ok');
+    }
+    resetFoodForm();
+    await loadFoods();
+
+  } catch(e){
+    console.error('saveFood error:', e);
+    showAlert('food', 'Error: ' + e.message);
+    showToast('❌ Failed: ' + e.message);
+  } finally {
+    // FIX: always re-enable button
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-check"></i> Save Food Item';
+  }
 };
-window.editFood=function(id){
-  const f=foods.find(x=>x.id===id); if(!f) return;
-  document.getElementById('foodEditId').value=id;
-  document.getElementById('fRestId').value=f.restaurantId||'';
-  document.getElementById('fName').value=f.name||'';
-  document.getElementById('fPrice').value=f.price||'';
-  document.getElementById('fDesc').value=f.description||'';
-  document.getElementById('fImage').value=f.image||'';
-  document.getElementById('fCategory').value=f.category||'';
-  document.getElementById('fRating').value=f.rating||'';
-  document.getElementById('fPrepTime').value=f.prepTime||'';
-  document.getElementById('fCal').value=f.calories||'';
-  document.getElementById('fVeg').checked=!!f.veg;
-  document.getElementById('fBest').checked=!!f.bestseller;
-  document.getElementById('fSpicy').checked=!!f.spicy;
-  prvImg('fImgPrv',f.image);
-  document.getElementById('foodFormTitle').textContent='Edit: '+f.name;
-  document.getElementById('foodCancelBtn').style.display='block';
-  showSec('foods',null);
-  document.querySelector('#sec-foods .form-card').scrollIntoView({behavior:'smooth'});
+
+window.resetFoodForm = () => {
+  document.getElementById('foodEditId').value = '';
+  document.getElementById('fRestId').value = '';
+  ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal']
+    .forEach(id => document.getElementById(id).value = '');
+  ['fVeg','fBest','fSpicy'].forEach(id => document.getElementById(id).checked = false);
+  document.getElementById('fPrv').style.display = 'none';
+  document.getElementById('foodFormTitle').textContent   = 'Add Food Item';
+  document.getElementById('foodCancelBtn').style.display = 'none';
 };
-window.deleteFood=async function(id){
+
+window.editFood = id => {
+  const f = foods.find(x => x.id === id);
+  if(!f) return;
+  document.getElementById('foodEditId').value = id;
+  document.getElementById('fRestId').value    = f.restaurantId || '';
+  document.getElementById('fName').value      = f.name         || '';
+  document.getElementById('fPrice').value     = f.price        != null ? f.price : '';
+  document.getElementById('fDesc').value      = f.description  || '';
+  document.getElementById('fImage').value     = f.image        || '';
+  document.getElementById('fCategory').value  = f.category     || '';
+  document.getElementById('fRating').value    = f.rating       != null ? f.rating : '';
+  document.getElementById('fPrepTime').value  = f.prepTime     || '';
+  document.getElementById('fCal').value       = f.calories     || '';
+  document.getElementById('fVeg').checked     = !!f.veg;
+  document.getElementById('fBest').checked    = !!f.bestseller;
+  document.getElementById('fSpicy').checked   = !!f.spicy;
+  prvImg('fPrv', f.image);
+  document.getElementById('foodFormTitle').textContent   = 'Edit: ' + f.name;
+  document.getElementById('foodCancelBtn').style.display = 'block';
+  showSec('foods', null);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+window.deleteFood = async id => {
   if(!confirm('Delete this food item?')) return;
-  await deleteDoc(doc(db,'foods',id)); showToast('Deleted'); await loadFoods();
+  try{
+    await deleteDoc(doc(db, 'foods', id));
+    showToast('Deleted');
+    await loadFoods();
+  } catch(e){ showToast('❌ Error: ' + e.message); }
 };
 
-// ── FOOD TABLE ──
-window.renderFoodTable=function(){
-  const q=document.getElementById('foodSearch').value.toLowerCase();
-  const rFilter=document.getElementById('foodRestFilter').value;
-  let list=[...foods];
-  if(q) list=list.filter(f=>f.name.toLowerCase().includes(q)||(f.description||'').toLowerCase().includes(q));
-  if(rFilter) list=list.filter(f=>f.restaurantId===rFilter);
-  const tbody=document.getElementById('foodTbody');
-  if(!list.length){ tbody.innerHTML='<tr><td colspan="7"><div class="empty-state"><i class="ti ti-bowl"></i><p>No food items found</p></div></td></tr>'; return; }
-  tbody.innerHTML=list.map(f=>`<tr>
-    <td><img class="food-img-thumb" src="${f.image||''}" alt="${f.name}" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100'" loading="lazy"/></td>
-    <td><div class="food-name-cell">${f.name}</div><div class="food-desc-cell">${f.description||''}</div></td>
-    <td><span class="rest-pill">${getRestName(f.restaurantId)}</span></td>
-    <td style="font-size:.78rem;color:var(--muted)">${f.category||'—'}</td>
-    <td style="font-weight:700">₹${f.price}</td>
-    <td style="display:flex;gap:.3rem;flex-wrap:wrap;padding-top:.65rem">
-      <span class="tag-pill ${f.veg?'tag-veg':'tag-nonveg'}">${f.veg?'Veg':'Non-Veg'}</span>
-      ${f.bestseller?'<span class="tag-pill tag-bestseller">🔥</span>':''}
-      ${f.spicy?'<span class="tag-pill tag-spicy">🌶</span>':''}
-    </td>
-    <td><div style="display:flex;gap:.35rem">
-      <button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
-      <button class="btn-sm del" onclick="deleteFood('${f.id}')"><i class="ti ti-trash"></i></button>
-    </div></td>
-  </tr>`).join('');
+// ── RENDER FOODS ──
+// FIX: search also checks category; restaurant name display uses stored restaurantName as fallback
+window.renderFoods = () => {
+  const q  = document.getElementById('foodSearch').value.toLowerCase();
+  const rf = document.getElementById('foodRestFilter').value;
+  let list = [...foods];
+  if(q) list = list.filter(f =>
+    f.name.toLowerCase().includes(q) ||
+    (f.description || '').toLowerCase().includes(q) ||
+    (f.category    || '').toLowerCase().includes(q)   // FIX: category included in search
+  );
+  if(rf) list = list.filter(f => f.restaurantId === rf);
+  const el = document.getElementById('foodList');
+  if(!list.length){
+    el.innerHTML = '<div class="empty-st"><i class="ti ti-bowl"></i><p>No food items found</p></div>';
+    return;
+  }
+  el.innerHTML = list.map(f => {
+    // FIX: use stored restaurantName first, then live lookup
+    const rName = f.restaurantName || getRestName(f.restaurantId) || '—';
+    return `
+    <div class="food-item-card">
+      <img class="food-item-img" src="${f.image || ''}" alt="${f.name}" loading="lazy"
+           onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100'"/>
+      <div class="food-item-body">
+        <div class="food-item-name">${f.name}</div>
+        <div class="food-item-sub">${f.description || ''}</div>
+        <div class="food-item-tags">
+          <span class="tpill ${f.veg ? 'tv' : 'tn'}">${f.veg ? 'Veg' : 'Non-Veg'}</span>
+          ${f.bestseller ? '<span class="tpill tb">🔥 Best</span>' : ''}
+          ${f.spicy      ? '<span class="tpill ts">🌶 Spicy</span>' : ''}
+          <span class="rpill">${rName}</span>
+          ${f.category ? `<span style="font-size:.65rem;color:var(--mut)">${f.category}</span>` : ''}
+        </div>
+        <div class="food-item-actions">
+          <button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-sm del"  onclick="deleteFood('${f.id}')"><i class="ti ti-trash"></i> Delete</button>
+        </div>
+      </div>
+      <div class="food-price-big">₹${f.price}</div>
+    </div>`;
+  }).join('');
 };
 
-// ── ORDERS ──
+// ── RECENT ORDERS (dashboard) ──
 function renderRecentOrders(){
-  const tbody=document.getElementById('recentOrdersTbody');
-  const list=orders.slice(0,8);
-  if(!list.length){ tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--muted)">No orders yet</td></tr>'; return; }
-  tbody.innerHTML=list.map(o=>{
-    const items=(o.cart||[]).slice(0,2).map(i=>i.name+(i.qty>1?` ×${i.qty}`:'')).join(', ')+((o.cart||[]).length>2?` +${(o.cart||[]).length-2}…`:'');
-    const st=o.status||'pending';
-    return `<tr>
-      <td class="order-id-cell">${o.orderId||o.id.slice(0,8)}</td>
-      <td><div class="cust-cell-name">${o.name||'—'}</div><div class="cust-cell-email">${o.email||''}</div></td>
-      <td><span class="rest-pill">${o.restaurantName||getRestName(o.restaurantId)||'—'}</span></td>
-      <td style="font-size:.75rem;color:var(--muted);max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${items||'—'}</td>
-      <td style="font-weight:700">₹${o.total||0}</td>
-      <td><span class="status-badge st-${st}">${st.replace('_',' ')}</span></td>
-      <td style="font-size:.72rem;color:var(--muted)">${new Date(o.timestamp).toLocaleDateString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
-    </tr>`;
-  }).join('');
+  const el = document.getElementById('recentOrders');
+  const list = orders.slice(0, 5);
+  if(!list.length){
+    el.innerHTML = '<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div>';
+    return;
+  }
+  el.innerHTML = list.map(o => orderCardHTML(o, false)).join('');
 }
-window.renderOrdersTable=function(){
-  const q=document.getElementById('orderSearch').value.toLowerCase();
-  const stFilter=document.getElementById('orderStatusFilter').value;
-  const rFilter=document.getElementById('orderRestFilter').value;
-  let list=[...orders];
-  if(q) list=list.filter(o=>(o.name||'').toLowerCase().includes(q)||(o.email||'').toLowerCase().includes(q)||(o.orderId||'').toLowerCase().includes(q));
-  if(stFilter) list=list.filter(o=>(o.status||'pending')===stFilter);
-  if(rFilter) list=list.filter(o=>o.restaurantId===rFilter);
-  const tbody=document.getElementById('ordersTbody');
-  if(!list.length){ tbody.innerHTML='<tr><td colspan="9"><div class="empty-state"><i class="ti ti-receipt"></i><p>No orders found</p></div></td></tr>'; return; }
-  tbody.innerHTML=list.map(o=>{
-    const items=(o.cart||[]).map(i=>i.name+(i.qty>1?` ×${i.qty}`:'')).slice(0,3).join(', ')+((o.cart||[]).length>3?'…':'');
-    const st=o.status||'pending';
-    return `<tr>
-      <td class="order-id-cell">${o.orderId||o.id.slice(0,8)}</td>
-      <td><div class="cust-cell-name">${o.name||'—'}</div><div class="cust-cell-email">${o.email||''}<br/>${o.mobile||''}</div></td>
-      <td><span class="rest-pill">${o.restaurantName||getRestName(o.restaurantId)||'—'}</span></td>
-      <td style="font-size:.75rem;color:var(--muted);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${items||'—'}</td>
-      <td style="font-weight:700">₹${o.total||0}</td>
-      <td><span class="status-badge st-${st}">${st.replace('_',' ')}</span></td>
-      <td style="font-size:.75rem;color:var(--muted)">${o.payment||'—'}</td>
-      <td style="font-size:.72rem;color:var(--muted);white-space:nowrap">${new Date(o.timestamp).toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}</td>
-      <td>
-        <select class="status-sel" onchange="updateOrderStatus('${o.id}',this.value)">
-          ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}"${st===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}
-        </select>
-      </td>
-    </tr>`;
-  }).join('');
-};
-window.updateOrderStatus=async function(id,status){
-  await updateDoc(doc(db,'food_orders',id),{status});
-  const o=orders.find(x=>x.id===id); if(o) o.status=status;
-  showToast('Order → '+status.replace('_',' '));
 
-  // telegram notify
-  const msg=`🔔 *Order Status Update*\n\nOrder updated to: *${status.replace('_',' ').toUpperCase()}*\n⏰ ${new Date().toLocaleString('en-IN')}`;
-  fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:msg,parse_mode:'Markdown'})}).catch(()=>{});
-  renderOrdersTable(); renderRecentOrders(); loadOrders();
+// ── ORDERS LIST ──
+// FIX: restaurant filter now also matches by restaurantName for orders that don't store restaurantId
+window.renderOrders = () => {
+  const q  = document.getElementById('orderSearch').value.toLowerCase();
+  const sf = document.getElementById('orderStatusFilter').value;
+  const rf = document.getElementById('orderRestFilter').value;
+  let list = [...orders];
+  if(q)  list = list.filter(o =>
+    (o.name    || '').toLowerCase().includes(q) ||
+    (o.email   || '').toLowerCase().includes(q) ||
+    (o.orderId || '').toLowerCase().includes(q)
+  );
+  if(sf) list = list.filter(o => (o.status || 'pending') === sf);
+  // FIX: match by restaurantId OR restaurantName
+  if(rf){
+    const rfName = (restaurants.find(r => r.id === rf)?.name || '').toLowerCase();
+    list = list.filter(o =>
+      o.restaurantId === rf ||
+      (o.restaurantName || '').toLowerCase() === rfName
+    );
+  }
+  const el = document.getElementById('ordersList');
+  if(!list.length){
+    el.innerHTML = '<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders found</p></div>';
+    return;
+  }
+  el.innerHTML = list.map(o => orderCardHTML(o, true)).join('');
+};
+
+function orderCardHTML(o, showUpdate){
+  const st = o.status || 'pending';
+  const items = (o.cart || []).map(i => i.name + (i.qty > 1 ? ` ×${i.qty}` : '')).join(', ');
+  const t = o.timestamp ? new Date(o.timestamp) : null;
+  // FIX: use stored restaurantName with live-lookup fallback
+  const rName = o.restaurantName || getRestName(o.restaurantId) || '—';
+  return `<div class="order-card">
+    <div class="oc-head">
+      <div>
+        <div class="oc-id">${o.orderId || o.id?.slice(0, 10) || '—'}</div>
+        <div class="oc-sub">${o.name || '—'} · ${o.email || ''}</div>
+      </div>
+      <span class="st-badge st-${st}">${st.replace(/_/g, ' ')}</span>
+    </div>
+    <div class="oc-row">
+      <span>🏪 ${rName}</span>
+      <span>💰 ₹${o.total || 0}</span>
+      <span>💳 ${o.payment || '—'}</span>
+    </div>
+    <div class="oc-row"><span>📍 ${o.address || '—'}</span><span>📱 ${o.mobile || ''}</span></div>
+    <div class="oc-items">${items || '—'}</div>
+    <div style="font-size:.68rem;color:var(--mut)">
+      ${t ? t.toLocaleString('en-IN', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : ''}
+    </div>
+    ${showUpdate ? `<div class="oc-actions">
+      <select class="status-sel" id="osel-${o.id}">
+        ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled']
+          .map(s => `<option value="${s}"${st === s ? ' selected' : ''}>${s.replace(/_/g, ' ')}</option>`).join('')}
+      </select>
+      <button class="update-btn" onclick="updateStatus('${o.id}')">Update</button>
+    </div>` : ''}
+  </div>`;
+}
+
+window.updateStatus = async id => {
+  const sel = document.getElementById('osel-' + id);
+  if(!sel) return;
+  const status = sel.value;
+  try{
+    await updateDoc(doc(db, 'food_orders', id), { status });
+    const o = orders.find(x => x.id === id);
+    if(o) o.status = status;
+    showToast('✅ Order → ' + status.replace(/_/g, ' '));
+    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: CHAT, text: `🔔 Order status updated to: *${status.replace(/_/g, ' ').toUpperCase()}*`, parse_mode: 'Markdown' })
+    }).catch(() => {});
+    renderOrders();
+    renderRecentOrders();
+    loadOrders();
+  } catch(e){ showToast('❌ Error: ' + e.message); }
 };
 
 // ── TOAST ──
 function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2600);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2800);
 }
-window.showToast=showToast;
+window.showToast = showToast;
 </script>
 </body>
 </html>
