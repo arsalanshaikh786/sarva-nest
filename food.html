@@ -682,7 +682,17 @@ window.placeOrder=async function(){
     await addDoc(collection(db,'food_orders'),order);
     const lines=items.map(i=>`• ${i.name} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
     const msg=`🍽️ *New Order — ${order.orderId}*\n🏪 *${order.restaurantName}*\n\n👤 *${name}*\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n💳 ${payment}\n\n🛒 *Items:*\n${lines}\n\n💰 *Total: ₹${total}*${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString('en-IN')}`;
-    await fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:msg,parse_mode:'Markdown'})});
+   await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  },
+  body: new URLSearchParams({
+    token: "nnrwv6lvl11p1nlv",
+    to: "919307320279",
+    body: msg
+  })
+});
     localStorage.setItem('zN',name); localStorage.setItem('zE',email); localStorage.setItem('zM',mobile); localStorage.setItem('zA',address);
     cart={}; discount=0; saveCart(); renderCartUI(); renderFoods();
     document.getElementById('fabCart').classList.remove('show');
