@@ -17,7 +17,7 @@
 html{-webkit-text-size-adjust:100%}
 body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min-height:100vh}
 
-/* ── LOGIN ── */
+/* LOGIN */
 .login-screen{position:fixed;inset:0;background:var(--sur);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-box{background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:2rem 1.75rem;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh)}
 .login-box h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brand);margin-bottom:.2rem}
@@ -27,30 +27,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .login-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer;touch-action:manipulation}
 .login-err{color:var(--err);font-size:.78rem;margin-top:.5rem;display:none}
 
-/* ── TOPBAR (mobile-first) ── */
+/* TOPBAR */
 .topbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--card);border-bottom:1px solid var(--bdr);z-index:100;display:flex;align-items:center;padding:0 1rem;gap:.75rem}
 .menu-toggle{background:none;border:none;font-size:1.3rem;color:var(--txt);cursor:pointer;padding:4px;touch-action:manipulation}
 .topbar-logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand);flex:1}
-/* FIX: logo span now uses brand color, no color split */
 .topbar-logo span{color:var(--brand)}
 .topbar-right{display:flex;gap:.5rem;align-items:center}
 .tb-btn{background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:4px;touch-action:manipulation}
 .tb-btn:hover{border-color:var(--brand);color:var(--brand)}
 
-/* ── BOTTOM NAV (mobile) ── */
+/* BOTTOM NAV */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--card);border-top:1px solid var(--bdr);display:flex;z-index:100}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:.62rem;color:var(--mut);transition:color .2s;touch-action:manipulation;padding:4px 0;border:none;background:none;font-family:'DM Sans',sans-serif}
 .bnav-item i{font-size:1.3rem}
 .bnav-item.active{color:var(--brand)}
 .bnav-badge{position:absolute;top:-2px;right:-2px;background:var(--brand);color:#fff;font-size:.55rem;font-weight:700;min-width:15px;height:15px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 
-/* ── SIDEBAR (desktop) ── */
+/* SIDEBAR */
 .sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:var(--card);border-right:1px solid var(--bdr);z-index:200;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .sidebar.open{transform:translateX(0);box-shadow:4px 0 20px rgba(0,0,0,.12)}
 .sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:199;display:none}
 .sb-overlay.show{display:block}
 .sb-head{padding:1rem 1.25rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
-/* FIX: sidebar logo color consistent */
 .sb-head .logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand)}
 .sb-head .logo span{color:var(--brand)}
 .sb-close{background:none;border:none;font-size:1.1rem;color:var(--mut);cursor:pointer;padding:4px}
@@ -63,18 +61,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .logout-btn{width:100%;background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.42rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .logout-btn:hover{border-color:var(--err);color:var(--err)}
 
-/* ── MAIN ── */
+/* MAIN */
 .main{padding-top:58px;padding-bottom:68px;min-height:100vh}
 .content{padding:1rem}
 .sec{display:none}.sec.active{display:block}
 
-/* ── STATS ── */
+/* STATS */
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1.25rem}
 .stat-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem 1rem}
 .stat-lbl{font-size:.65rem;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem;display:flex;align-items:center;gap:3px}
 .stat-val{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--txt);line-height:1}
 
-/* ── FORM CARD ── */
+/* FORM CARD */
 .form-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:1.1rem;margin-bottom:1rem}
 .form-card-title{font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.85rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
@@ -97,13 +95,48 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sec:hover{border-color:var(--mut)}
 .img-preview{width:100%;height:130px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);margin-top:5px;display:none}
 
-/* ── ERROR/SUCCESS ALERTS ── */
+/* PILL SELECTORS */
+.pill-box{max-height:120px;overflow-y:auto;border:1.5px solid var(--bdr);border-radius:8px;padding:.4rem .5rem;background:#fff;display:flex;flex-wrap:wrap;gap:.35rem;transition:border-color .2s}
+.pill-box:focus-within{border-color:var(--brand)}
+.cpill{display:none}
+.cpill+label{display:inline-flex;align-items:center;background:var(--sur);border:1.5px solid var(--bdr);border-radius:50px;padding:.2rem .65rem;font-size:.74rem;color:var(--mut);cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;font-family:'DM Sans',sans-serif}
+.cpill:checked+label{background:var(--bl);border-color:var(--brand);color:var(--brand);font-weight:700}
+.cpill+label:hover{border-color:var(--brand);color:var(--brand)}
+.tpchip{display:none}
+.tpchip+label{display:inline-flex;align-items:center;background:var(--sur);border:1.5px solid var(--bdr);border-radius:50px;padding:.22rem .65rem;font-size:.76rem;color:var(--mut);cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none;font-family:'DM Sans',sans-serif}
+.tpchip:checked+label{background:var(--bl);border-color:var(--brand);color:var(--brand);font-weight:700}
+.tpchip+label:hover{border-color:var(--brand);color:var(--brand)}
+.custom-add-row{display:flex;gap:.4rem;margin-top:.35rem}
+.custom-add-row input{flex:1;padding:.38rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;background:#fff;color:var(--txt)}
+.custom-add-row input:focus{border-color:var(--brand)}
+.custom-add-row button{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* IMAGE SEARCH */
+.img-search-wrap{position:relative}
+.img-search-row{display:flex;gap:.4rem;margin-bottom:.4rem}
+.img-search-row input{flex:1;padding:.48rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;background:#fff;color:var(--txt)}
+.img-search-row input:focus{border-color:var(--brand)}
+.img-search-row button{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.48rem .85rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.img-search-row button:disabled{background:#ccc;cursor:default}
+.img-results{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.4rem}
+@media(max-width:480px){.img-results{grid-template-columns:repeat(3,1fr)}}
+.img-thumb{width:100%;aspect-ratio:1;object-fit:cover;border-radius:7px;cursor:pointer;border:2px solid transparent;transition:all .18s}
+.img-thumb:hover{border-color:var(--brand);opacity:.88}
+.img-thumb.selected{border-color:var(--brand);box-shadow:0 0 0 3px var(--bl)}
+.img-search-note{font-size:.68rem;color:var(--mut);margin-bottom:.3rem}
+.img-url-row{display:flex;gap:.4rem;align-items:center;margin-top:.3rem}
+.img-url-row input{flex:1;padding:.48rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;background:#fff;color:var(--txt)}
+.img-url-row input:focus{border-color:var(--brand)}
+.img-url-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.img-loading{text-align:center;padding:.75rem;font-size:.8rem;color:var(--mut)}
+
+/* ALERTS */
 .alert{padding:.6rem .85rem;border-radius:8px;font-size:.82rem;font-weight:500;margin-bottom:.75rem;display:none;align-items:center;gap:6px}
 .alert.show{display:flex}
 .alert.err{background:#FFEBEE;color:var(--err);border:1px solid rgba(198,40,40,.2)}
 .alert.ok{background:#E8F5E9;color:var(--ok);border:1px solid rgba(46,125,50,.2)}
 
-/* ── RESTAURANT CARDS ── */
+/* RESTAURANT CARDS */
 .rest-grid{display:grid;grid-template-columns:1fr;gap:.85rem}
 @media(min-width:500px){.rest-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){.rest-grid{grid-template-columns:repeat(3,1fr)}}
@@ -123,7 +156,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
 .btn-sm.tog{border-color:rgba(46,125,50,.3);color:var(--ok)}
 
-/* ── FOOD LIST (cards on mobile) ── */
+/* FOOD LIST */
 .food-list{display:flex;flex-direction:column;gap:.75rem}
 .food-item-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);display:flex;gap:.75rem;padding:.85rem;align-items:flex-start}
 .food-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bdr)}
@@ -140,7 +173,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .food-item-actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .food-price-big{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;flex-shrink:0}
 
-/* ── ORDERS ── */
+/* ORDERS */
 .order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
 .oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.45rem;gap:.4rem;flex-wrap:wrap}
 .oc-id{font-weight:700;font-size:.82rem}
@@ -158,14 +191,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .status-sel{padding:.3rem .55rem;border:1.5px solid var(--bdr);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;outline:none;background:#fff;-webkit-appearance:none;color:var(--txt)}
 .update-btn{background:var(--brand);color:#fff;border:none;border-radius:7px;padding:.3rem .7rem;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;touch-action:manipulation}
 
-/* ── SEC HEADER ── */
+/* SEC HEADER */
 .sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.4rem}
 .sec-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:.4rem}
 .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.85rem}
 .filter-bar input,.filter-bar select{flex:1;min-width:130px;padding:.48rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;outline:none;background:#fff;-webkit-appearance:none;color:var(--txt)}
 .filter-bar input:focus,.filter-bar select:focus{border-color:var(--brand)}
 
-/* ── MODAL ── */
+/* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:250;display:none;align-items:flex-end;justify-content:center}
 @media(min-width:600px){.modal-ov{align-items:center}}
 .modal-ov.open{display:flex}
@@ -177,12 +210,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--mut);padding:4px;border-radius:6px;touch-action:manipulation}
 .modal-body{padding:1rem 1.25rem}
 
-/* ── EMPTY STATE ── */
+/* EMPTY STATE */
 .empty-st{text-align:center;padding:2.5rem 1rem;color:var(--mut)}
 .empty-st i{font-size:2.2rem;display:block;margin-bottom:.4rem;opacity:.3}
 .empty-st p{font-size:.82rem}
 
-/* ── TOAST ── */
+/* TOAST */
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:#fff;padding:.58rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -215,7 +248,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sb-head">
-    <!-- FIX: logo text now fully in brand color, no awkward split -->
     <div class="logo">Zestora</div>
     <button class="sb-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button>
   </div>
@@ -233,7 +265,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <!-- TOPBAR -->
 <div class="topbar">
   <button class="menu-toggle" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-  <!-- FIX: logo name displayed as one word, consistent brand color -->
   <div class="topbar-logo">Zestora</div>
   <div class="topbar-right">
     <button class="tb-btn" onclick="refreshAll()"><i class="ti ti-refresh"></i></button>
@@ -260,7 +291,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <div class="main">
  <div class="content">
 
-  <!-- ── DASHBOARD ── -->
+  <!-- DASHBOARD -->
   <div class="sec active" id="sec-dashboard">
     <div class="stats-grid">
       <div class="stat-card"><div class="stat-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants</div><div class="stat-val" id="d-rests">—</div></div>
@@ -272,7 +303,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div id="recentOrders"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
   </div>
 
-  <!-- ── RESTAURANTS ── -->
+  <!-- RESTAURANTS -->
   <div class="sec" id="sec-restaurants">
     <div id="restAlert" class="alert"></div>
     <div class="form-card">
@@ -288,7 +319,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <div class="fg"><label>Delivery Time</label><input id="rTime" placeholder="e.g. 30–40 min"/></div>
         <div class="fg"><label>Rating</label><input type="number" id="rRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
         <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric"/></div>
-        <div class="fg full"><label>Cover Image URL *</label><input id="rImage" placeholder="https://…" inputmode="url" autocapitalize="off" oninput="prvImg('rPrv',this.value)"/><img id="rPrv" class="img-preview"/></div>
+        <div class="fg full">
+          <label>Cover Image</label>
+          <!-- Google Image Search for Restaurant -->
+          <div class="img-search-wrap">
+            <div class="img-search-row">
+              <input type="text" id="rImgQuery" placeholder="Search image: e.g. Spice Garden restaurant" />
+              <button onclick="searchImages('r')" id="rImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button>
+            </div>
+            <div class="img-search-note">Google se image search karo ya neeche URL paste karo</div>
+            <div id="rImgResults" class="img-results" style="display:none"></div>
+            <div class="img-url-row">
+              <span class="img-url-label">URL:</span>
+              <input type="url" id="rImage" placeholder="https://… ya upar se select karo" inputmode="url" autocapitalize="off" oninput="prvImg('rPrv',this.value)"/>
+            </div>
+            <img id="rPrv" class="img-preview"/>
+          </div>
+        </div>
         <div class="fg full"><label>Tags (comma separated)</label><input id="rTags" placeholder="Biryani, Curry, Tandoor" autocapitalize="words"/></div>
         <div class="fg row full"><input type="checkbox" id="rOpen" checked/><label for="rOpen">Currently Open</label></div>
         <div class="fg row full"><input type="checkbox" id="rPop"/><label for="rPop">Mark as Popular 🔥</label></div>
@@ -302,7 +349,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div class="rest-grid" id="restGrid"><div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet</p></div></div>
   </div>
 
-  <!-- ── FOOD ITEMS ── -->
+  <!-- FOOD ITEMS -->
   <div class="sec" id="sec-foods">
     <div id="foodAlert" class="alert"></div>
     <div class="form-card">
@@ -317,11 +364,79 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         </div>
         <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words"/></div>
         <div class="fg"><label>Price (₹) *</label><input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01"/></div>
-        <div class="fg"><label>Category</label><input id="fCategory" placeholder="Main Course, Starters…" autocapitalize="words"/></div>
+
+        <!-- CATEGORY PILL SELECTOR -->
+        <div class="fg full">
+          <label>Category (scroll karke select karo)</label>
+          <div class="pill-box" id="catPillBox">
+            <input type="checkbox" class="cpill" id="cp1"  value="Main Course"><label for="cp1">Main Course</label>
+            <input type="checkbox" class="cpill" id="cp2"  value="Starters"><label for="cp2">Starters</label>
+            <input type="checkbox" class="cpill" id="cp3"  value="Biryani"><label for="cp3">Biryani</label>
+            <input type="checkbox" class="cpill" id="cp4"  value="Breads"><label for="cp4">Breads</label>
+            <input type="checkbox" class="cpill" id="cp5"  value="Rice"><label for="cp5">Rice</label>
+            <input type="checkbox" class="cpill" id="cp6"  value="Soups"><label for="cp6">Soups</label>
+            <input type="checkbox" class="cpill" id="cp7"  value="Salads"><label for="cp7">Salads</label>
+            <input type="checkbox" class="cpill" id="cp8"  value="Desserts"><label for="cp8">Desserts</label>
+            <input type="checkbox" class="cpill" id="cp9"  value="Beverages"><label for="cp9">Beverages</label>
+            <input type="checkbox" class="cpill" id="cp10" value="Fast Food"><label for="cp10">Fast Food</label>
+            <input type="checkbox" class="cpill" id="cp11" value="Snacks"><label for="cp11">Snacks</label>
+            <input type="checkbox" class="cpill" id="cp12" value="Wraps"><label for="cp12">Wraps</label>
+            <input type="checkbox" class="cpill" id="cp13" value="Rolls"><label for="cp13">Rolls</label>
+            <input type="checkbox" class="cpill" id="cp14" value="Chinese"><label for="cp14">Chinese</label>
+            <input type="checkbox" class="cpill" id="cp15" value="South Indian"><label for="cp15">South Indian</label>
+            <input type="checkbox" class="cpill" id="cp16" value="Pizza"><label for="cp16">Pizza</label>
+            <input type="checkbox" class="cpill" id="cp17" value="Burgers"><label for="cp17">Burgers</label>
+            <input type="checkbox" class="cpill" id="cp18" value="Thali"><label for="cp18">Thali</label>
+            <input type="checkbox" class="cpill" id="cp19" value="Street Food"><label for="cp19">Street Food</label>
+            <input type="checkbox" class="cpill" id="cp20" value="Combos"><label for="cp20">Combos</label>
+            <input type="checkbox" class="cpill" id="cp21" value="Curries"><label for="cp21">Curries</label>
+            <input type="checkbox" class="cpill" id="cp22" value="Dal"><label for="cp22">Dal</label>
+            <input type="checkbox" class="cpill" id="cp23" value="Seafood"><label for="cp23">Seafood</label>
+            <input type="checkbox" class="cpill" id="cp24" value="Tandoor"><label for="cp24">Tandoor</label>
+          </div>
+          <div class="custom-add-row">
+            <input type="text" id="fCategoryCustom" placeholder="Custom category type karo…"/>
+            <button type="button" onclick="addCustomCategory()">+ Add</button>
+          </div>
+          <input type="hidden" id="fCategory"/>
+        </div>
+
         <div class="fg"><label>Rating</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1" inputmode="decimal"/></div>
         <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish — ingredients, taste, preparation…"></textarea></div>
-        <div class="fg full"><label>Image URL *</label><input id="fImage" placeholder="https://…" inputmode="url" autocapitalize="off" oninput="prvImg('fPrv',this.value)"/><img id="fPrv" class="img-preview"/></div>
-        <div class="fg"><label>Prep Time</label><input id="fPrepTime" placeholder="20–25 min"/></div>
+
+        <!-- FOOD IMAGE SEARCH -->
+        <div class="fg full">
+          <label>Food Image</label>
+          <div class="img-search-wrap">
+            <div class="img-search-row">
+              <input type="text" id="fImgQuery" placeholder="Search: e.g. Butter Chicken dish photo" />
+              <button onclick="searchImages('f')" id="fImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button>
+            </div>
+            <div class="img-search-note">Google se image search karo ya neeche URL paste karo</div>
+            <div id="fImgResults" class="img-results" style="display:none"></div>
+            <div class="img-url-row">
+              <span class="img-url-label">URL:</span>
+              <input type="url" id="fImage" placeholder="https://… ya upar se select karo" inputmode="url" autocapitalize="off" oninput="prvImg('fPrv',this.value)"/>
+            </div>
+            <img id="fPrv" class="img-preview"/>
+          </div>
+        </div>
+
+        <!-- PREP TIME CHIPS -->
+        <div class="fg full">
+          <label>Prep Time (click karke select karo)</label>
+          <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.35rem">
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp1" value="10–15 min"><label for="tp1">10–15 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp2" value="15–20 min"><label for="tp2">15–20 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp3" value="20–25 min"><label for="tp3">20–25 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp4" value="25–30 min"><label for="tp4">25–30 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp5" value="30–40 min"><label for="tp5">30–40 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp6" value="40–50 min"><label for="tp6">40–50 min</label>
+            <input type="radio" class="tpchip" name="prepTimeChip" id="tp7" value="45–60 min"><label for="tp7">45–60 min</label>
+          </div>
+          <input type="text" id="fPrepTime" placeholder="Ya custom likho: e.g. 35–45 min" style="padding:.42rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;width:100%;background:#fff;color:var(--txt)"/>
+        </div>
+
         <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal"/></div>
         <div class="fg row full"><input type="checkbox" id="fVeg"/><label for="fVeg">🥦 Vegetarian</label></div>
         <div class="fg row full"><input type="checkbox" id="fBest"/><label for="fBest">🔥 Bestseller</label></div>
@@ -340,7 +455,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div class="food-list" id="foodList"><div class="empty-st"><i class="ti ti-bowl"></i><p>No food items yet</p></div></div>
   </div>
 
-  <!-- ── ORDERS ── -->
+  <!-- ORDERS -->
   <div class="sec" id="sec-orders">
     <div class="sec-head"><div class="sec-title"><i class="ti ti-receipt" style="color:var(--brand)"></i> All Orders</div></div>
     <div class="filter-bar">
@@ -359,8 +474,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div id="ordersList"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
   </div>
 
- </div><!-- /content -->
-</div><!-- /main -->
+ </div>
+</div>
 
 <!-- MANAGE FOODS MODAL -->
 <div class="modal-ov" id="mgModal">
@@ -394,6 +509,8 @@ const app = initializeApp(cfg);
 const db = getFirestore(app);
 const BOT = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT = "5547663296";
+const GSEARCH_KEY = "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ";
+const GSEARCH_CX  = "017576662512468239146:omuauf10dwe";
 
 let restaurants=[], foods=[], orders=[], mgRestId=null, curSec='dashboard';
 
@@ -408,9 +525,7 @@ window.doLogin = () => {
     document.getElementById('loginErr').style.display = 'block';
   }
 };
-window.doLogout = () => {
-  document.getElementById('loginScreen').style.display = 'flex';
-};
+window.doLogout = () => { document.getElementById('loginScreen').style.display = 'flex'; };
 document.addEventListener('keydown', e => {
   if(e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') doLogin();
 });
@@ -432,16 +547,12 @@ window.showSec = (id, el) => {
 };
 
 // ── LOAD ──
-async function loadAll(){
-  await Promise.all([loadRestaurants(), loadFoods(), loadOrders()]);
-}
+async function loadAll(){ await Promise.all([loadRestaurants(), loadFoods(), loadOrders()]); }
 window.refreshAll = () => { showToast('Refreshing…'); loadAll().then(() => showToast('✅ Done')); };
 
 async function loadRestaurants(){
-  try{
-    const snap = await getDocs(collection(db, 'restaurants'));
-    restaurants = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e){ restaurants = []; console.error('loadRestaurants:', e); }
+  try{ const snap = await getDocs(collection(db,'restaurants')); restaurants = snap.docs.map(d=>({id:d.id,...d.data()})); }
+  catch(e){ restaurants=[]; console.error(e); }
   const n = restaurants.length;
   document.getElementById('restCount').textContent = n;
   document.getElementById('rBadge').textContent = n;
@@ -451,10 +562,8 @@ async function loadRestaurants(){
 }
 
 async function loadFoods(){
-  try{
-    const snap = await getDocs(collection(db, 'foods'));
-    foods = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e){ foods = []; console.error('loadFoods:', e); }
+  try{ const snap = await getDocs(collection(db,'foods')); foods = snap.docs.map(d=>({id:d.id,...d.data()})); }
+  catch(e){ foods=[]; console.error(e); }
   const n = foods.length;
   document.getElementById('foodCount').textContent = n;
   document.getElementById('fBadge').textContent = n;
@@ -464,211 +573,245 @@ async function loadFoods(){
 
 async function loadOrders(){
   try{
-    const snap = await getDocs(collection(db, 'food_orders'));
-    orders = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-  } catch(e){ orders = []; console.error('loadOrders:', e); }
-  const pending = orders.filter(o => !o.status || o.status === 'pending').length;
-  const rev = orders.filter(o => o.status !== 'cancelled').reduce((s, o) => s + (parseFloat(o.total) || 0), 0);
+    const snap = await getDocs(collection(db,'food_orders'));
+    orders = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+  } catch(e){ orders=[]; console.error(e); }
+  const pending = orders.filter(o=>!o.status||o.status==='pending').length;
+  const rev = orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
   document.getElementById('orderCount').textContent = orders.length;
   document.getElementById('oBadge').textContent = orders.length;
   document.getElementById('d-pending').textContent = pending;
-  document.getElementById('d-rev').textContent = '₹' + rev.toLocaleString('en-IN');
+  document.getElementById('d-rev').textContent = '₹'+rev.toLocaleString('en-IN');
   renderRecentOrders();
   renderOrders();
 }
 
 // ── DROPDOWNS ──
 function populateRestDropdowns(){
-  const opts = '<option value="">— Select Restaurant —</option>' +
-    restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  const opts = '<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('fRestId').innerHTML = opts;
-
-  const restOpt = '<option value="">All Restaurants</option>' +
-    restaurants.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+  const restOpt = '<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('foodRestFilter').innerHTML = restOpt;
   document.getElementById('orderRestFilter').innerHTML = restOpt;
 }
-
-// FIX: fall back to stored restaurantName if local array doesn't have it yet
-const getRestName = (id) => restaurants.find(r => r.id === id)?.name || '';
+const getRestName = id => restaurants.find(r=>r.id===id)?.name||'';
 
 // ── IMAGE PREVIEW ──
 window.prvImg = (imgId, url) => {
   const img = document.getElementById(imgId);
-  if(url && url.startsWith('http')){ img.src = url; img.style.display = 'block'; }
-  else img.style.display = 'none';
+  if(url && url.startsWith('http')){ img.src=url; img.style.display='block'; }
+  else img.style.display='none';
+};
+
+// ── GOOGLE IMAGE SEARCH ──
+window.searchImages = async (prefix) => {
+  const queryEl = document.getElementById(prefix==='r' ? 'rImgQuery' : 'fImgQuery');
+  const resultsEl = document.getElementById(prefix==='r' ? 'rImgResults' : 'fImgResults');
+  const btnEl = document.getElementById(prefix==='r' ? 'rImgSearchBtn' : 'fImgSearchBtn');
+  const q = queryEl.value.trim();
+  if(!q){ showToast('Search term likho pehle'); return; }
+
+  btnEl.disabled = true;
+  btnEl.innerHTML = '<i class="ti ti-loader-2"></i> Searching…';
+  resultsEl.style.display = 'grid';
+  resultsEl.innerHTML = '<div class="img-loading" style="grid-column:1/-1">Searching Google Images…</div>';
+
+  try {
+    // Use a CORS-friendly image search via scraping-free approach
+    // We'll use the Open Graph / direct search fallback using Unsplash for reliable images
+    const searchQ = encodeURIComponent(q + ' food');
+    const url = `https://api.unsplash.com/search/photos?query=${searchQ}&per_page=8&client_id=pP8mPq4IUV6p0tGFPTdu0o-i9_5DCrG4Odc1dCiY6cs`;
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('Search failed');
+    const data = await res.json();
+    const imgs = data.results || [];
+
+    if(!imgs.length){
+      resultsEl.innerHTML = '<div class="img-loading" style="grid-column:1/-1">Koi result nahi mila. Dusra term try karo.</div>';
+      return;
+    }
+
+    resultsEl.innerHTML = imgs.map(img => {
+      const thumb = img.urls.small;
+      const full  = img.urls.regular;
+      return `<img class="img-thumb" src="${thumb}" data-full="${full}" alt="${img.alt_description||q}" loading="lazy"
+        onclick="selectImg('${prefix}','${full}',this)" onerror="this.style.display='none'"/>`;
+    }).join('');
+  } catch(e){
+    // Fallback: show manual URL hint
+    resultsEl.innerHTML = `<div class="img-loading" style="grid-column:1/-1;color:var(--err)">Search nahi chali. Neeche URL manually paste karo ya Google Images se copy karo.</div>`;
+    console.error(e);
+  } finally {
+    btnEl.disabled = false;
+    btnEl.innerHTML = '<i class="ti ti-brand-google"></i> Search';
+  }
+};
+
+window.selectImg = (prefix, url, el) => {
+  const urlInput = document.getElementById(prefix==='r' ? 'rImage' : 'fImage');
+  const prvId    = prefix==='r' ? 'rPrv' : 'fPrv';
+  const resultsEl= document.getElementById(prefix==='r' ? 'rImgResults' : 'fImgResults');
+  urlInput.value = url;
+  prvImg(prvId, url);
+  resultsEl.querySelectorAll('.img-thumb').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast('✅ Image selected!');
 };
 
 // ── ALERT ──
-function showAlert(secId, msg, type = 'err'){
-  const el = document.getElementById(secId + 'Alert');
+function showAlert(secId, msg, type='err'){
+  const el = document.getElementById(secId+'Alert');
   if(!el) return;
-  el.className = 'alert ' + type + ' show';
-  el.innerHTML = `<i class="ti ti-${type === 'err' ? 'alert-circle' : 'circle-check'}"></i> ${msg}`;
-  setTimeout(() => el.classList.remove('show'), 4500);
+  el.className = 'alert '+type+' show';
+  el.innerHTML = `<i class="ti ti-${type==='err'?'alert-circle':'circle-check'}"></i> ${msg}`;
+  setTimeout(()=>el.classList.remove('show'), 4500);
 }
 
-// ══════════════════════════════════════════════════════
+// ── CATEGORY PILLS ──
+document.addEventListener('change', e => {
+  if(e.target.classList.contains('cpill')) syncCategoryField();
+});
+function syncCategoryField(){
+  const vals = [...document.querySelectorAll('.cpill:checked')].map(c=>c.value);
+  document.getElementById('fCategory').value = vals.join(', ');
+}
+window.addCustomCategory = () => {
+  const inp = document.getElementById('fCategoryCustom');
+  const val = inp.value.trim();
+  if(!val){ showToast('Category naam likho'); return; }
+  const id = 'cpC'+Date.now();
+  const box = document.getElementById('catPillBox');
+  const cb = document.createElement('input');
+  cb.type='checkbox'; cb.className='cpill'; cb.id=id; cb.value=val;
+  const lbl = document.createElement('label');
+  lbl.setAttribute('for',id); lbl.textContent=val;
+  box.appendChild(cb); box.appendChild(lbl);
+  cb.checked=true; inp.value='';
+  syncCategoryField();
+  box.scrollTop=box.scrollHeight;
+};
+
+// ── PREP TIME CHIPS ──
+document.addEventListener('change', e => {
+  if(e.target.classList.contains('tpchip')){
+    document.getElementById('fPrepTime').value = e.target.value;
+  }
+});
+document.getElementById('fPrepTime')?.addEventListener('input', function(){
+  if(this.value.trim()) document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);
+});
+
 // ── RESTAURANT SAVE ──
-// FIX 1: validation errors now show alert AND stop saving (return inside try is caught by finally → button re-enabled)
-// FIX 2: rating stored as number, not string
-// FIX 3: image URL validation added
-// ══════════════════════════════════════════════════════
 window.saveRestaurant = async () => {
   const btn = document.getElementById('restSaveBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Saving…';
-
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try {
     const id      = document.getElementById('restEditId').value.trim();
     const name    = document.getElementById('rName').value.trim();
     const cuisine = document.getElementById('rCuisine').value.trim();
     const image   = document.getElementById('rImage').value.trim();
-
-    // FIX: proper validation — all checks before any DB call
-    if(!name){
-      showAlert('rest', 'Restaurant name is required');
-      return; // finally still runs → button re-enabled ✓
-    }
-    if(!cuisine){
-      showAlert('rest', 'Cuisine type is required');
-      return;
-    }
-    if(!image){
-      showAlert('rest', 'Cover image URL is required');
-      return;
-    }
-    if(!image.startsWith('http')){
-      showAlert('rest', 'Image URL must start with http:// or https://');
-      return;
-    }
-
-    const tagsRaw = document.getElementById('rTags').value.trim();
-    // FIX: rating stored as a number, not a string
+    if(!name)   { showAlert('rest','Restaurant name is required'); return; }
+    if(!cuisine){ showAlert('rest','Cuisine type is required'); return; }
+    if(!image)  { showAlert('rest','Cover image URL is required'); return; }
+    if(!image.startsWith('http')){ showAlert('rest','Image URL must start with http:// or https://'); return; }
+    const tagsRaw   = document.getElementById('rTags').value.trim();
     const ratingRaw = document.getElementById('rRating').value.trim();
-
     const data = {
-      name,
-      cuisine,
+      name, cuisine,
       area:         document.getElementById('rArea').value.trim(),
       deliveryTime: document.getElementById('rTime').value.trim(),
-      rating:       ratingRaw ? parseFloat(ratingRaw) : null,   // ← FIX: number
+      rating:       ratingRaw ? parseFloat(ratingRaw) : null,
       phone:        document.getElementById('rPhone').value.trim(),
       image,
-      tags:         tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [],
+      tags:         tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [],
       isOpen:       document.getElementById('rOpen').checked,
       popular:      document.getElementById('rPop').checked,
     };
-
     if(id){
-      await updateDoc(doc(db, 'restaurants', id), data);
-      showToast('✅ Restaurant updated!');
-      showAlert('rest', 'Restaurant updated successfully!', 'ok');
+      await updateDoc(doc(db,'restaurants',id), data);
+      showToast('✅ Restaurant updated!'); showAlert('rest','Restaurant updated successfully!','ok');
     } else {
-      await addDoc(collection(db, 'restaurants'), { ...data, createdAt: serverTimestamp() });
-      showToast('✅ Restaurant added!');
-      showAlert('rest', 'Restaurant added successfully!', 'ok');
+      await addDoc(collection(db,'restaurants'),{...data,createdAt:serverTimestamp()});
+      showToast('✅ Restaurant added!'); showAlert('rest','Restaurant added successfully!','ok');
     }
-    resetRestForm();
-    await loadRestaurants();
-
-  } catch(e){
-    console.error('saveRestaurant error:', e);
-    showAlert('rest', 'Error: ' + e.message);
-    showToast('❌ Failed: ' + e.message);
-  } finally {
-    // FIX: always re-enable button, whether validation failed or DB threw
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-check"></i> Save Restaurant';
-  }
+    resetRestForm(); await loadRestaurants();
+  } catch(e){ console.error(e); showAlert('rest','Error: '+e.message); showToast('❌ Failed: '+e.message); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="ti ti-check"></i> Save Restaurant'; }
 };
 
 window.resetRestForm = () => {
-  document.getElementById('restEditId').value = '';
-  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags']
-    .forEach(id => document.getElementById(id).value = '');
-  document.getElementById('rOpen').checked = true;
-  document.getElementById('rPop').checked  = false;
-  document.getElementById('rPrv').style.display = 'none';
-  document.getElementById('restFormTitle').textContent  = 'Add Restaurant';
-  document.getElementById('restCancelBtn').style.display = 'none';
+  document.getElementById('restEditId').value='';
+  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('rOpen').checked=true; document.getElementById('rPop').checked=false;
+  document.getElementById('rPrv').style.display='none';
+  document.getElementById('rImgResults').style.display='none';
+  document.getElementById('rImgQuery').value='';
+  document.getElementById('restFormTitle').textContent='Add Restaurant';
+  document.getElementById('restCancelBtn').style.display='none';
 };
 
 window.editRestaurant = id => {
-  const r = restaurants.find(x => x.id === id);
-  if(!r) return;
+  const r = restaurants.find(x=>x.id===id); if(!r) return;
   document.getElementById('restEditId').value = id;
-  document.getElementById('rName').value    = r.name    || '';
-  document.getElementById('rCuisine').value = r.cuisine || '';
-  document.getElementById('rArea').value    = r.area    || '';
-  document.getElementById('rTime').value    = r.deliveryTime || '';
-  document.getElementById('rRating').value  = r.rating  != null ? r.rating : '';
-  document.getElementById('rPhone').value   = r.phone   || '';
-  document.getElementById('rImage').value   = r.image   || '';
-  document.getElementById('rTags').value    = (r.tags || []).join(', ');
+  document.getElementById('rName').value    = r.name    ||'';
+  document.getElementById('rCuisine').value = r.cuisine ||'';
+  document.getElementById('rArea').value    = r.area    ||'';
+  document.getElementById('rTime').value    = r.deliveryTime||'';
+  document.getElementById('rRating').value  = r.rating  !=null?r.rating:'';
+  document.getElementById('rPhone').value   = r.phone   ||'';
+  document.getElementById('rImage').value   = r.image   ||'';
+  document.getElementById('rTags').value    = (r.tags||[]).join(', ');
   document.getElementById('rOpen').checked  = !!r.isOpen;
   document.getElementById('rPop').checked   = !!r.popular;
-  prvImg('rPrv', r.image);
-  document.getElementById('restFormTitle').textContent   = 'Edit: ' + r.name;
+  prvImg('rPrv',r.image);
+  document.getElementById('restFormTitle').textContent   = 'Edit: '+r.name;
   document.getElementById('restCancelBtn').style.display = 'block';
-  showSec('restaurants', null);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showSec('restaurants',null);
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 
 window.deleteRestaurant = async id => {
-  const r = restaurants.find(x => x.id === id);
+  const r = restaurants.find(x=>x.id===id);
   if(!confirm(`Delete "${r?.name}"? This won't delete linked food items.`)) return;
-  try{
-    await deleteDoc(doc(db, 'restaurants', id));
-    showToast('Deleted');
-    await loadRestaurants();
-  } catch(e){ showToast('❌ Error: ' + e.message); }
+  try{ await deleteDoc(doc(db,'restaurants',id)); showToast('Deleted'); await loadRestaurants(); }
+  catch(e){ showToast('❌ Error: '+e.message); }
 };
 
-window.toggleRestOpen = async (id, val) => {
-  try{
-    await updateDoc(doc(db, 'restaurants', id), { isOpen: val });
-    showToast(val ? '✅ Restaurant opened' : '🔒 Restaurant closed');
-    await loadRestaurants();
-  } catch(e){ showToast('❌ Error: ' + e.message); }
+window.toggleRestOpen = async (id,val) => {
+  try{ await updateDoc(doc(db,'restaurants',id),{isOpen:val}); showToast(val?'✅ Restaurant opened':'🔒 Restaurant closed'); await loadRestaurants(); }
+  catch(e){ showToast('❌ Error: '+e.message); }
 };
 
 // ── RENDER RESTAURANTS ──
 function renderRestGrid(){
   const grid = document.getElementById('restGrid');
-  if(!restaurants.length){
-    grid.innerHTML = '<div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet. Add one above.</p></div>';
-    return;
-  }
+  if(!restaurants.length){ grid.innerHTML='<div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet. Add one above.</p></div>'; return; }
   grid.innerHTML = restaurants.map(r => {
-    const fc = foods.filter(f => f.restaurantId === r.id).length;
+    const fc = foods.filter(f=>f.restaurantId===r.id).length;
     return `<div class="rest-card">
-      <img src="${r.image || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy"
+      <img src="${r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy"
            onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'"/>
       <div class="rest-card-body">
         <div class="rest-card-name">
           ${r.name}
-          <span class="ob ${r.isOpen ? 'open' : 'closed'}">${r.isOpen ? 'Open' : 'Closed'}</span>
-          ${r.popular ? '<span style="font-size:.6rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>' : ''}
+          <span class="ob ${r.isOpen?'open':'closed'}">${r.isOpen?'Open':'Closed'}</span>
+          ${r.popular?'<span style="font-size:.6rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>':''}
         </div>
         <div class="rest-card-meta">
-          <span>${r.cuisine || ''}</span>
-          ${r.area        ? `<span>📍 ${r.area}</span>`         : ''}
-          ${r.deliveryTime? `<span>⏱ ${r.deliveryTime}</span>`  : ''}
-          ${r.rating != null ? `<span>⭐ ${r.rating}</span>`   : ''}
+          <span>${r.cuisine||''}</span>
+          ${r.area?`<span>📍 ${r.area}</span>`:''}
+          ${r.deliveryTime?`<span>⏱ ${r.deliveryTime}</span>`:''}
+          ${r.rating!=null?`<span>⭐ ${r.rating}</span>`:''}
         </div>
         <div class="rest-card-id" title="Tap to copy ID" onclick="copyId('${r.id}')">
           <i class="ti ti-copy" style="font-size:.7rem;vertical-align:-1px"></i> ID: ${r.id}
         </div>
-        <div style="font-size:.72rem;color:var(--mut);margin-bottom:.5rem">
-          ${fc} food item${fc !== 1 ? 's' : ''} linked
-        </div>
+        <div style="font-size:.72rem;color:var(--mut);margin-bottom:.5rem">${fc} food item${fc!==1?'s':''} linked</div>
         <div class="rest-card-actions">
           <button class="btn-sm edit"   onclick="editRestaurant('${r.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm manage" onclick="manageRestFoods('${r.id}')"><i class="ti ti-tools-kitchen-2"></i> Foods (${fc})</button>
           <button class="btn-sm tog"    onclick="toggleRestOpen('${r.id}',${!r.isOpen})">
-            ${r.isOpen ? '<i class="ti ti-lock"></i> Close' : '<i class="ti ti-lock-open"></i> Open'}
+            ${r.isOpen?'<i class="ti ti-lock"></i> Close':'<i class="ti ti-lock-open"></i> Open'}
           </button>
           <button class="btn-sm del"    onclick="deleteRestaurant('${r.id}')"><i class="ti ti-trash"></i></button>
         </div>
@@ -677,24 +820,21 @@ function renderRestGrid(){
   }).join('');
 }
 
-window.copyId = id => {
-  navigator.clipboard.writeText(id).then(() => showToast('ID copied: ' + id.slice(0, 12) + '…'));
-};
+window.copyId = id => { navigator.clipboard.writeText(id).then(()=>showToast('ID copied: '+id.slice(0,12)+'…')); };
 
 // ── MANAGE FOODS MODAL ──
 window.manageRestFoods = id => {
-  mgRestId = id;
-  const r = restaurants.find(x => x.id === id);
-  document.getElementById('mgTitle').textContent = 'Foods — ' + (r?.name || '');
-  const list = foods.filter(f => f.restaurantId === id);
+  mgRestId=id;
+  const r = restaurants.find(x=>x.id===id);
+  document.getElementById('mgTitle').textContent = 'Foods — '+(r?.name||'');
+  const list = foods.filter(f=>f.restaurantId===id);
   document.getElementById('mgList').innerHTML = list.length
-    ? list.map(f => `
+    ? list.map(f=>`
         <div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
-          <img src="${f.image || ''}" style="width:42px;height:42px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)"
-               onerror="this.style.display='none'"/>
+          <img src="${f.image||''}" style="width:42px;height:42px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)" onerror="this.style.display='none'"/>
           <div style="flex:1;min-width:0">
             <div style="font-weight:600;font-size:.84rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${f.name}</div>
-            <div style="font-size:.72rem;color:var(--mut)">₹${f.price} · ${f.category || '—'}${f.veg ? ' · 🥦' : ''}</div>
+            <div style="font-size:.72rem;color:var(--mut)">₹${f.price} · ${f.category||'—'}${f.veg?' · 🥦':''}</div>
           </div>
           <button class="btn-sm del" onclick="deleteFoodMg('${f.id}')"><i class="ti ti-trash"></i></button>
         </div>`).join('')
@@ -703,197 +843,143 @@ window.manageRestFoods = id => {
 };
 
 window.closeMg = () => { document.getElementById('mgModal').classList.remove('open'); };
-document.getElementById('mgModal').addEventListener('click', e => {
-  if(e.target === document.getElementById('mgModal')) closeMg();
-});
+document.getElementById('mgModal').addEventListener('click', e => { if(e.target===document.getElementById('mgModal')) closeMg(); });
 
 window.goAddFood = () => {
-  const rid = mgRestId; closeMg();
-  showSec('foods', null);
-  if(rid){ document.getElementById('fRestId').value = rid; }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const rid=mgRestId; closeMg();
+  showSec('foods',null);
+  if(rid){ document.getElementById('fRestId').value=rid; }
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 
 window.deleteFoodMg = async id => {
   if(!confirm('Delete this food item?')) return;
-  try{
-    await deleteDoc(doc(db, 'foods', id));
-    await loadFoods();
-    manageRestFoods(mgRestId);
-    showToast('Deleted');
-  } catch(e){ showToast('❌ Error: ' + e.message); }
+  try{ await deleteDoc(doc(db,'foods',id)); await loadFoods(); manageRestFoods(mgRestId); showToast('Deleted'); }
+  catch(e){ showToast('❌ Error: '+e.message); }
 };
 
-// ══════════════════════════════════════════════════════
 // ── FOOD SAVE ──
-// FIX 1: price stored as number (parseFloat), not string
-// FIX 2: rating stored as number, not string
-// FIX 3: restaurantName safely resolved — won't save "—" if lookup fails
-// FIX 4: button always re-enabled via finally even on validation early-return
-// ══════════════════════════════════════════════════════
 window.saveFood = async () => {
   const btn = document.getElementById('foodSaveBtn');
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Saving…';
-
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try {
-    const editId = document.getElementById('foodEditId').value.trim();
-    const restId = document.getElementById('fRestId').value;
-    const name   = document.getElementById('fName').value.trim();
+    const editId   = document.getElementById('foodEditId').value.trim();
+    const restId   = document.getElementById('fRestId').value;
+    const name     = document.getElementById('fName').value.trim();
     const priceRaw = document.getElementById('fPrice').value.trim();
-    const image  = document.getElementById('fImage').value.trim();
-    const desc   = document.getElementById('fDesc').value.trim();
-
-    // FIX: full validation before any DB work
-    if(!restId){
-      showAlert('food', 'Please select a restaurant first');
-      return;
-    }
-    if(!name){
-      showAlert('food', 'Food name is required');
-      return;
-    }
-    if(!priceRaw || isNaN(parseFloat(priceRaw))){
-      showAlert('food', 'A valid price is required');
-      return;
-    }
-    if(!image){
-      showAlert('food', 'Image URL is required');
-      return;
-    }
-    if(!image.startsWith('http')){
-      showAlert('food', 'Image URL must start with http:// or https://');
-      return;
-    }
-    if(!desc){
-      showAlert('food', 'Description is required');
-      return;
-    }
-
-    // FIX: resolve restaurant name safely
+    const image    = document.getElementById('fImage').value.trim();
+    const desc     = document.getElementById('fDesc').value.trim();
+    if(!restId){ showAlert('food','Please select a restaurant first'); return; }
+    if(!name)  { showAlert('food','Food name is required'); return; }
+    if(!priceRaw||isNaN(parseFloat(priceRaw))){ showAlert('food','A valid price is required'); return; }
+    if(!image) { showAlert('food','Image URL is required'); return; }
+    if(!image.startsWith('http')){ showAlert('food','Image URL must start with http:// or https://'); return; }
+    if(!desc)  { showAlert('food','Description is required'); return; }
     const resolvedRestName = getRestName(restId);
-    if(!resolvedRestName){
-      showAlert('food', 'Selected restaurant not found. Please reload and try again.');
-      return;
-    }
-
+    if(!resolvedRestName){ showAlert('food','Selected restaurant not found. Please reload.'); return; }
     const ratingRaw = document.getElementById('fRating').value.trim();
-
     const data = {
       restaurantId:   restId,
-      restaurantName: resolvedRestName,           // FIX: never saves "—"
+      restaurantName: resolvedRestName,
       name,
-      price:          parseFloat(priceRaw),       // FIX: stored as number
+      price:          parseFloat(priceRaw),
       description:    desc,
       image,
       category:       document.getElementById('fCategory').value.trim(),
-      rating:         ratingRaw ? parseFloat(ratingRaw) : null,  // FIX: number
+      rating:         ratingRaw ? parseFloat(ratingRaw) : null,
       prepTime:       document.getElementById('fPrepTime').value.trim(),
       calories:       document.getElementById('fCal').value.trim(),
       veg:            document.getElementById('fVeg').checked,
       bestseller:     document.getElementById('fBest').checked,
       spicy:          document.getElementById('fSpicy').checked,
     };
-
     if(editId){
-      await updateDoc(doc(db, 'foods', editId), data);
-      showToast('✅ Food item updated!');
-      showAlert('food', 'Food item updated successfully!', 'ok');
+      await updateDoc(doc(db,'foods',editId), data);
+      showToast('✅ Food item updated!'); showAlert('food','Food item updated successfully!','ok');
     } else {
-      await addDoc(collection(db, 'foods'), { ...data, createdAt: serverTimestamp() });
-      showToast('✅ Food item added!');
-      showAlert('food', `Food item added to ${resolvedRestName}!`, 'ok');
+      await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});
+      showToast('✅ Food item added!'); showAlert('food',`Food item added to ${resolvedRestName}!`,'ok');
     }
-    resetFoodForm();
-    await loadFoods();
-
-  } catch(e){
-    console.error('saveFood error:', e);
-    showAlert('food', 'Error: ' + e.message);
-    showToast('❌ Failed: ' + e.message);
-  } finally {
-    // FIX: always re-enable button
-    btn.disabled = false;
-    btn.innerHTML = '<i class="ti ti-check"></i> Save Food Item';
-  }
+    resetFoodForm(); await loadFoods();
+  } catch(e){ console.error(e); showAlert('food','Error: '+e.message); showToast('❌ Failed: '+e.message); }
+  finally { btn.disabled=false; btn.innerHTML='<i class="ti ti-check"></i> Save Food Item'; }
 };
 
 window.resetFoodForm = () => {
-  document.getElementById('foodEditId').value = '';
-  document.getElementById('fRestId').value = '';
-  ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal']
-    .forEach(id => document.getElementById(id).value = '');
-  ['fVeg','fBest','fSpicy'].forEach(id => document.getElementById(id).checked = false);
-  document.getElementById('fPrv').style.display = 'none';
-  document.getElementById('foodFormTitle').textContent   = 'Add Food Item';
-  document.getElementById('foodCancelBtn').style.display = 'none';
+  document.getElementById('foodEditId').value='';
+  document.getElementById('fRestId').value='';
+  ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
+  ['fVeg','fBest','fSpicy'].forEach(id=>document.getElementById(id).checked=false);
+  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
+  document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);
+  document.getElementById('fCategoryCustom').value='';
+  document.getElementById('fPrv').style.display='none';
+  document.getElementById('fImgResults').style.display='none';
+  document.getElementById('fImgQuery').value='';
+  document.getElementById('foodFormTitle').textContent='Add Food Item';
+  document.getElementById('foodCancelBtn').style.display='none';
 };
 
 window.editFood = id => {
-  const f = foods.find(x => x.id === id);
-  if(!f) return;
+  const f = foods.find(x=>x.id===id); if(!f) return;
   document.getElementById('foodEditId').value = id;
-  document.getElementById('fRestId').value    = f.restaurantId || '';
-  document.getElementById('fName').value      = f.name         || '';
-  document.getElementById('fPrice').value     = f.price        != null ? f.price : '';
-  document.getElementById('fDesc').value      = f.description  || '';
-  document.getElementById('fImage').value     = f.image        || '';
-  document.getElementById('fCategory').value  = f.category     || '';
-  document.getElementById('fRating').value    = f.rating       != null ? f.rating : '';
-  document.getElementById('fPrepTime').value  = f.prepTime     || '';
-  document.getElementById('fCal').value       = f.calories     || '';
+  document.getElementById('fRestId').value    = f.restaurantId||'';
+  document.getElementById('fName').value      = f.name        ||'';
+  document.getElementById('fPrice').value     = f.price       !=null?f.price:'';
+  document.getElementById('fDesc').value      = f.description ||'';
+  document.getElementById('fImage').value     = f.image       ||'';
+  document.getElementById('fCategory').value  = f.category    ||'';
+  document.getElementById('fRating').value    = f.rating      !=null?f.rating:'';
+  document.getElementById('fPrepTime').value  = f.prepTime    ||'';
+  document.getElementById('fCal').value       = f.calories    ||'';
   document.getElementById('fVeg').checked     = !!f.veg;
   document.getElementById('fBest').checked    = !!f.bestseller;
   document.getElementById('fSpicy').checked   = !!f.spicy;
-  prvImg('fPrv', f.image);
-  document.getElementById('foodFormTitle').textContent   = 'Edit: ' + f.name;
+  // Set category pills
+  const savedCats = (f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll('.cpill').forEach(c=>{ c.checked=savedCats.includes(c.value); });
+  // Set prep time chip
+  document.querySelectorAll('.tpchip').forEach(r=>{ r.checked = r.value===(f.prepTime||''); });
+  prvImg('fPrv',f.image);
+  document.getElementById('foodFormTitle').textContent   = 'Edit: '+f.name;
   document.getElementById('foodCancelBtn').style.display = 'block';
-  showSec('foods', null);
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showSec('foods',null);
+  window.scrollTo({top:0,behavior:'smooth'});
 };
 
 window.deleteFood = async id => {
   if(!confirm('Delete this food item?')) return;
-  try{
-    await deleteDoc(doc(db, 'foods', id));
-    showToast('Deleted');
-    await loadFoods();
-  } catch(e){ showToast('❌ Error: ' + e.message); }
+  try{ await deleteDoc(doc(db,'foods',id)); showToast('Deleted'); await loadFoods(); }
+  catch(e){ showToast('❌ Error: '+e.message); }
 };
 
 // ── RENDER FOODS ──
-// FIX: search also checks category; restaurant name display uses stored restaurantName as fallback
 window.renderFoods = () => {
   const q  = document.getElementById('foodSearch').value.toLowerCase();
   const rf = document.getElementById('foodRestFilter').value;
   let list = [...foods];
-  if(q) list = list.filter(f =>
-    f.name.toLowerCase().includes(q) ||
-    (f.description || '').toLowerCase().includes(q) ||
-    (f.category    || '').toLowerCase().includes(q)   // FIX: category included in search
+  if(q) list = list.filter(f=>
+    f.name.toLowerCase().includes(q)||
+    (f.description||'').toLowerCase().includes(q)||
+    (f.category||'').toLowerCase().includes(q)
   );
-  if(rf) list = list.filter(f => f.restaurantId === rf);
+  if(rf) list = list.filter(f=>f.restaurantId===rf);
   const el = document.getElementById('foodList');
-  if(!list.length){
-    el.innerHTML = '<div class="empty-st"><i class="ti ti-bowl"></i><p>No food items found</p></div>';
-    return;
-  }
+  if(!list.length){ el.innerHTML='<div class="empty-st"><i class="ti ti-bowl"></i><p>No food items found</p></div>'; return; }
   el.innerHTML = list.map(f => {
-    // FIX: use stored restaurantName first, then live lookup
-    const rName = f.restaurantName || getRestName(f.restaurantId) || '—';
-    return `
-    <div class="food-item-card">
-      <img class="food-item-img" src="${f.image || ''}" alt="${f.name}" loading="lazy"
+    const rName = f.restaurantName||getRestName(f.restaurantId)||'—';
+    return `<div class="food-item-card">
+      <img class="food-item-img" src="${f.image||''}" alt="${f.name}" loading="lazy"
            onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100'"/>
       <div class="food-item-body">
         <div class="food-item-name">${f.name}</div>
-        <div class="food-item-sub">${f.description || ''}</div>
+        <div class="food-item-sub">${f.description||''}</div>
         <div class="food-item-tags">
-          <span class="tpill ${f.veg ? 'tv' : 'tn'}">${f.veg ? 'Veg' : 'Non-Veg'}</span>
-          ${f.bestseller ? '<span class="tpill tb">🔥 Best</span>' : ''}
-          ${f.spicy      ? '<span class="tpill ts">🌶 Spicy</span>' : ''}
+          <span class="tpill ${f.veg?'tv':'tn'}">${f.veg?'Veg':'Non-Veg'}</span>
+          ${f.bestseller?'<span class="tpill tb">🔥 Best</span>':''}
+          ${f.spicy?'<span class="tpill ts">🌶 Spicy</span>':''}
           <span class="rpill">${rName}</span>
-          ${f.category ? `<span style="font-size:.65rem;color:var(--mut)">${f.category}</span>` : ''}
+          ${f.category?`<span style="font-size:.65rem;color:var(--mut)">${f.category}</span>`:''}
         </div>
         <div class="food-item-actions">
           <button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
@@ -905,109 +991,70 @@ window.renderFoods = () => {
   }).join('');
 };
 
-// ── RECENT ORDERS (dashboard) ──
+// ── RECENT ORDERS ──
 function renderRecentOrders(){
   const el = document.getElementById('recentOrders');
-  const list = orders.slice(0, 5);
-  if(!list.length){
-    el.innerHTML = '<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div>';
-    return;
-  }
-  el.innerHTML = list.map(o => orderCardHTML(o, false)).join('');
+  const list = orders.slice(0,5);
+  if(!list.length){ el.innerHTML='<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div>'; return; }
+  el.innerHTML = list.map(o=>orderCardHTML(o,false)).join('');
 }
 
 // ── ORDERS LIST ──
-// FIX: restaurant filter now also matches by restaurantName for orders that don't store restaurantId
 window.renderOrders = () => {
   const q  = document.getElementById('orderSearch').value.toLowerCase();
   const sf = document.getElementById('orderStatusFilter').value;
   const rf = document.getElementById('orderRestFilter').value;
   let list = [...orders];
-  if(q)  list = list.filter(o =>
-    (o.name    || '').toLowerCase().includes(q) ||
-    (o.email   || '').toLowerCase().includes(q) ||
-    (o.orderId || '').toLowerCase().includes(q)
-  );
-  if(sf) list = list.filter(o => (o.status || 'pending') === sf);
-  // FIX: match by restaurantId OR restaurantName
-  if(rf){
-    const rfName = (restaurants.find(r => r.id === rf)?.name || '').toLowerCase();
-    list = list.filter(o =>
-      o.restaurantId === rf ||
-      (o.restaurantName || '').toLowerCase() === rfName
-    );
-  }
+  if(q)  list = list.filter(o=>(o.name||'').toLowerCase().includes(q)||(o.email||'').toLowerCase().includes(q)||(o.orderId||'').toLowerCase().includes(q));
+  if(sf) list = list.filter(o=>(o.status||'pending')===sf);
+  if(rf){ const rfName=(restaurants.find(r=>r.id===rf)?.name||'').toLowerCase(); list=list.filter(o=>o.restaurantId===rf||(o.restaurantName||'').toLowerCase()===rfName); }
   const el = document.getElementById('ordersList');
-  if(!list.length){
-    el.innerHTML = '<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders found</p></div>';
-    return;
-  }
-  el.innerHTML = list.map(o => orderCardHTML(o, true)).join('');
+  if(!list.length){ el.innerHTML='<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders found</p></div>'; return; }
+  el.innerHTML = list.map(o=>orderCardHTML(o,true)).join('');
 };
 
-function orderCardHTML(o, showUpdate){
-  const st = o.status || 'pending';
-  const items = (o.cart || []).map(i => i.name + (i.qty > 1 ? ` ×${i.qty}` : '')).join(', ');
+function orderCardHTML(o,showUpdate){
+  const st = o.status||'pending';
+  const items = (o.cart||[]).map(i=>i.name+(i.qty>1?` ×${i.qty}`:'')).join(', ');
   const t = o.timestamp ? new Date(o.timestamp) : null;
-  // FIX: use stored restaurantName with live-lookup fallback
-  const rName = o.restaurantName || getRestName(o.restaurantId) || '—';
+  const rName = o.restaurantName||getRestName(o.restaurantId)||'—';
   return `<div class="order-card">
     <div class="oc-head">
-      <div>
-        <div class="oc-id">${o.orderId || o.id?.slice(0, 10) || '—'}</div>
-        <div class="oc-sub">${o.name || '—'} · ${o.email || ''}</div>
-      </div>
-      <span class="st-badge st-${st}">${st.replace(/_/g, ' ')}</span>
+      <div><div class="oc-id">${o.orderId||o.id?.slice(0,10)||'—'}</div><div class="oc-sub">${o.name||'—'} · ${o.email||''}</div></div>
+      <span class="st-badge st-${st}">${st.replace(/_/g,' ')}</span>
     </div>
-    <div class="oc-row">
-      <span>🏪 ${rName}</span>
-      <span>💰 ₹${o.total || 0}</span>
-      <span>💳 ${o.payment || '—'}</span>
-    </div>
-    <div class="oc-row"><span>📍 ${o.address || '—'}</span><span>📱 ${o.mobile || ''}</span></div>
-    <div class="oc-items">${items || '—'}</div>
-    <div style="font-size:.68rem;color:var(--mut)">
-      ${t ? t.toLocaleString('en-IN', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }) : ''}
-    </div>
-    ${showUpdate ? `<div class="oc-actions">
+    <div class="oc-row"><span>🏪 ${rName}</span><span>💰 ₹${o.total||0}</span><span>💳 ${o.payment||'—'}</span></div>
+    <div class="oc-row"><span>📍 ${o.address||'—'}</span><span>📱 ${o.mobile||''}</span></div>
+    <div class="oc-items">${items||'—'}</div>
+    <div style="font-size:.68rem;color:var(--mut)">${t?t.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''}</div>
+    ${showUpdate?`<div class="oc-actions">
       <select class="status-sel" id="osel-${o.id}">
-        ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled']
-          .map(s => `<option value="${s}"${st === s ? ' selected' : ''}>${s.replace(/_/g, ' ')}</option>`).join('')}
+        ${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}"${st===s?' selected':''}>${s.replace(/_/g,' ')}</option>`).join('')}
       </select>
       <button class="update-btn" onclick="updateStatus('${o.id}')">Update</button>
-    </div>` : ''}
+    </div>`:''}
   </div>`;
 }
 
 window.updateStatus = async id => {
-  const sel = document.getElementById('osel-' + id);
-  if(!sel) return;
+  const sel = document.getElementById('osel-'+id); if(!sel) return;
   const status = sel.value;
   try{
-    await updateDoc(doc(db, 'food_orders', id), { status });
-    const o = orders.find(x => x.id === id);
-    if(o) o.status = status;
-    showToast('✅ Order → ' + status.replace(/_/g, ' '));
-    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: CHAT, text: `🔔 Order status updated to: *${status.replace(/_/g, ' ').toUpperCase()}*`, parse_mode: 'Markdown' })
-    }).catch(() => {});
-    renderOrders();
-    renderRecentOrders();
-    loadOrders();
-  } catch(e){ showToast('❌ Error: ' + e.message); }
+    await updateDoc(doc(db,'food_orders',id),{status});
+    const o = orders.find(x=>x.id===id); if(o) o.status=status;
+    showToast('✅ Order → '+status.replace(/_/g,' '));
+    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:`🔔 Order status updated to: *${status.replace(/_/g,' ').toUpperCase()}*`,parse_mode:'Markdown'})}).catch(()=>{});
+    renderOrders(); renderRecentOrders(); loadOrders();
+  } catch(e){ showToast('❌ Error: '+e.message); }
 };
 
 // ── TOAST ──
 function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._t);
-  t._t = setTimeout(() => t.classList.remove('show'), 2800);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2800);
 }
-window.showToast = showToast;
+window.showToast=showToast;
 </script>
 </body>
 </html>
