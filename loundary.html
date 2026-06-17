@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>LaundroLux – Premium Laundry Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --indigo:#1a1f4b;
+  --violet:#6c63ff;
+  --violet-light:#8b85ff;
+  --coral:#ff6b6b;
+  --coral-dark:#e85555;
+  --lavender:#f0f0ff;
+  --white:#fafafa;
+  --gray-50:#f8f9fa;
+  --gray-100:#e9ecef;
+  --gray-300:#ced4da;
+  --gray-500:#6c757d;
+  --gray-700:#343a40;
+  --success:#28c76f;
+  --shadow-sm:0 2px 8px rgba(108,99,255,.12);
+  --shadow-md:0 8px 24px rgba(108,99,255,.18);
+  --shadow-lg:0 16px 48px rgba(26,31,75,.2);
+  --radius:16px;
+  --radius-sm:10px;
+  --transition:.25s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--white);color:var(--gray-700);overflow-x:hidden}
+
+/* HEADER */
+.header{position:sticky;top:0;z-index:900;background:rgba(26,31,75,.97);backdrop-filter:blur(12px);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:68px;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-icon{width:38px;height:38px;background:linear-gradient(135deg,var(--violet),var(--coral));border-radius:10px;display:grid;place-items:center;font-size:18px;color:#fff}
+.logo-text{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.3rem;color:#fff;letter-spacing:-.3px}
+.logo-text span{color:var(--violet-light)}
+.header-actions{display:flex;align-items:center;gap:14px}
+.cart-btn{position:relative;background:var(--violet);color:#fff;border:none;border-radius:50px;padding:9px 20px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:var(--transition)}
+.cart-btn:hover{background:var(--violet-light);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.cart-count{background:var(--coral);color:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:.7rem;font-weight:700;position:absolute;top:-6px;right:-6px;animation:pop .2s ease}
+@keyframes pop{0%{transform:scale(.5)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--indigo) 0%,#2d1b69 60%,#1a1f4b 100%);padding:80px 5% 70px;position:relative;overflow:hidden;min-height:480px;display:flex;align-items:center}
+.hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236c63ff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.bubbles{position:absolute;inset:0;pointer-events:none}
+.bubble{position:absolute;border-radius:50%;background:rgba(108,99,255,.12);animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100%) scale(0);opacity:0}10%{opacity:1}90%{opacity:.6}100%{transform:translateY(-120%) scale(1.2);opacity:0}}
+.hero-content{position:relative;z-index:2;max-width:600px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(108,99,255,.25);border:1px solid rgba(108,99,255,.4);color:var(--violet-light);border-radius:50px;padding:5px 14px;font-size:.78rem;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:22px}
+.hero-title{font-family:'Poppins',sans-serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:800;color:#fff;line-height:1.15;margin-bottom:16px;letter-spacing:-.5px}
+.hero-title span{background:linear-gradient(135deg,var(--violet-light),var(--coral));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{color:rgba(255,255,255,.7);font-size:1.05rem;line-height:1.7;margin-bottom:32px;max-width:480px}
+.hero-stats{display:flex;gap:32px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-family:'Poppins',sans-serif;font-size:1.5rem;font-weight:700;color:#fff}
+.stat-label{font-size:.75rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.5px}
+.hero-visual{position:absolute;right:5%;top:50%;transform:translateY(-50%);opacity:.15;font-size:280px;color:var(--violet);pointer-events:none;display:none}
+@media(min-width:900px){.hero-visual{display:block}}
+
+/* SEARCH & FILTER */
+.filter-bar{background:#fff;padding:24px 5%;box-shadow:0 4px 20px rgba(0,0,0,.06);position:sticky;top:68px;z-index:800}
+.filter-inner{display:flex;gap:14px;align-items:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}
+.search-wrap{position:relative;flex:1;min-width:200px}
+.search-wrap i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--gray-500);font-size:.9rem}
+#searchInput{width:100%;padding:11px 14px 11px 40px;border:2px solid var(--gray-100);border-radius:50px;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;transition:var(--transition);background:var(--gray-50)}
+#searchInput:focus{border-color:var(--violet);background:#fff;box-shadow:0 0 0 4px rgba(108,99,255,.1)}
+.filter-btns{display:flex;gap:8px;flex-wrap:wrap}
+.filter-btn{padding:9px 18px;border:2px solid var(--gray-100);background:#fff;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;transition:var(--transition);color:var(--gray-500);white-space:nowrap}
+.filter-btn:hover,.filter-btn.active{background:var(--violet);border-color:var(--violet);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+
+/* SERVICES */
+.services-section{padding:52px 5%;max-width:1400px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:40px}
+.section-eyebrow{display:inline-block;font-size:.75rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--violet);margin-bottom:10px}
+.section-title{font-family:'Poppins',sans-serif;font-size:clamp(1.5rem,3vw,2.2rem);font-weight:700;color:var(--indigo);letter-spacing:-.3px}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
+.service-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition);border:1.5px solid transparent;position:relative}
+.service-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:rgba(108,99,255,.2)}
+.card-img-wrap{position:relative;height:180px;overflow:hidden;background:linear-gradient(135deg,var(--lavender),#e0dfff)}
+.card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.service-card:hover .card-img-wrap img{transform:scale(1.08)}
+.card-category{position:absolute;top:12px;left:12px;background:rgba(26,31,75,.8);color:#fff;font-size:.7rem;font-weight:600;padding:4px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.5px}
+.card-body{padding:18px 18px 20px}
+.card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.02rem;color:var(--indigo);margin-bottom:6px}
+.card-desc{font-size:.82rem;color:var(--gray-500);line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.card-price{font-family:'Poppins',sans-serif;font-size:1.15rem;font-weight:700;color:var(--violet)}
+.card-price span{font-size:.72rem;font-weight:400;color:var(--gray-500)}
+.qty-wrap{display:flex;align-items:center;gap:6px;background:var(--lavender);border-radius:50px;padding:4px 6px}
+.qty-btn{width:26px;height:26px;border:none;background:var(--violet);color:#fff;border-radius:50%;cursor:pointer;font-size:.9rem;display:grid;place-items:center;transition:var(--transition)}
+.qty-btn:hover{background:var(--violet-light)}
+.qty-val{font-family:'Poppins',sans-serif;font-weight:600;font-size:.9rem;min-width:20px;text-align:center;color:var(--indigo)}
+.add-cart-btn{background:linear-gradient(135deg,var(--violet),var(--violet-light));color:#fff;border:none;border-radius:50px;padding:10px 18px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.82rem;cursor:pointer;transition:var(--transition);width:100%;margin-top:12px;letter-spacing:.3px}
+.add-cart-btn:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.add-cart-btn.added{background:linear-gradient(135deg,var(--success),#20a55a)}
+.no-results{text-align:center;padding:60px 20px;color:var(--gray-500)}
+.no-results i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
+
+/* CART OVERLAY */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(3px)}
+.cart-overlay.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;right:0;top:0;bottom:0;width:min(480px,100vw);background:#fff;z-index:1001;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-8px 0 40px rgba(0,0,0,.15)}
+.cart-drawer.open{transform:translateX(0)}
+.cart-header{padding:20px 24px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;background:var(--indigo)}
+.cart-header h2{font-family:'Poppins',sans-serif;font-weight:700;color:#fff;font-size:1.1rem;display:flex;align-items:center;gap:8px}
+.close-cart{background:rgba(255,255,255,.15);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:var(--transition)}
+.close-cart:hover{background:rgba(255,255,255,.3)}
+.cart-body{flex:1;overflow-y:auto;padding:20px 24px}
+.cart-empty{text-align:center;padding:60px 20px;color:var(--gray-500)}
+.cart-empty i{font-size:3.5rem;color:var(--gray-300);margin-bottom:16px;display:block}
+.cart-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--gray-100)}
+.cart-item-img{width:56px;height:56px;border-radius:10px;object-fit:cover;background:var(--lavender)}
+.cart-item-info{flex:1}
+.cart-item-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:.9rem;color:var(--indigo);margin-bottom:3px}
+.cart-item-price{font-size:.82rem;color:var(--violet);font-weight:600}
+.cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+.ciq-btn{width:24px;height:24px;border:2px solid var(--gray-100);background:#fff;border-radius:50%;cursor:pointer;font-size:.75rem;display:grid;place-items:center;transition:var(--transition)}
+.ciq-btn:hover{border-color:var(--violet);color:var(--violet)}
+.ciq-val{font-size:.85rem;font-weight:600;color:var(--indigo)}
+.remove-item{background:none;border:none;color:var(--gray-300);cursor:pointer;padding:4px;font-size:.9rem;transition:var(--transition)}
+.remove-item:hover{color:var(--coral)}
+
+/* ORDER FORM */
+.order-form{padding:20px 24px;background:var(--gray-50);border-top:1px solid var(--gray-100)}
+.order-form h3{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.95rem;margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row.single{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:.75rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.5px}
+.form-group input,.form-group textarea,.form-group select{padding:10px 13px;border:2px solid var(--gray-100);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.88rem;outline:none;transition:var(--transition);background:#fff;color:var(--gray-700)}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
+.form-group textarea{resize:none;height:70px}
+.order-summary{background:var(--indigo);border-radius:var(--radius-sm);padding:14px 16px;margin:14px 0}
+.summary-row{display:flex;justify-content:space-between;align-items:center;color:rgba(255,255,255,.75);font-size:.82rem;margin-bottom:6px}
+.summary-row:last-child{border-top:1px solid rgba(255,255,255,.15);padding-top:8px;margin-top:4px;color:#fff;font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem}
+.place-order-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--coral),var(--coral-dark));color:#fff;border:none;border-radius:50px;font-family:'Poppins',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;transition:var(--transition);letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px}
+.place-order-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(255,107,107,.4)}
+.place-order-btn:disabled{opacity:.6;pointer-events:none}
+
+/* SUCCESS POPUP */
+.popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(6px)}
+.popup-overlay.show{opacity:1;pointer-events:all}
+.popup-box{background:#fff;border-radius:24px;padding:48px 36px;text-align:center;max-width:420px;width:90%;box-shadow:var(--shadow-lg);transform:scale(.8);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.popup-overlay.show .popup-box{transform:scale(1)}
+.popup-icon{width:80px;height:80px;background:linear-gradient(135deg,var(--success),#20a55a);border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;font-size:2rem;color:#fff;animation:bounce .5s .1s ease both}
+@keyframes bounce{0%{transform:scale(0)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
+.popup-title{font-family:'Poppins',sans-serif;font-size:1.6rem;font-weight:800;color:var(--indigo);margin-bottom:10px}
+.popup-msg{color:var(--gray-500);line-height:1.6;margin-bottom:8px;font-size:.95rem}
+.popup-order-id{font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:600;color:var(--violet);background:var(--lavender);padding:8px 16px;border-radius:50px;display:inline-block;margin-bottom:24px}
+.popup-close{background:var(--indigo);color:#fff;border:none;border-radius:50px;padding:14px 32px;font-family:'Poppins',sans-serif;font-weight:700;font-size:.95rem;cursor:pointer;transition:var(--transition)}
+.popup-close:hover{background:var(--violet);transform:translateY(-2px)}
+
+/* TOAST */
+.toast-container{position:fixed;bottom:24px;right:24px;z-index:3000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--indigo);color:#fff;padding:12px 20px;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.85rem;font-weight:500;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px;animation:slideUp .3s ease;transform-origin:bottom right}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.toast.success{background:var(--success)}
+.toast.error{background:var(--coral)}
+
+/* FOOTER */
+.footer{background:var(--indigo);color:rgba(255,255,255,.6);text-align:center;padding:28px 5%;margin-top:60px;font-size:.85rem}
+.footer strong{color:#fff;font-family:'Poppins',sans-serif}
+
+/* LOADER */
+.page-loader{position:fixed;inset:0;background:var(--indigo);z-index:9999;display:grid;place-items:center;transition:opacity .5s ease}
+.page-loader.hidden{opacity:0;pointer-events:none}
+.loader-spin{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:var(--violet);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .hero{padding:52px 5% 48px}
+  .filter-inner{gap:10px}
+  .services-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .card-img-wrap{height:130px}
+  .form-row{grid-template-columns:1fr}
+  .header{padding:0 4%}
+}
+@media(max-width:400px){
+  .services-grid{grid-template-columns:1fr}
+}
+
+/* Animate cards in */
+.service-card{opacity:0;transform:translateY(20px);animation:fadeUp .4s ease forwards}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="page-loader" id="pageLoader"><div class="loader-spin"></div></div>
+
+<!-- HEADER -->
+<header class="header">
+  <a href="#" class="logo">
+    <div class="logo-icon"><i class="fas fa-soap"></i></div>
+    <span class="logo-text">Laundro<span>Lux</span></span>
+  </a>
+  <div class="header-actions">
+    <button class="cart-btn" onclick="openCart()">
+      <i class="fas fa-shopping-bag"></i> Cart
+      <span class="cart-count" id="cartCount" style="display:none">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="bubbles" id="bubbles"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><i class="fas fa-star"></i> Premium Laundry Service</div>
+    <h1 class="hero-title">Fresh Clothes,<br><span>Zero Hassle.</span></h1>
+    <p class="hero-sub">Professional laundry at your doorstep. We pick up, clean with care, and deliver — so you can focus on what matters.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">10K+</div><div class="stat-label">Happy Customers</div></div>
+      <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">Avg. Rating</div></div>
+      <div class="stat"><div class="stat-num">24hr</div><div class="stat-label">Turnaround</div></div>
+    </div>
+  </div>
+  <div class="hero-visual"><i class="fas fa-soap"></i></div>
+</section>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <div class="search-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search services…" oninput="filterServices()"/>
+    </div>
+    <div class="filter-btns" id="filterBtns">
+      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" onclick="setFilter('washing',this)">Washing</button>
+      <button class="filter-btn" onclick="setFilter('ironing',this)">Ironing</button>
+      <button class="filter-btn" onclick="setFilter('dry-cleaning',this)">Dry Cleaning</button>
+      <button class="filter-btn" onclick="setFilter('specialty',this)">Specialty</button>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-section">
+  <div class="section-header">
+    <div class="section-eyebrow">Our Services</div>
+    <h2 class="section-title">What Can We Clean For You?</h2>
+  </div>
+  <div class="services-grid" id="servicesGrid">
+    <div class="no-results" id="noResults" style="display:none;grid-column:1/-1">
+      <i class="fas fa-search-minus"></i>
+      <p>No services match your search. Try something else!</p>
+    </div>
+  </div>
+</section>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2><i class="fas fa-shopping-bag"></i> Your Order</h2>
+    <button class="close-cart" onclick="closeCart()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <i class="fas fa-shopping-bag"></i>
+      <p>Your cart is empty</p>
+      <small>Add services to get started</small>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="order-form" id="orderForm" style="display:none">
+    <h3><i class="fas fa-clipboard-list"></i> Order Details</h3>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input type="text" id="custName" placeholder="Full name" required/>
+      </div>
+      <div class="form-group">
+        <label>Mobile</label>
+        <input type="tel" id="custPhone" placeholder="+91 XXXXX XXXXX" required/>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="form-group">
+        <label>Pickup Address</label>
+        <input type="text" id="custAddress" placeholder="House no, street, city…" required/>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pickup Date</label>
+        <input type="date" id="pickupDate" required/>
+      </div>
+      <div class="form-group">
+        <label>Delivery Date</label>
+        <input type="date" id="deliveryDate" required/>
+      </div>
+    </div>
+    <div class="form-row single">
+      <div class="form-group">
+        <label>Notes (optional)</label>
+        <textarea id="orderNotes" placeholder="Special instructions…"></textarea>
+      </div>
+    </div>
+    <div class="order-summary" id="orderSummary"></div>
+    <button class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()">
+      <i class="fas fa-check-circle"></i> Place Order
+    </button>
+  </div>
+</div>
+
+<!-- SUCCESS POPUP -->
+<div class="popup-overlay" id="successPopup">
+  <div class="popup-box">
+    <div class="popup-icon"><i class="fas fa-check"></i></div>
+    <h2 class="popup-title">Order Placed!</h2>
+    <p class="popup-msg">We've received your order and will pick it up soon. You'll receive updates on your mobile.</p>
+    <div class="popup-order-id" id="popupOrderId"></div>
+    <button class="popup-close" onclick="closePopup()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <strong>LaundroLux</strong> — Premium Laundry Service &copy; 2025. Fresh clothes, always.
+</footer>
+
+<!-- FIREBASE -->
+<script type="module">
+import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import{getFirestore,collection,addDoc,onSnapshot,serverTimestamp,query,orderBy}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig={
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
+window._db=db;
+window._collection=collection;
+window._addDoc=addDoc;
+window._serverTimestamp=serverTimestamp;
+window._query=query;
+window._orderBy=orderBy;
+window._onSnapshot=onSnapshot;
+
+// Load services from Firestore
+const q=query(collection(db,'services'),orderBy('createdAt','asc'));
+onSnapshot(q,snap=>{
+  window._firestoreServices=[];
+  snap.forEach(doc=>window._firestoreServices.push({id:doc.id,...doc.data()}));
+  if(window._firestoreServices.length>0){
+    window.renderServices(window._firestoreServices);
+  } else {
+    window.renderServices(window._defaultServices);
+  }
+});
+
+// Seed default services if none exist
+setTimeout(()=>{
+  if(!window._firestoreServices||window._firestoreServices.length===0){
+    window.renderServices(window._defaultServices);
+  }
+  document.getElementById('pageLoader').classList.add('hidden');
+},1800);
+</script>
+
+<script>
+// --- DEFAULT SERVICES (used if Firestore empty) ---
+window._defaultServices=[
+  {id:'s1',name:'Wash & Fold',description:'Machine wash with premium detergents, dried and neatly folded. Perfect for everyday clothes.',price:49,category:'washing',image:'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'},
+  {id:'s2',name:'Wash & Iron',description:'Full wash cycle followed by professional steam ironing. Crisp, wrinkle-free results.',price:79,category:'ironing',image:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'},
+  {id:'s3',name:'Dry Cleaning',description:'Solvent-based cleaning for delicate fabrics like suits, silk, and formal wear.',price:149,category:'dry-cleaning',image:'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400&q=80'},
+  {id:'s4',name:'Steam Iron',description:'Professional steam ironing only — bring freshness back to lightly used garments.',price:29,category:'ironing',image:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&q=80'},
+  {id:'s5',name:'Blanket Cleaning',description:'Deep clean for blankets, quilts, and comforters. Hygienic and fluffy results.',price:199,category:'specialty',image:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'},
+  {id:'s6',name:'Shoe Cleaning',description:'Detailed cleaning for sneakers, leather shoes, and sports footwear. Restore the shine.',price:99,category:'specialty',image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80'},
+];
+window._firestoreServices=null;
+
+// --- STATE ---
+let cart={};
+let currentFilter='all';
+let allServices=[];
+
+// --- BUBBLES ---
+(function createBubbles(){
+  const c=document.getElementById('bubbles');
+  for(let i=0;i<18;i++){
+    const b=document.createElement('div');
+    b.className='bubble';
+    const sz=20+Math.random()*80;
+    b.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*8}s`;
+    c.appendChild(b);
+  }
+})();
+
+// --- MIN DATE ---
+(function setMinDates(){
+  const today=new Date().toISOString().split('T')[0];
+  const tomorrow=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  document.getElementById('pickupDate').min=today;
+  document.getElementById('deliveryDate').min=tomorrow;
+})();
+
+// --- RENDER SERVICES ---
+window.renderServices=function(services){
+  allServices=services;
+  filterServices();
+};
+
+function filterServices(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const filtered=allServices.filter(s=>{
+    const matchCat=currentFilter==='all'||s.category===currentFilter;
+    const matchQ=!q||s.name.toLowerCase().includes(q)||s.description.toLowerCase().includes(q)||s.category.toLowerCase().includes(q);
+    return matchCat&&matchQ;
+  });
+  const grid=document.getElementById('servicesGrid');
+  const noRes=document.getElementById('noResults');
+  // Remove old cards
+  Array.from(grid.querySelectorAll('.service-card')).forEach(el=>el.remove());
+  if(filtered.length===0){noRes.style.display='block';return;}
+  noRes.style.display='none';
+  filtered.forEach((svc,i)=>{
+    const card=buildCard(svc,i);
+    grid.appendChild(card);
+  });
+};
+window.filterServices=filterServices;
+
+function buildCard(svc,i){
+  const div=document.createElement('div');
+  div.className='service-card';
+  div.style.animationDelay=(i*0.07)+'s';
+  const qty=cart[svc.id]?cart[svc.id].qty:1;
+  div.innerHTML=`
+    <div class="card-img-wrap">
+      <img src="${svc.image||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'}" alt="${svc.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'"/>
+      <span class="card-category">${svc.category||'service'}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-title">${svc.name}</div>
+      <div class="card-desc">${svc.description}</div>
+      <div class="card-footer">
+        <div class="card-price">₹${svc.price} <span>/item</span></div>
+        <div class="qty-wrap">
+          <button class="qty-btn" onclick="changeQty('${svc.id}',-1,this)"><i class="fas fa-minus"></i></button>
+          <span class="qty-val" id="qty-${svc.id}">${qty}</span>
+          <button class="qty-btn" onclick="changeQty('${svc.id}',1,this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <button class="add-cart-btn ${cart[svc.id]?'added':''}" id="btn-${svc.id}" onclick="addToCart('${svc.id}')">
+        <i class="fas ${cart[svc.id]?'fa-check':'fa-shopping-bag'}"></i> ${cart[svc.id]?'Added to Cart':'Add to Cart'}
+      </button>
+    </div>`;
+  return div;
+}
+
+// --- QTY ---
+window.changeQty=function(id,delta,btn){
+  const el=document.getElementById('qty-'+id);
+  if(!el)return;
+  let v=parseInt(el.textContent)+delta;
+  if(v<1)v=1;
+  if(v>20)v=20;
+  el.textContent=v;
+  if(cart[id]){cart[id].qty=v;updateCartUI();}
+};
+
+// --- ADD TO CART ---
+window.addToCart=function(id){
+  const svc=allServices.find(s=>s.id===id);
+  if(!svc)return;
+  const qtyEl=document.getElementById('qty-'+id);
+  const qty=qtyEl?parseInt(qtyEl.textContent):1;
+  cart[id]={...svc,qty};
+  // Update button
+  const btn=document.getElementById('btn-'+id);
+  if(btn){btn.className='add-cart-btn added';btn.innerHTML='<i class="fas fa-check"></i> Added to Cart';}
+  updateCartUI();
+  showToast(svc.name+' added to cart!','success');
+  openCart();
+};
+
+// --- UPDATE CART UI ---
+function updateCartUI(){
+  const items=Object.values(cart);
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const countEl=document.getElementById('cartCount');
+  if(count>0){countEl.style.display='grid';countEl.textContent=count;}
+  else{countEl.style.display='none';}
+  const cartItemsEl=document.getElementById('cartItems');
+  const cartEmptyEl=document.getElementById('cartEmpty');
+  const orderFormEl=document.getElementById('orderForm');
+  if(items.length===0){
+    cartEmptyEl.style.display='block';
+    cartItemsEl.innerHTML='';
+    orderFormEl.style.display='none';
+  } else {
+    cartEmptyEl.style.display='none';
+    orderFormEl.style.display='block';
+    cartItemsEl.innerHTML=items.map(item=>`
+      <div class="cart-item">
+        <img class="cart-item-img" src="${item.image||''}" alt="${item.name}" onerror="this.style.background='var(--lavender)'"/>
+        <div class="cart-item-info">
+          <div class="cart-item-name">${item.name}</div>
+          <div class="cart-item-price">₹${item.price} × ${item.qty} = ₹${item.price*item.qty}</div>
+          <div class="cart-item-qty">
+            <button class="ciq-btn" onclick="cartQty('${item.id}',-1)"><i class="fas fa-minus"></i></button>
+            <span class="ciq-val">${item.qty}</span>
+            <button class="ciq-btn" onclick="cartQty('${item.id}',1)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+        <button class="remove-item" onclick="removeItem('${item.id}')"><i class="fas fa-trash"></i></button>
+      </div>`).join('');
+    // Summary
+    document.getElementById('orderSummary').innerHTML=`
+      ${items.map(i=>`<div class="summary-row"><span>${i.name} ×${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('')}
+      <div class="summary-row"><span>Total Amount</span><span>₹${total}</span></div>`;
+  }
+}
+
+window.cartQty=function(id,delta){
+  if(!cart[id])return;
+  cart[id].qty+=delta;
+  if(cart[id].qty<=0){delete cart[id];}
+  updateCartUI();
+};
+window.removeItem=function(id){
+  delete cart[id];
+  // Reset card button if visible
+  const btn=document.getElementById('btn-'+id);
+  if(btn){btn.className='add-cart-btn';btn.innerHTML='<i class="fas fa-shopping-bag"></i> Add to Cart';}
+  updateCartUI();
+  showToast('Item removed','');
+};
+
+// --- CART OPEN/CLOSE ---
+window.openCart=function(){
+  document.getElementById('cartDrawer').classList.add('open');
+  document.getElementById('cartOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+};
+window.closeCart=function(){
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.body.style.overflow='';
+};
+
+// --- FILTER ---
+window.setFilter=function(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  filterServices();
+};
+
+// --- PLACE ORDER ---
+window.placeOrder=async function(){
+  const name=document.getElementById('custName').value.trim();
+  const phone=document.getElementById('custPhone').value.trim();
+  const address=document.getElementById('custAddress').value.trim();
+  const pickup=document.getElementById('pickupDate').value;
+  const delivery=document.getElementById('deliveryDate').value;
+  const notes=document.getElementById('orderNotes').value.trim();
+  if(!name||!phone||!address||!pickup||!delivery){showToast('Please fill all required fields','error');return;}
+  if(Object.keys(cart).length===0){showToast('Your cart is empty','error');return;}
+  const btn=document.getElementById('placeOrderBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Placing Order…';
+  const items=Object.values(cart);
+  const total=items.reduce((s,i)=>s+i.price*i.qty,0);
+  const order={
+    customerName:name,phone,address,
+    pickupDate:pickup,deliveryDate:delivery,
+    services:items.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty,subtotal:i.price*i.qty})),
+    totalAmount:total,notes,status:'Pending',
+    createdAt:window._serverTimestamp?window._serverTimestamp():new Date().toISOString()
+  };
+  try{
+    let docId='order-'+Date.now();
+    if(window._db&&window._addDoc&&window._collection){
+      const ref=await window._addDoc(window._collection(window._db,'orders'),order);
+      docId=ref.id;
+    }
+    // Reset
+    cart={};
+    updateCartUI();
+    closeCart();
+    document.getElementById('popupOrderId').textContent='Order ID: '+docId.slice(0,8).toUpperCase();
+    document.getElementById('successPopup').classList.add('show');
+    // Reset form
+    ['custName','custPhone','custAddress','pickupDate','deliveryDate','orderNotes'].forEach(id=>document.getElementById(id).value='');
+    // Reset card buttons
+    allServices.forEach(s=>{
+      const btn=document.getElementById('btn-'+s.id);
+      if(btn){btn.className='add-cart-btn';btn.innerHTML='<i class="fas fa-shopping-bag"></i> Add to Cart';}
+    });
+  } catch(e){
+    console.error(e);
+    showToast('Error placing order. Please try again.','error');
+  }
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-check-circle"></i> Place Order';
+};
+
+// --- POPUP CLOSE ---
+window.closePopup=function(){
+  document.getElementById('successPopup').classList.remove('show');
+};
+
+// --- TOAST ---
+function showToast(msg,type){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div');
+  t.className='toast '+(type||'');
+  t.innerHTML=`<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle'}"></i> ${msg}`;
+  c.appendChild(t);
+  setTimeout(()=>t.remove(),3000);
+}
+</script>
+</body>
+</html>
