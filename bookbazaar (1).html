@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BookBazaar – Buy & Sell Second-Hand & Academic Books</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a18;
+  --paper:#faf8f3;
+  --cream:#f0ead8;
+  --rust:#b5451b;
+  --rust-light:#faece7;
+  --rust-dark:#7d2e0f;
+  --sage:#3b6e3f;
+  --sage-light:#eaf3de;
+  --muted:#6b6860;
+  --border:#ddd8cc;
+  --white:#ffffff;
+  --radius:10px;
+  --shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);min-height:100vh}
+
+/* NAV */
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:60px;position:sticky;top:0;z-index:100}
+.nav-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--rust);letter-spacing:-0.5px;cursor:pointer}
+.nav-logo span{color:var(--ink)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-btn{padding:7px 16px;border-radius:var(--radius);border:1px solid var(--border);background:transparent;font-family:'Inter',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink);transition:all 0.15s}
+.nav-btn:hover{background:var(--cream)}
+.nav-btn.primary{background:var(--rust);border-color:var(--rust);color:var(--white)}
+.nav-btn.primary:hover{background:var(--rust-dark)}
+.nav-btn.active{background:var(--cream);font-weight:600}
+
+/* HERO */
+.hero{background:var(--cream);border-bottom:1px solid var(--border);padding:3rem 1.5rem 2.5rem;text-align:center}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:var(--ink);margin-bottom:0.5rem;line-height:1.15}
+.hero h1 em{color:var(--rust);font-style:normal}
+.hero p{font-size:16px;color:var(--muted);margin-bottom:1.5rem;max-width:480px;margin-left:auto;margin-right:auto}
+.hero-stats{display:flex;justify-content:center;gap:2.5rem;margin-top:1.5rem}
+.stat{text-align:center}
+.stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--rust);display:block}
+.stat-lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
+
+/* SEARCH + FILTERS */
+.toolbar{padding:1.25rem 1.5rem;background:var(--white);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.search-wrap{flex:1;min-width:200px;position:relative}
+.search-wrap input{width:100%;padding:9px 14px 9px 38px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--paper)}
+.search-wrap input:focus{outline:none;border-color:var(--rust)}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:15px;color:var(--muted)}
+.toolbar select{padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'Inter',sans-serif;background:var(--white);color:var(--ink);cursor:pointer}
+.toolbar select:focus{outline:none;border-color:var(--rust)}
+.result-count{font-size:13px;color:var(--muted);margin-left:auto;white-space:nowrap}
+
+/* MAIN LAYOUT */
+.main{padding:1.5rem}
+
+/* BOOK GRID */
+.books-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.book-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform 0.15s,border-color 0.15s}
+.book-card:hover{transform:translateY(-2px);border-color:#c0b8a8}
+.book-cover{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;background:var(--cream)}
+.book-cover-placeholder{width:100%;aspect-ratio:3/4;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:48px}
+.book-body{padding:12px}
+.book-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;line-height:1.3;margin-bottom:3px;color:var(--ink)}
+.book-author{font-size:12px;color:var(--muted);margin-bottom:8px}
+.book-footer{display:flex;align-items:center;justify-content:space-between}
+.book-price{font-size:16px;font-weight:600;color:var(--rust)}
+.cond-tag{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.cond-new{background:var(--sage-light);color:#27500a}
+.cond-good{background:#e6f1fb;color:#0c447c}
+.cond-fair{background:#faeeda;color:#633806}
+.book-location{font-size:11px;color:var(--muted);margin-top:5px}
+.acad-badge{display:inline-block;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:600;background:#eeedfe;color:#3c3489;margin-bottom:4px;letter-spacing:0.2px}
+.type-tab{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:0}
+.type-pill{padding:10px 22px;font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;font-family:'Inter',sans-serif;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.12s}
+.type-pill:hover{color:var(--rust)}
+.type-pill.active{color:var(--rust);border-bottom-color:var(--rust);font-weight:600}
+.acad-fields{background:#f5f3ff;border:1px solid #d0caf8;border-radius:var(--radius);padding:14px;margin-top:4px}
+.acad-fields-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.acad-label{font-size:12px;font-weight:600;color:#3c3489;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:4rem 1rem;color:var(--muted)}
+.empty-icon{font-size:56px;display:block;margin-bottom:1rem}
+.empty h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);margin-bottom:0.5rem}
+
+/* MODAL OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:14px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;padding:2rem}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.modal-header h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700}
+.close-btn{width:32px;height:32px;border:1px solid var(--border);border-radius:8px;background:transparent;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.close-btn:hover{background:var(--cream)}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:13px;font-weight:500;color:var(--ink)}
+.form-group label span{color:var(--rust)}
+.form-group input,.form-group select,.form-group textarea{padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);transition:border-color 0.15s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--rust)}
+.form-group textarea{resize:vertical;min-height:80px}
+.form-group input[type="file"]{padding:6px;font-size:13px;cursor:pointer}
+.btn-secondary{padding:8px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink);transition:all 0.15s}
+.btn-secondary:hover{background:var(--cream);border-color:#b0a890}
+.img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius);margin-top:10px;display:none;border:1px solid var(--border)}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.btn-cancel{padding:10px 20px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;color:var(--muted)}
+.btn-cancel:hover{background:var(--cream)}
+.btn-submit{padding:10px 24px;border:none;border-radius:var(--radius);background:var(--rust);font-family:'Inter',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:var(--white);transition:background 0.15s}
+.btn-submit:hover{background:var(--rust-dark)}
+.btn-submit:disabled{opacity:0.6;cursor:not-allowed}
+
+/* DETAIL MODAL */
+.detail-img{width:100%;max-height:280px;object-fit:cover;border-radius:var(--radius);margin-bottom:1.25rem}
+.detail-img-placeholder{width:100%;height:200px;background:var(--cream);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:1.25rem}
+.detail-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:4px}
+.detail-author{font-size:15px;color:var(--muted);margin-bottom:1rem}
+.detail-price{font-size:28px;font-weight:700;color:var(--rust);margin-bottom:1rem}
+.detail-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.meta-item{background:var(--paper);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+.meta-item label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;display:block;margin-bottom:2px}
+.meta-item span{font-size:14px;font-weight:500}
+.detail-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:1.25rem}
+.contact-box{background:var(--cream);border:1px solid var(--border);border-radius:var(--radius);padding:1rem}
+.contact-box h4{font-size:13px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px}
+.contact-box p{font-size:15px;font-weight:500}
+.detail-actions{display:flex;gap:8px;margin-top:1.25rem;flex-wrap:wrap}
+.btn-edit{padding:9px 18px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;font-weight:500}
+.btn-edit:hover{background:var(--cream)}
+.btn-delete{padding:9px 18px;border:1px solid #f0c0c0;border-radius:var(--radius);background:transparent;color:#a32d2d;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;font-weight:500}
+.btn-delete:hover{background:#fcebeb}
+
+/* MY LISTINGS */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.section-header h2{font-family:'Playfair Display',serif;font-size:22px}
+.my-book-row{display:flex;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.my-book-thumb{width:48px;height:64px;object-fit:cover;border-radius:6px;background:var(--cream);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.my-book-thumb img{width:48px;height:64px;object-fit:cover;border-radius:6px}
+.my-book-info{flex:1;min-width:0}
+.my-book-title{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my-book-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.my-book-price{font-size:15px;font-weight:700;color:var(--rust);margin-right:8px;white-space:nowrap}
+.row-actions{display:flex;gap:6px}
+.row-btn{padding:5px 12px;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer}
+.row-btn:hover{background:var(--cream)}
+.row-btn.danger{border-color:#f0c0c0;color:#a32d2d}
+.row-btn.danger:hover{background:#fcebeb}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--white);padding:10px 22px;border-radius:var(--radius);font-size:14px;z-index:999;opacity:0;pointer-events:none;transition:opacity 0.2s;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.7);z-index:300;align-items:center;justify-content:center}
+.loading-overlay.open{display:flex}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--rust);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* GENRE PILLS */
+.genre-pills{display:flex;flex-wrap:wrap;gap:6px;padding:0.75rem 1.5rem;background:var(--white);border-bottom:1px solid var(--border)}
+.genre-pill{padding:5px 14px;border:1px solid var(--border);border-radius:20px;font-size:13px;cursor:pointer;background:transparent;font-family:'Inter',sans-serif;color:var(--muted);transition:all 0.12s}
+.genre-pill:hover{border-color:var(--rust);color:var(--rust)}
+.genre-pill.active{background:var(--rust);border-color:var(--rust);color:var(--white);font-weight:500}
+
+@media(max-width:600px){
+  .form-grid{grid-template-columns:1fr}
+  .books-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}
+  .nav-links .nav-btn span{display:none}
+  .hero-stats{gap:1.25rem}
+  .detail-meta{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('browse')">Book<span>Bazaar</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="tab-browse" onclick="showPage('browse')">🛒 <span>Browse</span></button>
+    <button class="nav-btn" id="tab-my" onclick="showPage('my')">📚 <span>My Books</span></button>
+    <button class="nav-btn primary" onclick="openSellModal()">+ Sell a Book</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero-section">
+  <h1>Buy & Sell <em>Second-Hand Books</em><br>General &amp; Academic</h1>
+  <p>Find affordable books and academic textbooks from real people nearby. List yours in under 2 minutes.</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="nav-btn primary" onclick="openSellModal()" style="padding:10px 24px;font-size:15px">Sell a Book →</button>
+    <button class="nav-btn" onclick="document.querySelector('.toolbar input').focus()" style="padding:10px 24px;font-size:15px">Browse Books</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-num" id="stat-total">0</span><span class="stat-lbl">Books Listed</span></div>
+    <div class="stat"><span class="stat-num" id="stat-sellers">0</span><span class="stat-lbl">Sellers</span></div>
+    <div class="stat"><span class="stat-num" id="stat-genres">0</span><span class="stat-lbl">Genres</span></div>
+  </div>
+</div>
+
+<!-- BROWSE PAGE -->
+<div id="page-browse">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search title, author, subject, university…" oninput="applyFilters()">
+    </div>
+    <select id="filterCond" onchange="applyFilters()">
+      <option value="">Any condition</option>
+      <option value="new">Like new</option>
+      <option value="good">Good</option>
+      <option value="fair">Fair</option>
+    </select>
+    <select id="filterSort" onchange="applyFilters()">
+      <option value="newest">Newest first</option>
+      <option value="price-asc">Price: low → high</option>
+      <option value="price-desc">Price: high → low</option>
+      <option value="az">A → Z</option>
+    </select>
+    <span class="result-count" id="resultCount"></span>
+  </div>
+
+  <div class="type-tab">
+    <button class="type-pill active" id="typePillAll" onclick="setType('')">All Books</button>
+    <button class="type-pill" id="typePillGeneral" onclick="setType('general')">📖 General</button>
+    <button class="type-pill" id="typePillAcademic" onclick="setType('academic')">🎓 Academic</button>
+  </div>
+
+  <div class="genre-pills" id="genrePills"></div>
+
+  <div class="main">
+    <div class="books-grid" id="booksGrid"></div>
+  </div>
+</div>
+
+<!-- MY BOOKS PAGE -->
+<div id="page-my" style="display:none">
+  <div class="main">
+    <div class="section-header">
+      <h2>My Listings</h2>
+      <button class="nav-btn primary" onclick="openSellModal()">+ Add Book</button>
+    </div>
+    <div id="myBooksList"></div>
+  </div>
+</div>
+
+<!-- SELL / EDIT MODAL -->
+<div class="overlay" id="sellOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="sellModalTitle">List a Book for Sale</h2>
+      <button class="close-btn" onclick="closeSellModal()">✕</button>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-bottom:1.25rem">
+      <button type="button" id="btnTypeGeneral" onclick="setBookType('general')"
+        style="flex:1;padding:9px;border:2px solid var(--rust);border-radius:var(--radius);background:var(--rust);color:#fff;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer">
+        📖 General Book
+      </button>
+      <button type="button" id="btnTypeAcademic" onclick="setBookType('academic')"
+        style="flex:1;padding:9px;border:2px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer">
+        🎓 Academic / Textbook
+      </button>
+    </div>
+    <input type="hidden" id="fBookType" value="general">
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Your name <span>*</span></label>
+        <input type="text" id="fName" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="form-group">
+        <label>Contact (phone / email) <span>*</span></label>
+        <input type="text" id="fContact" placeholder="9876543210">
+      </div>
+      <div class="form-group">
+        <label>Book title <span>*</span></label>
+        <input type="text" id="fTitle" placeholder="Title of the book">
+      </div>
+      <div class="form-group">
+        <label>Author <span>*</span></label>
+        <input type="text" id="fAuthor" placeholder="Author name">
+      </div>
+      <div class="form-group">
+        <label id="genreLabel">Genre <span>*</span></label>
+        <select id="fGenre">
+          <option value="">Select genre</option>
+          <option>Fiction</option><option>Non-fiction</option><option>Science</option>
+          <option>History</option><option>Biography</option><option>Self-help</option>
+          <option>Technology</option><option>Children's</option><option>Mystery</option>
+          <option>Fantasy</option><option>Romance</option><option>Comics</option>
+          <option>Textbook</option><option>Travel</option><option>Art</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Condition <span>*</span></label>
+        <select id="fCondition">
+          <option value="">Select condition</option>
+          <option value="new">Like new</option>
+          <option value="good">Good</option>
+          <option value="fair">Fair</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price (₹) <span>*</span></label>
+        <input type="number" id="fPrice" placeholder="150" min="1">
+      </div>
+      <div class="form-group">
+        <label>Location</label>
+        <input type="text" id="fLocation" placeholder="City / Area">
+      </div>
+
+      <!-- ACADEMIC FIELDS (shown only for academic type) -->
+      <div class="form-group full" id="academicFieldsWrap" style="display:none">
+        <div class="acad-fields">
+          <div class="acad-label">🎓 Academic details</div>
+          <div class="acad-fields-inner">
+            <div class="form-group">
+              <label>Subject / Course <span>*</span></label>
+              <input type="text" id="fSubject" placeholder="e.g. Physics, Data Structures">
+            </div>
+            <div class="form-group">
+              <label>Class / Year / Semester</label>
+              <input type="text" id="fClassYear" placeholder="e.g. 12th, 2nd Year, Sem 3">
+            </div>
+            <div class="form-group">
+              <label>University / Board</label>
+              <input type="text" id="fUniversity" placeholder="e.g. SPPU, CBSE, Mumbai Uni">
+            </div>
+            <div class="form-group">
+              <label>Edition</label>
+              <input type="text" id="fEdition" placeholder="e.g. 5th Edition, 2022">
+            </div>
+            <div class="form-group">
+              <label>ISBN (optional)</label>
+              <input type="text" id="fISBN" placeholder="978-XXXXXXXXXX">
+            </div>
+            <div class="form-group">
+              <label>Publisher</label>
+              <input type="text" id="fPublisher" placeholder="e.g. S. Chand, Pearson">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group full">
+        <label>Description</label>
+        <textarea id="fDesc" placeholder="Notes about condition, missing pages, highlights…"></textarea>
+      </div>
+      <div class="form-group full">
+        <label>Book image <span>*</span></label>
+        <input type="file" id="imageFile" accept="image/*">
+        <button type="button" class="btn-secondary" onclick="uploadToCloudinary()" style="margin-top:10px">📤 Upload Image</button>
+        <input type="hidden" id="fImage">
+        <img id="imgPreview" class="img-preview"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeSellModal()">Cancel</button>
+      <button class="btn-submit" id="submitBtn" onclick="submitBook()">List for Sale</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal" id="detailContent" style="max-width:500px"></div>
+</div>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const COLL = "bookbazaar_listings";
+
+let allBooks = [];
+let activeGenre = "";
+let editingId = null;
+const SELLER_KEY = "bb_seller_id";
+
+function getSellerId(){
+  if(!localStorage.getItem(SELLER_KEY)) localStorage.setItem(SELLER_KEY,"seller_"+Math.random().toString(36).slice(2,9));
+  return localStorage.getItem(SELLER_KEY);
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 3000);
+}
+
+function showLoading(v){ document.getElementById("loadingOverlay").classList.toggle("open",v); }
+
+function previewImage(url){
+  const img = document.getElementById("imgPreview");
+  img.src = url;
+  img.style.display = "block";
+}
+
+window.uploadToCloudinary = async function(){
+  const file = document.getElementById("imageFile").files[0];
+  if(!file){ showToast("Select an image first"); return; }
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "ml_default");
+  try{
+    showToast("Uploading image…");
+    const res = await fetch("https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",{method:"POST",body:formData});
+    const data = await res.json();
+    if(data.error){ showToast(data.error.message); return; }
+    document.getElementById("fImage").value = data.secure_url;
+    previewImage(data.secure_url);
+    showToast("Image uploaded ✅");
+  }catch(e){ console.error(e); showToast("Upload failed"); }
+};
+
+function showPage(page){
+  document.getElementById("page-browse").style.display = page==="browse"?"":"none";
+  document.getElementById("page-my").style.display = page==="my"?"":"none";
+  document.getElementById("hero-section").style.display = page==="browse"?"":"none";
+  document.getElementById("tab-browse").classList.toggle("active", page==="browse");
+  document.getElementById("tab-my").classList.toggle("active", page==="my");
+  if(page==="my") renderMyBooks();
+}
+
+function openSellModal(id){
+  editingId = id||null;
+  document.getElementById("sellModalTitle").textContent = id ? "Edit Listing" : "List a Book for Sale";
+  document.getElementById("submitBtn").textContent = id ? "Save Changes" : "List for Sale";
+  if(id){
+    const b = allBooks.find(x=>x.id===id);
+    if(b){
+      document.getElementById("fName").value = b.sellerName||"";
+      document.getElementById("fContact").value = b.contact||"";
+      document.getElementById("fTitle").value = b.title||"";
+      document.getElementById("fAuthor").value = b.author||"";
+      document.getElementById("fGenre").value = b.genre||"";
+      document.getElementById("fCondition").value = b.condition||"";
+      document.getElementById("fPrice").value = b.price||"";
+      document.getElementById("fLocation").value = b.location||"";
+      document.getElementById("fDesc").value = b.description||"";
+      document.getElementById("fImage").value = b.image||"";
+      if(b.image) previewImage(b.image);
+    }
+  } else {
+    ["fName","fContact","fTitle","fAuthor","fDesc","fPrice","fLocation"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("fGenre").value="";
+    document.getElementById("fCondition").value="";
+    document.getElementById("fImage").value="";
+    const p = document.getElementById("imgPreview");
+    p.src=""; p.style.display="none";
+    document.getElementById("imageFile").value="";
+  }
+  document.getElementById("sellOverlay").classList.add("open");
+}
+function closeSellModal(){ document.getElementById("sellOverlay").classList.remove("open"); editingId=null; }
+
+async function submitBook(){
+  const title = document.getElementById("fTitle").value.trim();
+  const author = document.getElementById("fAuthor").value.trim();
+  const genre = document.getElementById("fGenre").value;
+  const condition = document.getElementById("fCondition").value;
+  const price = parseFloat(document.getElementById("fPrice").value);
+  const sellerName = document.getElementById("fName").value.trim();
+  const contact = document.getElementById("fContact").value.trim();
+  if(!title||!author||!genre||!condition||!price||!sellerName||!contact){
+    showToast("Please fill all required fields"); return;
+  }
+  const image = document.getElementById("fImage").value;
+  if(!image){ showToast("Please upload a book image"); return; }
+
+  const btn = document.getElementById("submitBtn");
+  btn.disabled=true; btn.textContent="Saving…";
+  showLoading(true);
+
+  const data = {
+    title, author, genre, condition, price,
+    sellerName, contact,
+    location: document.getElementById("fLocation").value.trim(),
+    description: document.getElementById("fDesc").value.trim(),
+    image,
+    sellerId: getSellerId(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try{
+    if(editingId){
+      await db.collection(COLL).doc(editingId).update(data);
+      showToast("Listing updated ✅");
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection(COLL).add(data);
+      showToast("Book listed for sale ✅");
+    }
+    closeSellModal();
+    loadBooks();
+  }catch(e){ console.error(e); showToast("Error saving: "+e.message); }
+  finally{ btn.disabled=false; btn.textContent=editingId?"Save Changes":"List for Sale"; showLoading(false); }
+}
+
+async function deleteBook(id){
+  if(!confirm("Remove this listing?")) return;
+  showLoading(true);
+  try{
+    await db.collection(COLL).doc(id).delete();
+    showToast("Listing removed");
+    closeDetail();
+    loadBooks();
+  }catch(e){ showToast("Error: "+e.message); }
+  finally{ showLoading(false); }
+}
+
+function condLabel(c){ return {new:"Like new",good:"Good",fair:"Fair"}[c]||c; }
+function condClass(c){ return "cond-"+c; }
+
+function renderBooks(){
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  const cond = document.getElementById("filterCond").value;
+  const sort = document.getElementById("filterSort").value;
+
+  let res = allBooks.filter(b=>{
+    const textMatch = !q||(b.title||"").toLowerCase().includes(q)||(b.author||"").toLowerCase().includes(q)||(b.genre||"").toLowerCase().includes(q);
+    const condMatch = !cond||b.condition===cond;
+    const genreMatch = !activeGenre||b.genre===activeGenre;
+    return textMatch&&condMatch&&genreMatch;
+  });
+
+  if(sort==="price-asc") res.sort((a,b)=>a.price-b.price);
+  else if(sort==="price-desc") res.sort((a,b)=>b.price-a.price);
+  else if(sort==="az") res.sort((a,b)=>(a.title||"").localeCompare(b.title||""));
+  else res.sort((a,b)=>(b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
+
+  document.getElementById("resultCount").textContent = res.length+" book"+(res.length!==1?"s":"")+" found";
+
+  const grid = document.getElementById("booksGrid");
+  if(!res.length){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><span class="empty-icon">📭</span><h3>No books found</h3><p>Try a different search, or <a href="#" onclick="openSellModal()" style="color:var(--rust)">list the first one</a></p></div>`;
+    return;
+  }
+  grid.innerHTML = res.map(b=>`
+    <div class="book-card" onclick="openDetail('${b.id}')">
+      ${b.image?`<img class="book-cover" src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy">`:`<div class="book-cover-placeholder">📗</div>`}
+      <div class="book-body">
+        <div class="book-title">${esc(b.title)}</div>
+        <div class="book-author">${esc(b.author)}</div>
+        <div class="book-footer">
+          <span class="book-price">₹${b.price}</span>
+          <span class="cond-tag ${condClass(b.condition)}">${condLabel(b.condition)}</span>
+        </div>
+        <div class="book-location">${b.location?'📍 '+esc(b.location):''} · ${esc(b.sellerName)}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function applyFilters(){ renderBooks(); }
+
+function renderGenrePills(){
+  const genres = [...new Set(allBooks.map(b=>b.genre).filter(Boolean))].sort();
+  const wrap = document.getElementById("genrePills");
+  wrap.innerHTML = `<button class="genre-pill${!activeGenre?" active":""}" onclick="setGenre('')">All</button>`+
+    genres.map(g=>`<button class="genre-pill${activeGenre===g?" active":""}" onclick="setGenre('${g}')">${g}</button>`).join("");
+}
+
+function setGenre(g){ activeGenre=g; renderGenrePills(); renderBooks(); }
+
+function updateStats(){
+  document.getElementById("stat-total").textContent = allBooks.length;
+  document.getElementById("stat-sellers").textContent = new Set(allBooks.map(b=>b.sellerId)).size;
+  document.getElementById("stat-genres").textContent = new Set(allBooks.map(b=>b.genre).filter(Boolean)).size;
+}
+
+function openDetail(id){
+  const b = allBooks.find(x=>x.id===id); if(!b) return;
+  const isMine = b.sellerId===getSellerId();
+  document.getElementById("detailContent").innerHTML=`
+    ${b.image?`<img class="detail-img" src="${esc(b.image)}" alt="${esc(b.title)}">`:`<div class="detail-img-placeholder">📗</div>`}
+    <div class="detail-title">${esc(b.title)}</div>
+    <div class="detail-author">by ${esc(b.author)}</div>
+    <div class="detail-price">₹${b.price}</div>
+    <div class="detail-meta">
+      <div class="meta-item"><label>Genre</label><span>${esc(b.genre)}</span></div>
+      <div class="meta-item"><label>Condition</label><span class="cond-tag ${condClass(b.condition)}" style="display:inline-block">${condLabel(b.condition)}</span></div>
+      ${b.location?`<div class="meta-item"><label>Location</label><span>📍 ${esc(b.location)}</span></div>`:""}
+    </div>
+    ${b.description?`<div class="detail-desc">${esc(b.description)}</div>`:""}
+    <div class="contact-box">
+      <h4>Seller</h4>
+      <p><strong>${esc(b.sellerName)}</strong></p>
+      <p style="margin-top:4px;color:var(--muted)">${esc(b.contact)}</p>
+    </div>
+    <div class="detail-actions">
+      ${isMine?`<button class="btn-edit" onclick="closeDetail();openSellModal('${b.id}')">✏️ Edit</button><button class="btn-delete" onclick="deleteBook('${b.id}')">🗑 Delete</button>`:""}
+      <button class="btn-cancel" onclick="closeDetail()" style="margin-left:auto">Close</button>
+    </div>
+  `;
+  document.getElementById("detailOverlay").classList.add("open");
+}
+function closeDetail(){ document.getElementById("detailOverlay").classList.remove("open"); }
+
+function renderMyBooks(){
+  const sid = getSellerId();
+  const mine = allBooks.filter(b=>b.sellerId===sid);
+  const el = document.getElementById("myBooksList");
+  if(!mine.length){
+    el.innerHTML=`<div class="empty"><span class="empty-icon">📚</span><h3>No listings yet</h3><p>Start by listing your first book for sale.</p><br><button class="nav-btn primary" onclick="openSellModal()">+ List a Book</button></div>`;
+    return;
+  }
+  el.innerHTML = mine.map(b=>`
+    <div class="my-book-row">
+      <div class="my-book-thumb">${b.image?`<img src="${esc(b.image)}" alt="${esc(b.title)}">`:"📗"}</div>
+      <div class="my-book-info">
+        <div class="my-book-title">${esc(b.title)}</div>
+        <div class="my-book-sub">${esc(b.author)} · ${esc(b.genre)} · <span class="cond-tag ${condClass(b.condition)}" style="font-size:11px">${condLabel(b.condition)}</span></div>
+      </div>
+      <span class="my-book-price">₹${b.price}</span>
+      <div class="row-actions">
+        <button class="row-btn" onclick="openSellModal('${b.id}')">Edit</button>
+        <button class="row-btn danger" onclick="deleteBook('${b.id}')">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function esc(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+async function loadBooks(){
+  showLoading(true);
+  try{
+    const snap = await db.collection(COLL).orderBy("createdAt","desc").get();
+    allBooks = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderBooks();
+    renderGenrePills();
+    updateStats();
+  }catch(e){ console.error(e); showToast("Error loading books: "+e.message); }
+  finally{ showLoading(false); }
+}
+
+document.getElementById("detailOverlay").addEventListener("click",function(e){ if(e.target===this) closeDetail(); });
+document.getElementById("sellOverlay").addEventListener("click",function(e){ if(e.target===this) closeSellModal(); });
+
+loadBooks();
+</script>
+</body>
+</html>
