@@ -85,12 +85,31 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
 
 /* ─ LOCATION PILL ─ */
 .top-location{
-  position:fixed;top:12px;right:12px;
+  position:fixed;top:12px;left:12px;
   background:var(--primary);color:#fff;
   padding:8px 14px;border-radius:30px;
   font-size:12px;font-weight:700;
   z-index:1001;box-shadow:0 4px 14px rgba(79,70,229,.4);
 }
+
+/* ─ TOP PROFILE PILL (app-style quick access to account) ─ */
+.top-profile{
+  position:fixed;top:12px;right:12px;
+  display:flex;align-items:center;gap:6px;
+  background:#fff;color:var(--primary);
+  padding:6px 14px 6px 6px;border-radius:30px;
+  font-size:12px;font-weight:800;
+  z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.18);
+  text-decoration:none;border:1.5px solid var(--primary);
+  max-width:46vw;overflow:hidden;white-space:nowrap;
+}
+.top-profile .tp-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;flex-shrink:0;
+}
+.top-profile .tp-text{overflow:hidden;text-overflow:ellipsis;}
 
 /* ─ HEADER ─ */
 header{
@@ -367,6 +386,12 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 
 <!-- Location -->
 <div class="top-location">📍 Akole, Maharashtra</div>
+
+<!-- Top Profile Pill (app-style quick access to account) -->
+<a href="#account" class="top-profile" id="topProfile">
+  <span class="tp-avatar" id="tpAvatar">👤</span>
+  <span class="tp-text" id="tpText">Login</span>
+</a>
 
 <!-- Toast -->
 <div id="toast"></div>
@@ -764,18 +789,39 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("profileAddress").innerText  = d.address || "–";
       document.getElementById("profileAge").innerText      = d.age     || "–";
       document.getElementById("avatarInitial").innerText   = (d.name||"?")[0].toUpperCase();
+
+      /* 🔽 NEW: update the top app-style profile pill */
+      document.getElementById("tpAvatar").textContent = (d.name||"?")[0].toUpperCase();
+      document.getElementById("tpText").textContent   = (d.name||"My Account").split(" ")[0];
+
+      /* save logged-in user's data to a shared localStorage key
+         so other pages (food.html, taxi.html, etc.) can auto-fill order forms */
+      localStorage.setItem("sn_user", JSON.stringify({
+        name: d.name || "",
+        email: d.email || "",
+        mobile: d.mobile || "",
+        whatsapp: d.whatsapp || "",
+        address: d.address || ""
+      }));
     }
   } else {
     document.getElementById("authContainer").style.display = "flex";
     document.getElementById("profileCard").style.display   = "none";
     document.getElementById("authSectionTitle").textContent = "My Account";
     document.getElementById("nav-account").querySelector(".icon").textContent = "👤";
+
+    /* 🔽 NEW: reset the top profile pill when logged out */
+    document.getElementById("tpAvatar").textContent = "👤";
+    document.getElementById("tpText").textContent    = "Login";
   }
 });
 
 /* ── LOGOUT ── */
 window.logoutUser = async () => {
   await signOut(auth);
+  localStorage.removeItem("sn_user");
+  document.getElementById("tpAvatar").textContent = "👤";
+  document.getElementById("tpText").textContent    = "Login";
   showToast("👋 Logged out successfully.", "success");
 };
 </script>
