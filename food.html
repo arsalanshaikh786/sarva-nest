@@ -1,442 +1,438 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>HariyaLi – Fresh Vegetable Delivery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,500&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
-  <style>
-    :root {
-      --green:#2D7A4F;--green-light:#E8F5EE;--green-dark:#1E5C39;
-      --accent:#F4A228;--accent-light:#FEF3E2;
-      --surface:#F7FBF4;--card:#FFFFFF;--border:rgba(45,122,79,0.12);
-      --text:#1A2E1F;--muted:#637A6B;--danger:#C0392B;
-      --radius:18px;--safe-bottom:env(safe-area-inset-bottom,0px);
-    }
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    html{scroll-behavior:smooth;}
-    body{font-family:'Nunito',sans-serif;background:var(--surface);color:var(--text);min-height:100vh;overflow-x:hidden;}
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sarvanest – Food Delivery</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+:root{
+  --brand:#E8521A;--bl:#FFF1EB;--bd:#C03E10;
+  --sur:#FFFDF9;--card:#fff;--bdr:rgba(0,0,0,.08);
+  --txt:#1A1208;--mut:#7A7068;--ok:#2E7D32;
+  --r:12px;--sh:0 4px 20px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt)}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--card);border-bottom:1px solid var(--border);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;}
-    .logo{font-family:'Lora',serif;font-size:1.45rem;color:var(--green);display:flex;align-items:center;gap:6px;}
-    .logo-icon{width:32px;height:32px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;}
-    .icon-btn{width:42px;height:42px;border-radius:50%;border:none;background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;color:var(--text);position:relative;}
-    .cart-dot{position:absolute;top:4px;right:4px;background:var(--accent);color:#fff;font-size:.6rem;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;}
-    .cart-dot.hidden{display:none;}
+/* NAV */
+nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px solid var(--bdr);z-index:100;height:52px;padding:0 .85rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem}
+.logo{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brand);flex:1}
+.logo span{color:var(--txt)}
+.back-btn{background:none;border:1.5px solid var(--bdr);border-radius:50px;padding:.3rem .7rem;font-family:'DM Sans',sans-serif;font-size:.75rem;cursor:pointer;display:flex;align-items:center;gap:3px;color:var(--mut);white-space:nowrap}
+.back-btn:active{border-color:var(--brand);color:var(--brand)}
+.cart-btn{background:var(--brand);color:#fff;border:none;border-radius:50px;padding:.35rem .8rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.cart-btn:active{background:var(--bd)}
+.cart-badge{background:#fff;color:var(--brand);border-radius:50%;width:17px;height:17px;font-size:.62rem;display:flex;align-items:center;justify-content:center;font-weight:700}
+.track-nav-btn{background:none;border:1.5px solid var(--brand);color:var(--brand);border-radius:50px;padding:.32rem .7rem;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.track-nav-btn:active{background:var(--bl)}
 
-    /* HERO */
-    .hero{margin-top:58px;background:linear-gradient(150deg,#E8F5EE 0%,#D4EDD9 60%,#C5E0CB 100%);padding:1.5rem 1rem 1.25rem;position:relative;overflow:hidden;}
-    .hero::after{content:'🥬🍅🥕🧅🌽';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:4rem;opacity:.15;letter-spacing:-4px;pointer-events:none;}
-    .hero h1{font-family:'Lora',serif;font-size:1.8rem;line-height:1.15;margin-bottom:.4rem;max-width:220px;}
-    .hero h1 em{color:var(--green);font-style:italic;}
-    .hero p{color:var(--muted);font-size:.88rem;margin-bottom:1rem;max-width:240px;}
-    .chips-scroll{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-    .chips-scroll::-webkit-scrollbar{display:none;}
-    .chip{white-space:nowrap;background:#fff;border:1px solid var(--border);border-radius:50px;padding:.3rem .75rem;font-size:.74rem;color:var(--muted);display:flex;align-items:center;gap:4px;flex-shrink:0;font-weight:500;}
-    .chip i{color:var(--green);}
+#restView,#menuView{animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-    /* SEARCH */
-    .search-bar{position:sticky;top:58px;z-index:90;background:var(--card);border-bottom:1px solid var(--border);padding:.6rem 1rem;}
-    .search-inner{position:relative;}
-    .search-inner i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:1rem;pointer-events:none;}
-    .search-inner input{width:100%;padding:.65rem .75rem .65rem 2.4rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Nunito',sans-serif;font-size:.9rem;background:var(--surface);outline:none;transition:border-color .2s;}
-    .search-inner input:focus{border-color:var(--green);background:#fff;}
+/* RESTAURANT VIEW */
+.hero{margin-top:52px;background:linear-gradient(135deg,#FFF1EB,#FFEBD8);padding:1.4rem 1rem 1.2rem;text-align:center;border-bottom:1px solid var(--bdr)}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,5vw,2.2rem);line-height:1.1;margin-bottom:.25rem}
+.hero h1 em{color:var(--brand);font-style:normal}
+.hero p{color:var(--mut);font-size:.82rem;margin-bottom:.85rem}
+.chips{display:flex;justify-content:center;gap:.35rem;flex-wrap:wrap}
+.chip{background:#fff;border:1px solid var(--bdr);border-radius:50px;padding:.2rem .65rem;font-size:.7rem;color:var(--mut);display:flex;align-items:center;gap:3px}
+.chip i{color:var(--brand);font-size:.75rem}
 
-    /* FILTERS */
-    .filter-scroll{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.55rem 1rem;background:var(--card);border-bottom:1px solid var(--border);}
-    .filter-scroll::-webkit-scrollbar{display:none;}
-    .filter-pill{white-space:nowrap;border:1.5px solid var(--border);background:var(--surface);border-radius:50px;padding:.38rem .9rem;font-family:'Nunito',sans-serif;font-size:.8rem;cursor:pointer;transition:all .18s;color:var(--muted);flex-shrink:0;font-weight:600;}
-    .filter-pill.active{border-color:var(--green);background:var(--green-light);color:var(--green);}
+/* SEARCH/FILTER */
+.ctrl-bar{padding:.7rem 1rem .25rem;display:flex;flex-direction:column;gap:.4rem}
+.ctrl-search{position:relative}
+.ctrl-search i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:.85rem}
+.ctrl-search input{width:100%;padding:.46rem .7rem .46rem 2rem;border:1.5px solid var(--bdr);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.8rem;background:#fff;outline:none;-webkit-appearance:none;color:var(--txt)}
+.ctrl-search input:focus{border-color:var(--brand)}
+.ctrl-row{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.ctrl-row::-webkit-scrollbar{display:none}
+.fbtn{border:1.5px solid var(--bdr);background:#fff;border-radius:50px;padding:.3rem .7rem;font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;transition:all .18s;color:var(--mut);white-space:nowrap;flex-shrink:0}
+.fbtn.active,.fbtn:active{border-color:var(--brand);background:var(--bl);color:var(--brand)}
+.sort-sel{border:1.5px solid var(--bdr);background:#fff;border-radius:50px;padding:.3rem .75rem;font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;outline:none;color:var(--mut);-webkit-appearance:none;flex-shrink:0}
 
-    /* CATEGORIES */
-    .cat-bar{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.55rem 1rem .4rem;}
-    .cat-bar::-webkit-scrollbar{display:none;}
-    .cat-pill{white-space:nowrap;border:1.5px solid var(--border);background:var(--card);border-radius:50px;padding:.32rem .85rem;font-size:.78rem;cursor:pointer;transition:all .18s;color:var(--muted);flex-shrink:0;font-weight:600;}
-    .cat-pill.active{background:var(--green);border-color:var(--green);color:#fff;}
+/* CUISINE PILLS */
+.cat-bar{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:none;padding:.15rem 1rem .5rem}
+.cat-bar::-webkit-scrollbar{display:none}
+.cpill{white-space:nowrap;border:1.5px solid var(--bdr);background:#fff;border-radius:50px;padding:.26rem .7rem;font-size:.72rem;cursor:pointer;transition:all .18s;color:var(--mut);flex-shrink:0}
+.cpill.active{background:var(--brand);border-color:var(--brand);color:#fff}
 
-    /* SECTION LABEL */
-    .section-label{padding:.5rem 1rem .1rem;font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
+/* RESTAURANT GRID */
+.page-wrap{padding:.2rem 1rem 5rem}
+.sec-lbl{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:.65rem;display:flex;align-items:center;gap:.35rem}
+.rest-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
+@media(min-width:520px){.rest-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.rest-grid{grid-template-columns:repeat(3,1fr)}}
+.rest-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden;cursor:pointer}
+.rest-card img{width:100%;height:130px;object-fit:cover;display:block}
+.rest-card-body{padding:.72rem}
+.rest-name{font-weight:700;font-size:.85rem;margin-bottom:.14rem;display:flex;align-items:center;gap:.3rem;flex-wrap:wrap}
+.odot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.odot.open{background:var(--ok)}.odot.closed{background:#C62828}
+.pop-tag{font-size:.58rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700}
+.rest-cuisine{font-size:.7rem;color:var(--mut);margin-bottom:.35rem}
+.rest-tags-row{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:.38rem}
+.rtag{font-size:.6rem;background:var(--sur);border:1px solid var(--bdr);border-radius:50px;padding:1px 5px;color:var(--mut)}
+.rest-meta{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.25rem}
+.rest-rating{font-size:.72rem;font-weight:600;display:flex;align-items:center;gap:2px}
+.rest-time{font-size:.68rem;color:var(--mut);display:flex;align-items:center;gap:2px}
+.closed-badge{font-size:.6rem;background:#FFEBEE;color:#C62828;border-radius:50px;padding:2px 6px;font-weight:600}
 
-    /* PRODUCT LIST */
-    .products-list{display:flex;flex-direction:column;padding:0 1rem;gap:.75rem;padding-bottom:1rem;}
-    .veg-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);display:flex;overflow:hidden;cursor:pointer;transition:box-shadow .2s;}
-    .veg-card:active{opacity:.94;}
-    .veg-card-img{width:100px;min-width:100px;height:100px;object-fit:cover;}
-    .veg-card-body{flex:1;padding:.7rem .75rem;display:flex;flex-direction:column;justify-content:space-between;min-width:0;}
-    .veg-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.22rem;}
-    .veg-tag{font-size:.62rem;padding:2px 6px;border-radius:50px;background:var(--green-light);color:var(--green);font-weight:700;}
-    .veg-tag.organic{background:#FEF9E7;color:#B7770D;}
-    .veg-tag.sale{background:#FDEDEC;color:#C0392B;}
-    .veg-name{font-weight:700;font-size:.92rem;margin-bottom:.12rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .veg-unit{font-size:.72rem;color:var(--muted);margin-bottom:.3rem;}
-    .veg-bottom{display:flex;align-items:center;justify-content:space-between;gap:.4rem;}
-    .price-block{display:flex;flex-direction:column;}
-    .veg-price{font-family:'Lora',serif;font-size:1.05rem;font-weight:700;color:var(--text);line-height:1;}
-    .veg-mrp{font-size:.68rem;color:var(--muted);text-decoration:line-through;}
-    .add-btn{background:var(--green);color:#fff;border:none;border-radius:9px;padding:.4rem .85rem;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:3px;flex-shrink:0;}
-    .add-btn:active{background:var(--green-dark);}
-    .qty-ctrl{display:flex;align-items:center;background:var(--green-light);border-radius:9px;overflow:hidden;flex-shrink:0;}
-    .qty-btn{background:none;border:none;color:var(--green);font-size:1.1rem;padding:.35rem .65rem;cursor:pointer;font-weight:700;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center;}
-    .qty-btn:active{background:rgba(45,122,79,.15);}
-    .qty-num{font-weight:700;color:var(--green);font-size:.88rem;padding:0 .1rem;}
+/* MENU VIEW */
+.rest-hero{margin-top:52px;height:165px;position:relative;overflow:hidden}
+@media(min-width:600px){.rest-hero{height:200px}}
+.rest-hero img{width:100%;height:100%;object-fit:cover}
+.rest-hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.05) 60%)}
+.rest-hero-info{position:absolute;bottom:.85rem;left:.9rem;right:.9rem;color:#fff}
+.rh-name{font-family:'Playfair Display',serif;font-size:clamp(1.15rem,4vw,1.6rem);font-weight:700;line-height:1.1;margin-bottom:.25rem}
+.rh-meta{display:flex;gap:.6rem;flex-wrap:wrap}
+.rh-chip{font-size:.7rem;display:flex;align-items:center;gap:3px;opacity:.9}
+.cuisine-tag{font-size:.6rem;background:var(--brand);color:#fff;border-radius:50px;padding:2px 7px;font-weight:600}
 
-    /* SKELETONS */
-    .skeleton{background:linear-gradient(90deg,#eaf3ec 25%,#ddeee1 50%,#eaf3ec 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
-    @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-    .skel-card{background:#fff;border-radius:var(--radius);border:1px solid var(--border);display:flex;overflow:hidden;margin-bottom:.75rem;}
-    .skel-img-s{width:100px;min-width:100px;height:100px;}
-    .skel-body-s{flex:1;padding:.7rem;display:flex;flex-direction:column;gap:8px;}
-    .skel-line{height:11px;}
+/* MENU FILTERS */
+.menu-ctrl{padding:.6rem 1rem .15rem;display:flex;flex-direction:column;gap:.35rem}
+.menu-ctrl .ctrl-row{gap:.3rem}
 
-    /* CART BAR */
-    .cart-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;background:var(--green);color:#fff;padding:.85rem 1.25rem;padding-bottom:calc(.85rem + var(--safe-bottom));display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 -4px 20px rgba(45,122,79,.35);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
-    .cart-bar.hidden{transform:translateY(120%);}
-    .cart-bar-count{background:rgba(255,255,255,.22);border-radius:8px;padding:.2rem .65rem;font-size:.82rem;font-weight:700;}
-    .cart-bar-right{display:flex;align-items:center;gap:.5rem;font-weight:700;}
-    .cart-bar-price{font-family:'Lora',serif;font-size:1.1rem;}
+/* FOODS GRID — 2 col always */
+.foods-outer{padding:0 .85rem}
+.foods-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:.6rem;
+  margin-bottom:1rem;
+}
+@media(min-width:760px){.foods-grid{grid-template-columns:repeat(3,1fr)}}
 
-    /* BOTTOM NAV */
-    .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);}
-    .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.65rem;font-weight:600;transition:color .2s;}
-    .bnav-item.active{color:var(--green);}
-    .bnav-item i{font-size:1.3rem;}
+.food-card{
+  background:var(--card);
+  border-radius:var(--r);
+  border:1px solid var(--bdr);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.food-card img{
+  width:100%;
+  height:105px;   /* was 130px */
+  object-fit:cover;
+  display:block;
+}
+.food-card-body{
+  padding:.58rem;  /* was .78rem */
+  flex:1;
+  display:flex;
+  flex-direction:column;
+}
+.ftags{display:flex;gap:.22rem;flex-wrap:wrap;margin-bottom:.25rem}
+.ftag{font-size:.58rem;padding:1px 5px;border-radius:50px;font-weight:600}
+.fveg{background:#E8F5E9;color:#2E7D32}
+.fnveg{background:#FFF1EB;color:var(--brand)}
+.fbest{background:#FFF3E0;color:#E65100}
+.fspicy{background:#FFF3E0;color:#E65100}
 
-    /* PAGES */
-    .page{display:none;}
-    .page.active{display:block;}
-    .menu-content{padding-bottom:calc(120px + var(--safe-bottom));}
+.food-name{
+  font-weight:700;
+  font-size:.78rem;  /* was .86rem */
+  margin-bottom:.1rem;
+  line-height:1.25;
+}
+.food-desc{
+  font-size:.66rem;  /* was .72rem */
+  color:var(--mut);
+  line-height:1.35;
+  margin-bottom:.35rem;
+  flex:1;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.food-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:.35rem;
+}
+.food-price{
+  font-family:'Playfair Display',serif;
+  font-size:.88rem;  /* was .95rem */
+  font-weight:700;
+}
+.food-rating{font-size:.64rem;color:var(--mut);display:flex;align-items:center;gap:2px}
 
-    /* DRAWER */
-    .drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0);z-index:300;pointer-events:none;transition:background .3s;}
-    .drawer-overlay.open{background:rgba(0,0,0,.45);pointer-events:all;}
-    .cart-drawer{position:fixed;bottom:0;left:0;right:0;z-index:310;background:var(--card);border-radius:24px 24px 0 0;max-height:92vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);box-shadow:0 -8px 40px rgba(0,0,0,.12);}
-    .cart-drawer.open{transform:translateY(0);}
-    .drawer-handle{width:40px;height:4px;background:var(--border);border-radius:50px;margin:.75rem auto;flex-shrink:0;}
-    .drawer-header{padding:0 1.25rem .75rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;border-bottom:1px solid var(--border);}
-    .drawer-title{font-family:'Lora',serif;font-size:1.2rem;}
-    .drawer-close{background:var(--surface);border:none;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;color:var(--muted);}
-    .drawer-body{overflow-y:auto;flex:1;padding:.75rem 1.25rem;}
-    .drawer-footer{padding:.75rem 1.25rem;padding-bottom:calc(.75rem + var(--safe-bottom));border-top:1px solid var(--border);flex-shrink:0;background:var(--card);}
+.add-btn{
+  width:100%;
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  border-radius:7px;
+  padding:.36rem;   /* was .44rem */
+  font-family:'DM Sans',sans-serif;
+  font-size:.74rem; /* was .8rem */
+  font-weight:600;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+}
+.add-btn:active{background:var(--bd)}
+.qty-ctrl{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--bl);
+  border-radius:7px;
+  overflow:hidden;
+}
+.qty-btn{
+  background:none;border:none;color:var(--brand);
+  font-size:1rem;padding:.28rem .55rem;
+  cursor:pointer;font-weight:700;line-height:1;
+}
+.qty-num{font-weight:700;color:var(--brand);font-size:.78rem}
 
-    .empty-cart{text-align:center;padding:2.5rem 0;color:var(--muted);}
-    .empty-cart i{font-size:2.8rem;display:block;margin-bottom:.5rem;opacity:.3;}
-    .empty-cart p{font-size:.9rem;}
+/* CART SHEET */
+.cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:150;display:none;align-items:flex-end}
+.cart-overlay.open{display:flex}
+.cart-sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:1rem 1rem 2rem;animation:sheetUp .25s ease}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-handle{width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto .75rem}
+.cart-title{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:.45rem;display:flex;align-items:center;gap:6px}
+.cart-rest-row{font-size:.7rem;color:var(--mut);padding-bottom:.45rem;margin-bottom:.45rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:4px}
+.empty-cart{text-align:center;padding:1.75rem;color:var(--mut)}
+.empty-cart i{font-size:1.8rem;display:block;margin-bottom:.3rem;opacity:.3}
+.cart-item{display:flex;align-items:center;justify-content:space-between;padding:.38rem 0;border-bottom:1px solid var(--bdr);gap:.3rem}
+.ci-name{font-size:.76rem;font-weight:500;flex:1;line-height:1.3}
+.ci-qty{font-size:.66rem;color:var(--mut)}
+.ci-price{font-size:.8rem;font-weight:600}
+.ci-rm{background:none;border:none;color:#ccc;cursor:pointer;padding:2px}
+.cr{display:flex;justify-content:space-between;font-size:.76rem;color:var(--mut);margin-bottom:.2rem}
+.cart-total{font-size:.9rem;font-weight:700;border-top:1px solid var(--bdr);padding-top:.35rem;margin-top:.15rem;display:flex;justify-content:space-between}
+.of-lbl{font-size:.62rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-top:.6rem;margin-bottom:.28rem}
+.order-form{display:flex;flex-direction:column;gap:.4rem}
+.order-form input,.order-form textarea,.order-form select{padding:.48rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;transition:border-color .2s;background:#fff;width:100%;-webkit-appearance:none;color:var(--txt)}
+.order-form input:focus,.order-form textarea:focus{border-color:var(--brand)}
+.order-form textarea{resize:none;height:54px}
+.coupon-row{display:flex;gap:.35rem}
+.coupon-row input{flex:1}
+.coupon-row button{background:var(--bl);color:var(--brand);border:1.5px solid var(--brand);border-radius:8px;padding:.48rem .65rem;font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.place-btn{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.65rem;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:600;cursor:pointer;width:100%;margin-top:.3rem;display:flex;align-items:center;justify-content:center;gap:5px}
+.place-btn:active{background:var(--bd)}
+.place-btn:disabled{background:#ccc;cursor:default}
 
-    .cart-item{display:flex;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);gap:.75rem;}
-    .cart-item-name{font-size:.88rem;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .cart-item-unit{font-size:.7rem;color:var(--muted);}
-    .cart-item-qty-ctrl{display:flex;align-items:center;background:var(--surface);border-radius:8px;overflow:hidden;border:1.5px solid var(--border);}
-    .cqbtn{background:none;border:none;color:var(--green);font-weight:700;font-size:1rem;padding:.3rem .55rem;cursor:pointer;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center;}
-    .cqnum{font-size:.85rem;font-weight:700;padding:0 .2rem;min-width:20px;text-align:center;}
-    .cart-item-price{font-weight:700;font-size:.9rem;white-space:nowrap;min-width:48px;text-align:right;}
+/* FAB CART */
+.fab-cart{position:fixed;bottom:1.2rem;right:1.2rem;background:var(--brand);color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:none;align-items:center;gap:5px;box-shadow:0 4px 16px rgba(232,82,26,.4);z-index:120}
+.fab-cart.show{display:flex}
+.fab-badge{background:#fff;color:var(--brand);border-radius:50%;width:18px;height:18px;font-size:.66rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-    .cart-summary{padding:.75rem 0 .5rem;}
-    .cart-row{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-bottom:.3rem;}
-    .savings-row{display:flex;justify-content:space-between;font-size:.85rem;color:#2D7A4F;margin-bottom:.3rem;font-weight:600;}
-    .cart-total-row{display:flex;justify-content:space-between;font-size:1rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:.5rem;margin-top:.25rem;}
+/* TRACKING */
+.track-wrap{padding:0 1rem 4rem}
+.track-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:1rem}
+.track-title{font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:.7rem}
+.track-form{display:flex;gap:.45rem;flex-wrap:wrap}
+.track-form input{flex:1;min-width:150px;padding:.48rem .75rem;border:1.5px solid var(--bdr);border-radius:50px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;-webkit-appearance:none;color:var(--txt)}
+.track-form input:focus{border-color:var(--brand)}
+.track-form button{background:var(--brand);color:#fff;border:none;border-radius:50px;padding:.48rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer}
+.o-card{background:var(--sur);border:1px solid var(--bdr);border-radius:10px;padding:.8rem;margin-top:.6rem}
+.o-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.35rem;flex-wrap:wrap;gap:.25rem}
+.o-id{font-weight:700;font-size:.76rem}
+.o-sub{font-size:.65rem;color:var(--mut)}
+.st-badge{font-size:.6rem;font-weight:700;padding:2px 7px;border-radius:50px}
+.st-pending{background:#FFF8E1;color:#F57F17}
+.st-confirmed{background:#E3F2FD;color:#1565C0}
+.st-preparing{background:#FFF3E0;color:#E65100}
+.st-out_for_delivery{background:#E8F5E9;color:#2E7D32}
+.st-delivered{background:#E8F5E9;color:var(--ok)}
+.st-cancelled{background:#FFEBEE;color:#C62828}
+.progress-bar{display:flex;justify-content:space-between;position:relative;margin:.5rem 0 .12rem}
+.progress-bar::before{content:'';position:absolute;top:10px;left:7%;right:7%;height:1.5px;background:var(--bdr);z-index:0}
+.p-step{display:flex;flex-direction:column;align-items:center;gap:3px;z-index:1;font-size:.54rem;color:var(--mut);text-align:center;width:44px}
+.p-dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bdr);background:#fff;display:flex;align-items:center;justify-content:center;font-size:.58rem}
+.p-dot.done{background:var(--brand);border-color:var(--brand);color:#fff}
+.p-dot.active{border-color:var(--brand);color:var(--brand);background:var(--bl)}
+.cancel-btn{background:#FFEBEE;color:#C62828;border:none;border-radius:7px;padding:.26rem .6rem;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;cursor:pointer;margin-top:.35rem}
 
-    .coupon-row{display:flex;gap:.5rem;margin-bottom:.75rem;}
-    .coupon-row input{flex:1;padding:.55rem .8rem;border:1.5px solid var(--border);border-radius:8px;font-family:'Nunito',sans-serif;font-size:.85rem;outline:none;}
-    .coupon-row input:focus{border-color:var(--green);}
-    .coupon-row button{background:var(--green-light);color:var(--green);border:1.5px solid var(--green);border-radius:8px;padding:.55rem .9rem;font-family:'Nunito',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
+@media(min-width:520px){.modal-ov{align-items:center}}
+.modal-ov.open{display:flex}
+.modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:88vh;overflow-y:auto;position:relative;animation:mUp .22s ease}
+@media(min-width:520px){.modal{border-radius:20px;max-width:430px;max-height:80vh}}
+@keyframes mUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal img{width:100%;height:175px;object-fit:cover;display:block}
+.modal-body{padding:.9rem}
+.modal-name{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:.18rem}
+.modal-desc{font-size:.78rem;color:var(--mut);line-height:1.5;margin-bottom:.55rem}
+.modal-close{position:absolute;top:.65rem;right:.65rem;background:#fff;border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;box-shadow:0 2px 8px rgba(0,0,0,.18);z-index:1}
+.modal-footer{padding:.15rem 1rem 1rem;display:flex;align-items:center;justify-content:space-between}
+.modal-price{font-family:'Playfair Display',serif;font-size:1.35rem}
+.modal-add{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.55rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+.modal-add:active{background:var(--bd)}
 
-    .checkout-view{display:none;flex-direction:column;height:100%;}
-    .checkout-view.active{display:flex;}
-    .cart-view.hidden{display:none;}
+/* SKELETON */
+.skel{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:8px}
+@keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden}
+.si{height:105px}.sb{padding:.65rem}.sl{height:9px;margin-bottom:6px}.sl.s{width:55%}.sbtn{height:28px;margin-top:.38rem}
 
-    .form-section-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin:.75rem 0 .4rem;}
-    .form-field{width:100%;padding:.65rem .85rem;border:1.5px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;background:#fff;margin-bottom:.5rem;}
-    .form-field:focus{border-color:var(--green);}
-    textarea.form-field{resize:none;min-height:72px;}
-    select.form-field{cursor:pointer;}
+/* TOAST */
+.toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1208;color:#fff;padding:.52rem 1rem;border-radius:50px;font-size:.74rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;max-width:88vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-    .slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem;}
-    .slot-btn{border:1.5px solid var(--border);background:#fff;border-radius:10px;padding:.55rem .5rem;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;text-align:center;color:var(--muted);transition:all .18s;}
-    .slot-btn.active{border-color:var(--green);background:var(--green-light);color:var(--green);}
-
-    .checkout-btn{width:100%;background:var(--green);color:#fff;border:none;border-radius:12px;padding:.9rem;font-family:'Nunito',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;margin-top:.25rem;}
-    .checkout-btn:active{background:var(--green-dark);}
-    .checkout-btn:disabled{background:#aaa;cursor:default;}
-    .back-btn{background:none;border:none;color:var(--muted);font-family:'Nunito',sans-serif;font-size:.85rem;cursor:pointer;display:flex;align-items:center;gap:4px;padding:0;font-weight:600;}
-
-    /* TOAST */
-    .toast{position:fixed;bottom:calc(72px + var(--safe-bottom) + 1rem);left:1rem;right:1rem;background:var(--text);color:#fff;padding:.75rem 1.25rem;border-radius:14px;font-size:.88rem;font-weight:600;z-index:500;transition:all .3s cubic-bezier(.34,1.56,.64,1);opacity:0;transform:translateY(20px);pointer-events:none;text-align:center;}
-    .toast.show{opacity:1;transform:translateY(0);}
-
-    /* SUCCESS */
-    .success-screen{display:none;position:fixed;inset:0;background:var(--surface);z-index:600;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;}
-    .success-screen.show{display:flex;}
-    .success-icon{width:88px;height:88px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:2.8rem;margin-bottom:1rem;}
-    .success-screen h2{font-family:'Lora',serif;font-size:1.6rem;margin-bottom:.5rem;color:var(--green);}
-    .success-screen p{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem;max-width:280px;}
-    .success-screen button{background:var(--green);color:#fff;border:none;border-radius:12px;padding:.85rem 2rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;}
-
-    /* TRACK */
-    .track-section{padding:1rem;padding-top:calc(58px + 1rem);padding-bottom:calc(90px + var(--safe-bottom));}
-    .section-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.25rem;}
-    .section-title{font-family:'Lora',serif;font-size:1.15rem;margin-bottom:.9rem;display:flex;align-items:center;gap:6px;}
-    .track-input-row{display:flex;gap:.5rem;}
-    .track-input-row input{flex:1;padding:.6rem .9rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Nunito',sans-serif;font-size:.88rem;outline:none;}
-    .track-input-row input:focus{border-color:var(--green);}
-    .track-input-row button{background:var(--green);color:#fff;border:none;border-radius:50px;padding:.6rem 1.25rem;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-
-    .order-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-top:.75rem;}
-    .order-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;gap:.5rem;}
-    .order-id-name{font-weight:700;font-size:.88rem;}
-    .order-time{font-size:.72rem;color:var(--muted);margin-top:2px;}
-    .status-badge{font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:50px;white-space:nowrap;}
-    .status-pending{background:#FFF8E1;color:#F57F17;}
-    .status-confirmed{background:#E3F2FD;color:#1565C0;}
-    .status-preparing{background:#F3E5F5;color:#6A1B9A;}
-    .status-out_for_delivery{background:var(--green-light);color:var(--green);}
-    .status-delivered{background:var(--green-light);color:var(--green-dark);}
-    .status-cancelled{background:#FFEBEE;color:#C62828;}
-    .progress-bar{display:flex;justify-content:space-between;margin:.75rem 0 .5rem;position:relative;}
-    .progress-bar::before{content:'';position:absolute;top:11px;left:5%;right:5%;height:2px;background:var(--border);z-index:0;}
-    .progress-step{display:flex;flex-direction:column;align-items:center;gap:4px;z-index:1;font-size:.6rem;color:var(--muted);text-align:center;flex:1;}
-    .p-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .3s;}
-    .p-dot.done{background:var(--green);border-color:var(--green);color:#fff;}
-    .p-dot.active{border-color:var(--green);color:var(--green);background:var(--green-light);}
-    .order-items-str{font-size:.78rem;color:var(--muted);margin-top:.25rem;}
-    .cancel-btn{background:#FFEBEE;color:#C62828;border:none;border-radius:8px;padding:.4rem .85rem;font-family:'Nunito',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;margin-top:.6rem;}
-
-    /* MODAL */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:400;display:none;align-items:flex-end;}
-    .modal-overlay.open{display:flex;}
-    .modal{background:#fff;border-radius:24px 24px 0 0;width:100%;max-height:90vh;overflow-y:auto;animation:slideUp .28s cubic-bezier(.32,.72,0,1);}
-    @keyframes slideUp{from{transform:translateY(50px);opacity:.5;}to{transform:translateY(0);opacity:1;}}
-    .modal-img{width:100%;height:200px;object-fit:cover;}
-    .modal-drag-handle{width:40px;height:4px;background:var(--border);border-radius:50px;margin:.75rem auto 0;}
-    .modal-body{padding:1rem 1.25rem 0;}
-    .modal-name{font-family:'Lora',serif;font-size:1.35rem;margin-bottom:.3rem;}
-    .modal-desc{font-size:.86rem;color:var(--muted);line-height:1.6;margin-bottom:.75rem;}
-    .modal-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;}
-    .meta-chip{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:.5rem .75rem;}
-    .meta-chip-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;font-weight:700;}
-    .meta-chip-val{font-size:.88rem;font-weight:700;color:var(--text);}
-    .modal-footer{padding:1rem 1.25rem;padding-bottom:calc(1rem + var(--safe-bottom));display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);position:sticky;bottom:0;background:#fff;gap:1rem;}
-    .modal-price-block{display:flex;flex-direction:column;}
-    .modal-price{font-family:'Lora',serif;font-size:1.5rem;font-weight:700;}
-    .modal-mrp{font-size:.75rem;color:var(--muted);text-decoration:line-through;}
-    .modal-add-btn{background:var(--green);color:#fff;border:none;border-radius:12px;padding:.75rem 1.5rem;font-family:'Nunito',sans-serif;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;flex:1;justify-content:center;max-width:200px;}
-    .modal-add-btn:active{background:var(--green-dark);}
-
-    /* FRESHNESS BAR */
-    .freshness-wrap{margin-bottom:.75rem;}
-    .freshness-label{font-size:.7rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
-    .freshness-bar-bg{background:#e5e5e5;border-radius:50px;height:6px;overflow:hidden;}
-    .freshness-bar-fill{background:linear-gradient(90deg,#F4A228,#2D7A4F);height:100%;border-radius:50px;transition:width .5s;}
-  </style>
+footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;padding:1rem;font-size:.72rem}
+</style>
 </head>
 <body>
 
 <nav>
-  <div class="logo"><div class="logo-icon">🌿</div> SarvaNest</div>
-  <button class="icon-btn" onclick="openCart()">
-    <i class="ti ti-shopping-basket"></i>
-    <span class="cart-dot hidden" id="cartDot">0</span>
-  </button>
+  <div class="logo">Sarva<span>Nest</span></div>
+  <button class="back-btn" id="backBtn" style="display:none" onclick="goBack()"><i class="ti ti-arrow-left"></i> Back</button>
+  <button class="track-nav-btn" onclick="scrollToTrack()"><i class="ti ti-map-pin"></i> Track</button>
+  <button class="cart-btn" onclick="openCart()"><i class="ti ti-shopping-cart"></i> Cart <span class="cart-badge" id="cartCount">0</span></button>
 </nav>
 
-<!-- MENU PAGE -->
-<div class="page active" id="pageMenu">
-  <div class="menu-content">
-    <div class="hero">
-      <h1>Farm fresh, <em>your door</em></h1>
-      <p>Delivered within 2–4 hours · Daily morning harvest</p>
-      <div class="chips-scroll">
-        <span class="chip"><i class="ti ti-clock"></i> 2–4 hrs delivery</span>
-        <span class="chip"><i class="ti ti-leaf"></i> 100% organic</span>
-        <span class="chip"><i class="ti ti-truck"></i> Free above ₹249</span>
-        <span class="chip"><i class="ti ti-star-filled"></i> 4.9 rated</span>
-        <span class="chip"><i class="ti ti-calendar"></i> Daily fresh stock</span>
-      </div>
+<!-- RESTAURANT VIEW -->
+<div id="restView">
+  <div class="hero">
+    <h1>Order from the <em>Best</em></h1>
+    <p>Choose your restaurant and pick favourites</p>
+    <div class="chips">
+      <span class="chip"><i class="ti ti-clock"></i> 30–45 min</span>
+      <span class="chip"><i class="ti ti-truck"></i> Free above ₹299</span>
+      <span class="chip"><i class="ti ti-shield-check"></i> Hygienic</span>
     </div>
-
-    <div class="search-bar">
-      <div class="search-inner">
-        <i class="ti ti-search"></i>
-        <input type="text" id="searchInput" placeholder="Search vegetables, fruits…"/>
-      </div>
+  </div>
+  <div class="ctrl-bar">
+    <div class="ctrl-search"><i class="ti ti-search"></i><input id="restSearch" placeholder="Search restaurants…" autocomplete="off"/></div>
+    <div class="ctrl-row">
+      <button class="fbtn active" data-f="all" onclick="setRF(this)">All</button>
+      <button class="fbtn" data-f="open" onclick="setRF(this)">🟢 Open</button>
+      <button class="fbtn" data-f="top" onclick="setRF(this)">⭐ Top Rated</button>
+      <select class="sort-sel" id="restSort"><option value="">Sort</option><option value="rating">Rating</option><option value="name">A–Z</option><option value="time">Fastest</option></select>
     </div>
-
-    <div class="filter-scroll" id="filterRow">
-      <button class="filter-pill active" data-filter="all">All</button>
-      <button class="filter-pill" data-filter="organic">🌿 Organic</button>
-      <button class="filter-pill" data-filter="sale">🏷️ On Sale</button>
-      <button class="filter-pill" data-filter="leafy">🥬 Leafy</button>
-      <button class="filter-pill" data-filter="seasonal">☀️ Seasonal</button>
-    </div>
-
-    <div class="cat-bar" id="catBar"></div>
-
-    <div class="section-label" id="resultsLabel">Loading fresh stock…</div>
-    <div class="products-list" id="productsList">
-      <div class="skel-card"><div class="skeleton skel-img-s"></div><div class="skel-body-s"><div class="skeleton skel-line" style="width:70%"></div><div class="skeleton skel-line" style="width:50%"></div></div></div>
-      <div class="skel-card"><div class="skeleton skel-img-s"></div><div class="skel-body-s"><div class="skeleton skel-line" style="width:80%"></div><div class="skeleton skel-line" style="width:45%"></div></div></div>
-      <div class="skel-card"><div class="skeleton skel-img-s"></div><div class="skel-body-s"><div class="skeleton skel-line" style="width:65%"></div><div class="skeleton skel-line" style="width:55%"></div></div></div>
+  </div>
+  <div class="cat-bar" id="cuisineBar"></div>
+  <div class="page-wrap">
+    <div class="sec-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants near you</div>
+    <div class="rest-grid" id="restGrid">
+      ${Array(4).fill(`<div class="skel-card"><div class="skel si"></div><div class="sb"><div class="skel sl"></div><div class="skel sl s"></div><div class="skel sbtn"></div></div></div>`).join('')}
     </div>
   </div>
 </div>
 
-<!-- TRACK PAGE -->
-<div class="page" id="pageTrack">
-  <div class="track-section">
-    <div class="section-card">
-      <div class="section-title"><i class="ti ti-map-pin" style="color:var(--green)"></i> Track Order</div>
-      <div class="track-input-row">
-        <input type="email" id="trackEmail" placeholder="Your email address"/>
-        <button onclick="trackOrder()">Track</button>
+<!-- MENU VIEW -->
+<div id="menuView" style="display:none">
+  <div class="rest-hero">
+    <img id="heroImg" src="" alt=""/>
+    <div class="rest-hero-overlay"></div>
+    <div class="rest-hero-info">
+      <div class="rh-name" id="heroName"></div>
+      <div class="rh-meta">
+        <span class="rh-chip"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.72rem"></i> <span id="heroRating"></span></span>
+        <span class="rh-chip"><i class="ti ti-clock"></i> <span id="heroTime"></span></span>
+        <span class="rh-chip"><i class="ti ti-map-pin"></i> <span id="heroArea"></span></span>
+        <span id="heroCTag"></span>
       </div>
-      <div id="trackResult"></div>
+    </div>
+  </div>
+  <div class="menu-ctrl">
+    <div class="ctrl-search"><i class="ti ti-search"></i><input id="menuSearch" placeholder="Search dishes…"/></div>
+    <div class="ctrl-row">
+      <button class="fbtn active" data-mf="all" onclick="setMF(this)">All</button>
+      <button class="fbtn" data-mf="veg" onclick="setMF(this)">🥦 Veg</button>
+      <button class="fbtn" data-mf="nonveg" onclick="setMF(this)">🍖 Non-Veg</button>
+      <button class="fbtn" data-mf="bestseller" onclick="setMF(this)">🔥 Best</button>
+    </div>
+  </div>
+  <div class="cat-bar" id="menuCatBar"></div>
+  <div class="foods-outer">
+    <div class="foods-grid" id="foodsGrid"></div>
+  </div>
+</div>
+
+<!-- TRACKING -->
+<div class="track-wrap" id="trackSection">
+  <div class="track-card">
+    <div class="track-title"><i class="ti ti-map-pin" style="color:var(--brand);vertical-align:-2px"></i> Track Your Order</div>
+    <div class="track-form">
+      <input id="trackEmail" placeholder="Enter your email" type="email" autocomplete="email"/>
+      <button onclick="trackOrder()">Track</button>
+    </div>
+    <div id="trackResult"></div>
+  </div>
+</div>
+
+<footer>© 2025 Sarva Nest Food Delivery. All rights reserved.</footer>
+
+<!-- CART SHEET -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCartIfOutside(event)">
+  <div class="cart-sheet" id="cartSheet">
+    <div class="sheet-handle"></div>
+    <div class="cart-title"><i class="ti ti-shopping-bag" style="color:var(--brand)"></i> Your Order</div>
+    <div class="cart-rest-row" id="cartRestRow" style="display:none"><i class="ti ti-building-store" style="color:var(--brand);font-size:.82rem"></i> <span id="cartRestName"></span></div>
+    <div id="cartBody"><div class="empty-cart"><i class="ti ti-bowl"></i><p style="font-size:.78rem">Cart is empty</p><p style="font-size:.68rem;margin-top:2px">Add items to get started</p></div></div>
+    <div id="cartExtra" style="display:none">
+      <div style="padding-top:.5rem">
+        <div class="cr"><span>Subtotal</span><span id="cSub">₹0</span></div>
+        <div class="cr"><span>Delivery</span><span id="cDel">₹40</span></div>
+        <div class="cr" id="cDiscRow" style="display:none;color:var(--ok)"><span>Discount</span><span id="cDisc">-₹0</span></div>
+        <div class="cart-total"><span>Total</span><span id="cTotal">₹0</span></div>
+      </div>
+      <div class="order-form" id="orderForm">
+        <div class="of-lbl">Delivery Details</div>
+        <input id="oName" placeholder="Full Name" autocapitalize="words"/>
+        <input id="oEmail" placeholder="Email address" type="email" autocomplete="email"/>
+        <input id="oMobile" placeholder="Mobile (10 digits)" type="tel" inputmode="numeric" autocomplete="tel"/>
+        <textarea id="oAddress" placeholder="Delivery address"></textarea>
+        <select id="oPayment"><option value="">Payment method</option><option value="cod">💵 Cash on Delivery</option><option value="upi">📱 UPI / GPay</option><option value="card">💳 Card</option></select>
+        <div class="of-lbl">Coupon</div>
+        <div class="coupon-row"><input id="couponInput" placeholder="Coupon code" autocapitalize="characters"/><button onclick="applyCoupon()">Apply</button></div>
+        <div class="of-lbl">Note</div>
+        <textarea id="oNotes" placeholder="Any preferences?" style="height:46px"></textarea>
+        <button class="place-btn" id="placeBtn" onclick="placeOrder()"><i class="ti ti-check"></i> Place Order</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <div class="bnav-item active" id="bnav-menu" onclick="switchPage('menu')">
-    <i class="ti ti-basket"></i>Shop
-  </div>
-  <div class="bnav-item" id="bnav-track" onclick="switchPage('track')">
-    <i class="ti ti-map-pin"></i>Track
-  </div>
-</div>
+<!-- FAB -->
+<button class="fab-cart" id="fabCart" onclick="openCart()">
+  <i class="ti ti-shopping-cart"></i> View Cart <span class="fab-badge" id="fabBadge">0</span>
+</button>
 
-<!-- CART BAR -->
-<div class="cart-bar hidden" id="cartBar" onclick="openCart()" style="bottom:calc(52px + env(safe-area-inset-bottom,0px))">
-  <div style="display:flex;align-items:center;gap:.75rem">
-    <span class="cart-bar-count" id="cartBarCount">0 items</span>
-    <span style="font-size:.85rem;opacity:.85">View basket</span>
-  </div>
-  <div class="cart-bar-right">
-    <span class="cart-bar-price" id="cartBarPrice">₹0</span>
-    <i class="ti ti-chevron-up"></i>
-  </div>
-</div>
-
-<!-- DRAWER OVERLAY -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="closeCart()"></div>
-
-<!-- CART DRAWER -->
-<div class="cart-drawer" id="cartDrawer">
-  <div class="drawer-handle"></div>
-
-  <!-- Cart view -->
-  <div class="cart-view" id="cartView">
-    <div class="drawer-header">
-      <div class="drawer-title">🧺 Your Basket</div>
-      <button class="drawer-close" onclick="closeCart()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="drawer-body" id="drawerCartBody">
-      <div class="empty-cart"><i class="ti ti-basket"></i><p>Your basket is empty</p></div>
-    </div>
-    <div class="drawer-footer" id="drawerFooter" style="display:none">
-      <div class="cart-summary">
-        <div class="cart-row"><span>Subtotal</span><span id="dSubtotal">₹0</span></div>
-        <div class="cart-row"><span>Delivery</span><span id="dDelivery">₹30</span></div>
-        <div class="savings-row" id="dSavingsRow" style="display:none"><span>🎉 You save</span><span id="dSavings">₹0</span></div>
-        <div class="cart-row" id="dDiscountRow" style="display:none;color:var(--green)"><span>Coupon</span><span id="dDiscount">-₹0</span></div>
-        <div class="cart-total-row"><span>Total</span><span id="dTotal">₹0</span></div>
-      </div>
-      <div class="coupon-row" style="margin-top:.75rem">
-        <input type="text" id="couponInput" placeholder="Enter coupon code"/>
-        <button onclick="applyCoupon()">Apply</button>
-      </div>
-      <button class="checkout-btn" onclick="showCheckout()"><i class="ti ti-arrow-right"></i> Proceed to Checkout</button>
-    </div>
-  </div>
-
-  <!-- Checkout view -->
-  <div class="checkout-view" id="checkoutView">
-    <div class="drawer-header">
-      <div style="display:flex;align-items:center;gap:.5rem">
-        <button class="back-btn" onclick="showCart()"><i class="ti ti-arrow-left"></i></button>
-        <div class="drawer-title">Checkout</div>
-      </div>
-      <button class="drawer-close" onclick="closeCart()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="drawer-body">
-      <div class="form-section-label">Delivery Details</div>
-      <input type="text" class="form-field" id="oName" placeholder="Full Name"/>
-      <input type="email" class="form-field" id="oEmail" placeholder="Email address"/>
-      <input type="tel" class="form-field" id="oMobile" placeholder="Mobile number (10 digits)"/>
-      <textarea class="form-field" id="oAddress" placeholder="Delivery address (flat, building, area, landmark)"></textarea>
-
-      <div class="form-section-label">Delivery Slot</div>
-      <div class="slot-grid" id="slotGrid">
-        <button class="slot-btn" data-slot="7am-10am" onclick="selectSlot(this)">🌅 7am – 10am</button>
-        <button class="slot-btn" data-slot="10am-1pm" onclick="selectSlot(this)">☀️ 10am – 1pm</button>
-        <button class="slot-btn" data-slot="4pm-7pm" onclick="selectSlot(this)">🌇 4pm – 7pm</button>
-        <button class="slot-btn" data-slot="7pm-9pm" onclick="selectSlot(this)">🌙 7pm – 9pm</button>
-      </div>
-
-      <div class="form-section-label">Payment</div>
-      <select class="form-field" id="oPayment">
-        <option value="">Select payment method</option>
-        <option value="cod">💵 Cash on Delivery</option>
-        <option value="upi">📱 UPI / GPay / PhonePe</option>
-        <option value="card">💳 Credit / Debit Card</option>
-      </select>
-      <div class="form-section-label">Notes (optional)</div>
-      <textarea class="form-field" id="oNotes" placeholder="Any preferences? e.g. extra fresh spinach, avoid overripe tomatoes" style="min-height:60px"></textarea>
-    </div>
-    <div class="drawer-footer">
-      <div style="display:flex;justify-content:space-between;margin-bottom:.6rem;font-size:.9rem">
-        <span style="color:var(--muted)">Order total</span>
-        <span style="font-weight:700;font-size:1rem" id="checkoutTotal">₹0</span>
-      </div>
-      <button class="checkout-btn" id="placeOrderBtn" onclick="placeOrder()"><i class="ti ti-check"></i> Place Order</button>
-    </div>
-  </div>
-</div>
-
-<!-- VEGGIE DETAIL MODAL -->
-<div class="modal-overlay" id="vegModal" onclick="maybeCloseModal(event)">
-  <div class="modal" id="modalInner">
-    <div class="modal-drag-handle"></div>
-    <img class="modal-img" id="modalImg" src="" alt=""/>
+<!-- FOOD MODAL -->
+<div class="modal-ov" id="foodModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()"><i class="ti ti-x"></i></button>
+    <img id="mImg" src="" alt=""/>
     <div class="modal-body">
-      <div class="veg-tags" id="modalTags" style="margin-bottom:.5rem"></div>
-      <div class="modal-name" id="modalName"></div>
-      <div class="modal-desc" id="modalDesc"></div>
-      <div class="modal-meta-grid">
-        <div class="meta-chip"><div class="meta-chip-label">Unit</div><div class="meta-chip-val" id="modalUnit"></div></div>
-        <div class="meta-chip"><div class="meta-chip-label">Origin</div><div class="meta-chip-val" id="modalOrigin"></div></div>
-        <div class="meta-chip"><div class="meta-chip-label">Shelf Life</div><div class="meta-chip-val" id="modalShelf"></div></div>
-        <div class="meta-chip"><div class="meta-chip-label">Rating</div><div class="meta-chip-val" id="modalRating"></div></div>
-      </div>
-      <div class="freshness-wrap">
-        <div class="freshness-label">Freshness Score</div>
-        <div class="freshness-bar-bg"><div class="freshness-bar-fill" id="modalFreshnessBar" style="width:85%"></div></div>
+      <div id="mTags" class="ftags" style="margin-bottom:.32rem"></div>
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-desc" id="mDesc"></div>
+      <div style="display:flex;gap:.85rem;font-size:.72rem;color:var(--mut)">
+        <span><i class="ti ti-star" style="color:#FFAB00"></i> <span id="mRating"></span></span>
+        <span><i class="ti ti-clock"></i> <span id="mTime"></span></span>
+        <span><i class="ti ti-flame"></i> <span id="mCal"></span></span>
       </div>
     </div>
     <div class="modal-footer">
-      <div class="modal-price-block">
-        <div class="modal-price" id="modalPrice"></div>
-        <div class="modal-mrp" id="modalMrp"></div>
-      </div>
-      <button class="modal-add-btn" id="modalAddBtn"><i class="ti ti-basket"></i> Add to basket</button>
+      <div class="modal-price" id="mPrice"></div>
+      <button class="modal-add" id="mAddBtn"><i class="ti ti-shopping-cart"></i> Add to cart</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<div class="success-screen" id="successScreen">
-  <div class="success-icon">🥦</div>
-  <h2>Order Placed!</h2>
-  <p id="successMsg">Your fresh vegetables are on their way!</p>
-  <button onclick="dismissSuccess()">Continue Shopping</button>
-</div>
-
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
+const cfg = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
   authDomain:"multi-service-app-77dd8.firebaseapp.com",
   projectId:"multi-service-app-77dd8",
@@ -444,255 +440,255 @@ const firebaseConfig = {
   messagingSenderId:"123732555482",
   appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
 };
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(cfg);
 const db = getFirestore(app);
-const BOT_TOKEN = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
-const CHAT_ID = "5547663296";
-const DELIVERY_FEE = 30, FREE_DELIVERY = 249;
-const COUPONS = { FRESH20: 20, HARIYALI30: 30, ORGANIC15: 15 };
+const BOT = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
+const CHAT = "5547663296";
+const DEL_FEE=40, FREE_MIN=299;
+const COUPONS={FIRST50:50,SAVE30:30,ZESTORA20:20};
 
-// DEMO VEGGIE DATA (shows even if Firestore veggies collection is empty)
-const DEMO_VEGGIES = [
-  { id:'d1', name:'Tomato', price:'25', mrp:'35', unit:'500g', category:'Vegetables', organic:true, tags:['organic'], image:'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=400', description:'Plump, juicy farm-fresh tomatoes sourced directly from local farms. Rich in lycopene and vitamin C.', origin:'Nashik', shelfLife:'4–5 days', rating:'4.8', freshness:92, seasonal:false, sale:true },
-  { id:'d2', name:'Spinach', price:'20', mrp:'20', unit:'250g bunch', category:'Leafy Greens', organic:true, tags:['organic','leafy'], image:'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400', description:'Tender baby spinach harvested this morning. Perfect for salads, curries and smoothies.', origin:'Pune', shelfLife:'2–3 days', rating:'4.9', freshness:98, seasonal:false, sale:false },
-  { id:'d3', name:'Carrot', price:'30', mrp:'40', unit:'500g', category:'Root Veggies', organic:false, tags:[], image:'https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=400', description:'Crunchy sweet carrots packed with beta-carotene. Great for cooking, salads, and juicing.', origin:'Ooty', shelfLife:'7–8 days', rating:'4.7', freshness:88, seasonal:true, sale:true },
-  { id:'d4', name:'Green Capsicum', price:'35', mrp:'45', unit:'250g', category:'Vegetables', organic:false, tags:['seasonal'], image:'https://images.unsplash.com/photo-1563565375-f3fdfdbefa83?w=400', description:'Crisp green bell peppers with a mild, fresh flavour. Excellent for stir-fries and salads.', origin:'Shimla', shelfLife:'5–6 days', rating:'4.6', freshness:85, seasonal:true, sale:false },
-  { id:'d5', name:'Coriander', price:'10', mrp:'10', unit:'100g bunch', category:'Leafy Greens', organic:true, tags:['organic','leafy'], image:'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=400', description:'Fragrant fresh coriander leaves, ideal for garnishing dals, curries, and chutneys.', origin:'Local Farm', shelfLife:'2–3 days', rating:'4.9', freshness:96, seasonal:false, sale:false },
-  { id:'d6', name:'Brinjal / Eggplant', price:'28', mrp:'35', unit:'500g', category:'Vegetables', organic:false, tags:['seasonal'], image:'https://images.unsplash.com/photo-1659261200833-ec8761558af7?w=400', description:'Deep purple brinjals, perfect for bhartha, curry, or grilling.', origin:'Maharashtra', shelfLife:'4–5 days', rating:'4.5', freshness:82, seasonal:true, sale:false },
-  { id:'d7', name:'Potato', price:'20', mrp:'25', unit:'1 kg', category:'Root Veggies', organic:false, tags:['sale'], image:'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400', description:'Versatile starchy potatoes for everyday cooking — aloo sabzi, fries, biryani, or chaat.', origin:'UP', shelfLife:'2–3 weeks', rating:'4.7', freshness:78, seasonal:false, sale:true },
-  { id:'d8', name:'Methi / Fenugreek', price:'15', mrp:'15', unit:'200g bunch', category:'Leafy Greens', organic:true, tags:['organic','leafy'], image:'https://images.unsplash.com/photo-1622797942292-7d3b2540ef4b?w=400', description:'Aromatic fenugreek leaves for methi thepla, paratha, and dal methi.', origin:'Rajasthan', shelfLife:'2–3 days', rating:'4.8', freshness:94, seasonal:false, sale:false },
-];
+let allRests=[], menuFoods=[], curRest=null;
+let cart=JSON.parse(localStorage.getItem('z_cart')||'{}');
+let cartRestId=localStorage.getItem('z_cart_rest')||null;
+let discount=0;
+let rFilter='all', rCuisine='All', mFilter='all', mCat='All';
 
-let allItems = [], cart = JSON.parse(localStorage.getItem("hariyali_cart") || "{}");
-let activeFilter = 'all', activeCategory = 'All', discount = 0, cartOpen = false;
-let selectedSlot = '';
-
-window.switchPage = function(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.bnav-item').forEach(b => b.classList.remove('active'));
-  document.getElementById('page' + page[0].toUpperCase() + page.slice(1)).classList.add('active');
-  document.getElementById('bnav-' + page).classList.add('active');
-
-  // Auto-fill + auto-search the track page when the user lands on it,
-  // using the logged-in profile (sn_user) or the last order's email as fallback.
-  if (page === 'track') {
-    const su = JSON.parse(localStorage.getItem('sn_user') || 'null');
-    const knownEmail = su?.email || localStorage.getItem('hEmail') || '';
-    const emailField = document.getElementById('trackEmail');
-    if (knownEmail && !emailField.value.trim()) {
-      emailField.value = knownEmail;
-      trackOrder();
-    }
-  }
-};
-
-window.selectSlot = function(btn) {
-  document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedSlot = btn.dataset.slot;
-};
-
-async function loadItems() {
-  try {
-    const snap = await getDocs(collection(db, "vegetables"));
-    const dbItems = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    allItems = dbItems.length > 0 ? dbItems : DEMO_VEGGIES;
-  } catch(e) {
-    allItems = DEMO_VEGGIES;
-  }
-  buildCatBar();
-  renderProducts(getFiltered());
+async function loadRestaurants(){
+  try{
+    const snap=await getDocs(collection(db,'restaurants'));
+    allRests=snap.docs.map(d=>({id:d.id,...d.data()}));
+  }catch(e){ allRests=[]; }
+  buildCuisineBar(); renderRests();
 }
 
-function buildCatBar() {
-  const cats = ['All', ...new Set(allItems.map(f => f.category).filter(Boolean))];
-  document.getElementById('catBar').innerHTML = cats.map(c =>
-    `<button class="cat-pill${c==='All'?' active':''}" onclick="setCategory('${c}',this)">${c}</button>`
+function buildCuisineBar(){
+  const cs=['All',...new Set(allRests.map(r=>r.cuisine).filter(Boolean))];
+  document.getElementById('cuisineBar').innerHTML=cs.map(c=>
+    `<button class="cpill${c==='All'?' active':''}" onclick="setRC('${c}',this)">${c}</button>`
   ).join('');
 }
 
-function getFiltered() {
-  let list = [...allItems];
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  if (q) list = list.filter(f => f.name.toLowerCase().includes(q) || (f.description||'').toLowerCase().includes(q) || (f.category||'').toLowerCase().includes(q));
-  if (activeFilter === 'organic') list = list.filter(f => f.organic);
-  if (activeFilter === 'sale') list = list.filter(f => f.sale || (+f.mrp > +f.price));
-  if (activeFilter === 'leafy') list = list.filter(f => (f.tags||[]).includes('leafy') || (f.category||'').toLowerCase().includes('leafy'));
-  if (activeFilter === 'seasonal') list = list.filter(f => f.seasonal || (f.tags||[]).includes('seasonal'));
-  if (activeCategory !== 'All') list = list.filter(f => f.category === activeCategory);
-  return list;
+function filteredRests(){
+  let l=[...allRests];
+  const q=document.getElementById('restSearch').value.toLowerCase();
+  if(q) l=l.filter(r=>r.name.toLowerCase().includes(q)||(r.cuisine||'').toLowerCase().includes(q)||(r.tags||[]).some(t=>t.toLowerCase().includes(q)));
+  if(rFilter==='open') l=l.filter(r=>r.isOpen!==false);
+  if(rFilter==='top') l=l.filter(r=>+r.rating>=4.5);
+  if(rCuisine!=='All') l=l.filter(r=>r.cuisine===rCuisine);
+  const s=document.getElementById('restSort').value;
+  if(s==='rating') l.sort((a,b)=>+b.rating- +a.rating);
+  if(s==='name') l.sort((a,b)=>a.name.localeCompare(b.name));
+  if(s==='time') l.sort((a,b)=>parseInt(a.deliveryTime||99)-parseInt(b.deliveryTime||99));
+  return l;
 }
 
-window.setCategory = function(c, el) {
-  activeCategory = c;
-  document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  renderProducts(getFiltered());
+function renderRests(){
+  const g=document.getElementById('restGrid');
+  const l=filteredRests();
+  if(!l.length){ g.innerHTML=`<div style="color:var(--mut);text-align:center;grid-column:1/-1;padding:2.5rem"><i class="ti ti-building-off" style="font-size:2rem;display:block;margin-bottom:.4rem;opacity:.3"></i><p style="font-size:.8rem">No restaurants found</p></div>`; return; }
+  g.innerHTML=l.map(r=>`
+    <div class="rest-card" onclick="openRest('${r.id}')">
+      <img src="${r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'"/>
+      <div class="rest-card-body">
+        <div class="rest-name"><span class="odot ${r.isOpen!==false?'open':'closed'}"></span>${r.name}${r.popular?'<span class="pop-tag">🔥</span>':''}</div>
+        <div class="rest-cuisine">${r.cuisine||''}${r.area?' · '+r.area:''}</div>
+        <div class="rest-tags-row">${(r.tags||[]).slice(0,4).map(t=>`<span class="rtag">${t}</span>`).join('')}</div>
+        <div class="rest-meta">
+          <span class="rest-rating"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.7rem"></i> ${r.rating||'—'}</span>
+          <span class="rest-time"><i class="ti ti-clock" style="font-size:.7rem"></i> ${r.deliveryTime||'—'}</span>
+          ${r.isOpen===false?'<span class="closed-badge">Closed</span>':''}
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+window.setRF=function(el){ rFilter=el.dataset.f; document.querySelectorAll('#restView .fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderRests(); };
+window.setRC=function(c,el){ rCuisine=c; document.querySelectorAll('#cuisineBar .cpill').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderRests(); };
+document.getElementById('restSearch').addEventListener('input',renderRests);
+document.getElementById('restSort').addEventListener('change',renderRests);
+
+window.openRest=async function(id){
+  const r=allRests.find(x=>x.id===id);
+  if(!r) return;
+  if(r.isOpen===false) return showToast('This restaurant is currently closed');
+  if(Object.keys(cart).length && cartRestId && cartRestId!==id){
+    const prevName=allRests.find(x=>x.id===cartRestId)?.name||'another restaurant';
+    if(!confirm(`Clear cart from "${prevName}" and switch?`)) return;
+    cart={}; discount=0; saveCart();
+  }
+  curRest=r; cartRestId=id; localStorage.setItem('z_cart_rest',id);
+  document.getElementById('heroImg').src=r.image||'';
+  document.getElementById('heroName').textContent=r.name;
+  document.getElementById('heroRating').textContent=r.rating||'—';
+  document.getElementById('heroTime').textContent=r.deliveryTime||'—';
+  document.getElementById('heroArea').textContent=r.area||'';
+  document.getElementById('heroCTag').innerHTML=r.cuisine?`<span class="cuisine-tag">${r.cuisine}</span>`:'';
+  document.getElementById('cartRestName').textContent=r.name;
+  document.getElementById('cartRestRow').style.display='flex';
+  document.getElementById('restView').style.display='none';
+  document.getElementById('menuView').style.display='block';
+  document.getElementById('backBtn').style.display='flex';
+  document.getElementById('fabCart').classList.toggle('show', Object.values(cart).reduce((s,i)=>s+i.qty,0)>0);
+  window.scrollTo({top:0,behavior:'instant'});
+  await loadMenu(id);
+  renderCartUI();
 };
 
-document.getElementById('filterRow').addEventListener('click', e => {
-  const btn = e.target.closest('.filter-pill');
-  if (!btn) return;
-  activeFilter = btn.dataset.filter;
-  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderProducts(getFiltered());
-});
-document.getElementById('searchInput').addEventListener('input', () => renderProducts(getFiltered()));
+window.goBack=function(){
+  document.getElementById('menuView').style.display='none';
+  document.getElementById('restView').style.display='block';
+  document.getElementById('backBtn').style.display='none';
+  document.getElementById('fabCart').classList.remove('show');
+  curRest=null;
+  window.scrollTo({top:0,behavior:'instant'});
+};
 
-function qtyOf(id) { return (cart[id] && cart[id].qty) || 0; }
+async function loadMenu(id){
+  document.getElementById('foodsGrid').innerHTML=Array(4).fill(`<div class="skel-card"><div class="skel si"></div><div class="sb"><div class="skel sl"></div><div class="skel sl s"></div><div class="skel sbtn"></div></div></div>`).join('');
+  try{
+    const snap=await getDocs(collection(db,'foods'));
+    menuFoods=snap.docs.map(d=>({id:d.id,...d.data()})).filter(f=>f.restaurantId===id);
+  }catch(e){ menuFoods=[]; }
+  mFilter='all'; mCat='All';
+  document.querySelectorAll('.menu-ctrl .fbtn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  buildMenuCats(); renderFoods();
+}
 
-function renderProducts(list) {
-  document.getElementById('resultsLabel').textContent = `${list.length} item${list.length!==1?'s':''} available`;
-  const el = document.getElementById('productsList');
-  if (!list.length) { el.innerHTML = `<div style="text-align:center;padding:3rem 0;color:var(--muted)"><i class="ti ti-search-off" style="font-size:2.5rem;display:block;margin-bottom:.5rem;opacity:.3"></i>No items found</div>`; return; }
-  el.innerHTML = list.map(f => {
-    const qty = qtyOf(f.id);
-    const hasSale = +f.mrp > +f.price;
-    const tags = [(f.organic ? `<span class="veg-tag organic">🌿 Organic</span>` : ''), (hasSale ? `<span class="veg-tag sale">🏷️ ${Math.round((1-(+f.price/+f.mrp))*100)}% off</span>` : ''), ((f.tags||[]).includes('leafy') ? `<span class="veg-tag">🥬 Leafy</span>` : ''), (f.seasonal ? `<span class="veg-tag">☀️ Seasonal</span>` : '')].join('');
-    const safeF = JSON.stringify(f).replace(/'/g, "&#39;");
-    const ctrl = qty > 0
-      ? `<div class="qty-ctrl"><button class="qty-btn" onclick="changeQty('${f.id}',-1,event)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="changeQty('${f.id}',1,event)">+</button></div>`
-      : `<button class="add-btn" onclick='addToCart(${safeF},event)'><i class="ti ti-plus"></i> Add</button>`;
-    return `<div class="veg-card" onclick='openModal(${safeF})'>
-      <img class="veg-card-img" src="${f.image||'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300'}" alt="${f.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1540420773420-3366772f4999?w=300'"/>
-      <div class="veg-card-body">
-        <div class="veg-tags">${tags}</div>
-        <div class="veg-name">${f.name}</div>
-        <div class="veg-unit">${f.unit||'per piece'}</div>
-        <div class="veg-bottom">
-          <div class="price-block">
-            <div class="veg-price">₹${f.price}</div>
-            ${hasSale ? `<div class="veg-mrp">₹${f.mrp}</div>` : ''}
-          </div>
-          ${ctrl}
-        </div>
+function buildMenuCats(){
+  const cs=['All',...new Set(menuFoods.map(f=>f.category).filter(Boolean))];
+  document.getElementById('menuCatBar').innerHTML=cs.map(c=>
+    `<button class="cpill${c==='All'?' active':''}" onclick="setMC('${c}',this)">${c}</button>`
+  ).join('');
+}
+
+function filteredFoods(){
+  let l=[...menuFoods];
+  const q=document.getElementById('menuSearch').value.toLowerCase();
+  if(q) l=l.filter(f=>f.name.toLowerCase().includes(q)||(f.description||'').toLowerCase().includes(q));
+  if(mFilter==='veg') l=l.filter(f=>f.veg);
+  if(mFilter==='nonveg') l=l.filter(f=>!f.veg);
+  if(mFilter==='bestseller') l=l.filter(f=>f.bestseller);
+  if(mCat!=='All') l=l.filter(f=>f.category===mCat);
+  return l;
+}
+
+window.setMF=function(el){ mFilter=el.dataset.mf; document.querySelectorAll('.menu-ctrl .fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderFoods(); };
+window.setMC=function(c,el){ mCat=c; document.querySelectorAll('#menuCatBar .cpill').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderFoods(); };
+document.getElementById('menuSearch').addEventListener('input',renderFoods);
+
+function renderFoods(){
+  const g=document.getElementById('foodsGrid');
+  const l=filteredFoods();
+  if(!l.length){ g.innerHTML=`<div style="color:var(--mut);text-align:center;grid-column:1/-1;padding:2.5rem"><i class="ti ti-search-off" style="font-size:2rem;display:block;margin-bottom:.4rem;opacity:.3"></i><p style="font-size:.78rem">No dishes found</p></div>`; return; }
+  g.innerHTML=l.map(food=>{
+    const qty=(cart[food.id]?.qty)||0;
+    const tags=[food.veg?'<span class="ftag fveg">Veg</span>':'<span class="ftag fnveg">Non-Veg</span>',
+      food.bestseller?'<span class="ftag fbest">🔥</span>':'',
+      food.spicy?'<span class="ftag fspicy">🌶</span>':''].join('');
+    const ctrl=qty>0
+      ?`<div class="qty-ctrl"><button class="qty-btn" onclick="chgQty('${food.id}',-1,event)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="chgQty('${food.id}',1,event)">+</button></div>`
+      :`<button class="add-btn" onclick="addCart(${JSON.stringify(food).replace(/"/g,'&quot;')},event)"><i class="ti ti-plus"></i> Add</button>`;
+    return `<div class="food-card" onclick="openModal(${JSON.stringify(food).replace(/"/g,'&quot;')})">
+      <img src="${food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'}" alt="${food.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'"/>
+      <div class="food-card-body">
+        <div class="ftags">${tags}</div>
+        <div class="food-name">${food.name}</div>
+        <div class="food-desc">${food.description||'A freshly prepared dish made with quality ingredients.'}</div>
+        <div class="food-bottom"><span class="food-price">₹${food.price}</span><span class="food-rating"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.62rem"></i> ${food.rating||'4.5'}</span></div>
+        ${ctrl}
       </div>
     </div>`;
   }).join('');
 }
 
-window.addToCart = function(item, e) {
-  if (e) e.stopPropagation();
-  if (!cart[item.id]) cart[item.id] = { ...item, qty: 0 };
-  cart[item.id].qty++;
-  saveCart(); updateCartUI(); renderProducts(getFiltered());
-  showToast(`${item.name} added 🧺`);
+window.addCart=function(food,e){
+  if(e) e.stopPropagation();
+  if(!cart[food.id]) cart[food.id]={...food,qty:0};
+  cart[food.id].qty++;
+  saveCart(); renderCartUI(); renderFoods();
+  document.getElementById('fabCart').classList.add('show');
+  showToast(food.name+' added 🛒');
 };
-window.changeQty = function(id, delta, e) {
-  if (e) e.stopPropagation();
-  if (!cart[id]) return;
-  cart[id].qty += delta;
-  if (cart[id].qty <= 0) delete cart[id];
-  saveCart(); updateCartUI();
-  if (cartOpen) renderDrawerCart();
-  renderProducts(getFiltered());
+window.chgQty=function(id,delta,e){
+  if(e) e.stopPropagation();
+  if(!cart[id]) return;
+  cart[id].qty+=delta;
+  if(cart[id].qty<=0) delete cart[id];
+  saveCart(); renderCartUI(); renderFoods();
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  if(total===0) document.getElementById('fabCart').classList.remove('show');
 };
-function saveCart() { localStorage.setItem("hariyali_cart", JSON.stringify(cart)); }
+window.rmCartItem=function(id){ delete cart[id]; saveCart(); renderCartUI(); renderFoods(); if(!Object.keys(cart).length) document.getElementById('fabCart').classList.remove('show'); };
+function saveCart(){ localStorage.setItem('z_cart',JSON.stringify(cart)); }
 
-function cartTotals() {
-  const items = Object.values(cart);
-  const count = items.reduce((s, i) => s + i.qty, 0);
-  const subtotal = items.reduce((s, i) => s + (+i.price * i.qty), 0);
-  const mrpTotal = items.reduce((s, i) => s + ((+(i.mrp||i.price)) * i.qty), 0);
-  const savings = mrpTotal - subtotal;
-  const fee = subtotal >= FREE_DELIVERY ? 0 : (subtotal > 0 ? DELIVERY_FEE : 0);
-  const total = subtotal + fee - discount;
-  return { items, count, subtotal, savings, fee, total };
-}
+function renderCartUI(){
+  const items=Object.values(cart);
+  const count=items.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartCount').textContent=count;
+  document.getElementById('fabBadge').textContent=count;
+  if(!items.length){
+    document.getElementById('cartBody').innerHTML='<div class="empty-cart"><i class="ti ti-bowl"></i><p style="font-size:.78rem">Cart is empty</p><p style="font-size:.68rem;margin-top:2px">Add items to get started</p></div>';
+    document.getElementById('cartExtra').style.display='none'; return;
+  }
+  const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
+  const fee=sub>=FREE_MIN?0:DEL_FEE;
+  const total=sub+fee-discount;
+  document.getElementById('cartBody').innerHTML=items.map(i=>`
+    <div class="cart-item">
+      <div class="ci-name">${i.name}</div>
+      <div class="ci-qty">×${i.qty}</div>
+      <div class="ci-price">₹${(+i.price*i.qty).toFixed(0)}</div>
+      <button class="ci-rm" onclick="rmCartItem('${i.id}')"><i class="ti ti-x" style="font-size:.68rem;color:#aaa"></i></button>
+    </div>`).join('');
+  document.getElementById('cartExtra').style.display='block';
+  document.getElementById('cSub').textContent='₹'+sub;
+  document.getElementById('cDel').textContent=fee===0?'FREE':'₹'+fee;
+  document.getElementById('cTotal').textContent='₹'+total;
+  if(discount){ document.getElementById('cDiscRow').style.display='flex'; document.getElementById('cDisc').textContent='-₹'+discount; }
 
-function updateCartUI() {
-  const { count, total } = cartTotals();
-  const dot = document.getElementById('cartDot');
-  if (count > 0) { dot.textContent = count; dot.classList.remove('hidden'); } else dot.classList.add('hidden');
-  const bar = document.getElementById('cartBar');
-  if (count > 0) {
-    bar.classList.remove('hidden');
-    document.getElementById('cartBarCount').textContent = `${count} item${count>1?'s':''}`;
-    document.getElementById('cartBarPrice').textContent = `₹${total}`;
-  } else bar.classList.add('hidden');
-}
-
-function renderDrawerCart() {
-  const { items, subtotal, savings, fee, total } = cartTotals();
-  const body = document.getElementById('drawerCartBody');
-  const footer = document.getElementById('drawerFooter');
-  if (!items.length) { body.innerHTML = `<div class="empty-cart"><i class="ti ti-basket"></i><p>Your basket is empty</p></div>`; footer.style.display = 'none'; return; }
-  body.innerHTML = items.map(i => `<div class="cart-item">
-    <div style="min-width:0;flex:1"><div class="cart-item-name">${i.name}</div><div class="cart-item-unit">${i.unit||''}</div></div>
-    <div class="cart-item-qty-ctrl">
-      <button class="cqbtn" onclick="changeQty('${i.id}',-1)">−</button>
-      <span class="cqnum">${i.qty}</span>
-      <button class="cqbtn" onclick="changeQty('${i.id}',1)">+</button>
-    </div>
-    <div class="cart-item-price">₹${(+i.price*i.qty).toFixed(0)}</div>
-  </div>`).join('');
-  footer.style.display = 'block';
-  document.getElementById('dSubtotal').textContent = `₹${subtotal}`;
-  document.getElementById('dDelivery').textContent = fee === 0 ? (subtotal>0?'FREE':'₹0') : `₹${fee}`;
-  document.getElementById('dTotal').textContent = `₹${total}`;
-  if (savings > 0) { document.getElementById('dSavingsRow').style.display='flex'; document.getElementById('dSavings').textContent=`₹${savings.toFixed(0)}`; }
-  if (discount) { document.getElementById('dDiscountRow').style.display='flex'; document.getElementById('dDiscount').textContent=`-₹${discount}`; }
-  document.getElementById('checkoutTotal').textContent = `₹${total}`;
-}
-
-window.openCart = function() {
-  cartOpen = true; renderDrawerCart();
-  document.getElementById('drawerOverlay').classList.add('open');
-  document.getElementById('cartDrawer').classList.add('open');
-  document.body.style.overflow = 'hidden';
-};
-window.closeCart = function() {
-  cartOpen = false;
-  document.getElementById('drawerOverlay').classList.remove('open');
-  document.getElementById('cartDrawer').classList.remove('open');
-  document.body.style.overflow = '';
-};
-window.showCheckout = function() {
-  document.getElementById('cartView').classList.add('hidden');
-  document.getElementById('checkoutView').classList.add('active');
-  // Prefer the logged-in user's saved profile (sn_user), fall back to the
-  // last order's details (hName/hEmail/hMobile/hAddress) if not logged in.
+  /* 🔽 AUTO-FILL: prefer the logged-in user's saved profile (sn_user),
+     fall back to the last order's details (zN/zE/zM/zA) if not logged in */
   const su = JSON.parse(localStorage.getItem('sn_user') || 'null');
-  document.getElementById('oName').value    = su?.name    || localStorage.getItem('hName')    || '';
-  document.getElementById('oEmail').value   = su?.email   || localStorage.getItem('hEmail')   || '';
-  document.getElementById('oMobile').value  = su?.mobile  || localStorage.getItem('hMobile')  || '';
-  document.getElementById('oAddress').value = su?.address || localStorage.getItem('hAddress') || '';
-};
-window.showCart = function() {
-  document.getElementById('cartView').classList.remove('hidden');
-  document.getElementById('checkoutView').classList.remove('active');
-};
-window.applyCoupon = function() {
-  const code = document.getElementById('couponInput').value.trim().toUpperCase();
-  if (COUPONS[code]) { discount = COUPONS[code]; showToast(`Coupon applied! Saved ₹${discount} 🎉`); renderDrawerCart(); }
+  document.getElementById('oName').value    = su?.name    || localStorage.getItem('zN') || '';
+  document.getElementById('oEmail').value   = su?.email   || localStorage.getItem('zE') || '';
+  document.getElementById('oMobile').value  = su?.mobile  || localStorage.getItem('zM') || '';
+  document.getElementById('oAddress').value = su?.address || localStorage.getItem('zA') || '';
+  document.getElementById('trackEmail').value = su?.email || localStorage.getItem('zE') || '';
+}
+
+window.openCart=function(){ document.getElementById('cartOverlay').classList.add('open'); };
+window.closeCartIfOutside=function(e){ if(e.target===document.getElementById('cartOverlay')) document.getElementById('cartOverlay').classList.remove('open'); };
+
+window.applyCoupon=function(){
+  const code=document.getElementById('couponInput').value.trim().toUpperCase();
+  if(COUPONS[code]){ discount=COUPONS[code]; showToast('Coupon applied! ₹'+discount+' off'); renderCartUI(); }
   else showToast('Invalid coupon code');
 };
 
-window.placeOrder = async function() {
-  const items = Object.values(cart);
-  if (!items.length) return showToast('Your basket is empty!');
-  const name = document.getElementById('oName').value.trim();
-  const email = document.getElementById('oEmail').value.trim();
-  const mobile = document.getElementById('oMobile').value.trim();
-  const address = document.getElementById('oAddress').value.trim();
-  const payment = document.getElementById('oPayment').value;
-  const notes = document.getElementById('oNotes').value.trim();
-  if (!name || !email || !mobile || !address || !payment) return showToast('Please fill all required fields');
-  if (!/^[0-9]{10}$/.test(mobile)) return showToast('Enter a valid 10-digit mobile');
-  if (!/\S+@\S+\.\S+/.test(email)) return showToast('Enter a valid email');
-  if (!selectedSlot) return showToast('Please select a delivery slot');
-
-  const btn = document.getElementById('placeOrderBtn');
-  btn.disabled = true; btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Placing…';
-  const { subtotal, savings, fee, total } = cartTotals();
-  const orderId = 'HRL' + Date.now().toString().slice(-6);
-  const order = { name, email, mobile, address, payment, notes, slot: selectedSlot, cart: items, subtotal, savings, deliveryFee: fee, discount, total, status: 'pending', timestamp: Date.now(), orderId };
-
-  try {
-    await addDoc(collection(db, "veg_orders"), order);
-    const lines = items.map(i => `• ${i.name} (${i.unit||''}) ×${i.qty} — ₹${+i.price*i.qty}`).join('\n');
-    const msg = `🥦 *New Veggie Order — ${orderId}*\n\n👤 *${name}*\n📧 ${email} | 📱 ${mobile}\n📍 ${address}\n🕐 Slot: ${selectedSlot}\n💳 ${payment}\n\n🧺 *Items:*\n${lines}\n\n💰 Total: ₹${total}${savings>0?` (saved ₹${savings})`:''}${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString()}`;
+window.placeOrder=async function(){
+  const items=Object.values(cart);
+  if(!items.length) return showToast('Cart is empty!');
+  const name=document.getElementById('oName').value.trim();
+  const email=document.getElementById('oEmail').value.trim();
+  const mobile=document.getElementById('oMobile').value.trim();
+  const address=document.getElementById('oAddress').value.trim();
+  const payment=document.getElementById('oPayment').value;
+  const notes=document.getElementById('oNotes').value.trim();
+  if(!name||!email||!mobile||!address||!payment) return showToast('Please fill all required fields');
+  if(!/^[0-9]{10}$/.test(mobile)) return showToast('Enter valid 10-digit mobile number');
+  if(!/\S+@\S+\.\S+/.test(email)) return showToast('Enter valid email address');
+  const btn=document.getElementById('placeBtn');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Placing…';
+  const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
+  const fee=sub>=FREE_MIN?0:DEL_FEE;
+  const total=sub+fee-discount;
+  const order={name,email,mobile,address,payment,notes,cart:items,subtotal:sub,deliveryFee:fee,discount,total,
+    restaurantId:curRest?.id||'',restaurantName:curRest?.name||'',
+    status:'pending',timestamp:Date.now(),orderId:'ZST'+Date.now().toString().slice(-6)};
+  try{
+    await addDoc(collection(db,'food_orders'),order);
+    const lines=items.map(i=>`• ${i.name} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
+    const msg=`🍽️ *New Order — ${order.orderId}*\n🏪 *${order.restaurantName}*\n\n👤 *${name}*\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n💳 ${payment}\n\n🛒 *Items:*\n${lines}\n\n💰 *Total: ₹${total}*${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString('en-IN')}`;
    await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
   method: "POST",
   headers: {
@@ -704,78 +700,76 @@ window.placeOrder = async function() {
     body: msg
   })
 });
-    localStorage.setItem('hName',name); localStorage.setItem('hEmail',email);
-    localStorage.setItem('hMobile',mobile); localStorage.setItem('hAddress',address);
-    document.getElementById('trackEmail').value = email;
-    cart = {}; discount = 0; selectedSlot = '';
-    saveCart(); updateCartUI(); renderProducts(getFiltered());
-    closeCart();
-    document.getElementById('successMsg').textContent = `Order ${orderId} confirmed! Delivery slot: ${selectedSlot}. Your fresh vegetables are on the way!`;
-    document.getElementById('successScreen').classList.add('show');
-  } catch(err) { showToast('Failed to place order. Try again.'); }
-  btn.disabled = false; btn.innerHTML = '<i class="ti ti-check"></i> Place Order';
+    localStorage.setItem('zN',name); localStorage.setItem('zE',email); localStorage.setItem('zM',mobile); localStorage.setItem('zA',address);
+    cart={}; discount=0; saveCart(); renderCartUI(); renderFoods();
+    document.getElementById('fabCart').classList.remove('show');
+    document.getElementById('cartOverlay').classList.remove('open');
+    showToast('✅ Order '+order.orderId+' placed!');
+    document.getElementById('trackEmail').value=email;
+  }catch(err){ showToast('Failed to place order. Try again.'); }
+  btn.disabled=false; btn.innerHTML='<i class="ti ti-check"></i> Place Order';
 };
-window.dismissSuccess = function() { document.getElementById('successScreen').classList.remove('show'); };
 
-const statusOrder = ['pending','confirmed','preparing','out_for_delivery','delivered'];
-const stepDefs = [['ti-clipboard-check','Ordered'],['ti-badge-check','Confirmed'],['ti-package','Packing'],['ti-motorbike','On way'],['ti-circle-check','Delivered']];
-
-window.trackOrder = async function() {
-  const email = document.getElementById('trackEmail').value.trim();
-  if (!email) return showToast('Enter your email');
-  const result = document.getElementById('trackResult');
-  result.innerHTML = '<p style="color:var(--muted);font-size:.85rem;margin-top:.75rem">Searching…</p>';
-  const snap = await getDocs(collection(db, "veg_orders"));
-  let html = '';
-  snap.forEach(d => {
-    const o = d.data();
-    if (o.email !== email) return;
-    const si = statusOrder.indexOf(o.status||'pending');
-    const mins = (Date.now() - o.timestamp) / 60000;
-    const progress = `<div class="progress-bar">${stepDefs.map(([icon,label],i)=>`<div class="progress-step"><div class="p-dot ${i<si?'done':i===si?'active':''}"><i class="ti ${icon}"></i></div><span>${label}</span></div>`).join('')}</div>`;
-    const cancelBtn = mins<=5&&o.status==='pending' ? `<button class="cancel-btn" onclick="cancelOrder('${d.id}','${email}')"><i class="ti ti-x"></i> Cancel (${Math.max(0,5-mins).toFixed(0)}m left)</button>` : '';
-    html += `<div class="order-card"><div class="order-card-header"><div><div class="order-id-name">${o.orderId} — ${o.name}</div><div class="order-time">${new Date(o.timestamp).toLocaleString()} · ₹${o.total} · Slot: ${o.slot||'—'}</div></div><span class="status-badge status-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>${progress}<div class="order-items-str">${(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(' · ')}</div>${cancelBtn}</div>`;
+const S_ORDER=['pending','confirmed','preparing','out_for_delivery','delivered'];
+window.trackOrder=async function(){
+  const email=document.getElementById('trackEmail').value.trim();
+  if(!email) return showToast('Enter your email');
+  const res=document.getElementById('trackResult');
+  res.innerHTML='<p style="color:var(--mut);font-size:.76rem;margin-top:.4rem">Searching…</p>';
+  const snap=await getDocs(collection(db,'food_orders'));
+  let html='';
+  snap.forEach(d=>{
+    const o=d.data(); if(o.email!==email) return;
+    const t=new Date(o.timestamp);
+    const mins=(Date.now()-o.timestamp)/60000;
+    const si=S_ORDER.indexOf(o.status||'pending');
+    const steps=[['ti-clipboard-check','Placed'],['ti-badge-check','Confirmed'],['ti-tools-kitchen-2','Prep'],['ti-motorbike','On way'],['ti-circle-check','Done']];
+    const prog=`<div class="progress-bar">${steps.map(([ic,lb],i)=>`<div class="p-step"><div class="p-dot ${i<si?'done':i===si?'active':''}"><i class="ti ${ic}" style="font-size:.58rem"></i></div><span>${lb}</span></div>`).join('')}</div>`;
+    const cancel=mins<=5&&o.status==='pending'?`<button class="cancel-btn" onclick="cancelOrder('${d.id}','${email}')">✕ Cancel (${Math.max(0,(5-mins)).toFixed(0)}m left)</button>`:
+      (o.status==='pending'?'<p style="font-size:.66rem;color:var(--mut);margin-top:.3rem">Cancellation window expired.</p>':'');
+    html+=`<div class="o-card">
+      <div class="o-head"><div><div class="o-id">${o.orderId||'Order'} — ${o.name}</div><div class="o-sub">${o.restaurantName||''} · ${t.toLocaleString('en-IN')} · ₹${o.total||0}</div></div><span class="st-badge st-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>
+      ${prog}
+      <div style="font-size:.68rem;color:var(--mut)">${(o.cart||[]).map(i=>i.name+' ×'+(i.qty||1)).join(' · ')}</div>${cancel}
+    </div>`;
   });
-  result.innerHTML = html || `<p style="color:var(--muted);font-size:.85rem;margin-top:.75rem">No orders found for this email.</p>`;
+  res.innerHTML=html||'<p style="color:var(--mut);font-size:.76rem;margin-top:.6rem">No orders found for this email.</p>';
 };
-window.cancelOrder = async function(id, email) {
-  if (!confirm('Cancel this order?')) return;
-  await deleteDoc(doc(db,"veg_orders",id));
-  showToast('Order cancelled'); trackOrder();
+window.cancelOrder=async function(id,email){ if(!confirm('Cancel this order?'))return; await deleteDoc(doc(db,'food_orders',id)); showToast('Order cancelled'); trackOrder(); };
+
+window.openModal=function(food){
+  document.getElementById('mImg').src=food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600';
+  document.getElementById('mName').textContent=food.name;
+  document.getElementById('mDesc').textContent=food.description||'A delicious freshly prepared dish.';
+  document.getElementById('mPrice').textContent='₹'+food.price;
+  document.getElementById('mRating').textContent=food.rating||'4.5';
+  document.getElementById('mTime').textContent=food.prepTime||'20–25 min';
+  document.getElementById('mCal').textContent=food.calories?food.calories+' kcal':'N/A';
+  document.getElementById('mTags').innerHTML=[food.veg?'<span class="ftag fveg">Veg</span>':'<span class="ftag fnveg">Non-Veg</span>',food.bestseller?'<span class="ftag fbest">🔥</span>':'',food.spicy?'<span class="ftag fspicy">🌶</span>':''].join('');
+  document.getElementById('mAddBtn').onclick=()=>{ addCart(food,null); closeModal(); };
+  document.getElementById('foodModal').classList.add('open');
+};
+window.closeModal=function(){ document.getElementById('foodModal').classList.remove('open'); };
+document.getElementById('foodModal').addEventListener('click',e=>{ if(e.target===document.getElementById('foodModal')) closeModal(); });
+
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2700); }
+window.showToast=showToast;
+
+/* 🔽 NEW: easy one-tap access to order tracking from the top nav */
+window.scrollToTrack=function(){
+  const sec=document.getElementById('trackSection');
+  sec.scrollIntoView({behavior:'smooth',block:'start'});
+  const emailField=document.getElementById('trackEmail');
+  if(emailField.value.trim()){
+    // email already known (logged in / previous order) — auto search
+    trackOrder();
+  } else {
+    emailField.focus();
+  }
 };
 
-window.openModal = function(item) {
-  document.getElementById('modalImg').src = item.image||'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
-  document.getElementById('modalName').textContent = item.name;
-  document.getElementById('modalDesc').textContent = item.description||'Fresh, quality produce sourced from local farms.';
-  document.getElementById('modalPrice').textContent = `₹${item.price}`;
-  const hasSale = +item.mrp > +item.price;
-  document.getElementById('modalMrp').textContent = hasSale ? `MRP ₹${item.mrp}` : '';
-  document.getElementById('modalUnit').textContent = item.unit||'per piece';
-  document.getElementById('modalOrigin').textContent = item.origin||'Local';
-  document.getElementById('modalShelf').textContent = item.shelfLife||'3–4 days';
-  document.getElementById('modalRating').textContent = `⭐ ${item.rating||'4.7'}`;
-  document.getElementById('modalFreshnessBar').style.width = (item.freshness||80) + '%';
-  const tags = [(item.organic?`<span class="veg-tag organic">🌿 Organic</span>`:''),(hasSale?`<span class="veg-tag sale">🏷️ Sale</span>`:'')].join('');
-  document.getElementById('modalTags').innerHTML = tags;
-  document.getElementById('modalAddBtn').onclick = () => { addToCart(item, null); closeModal(); };
-  document.getElementById('vegModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-};
-window.closeModal = function() { document.getElementById('vegModal').classList.remove('open'); document.body.style.overflow=''; };
-window.maybeCloseModal = function(e) { if (e.target===document.getElementById('vegModal')) closeModal(); };
-
-let toastTimer;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>t.classList.remove('show'), 2600);
-}
-window.showToast = showToast;
-
-loadItems();
-updateCartUI();
+loadRestaurants();
+renderCartUI();
 </script>
 </body>
 </html>
