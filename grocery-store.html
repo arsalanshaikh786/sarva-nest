@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,6 +35,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .topbar-right{display:flex;align-items:center;gap:.5rem;}
 .cart-btn{background:var(--orange);color:#fff;border:none;border-radius:50px;padding:.45rem 1rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.82rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;transition:.2s;position:relative;}
 .cart-btn:active{background:var(--orange-dark);}
+.track-nav-btn{background:none;border:1.5px solid var(--orange);color:var(--orange);border-radius:50px;padding:.4rem .85rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;}
+.track-nav-btn:active{background:var(--orange-light);}
 .cart-dot{background:#fff;color:var(--orange);width:18px;height:18px;border-radius:50%;font-size:.65rem;font-weight:800;display:flex;align-items:center;justify-content:center;}
 .cart-dot.hidden{display:none;}
  
@@ -225,6 +226,19 @@ select.finput{cursor:pointer;}
 .pdot.active{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
 .oc-items{font-size:.75rem;color:var(--muted);margin-top:.3rem;}
 .cancel-order-btn{background:var(--red-light);color:var(--red);border:none;border-radius:8px;padding:.38rem .8rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;margin-top:.55rem;}
+.rate-order-btn{background:var(--orange-light);color:var(--orange);border:1.5px solid var(--orange);border-radius:8px;padding:.38rem .8rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer;margin-top:.55rem;display:inline-flex;align-items:center;gap:4px;}
+.rated-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);color:var(--green);border-radius:8px;padding:.4rem .75rem;font-size:.75rem;font-weight:700;margin-top:.55rem;}
+.rated-badge .stars-mini{color:#F5A623;letter-spacing:1px;}
+
+/* RATING MODAL */
+.rate-stars{display:flex;justify-content:center;gap:.5rem;margin:1rem 0 1.2rem;}
+.rate-star{font-size:2.1rem;color:#ddd;cursor:pointer;transition:transform .15s,color .15s;-webkit-tap-highlight-color:transparent;}
+.rate-star.filled{color:#F5A623;}
+.rate-star:active{transform:scale(1.15);}
+.rate-review-label{font-size:.65rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.3rem;display:block;}
+.rate-submit-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:12px;padding:.85rem;font-family:'Fraunces',serif;font-size:.95rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:.7rem;}
+.rate-submit-btn:disabled{background:#ccc;cursor:not-allowed;}
+.rate-order-meta{font-size:.78rem;color:var(--muted);text-align:center;margin-bottom:.3rem;}
  
 /* SUCCESS */
 .success-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:600;align-items:center;justify-content:center;flex-direction:column;padding:2rem;text-align:center;}
@@ -263,6 +277,7 @@ select.finput{cursor:pointer;}
 <div class="topbar">
   <div class="logo">Basket<span>Cart</span></div>
   <div class="topbar-right">
+    <button class="track-nav-btn" onclick="switchPage('track')"><i class="ti ti-map-pin"></i> Track</button>
     <button class="cart-btn" onclick="openCart()">
       <i class="ti ti-shopping-basket"></i> Cart
       <span class="cart-dot hidden" id="cartDot">0</span>
@@ -478,6 +493,25 @@ select.finput{cursor:pointer;}
     </div>
   </div>
 </div>
+
+<!-- RATING MODAL -->
+<div class="overlay" id="rateModal" onclick="handleRateModalClick(event)">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" style="text-align:center">⭐ Rate Your Order</div>
+    <div class="rate-order-meta" id="rateOrderMeta"></div>
+    <div class="rate-stars" id="rateStars">
+      <span class="rate-star" data-val="1"><i class="ti ti-star-filled"></i></span>
+      <span class="rate-star" data-val="2"><i class="ti ti-star-filled"></i></span>
+      <span class="rate-star" data-val="3"><i class="ti ti-star-filled"></i></span>
+      <span class="rate-star" data-val="4"><i class="ti ti-star-filled"></i></span>
+      <span class="rate-star" data-val="5"><i class="ti ti-star-filled"></i></span>
+    </div>
+    <label class="rate-review-label">Your review (optional)</label>
+    <textarea class="finput" id="rateReview" placeholder="How was the quality, freshness, delivery time…" style="min-height:70px"></textarea>
+    <button class="rate-submit-btn" id="rateSubmitBtn" onclick="submitRating()"><i class="ti ti-check"></i> Submit Rating</button>
+  </div>
+</div>
  
 <!-- SUCCESS -->
 <div class="success-screen" id="successScreen">
@@ -490,7 +524,7 @@ select.finput{cursor:pointer;}
 <!-- ✅ SINGLE UNIFIED MODULE SCRIPT — fixes the split-script bug -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
  
 // ── Firebase init ──────────────────────────────────────────────────────────
 const FC = {
@@ -592,6 +626,18 @@ window.switchPage = function(page) {
   document.querySelectorAll('.bnav').forEach(b => b.classList.remove('active'));
   document.getElementById('page' + page[0].toUpperCase() + page.slice(1)).classList.add('active');
   document.getElementById('bnav-' + page).classList.add('active');
+
+  // Auto-fill + auto-search the track page when the user lands on it,
+  // using the logged-in profile (sn_user) or the last order's email as fallback.
+  if (page === 'track') {
+    const su = JSON.parse(localStorage.getItem('sn_user') || 'null');
+    const knownEmail = su?.email || localStorage.getItem('bc_email') || '';
+    const emailField = document.getElementById('trackEmail');
+    if (knownEmail && !emailField.value.trim()) {
+      emailField.value = knownEmail;
+      trackOrder();
+    }
+  }
 };
  
 // ── Category ───────────────────────────────────────────────────────────────
@@ -783,10 +829,13 @@ function renderCartItems() {
 window.showCheckout = function() {
   document.getElementById('cartView').classList.add('hidden');
   document.getElementById('checkoutView').classList.add('active');
-  document.getElementById('oName').value    = localStorage.getItem('bc_name')    || '';
-  document.getElementById('oEmail').value   = localStorage.getItem('bc_email')   || '';
-  document.getElementById('oMobile').value  = localStorage.getItem('bc_mobile')  || '';
-  document.getElementById('oAddress').value = localStorage.getItem('bc_address') || '';
+  // Prefer the logged-in user's saved profile (sn_user), fall back to the
+  // last order's details (bc_name/bc_email/bc_mobile/bc_address) if not logged in.
+  const su = JSON.parse(localStorage.getItem('sn_user') || 'null');
+  document.getElementById('oName').value    = su?.name    || localStorage.getItem('bc_name')    || '';
+  document.getElementById('oEmail').value   = su?.email   || localStorage.getItem('bc_email')   || '';
+  document.getElementById('oMobile').value  = su?.mobile  || localStorage.getItem('bc_mobile')  || '';
+  document.getElementById('oAddress').value = su?.address || localStorage.getItem('bc_address') || '';
 };
 window.showCartView = function() {
   document.getElementById('cartView').classList.remove('hidden');
@@ -877,6 +926,7 @@ const stepDefs = [
 window.trackOrder = async function() {
   const email = document.getElementById('trackEmail').value.trim();
   if (!email) { showToast('Enter your email', 'warn'); return; }
+  lastTrackedEmail = email;
   const result = document.getElementById('trackResult');
   result.innerHTML = '<p style="color:var(--muted2);font-size:.82rem;margin-top:.7rem">Searching…</p>';
   const orders = await loadOrdersByEmail(email);
@@ -896,6 +946,11 @@ window.trackOrder = async function() {
     const cancelBtn = mins <= 10 && o.status === 'pending'
       ? `<button class="cancel-order-btn" onclick="cancelOrder('${o.id}','${email}')"><i class="ti ti-x"></i> Cancel (${Math.max(0, 10 - mins).toFixed(0)}m left)</button>`
       : '';
+    const ratingBlock = o.status === 'delivered'
+      ? (o.rating
+          ? `<div class="rated-badge"><span class="stars-mini">${'★'.repeat(o.rating)}${'☆'.repeat(5-o.rating)}</span> Rated · Thanks!</div>`
+          : `<button class="rate-order-btn" onclick="openRateModal('${o.id}','${o.orderId}')"><i class="ti ti-star"></i> Rate Order</button>`)
+      : '';
     return `<div class="order-card">
       <div class="oc-header">
         <div>
@@ -907,6 +962,7 @@ window.trackOrder = async function() {
       ${prog}
       <div class="oc-items">${(o.cart || []).map(i => `${i.name} ×${i.qty}`).join(' · ')}</div>
       ${cancelBtn}
+      ${ratingBlock}
     </div>`;
   }).join('');
 };
@@ -916,6 +972,54 @@ window.cancelOrder = async function(id, email) {
   await deleteDoc(doc(db, 'grocery_orders', id));
   showToast('Order cancelled', 'warn');
   trackOrder();
+};
+ 
+// ── Rating ─────────────────────────────────────────────────────────────────
+let lastTrackedEmail = '';
+let ratingOrderId = '', ratingOrderLabel = '', selectedStars = 0;
+ 
+window.openRateModal = function(docId, orderId) {
+  ratingOrderId = docId; ratingOrderLabel = orderId; selectedStars = 0;
+  document.getElementById('rateOrderMeta').textContent = `Order ${orderId}`;
+  document.getElementById('rateReview').value = '';
+  document.querySelectorAll('.rate-star').forEach(s => s.classList.remove('filled'));
+  document.getElementById('rateModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+};
+ 
+window.handleRateModalClick = function(e) {
+  if (e.target === document.getElementById('rateModal')) {
+    document.getElementById('rateModal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+};
+ 
+document.getElementById('rateStars').addEventListener('click', (e) => {
+  const star = e.target.closest('.rate-star');
+  if (!star) return;
+  selectedStars = +star.dataset.val;
+  document.querySelectorAll('.rate-star').forEach(s => {
+    s.classList.toggle('filled', +s.dataset.val <= selectedStars);
+  });
+});
+ 
+window.submitRating = async function() {
+  if (!selectedStars) { showToast('Please select a star rating', 'warn'); return; }
+  const review = document.getElementById('rateReview').value.trim();
+  const btn = document.getElementById('rateSubmitBtn');
+  btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Submitting…`;
+  try {
+    await updateDoc(doc(db, 'grocery_orders', ratingOrderId), { rating: selectedStars, review, ratedAt: Date.now() });
+    const msg = `⭐ *Order Rated — ${ratingOrderLabel}*\n\nRating: ${'★'.repeat(selectedStars)}${'☆'.repeat(5-selectedStars)}${review ? `\n📝 "${review}"` : ''}`;
+    await sendTelegram(msg);
+    document.getElementById('rateModal').classList.remove('show');
+    document.body.style.overflow = '';
+    showToast('Thanks for rating your order! 🌟', 'success');
+    if (lastTrackedEmail) trackOrder();
+  } catch(e) {
+    showToast('Could not submit rating, try again', 'error');
+  }
+  btn.disabled = false; btn.innerHTML = `<i class="ti ti-check"></i> Submit Rating`;
 };
  
 // ── Product detail modal ───────────────────────────────────────────────────
@@ -967,4 +1071,3 @@ init();
 </script>
 </body>
 </html>
- 
