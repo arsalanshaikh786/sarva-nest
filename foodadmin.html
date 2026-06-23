@@ -78,7 +78,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sec{background:#fff;color:var(--txt);border:1.5px solid var(--bdr);border-radius:8px;padding:.58rem 1rem;font-family:'DM Sans',sans-serif;font-size:.86rem;cursor:pointer;transition:all .2s}
 .btn-sec:hover{border-color:var(--mut)}
 .img-preview{width:100%;height:130px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);margin-top:5px;display:none}
-/* PILL SELECTORS */
 .pill-box{max-height:120px;overflow-y:auto;border:1.5px solid var(--bdr);border-radius:8px;padding:.4rem .5rem;background:#fff;display:flex;flex-wrap:wrap;gap:.35rem;transition:border-color .2s}
 .pill-box:focus-within{border-color:var(--brand)}
 .cpill{display:none}
@@ -93,7 +92,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .custom-add-row input{flex:1;padding:.38rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;background:#fff;color:var(--txt)}
 .custom-add-row input:focus{border-color:var(--brand)}
 .custom-add-row button{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap}
-/* IMAGE SEARCH */
 .img-search-wrap{position:relative}
 .img-search-row{display:flex;gap:.4rem;margin-bottom:.4rem}
 .img-search-row input{flex:1;padding:.48rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;background:#fff;color:var(--txt)}
@@ -111,12 +109,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .img-url-row input:focus{border-color:var(--brand)}
 .img-url-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 .img-loading{text-align:center;padding:.75rem;font-size:.8rem;color:var(--mut)}
-/* ALERTS */
 .alert{padding:.6rem .85rem;border-radius:8px;font-size:.82rem;font-weight:500;margin-bottom:.75rem;display:none;align-items:center;gap:6px}
 .alert.show{display:flex}
 .alert.err{background:#FFEBEE;color:var(--err);border:1px solid rgba(198,40,40,.2)}
 .alert.ok{background:#E8F5E9;color:var(--ok);border:1px solid rgba(46,125,50,.2)}
-/* RESTAURANT CARDS */
 .rest-grid{display:grid;grid-template-columns:1fr;gap:.85rem}
 @media(min-width:500px){.rest-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:900px){.rest-grid{grid-template-columns:repeat(3,1fr)}}
@@ -135,9 +131,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sm.del{border-color:rgba(198,40,40,.25);color:var(--err)}
 .btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
 .btn-sm.tog{border-color:rgba(46,125,50,.3);color:var(--ok)}
-/* DUPLICATE BUTTON — purple accent */
 .btn-sm.dup{border-color:rgba(103,58,183,.3);color:#6A1B9A}
-/* FOOD LIST */
 .food-list{display:flex;flex-direction:column;gap:.75rem}
 .food-item-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);display:flex;gap:.75rem;padding:.85rem;align-items:flex-start}
 .food-item-img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bdr)}
@@ -153,7 +147,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .rpill{font-size:.65rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:2px 7px;font-weight:600}
 .food-item-actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .food-price-big{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;flex-shrink:0}
-/* ORDERS */
 .order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
 .oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.45rem;gap:.4rem;flex-wrap:wrap}
 .oc-id{font-weight:700;font-size:.82rem}
@@ -190,9 +183,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .empty-st p{font-size:.82rem}
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:#fff;padding:.58rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-/* DUPLICATE BANNER */
 .dup-banner{background:linear-gradient(135deg,#F3E5F5,#faf5ff);border:1.5px solid rgba(106,27,154,.2);border-radius:10px;padding:.6rem .9rem;font-size:.78rem;color:#6A1B9A;display:none;align-items:center;gap:6px;margin-bottom:.75rem;font-weight:500}
 .dup-banner.show{display:flex}
+/* DELIVERY SETTINGS */
+.settings-info{background:var(--bl);border:1px solid rgba(232,82,26,.2);border-radius:10px;padding:.75rem 1rem;font-size:.78rem;color:var(--brand);margin-bottom:1rem;display:flex;align-items:flex-start;gap:7px;line-height:1.45}
+.setting-preview{background:var(--sur);border-radius:8px;padding:.65rem .85rem;font-size:.8rem;color:var(--mut);margin-top:.5rem;line-height:1.55}
+.setting-preview strong{color:var(--txt)}
 @media(min-width:768px){
   .bottom-nav{display:none}
   .main{padding-top:58px;padding-bottom:0}
@@ -228,6 +224,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   <div class="sb-item" onclick="showSec('restaurants',this);closeSidebar()"><i class="ti ti-building-store"></i> Restaurants <span class="sb-badge" id="restCount">0</span></div>
   <div class="sb-item" onclick="showSec('foods',this);closeSidebar()"><i class="ti ti-tools-kitchen-2"></i> Food Items <span class="sb-badge" id="foodCount">0</span></div>
   <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
+  <div class="sb-sec">Configuration</div>
+  <div class="sb-item" onclick="showSec('settings',this);closeSidebar()"><i class="ti ti-settings"></i> Delivery Settings</div>
   <div class="sb-bottom">
     <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
   </div>
@@ -252,6 +250,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   <button class="bnav-item" id="bn-orders" onclick="showSec('orders',this)">
     <div style="position:relative;display:inline-block"><i class="ti ti-receipt"></i><span class="bnav-badge" id="oBadge">0</span></div>Orders
   </button>
+  <button class="bnav-item" id="bn-settings" onclick="showSec('settings',this)"><i class="ti ti-settings"></i>Settings</button>
 </nav>
 
 <div class="main"><div class="content">
@@ -316,7 +315,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   <!-- FOOD ITEMS -->
   <div class="sec" id="sec-foods">
     <div id="foodAlert" class="alert"></div>
-    <!-- DUPLICATE NOTICE BANNER -->
     <div class="dup-banner" id="dupBanner"><i class="ti ti-copy"></i> Item duplicate hua — naam aur price change karo, baaki sab copy hai. Save karoge toh naya item banega.</div>
     <div class="form-card">
       <div class="form-card-title">
@@ -330,7 +328,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         </div>
         <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words"/></div>
         <div class="fg"><label>Price (₹) *</label><input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01"/></div>
-        <!-- CATEGORY PILLS -->
         <div class="fg full">
           <label>Category (scroll karke select karo)</label>
           <div class="pill-box" id="catPillBox">
@@ -367,7 +364,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         </div>
         <div class="fg"><label>Rating</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1" inputmode="decimal"/></div>
         <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish…"></textarea></div>
-        <!-- FOOD IMAGE SEARCH -->
         <div class="fg full">
           <label>Food Image</label>
           <div class="img-search-wrap">
@@ -384,7 +380,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
             <img id="fPrv" class="img-preview"/>
           </div>
         </div>
-        <!-- PREP TIME CHIPS -->
         <div class="fg full">
           <label>Prep Time</label>
           <div style="display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.35rem">
@@ -435,6 +430,51 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div id="ordersList"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
   </div>
 
+  <!-- ══════════════════════════════════════════ -->
+  <!-- DELIVERY SETTINGS — NEW SECTION           -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec" id="sec-settings">
+    <div id="settingsAlert" class="alert"></div>
+
+    <div class="settings-info">
+      <i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i>
+      <span>Yahan jo bhi set karoge woh customer website pe automatically apply ho jaega — delivery charge aur free delivery minimum dono.</span>
+    </div>
+
+    <div class="form-card">
+      <div class="form-card-title">
+        <span><i class="ti ti-truck" style="color:var(--brand);vertical-align:-2px"></i> Delivery Charges</span>
+      </div>
+      <div class="form-grid">
+        <div class="fg">
+          <label>Delivery Fee (₹) *</label>
+          <input type="number" id="sDelFee" placeholder="e.g. 40" min="0" step="1" inputmode="numeric"/>
+          <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Jab order FREE delivery se kam ho tab yeh charge lagega</span>
+        </div>
+        <div class="fg">
+          <label>Free Delivery Minimum (₹) *</label>
+          <input type="number" id="sFreeMin" placeholder="e.g. 299" min="0" step="1" inputmode="numeric"/>
+          <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Isse zyada order pe delivery free milegi</span>
+        </div>
+        <div class="fg full">
+          <div class="setting-preview" id="settingPreview">
+            ⬆️ Values bharone ke baad preview yahan dikhega.
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-pr" id="settingsSaveBtn" onclick="saveSettings()"><i class="ti ti-device-floppy"></i> Save Settings</button>
+      </div>
+    </div>
+
+    <div class="form-card" style="margin-top:0">
+      <div class="form-card-title">Current Live Settings</div>
+      <div id="liveSettingsDisplay" style="font-size:.84rem;color:var(--mut);line-height:1.7">
+        Loading…
+      </div>
+    </div>
+  </div>
+
 </div></div>
 
 <!-- MANAGE FOODS MODAL -->
@@ -455,7 +495,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(cfg);
@@ -488,6 +528,7 @@ window.showSec=(id,el)=>{
   if(el&&el.classList.contains('sb-item'))el.classList.add('active');
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
   const bn=document.getElementById('bn-'+id);if(bn)bn.classList.add('active');
+  if(id==='settings') loadSettingsDisplay();
 };
 
 // LOAD
@@ -524,6 +565,78 @@ async function loadOrders(){
   renderRecentOrders();renderOrders();
 }
 
+// ══════════════════════════════════════════════
+// ✨ DELIVERY SETTINGS — SAVE & LOAD
+// ══════════════════════════════════════════════
+async function loadSettingsDisplay(){
+  const el=document.getElementById('liveSettingsDisplay');
+  try{
+    const snap=await getDoc(doc(db,'settings','delivery'));
+    if(snap.exists()){
+      const d=snap.data();
+      const fee=d.deliveryFee??40;
+      const freeMin=d.freeDeliveryMin??299;
+      el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+        <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem">
+          <div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem">Delivery Fee</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brand)">₹${fee}</div>
+        </div>
+        <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem">
+          <div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem">Free Delivery Above</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ok)">₹${freeMin}</div>
+        </div>
+      </div>
+      <div style="margin-top:.5rem;font-size:.72rem;color:var(--mut)">Last updated: ${d.updatedAt?new Date(d.updatedAt.toMillis()).toLocaleString('en-IN'):'—'}</div>`;
+      // Pre-fill form with current values
+      document.getElementById('sDelFee').value=fee;
+      document.getElementById('sFreeMin').value=freeMin;
+      updatePreview();
+    } else {
+      el.innerHTML='<span style="color:var(--mut);font-size:.8rem">Koi setting save nahi hui abhi tak. Default values use ho rahi hain (Fee: ₹40, Free above: ₹299).</span>';
+    }
+  } catch(e){
+    el.innerHTML='<span style="color:var(--err);font-size:.8rem">Load karne mein error aaya.</span>';
+  }
+}
+
+function updatePreview(){
+  const fee=parseFloat(document.getElementById('sDelFee').value)||0;
+  const freeMin=parseFloat(document.getElementById('sFreeMin').value)||0;
+  const el=document.getElementById('settingPreview');
+  if(!fee&&!freeMin){el.innerHTML='⬆️ Values bharone ke baad preview yahan dikhega.';return;}
+  el.innerHTML=`<strong>Preview:</strong><br>
+    • ₹${freeMin} se kam order pe → <strong style="color:var(--err)">₹${fee} delivery charge</strong><br>
+    • ₹${freeMin} ya usse zyada order pe → <strong style="color:var(--ok)">FREE delivery 🎉</strong>`;
+}
+
+document.getElementById('sDelFee').addEventListener('input',updatePreview);
+document.getElementById('sFreeMin').addEventListener('input',updatePreview);
+
+window.saveSettings=async()=>{
+  const btn=document.getElementById('settingsSaveBtn');
+  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
+  try{
+    const fee=parseFloat(document.getElementById('sDelFee').value);
+    const freeMin=parseFloat(document.getElementById('sFreeMin').value);
+    if(isNaN(fee)||fee<0){showAlert('settings','Delivery fee sahi se likho (0 ya usse zyada)');return;}
+    if(isNaN(freeMin)||freeMin<0){showAlert('settings','Free delivery minimum sahi se likho');return;}
+    await setDoc(doc(db,'settings','delivery'),{
+      deliveryFee:fee,
+      freeDeliveryMin:freeMin,
+      updatedAt:serverTimestamp()
+    });
+    showToast('✅ Settings save ho gayi!');
+    showAlert('settings','Delivery settings update ho gayi — customer site pe effect aa gaya!','ok');
+    loadSettingsDisplay();
+  }catch(e){
+    console.error(e);
+    showAlert('settings','Error: '+e.message);
+    showToast('❌ '+e.message);
+  }finally{
+    btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Save Settings';
+  }
+};
+
 function populateRestDropdowns(){
   const opts='<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('fRestId').innerHTML=opts;
@@ -539,7 +652,7 @@ window.prvImg=(imgId,url)=>{
   else img.style.display='none';
 };
 
-// IMAGE SEARCH (Unsplash)
+// IMAGE SEARCH
 window.searchImages=async(prefix)=>{
   const queryEl=document.getElementById(prefix==='r'?'rImgQuery':'fImgQuery');
   const resultsEl=document.getElementById(prefix==='r'?'rImgResults':'fImgResults');
@@ -719,18 +832,11 @@ window.deleteFoodMg=async id=>{
   catch(e){showToast('❌ '+e.message);}
 };
 
-// ══════════════════════════════════════════════
-// ✨ DUPLICATE FOOD — saari values copy, id blank
-// ══════════════════════════════════════════════
 window.duplicateFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
-
-  // Clear edit id so Save creates a NEW document
   document.getElementById('foodEditId').value='';
-
-  // Fill all fields same as original
   document.getElementById('fRestId').value=f.restaurantId||'';
-  document.getElementById('fName').value=(f.name||'')+' (Copy)';  // name mein Copy laga do
+  document.getElementById('fName').value=(f.name||'')+' (Copy)';
   document.getElementById('fPrice').value=f.price!=null?f.price:'';
   document.getElementById('fDesc').value=f.description||'';
   document.getElementById('fImage').value=f.image||'';
@@ -741,28 +847,15 @@ window.duplicateFood=id=>{
   document.getElementById('fVeg').checked=!!f.veg;
   document.getElementById('fBest').checked=!!f.bestseller;
   document.getElementById('fSpicy').checked=!!f.spicy;
-
-  // Category pills sync
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
-
-  // Prep time chip sync
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
-
-  // Image preview
   prvImg('fPrv',f.image);
-
-  // UI labels
   document.getElementById('foodFormTitle').textContent='Duplicate: '+f.name;
   document.getElementById('foodCancelBtn').style.display='block';
-
-  // Show purple duplicate banner
   document.getElementById('dupBanner').classList.add('show');
-
-  // Navigate to foods section and scroll up
   showSec('foods',null);
   window.scrollTo({top:0,behavior:'smooth'});
-
   showToast('📋 Item duplicate hua — naam/price change karo!');
 };
 
@@ -841,7 +934,6 @@ window.deleteFood=async id=>{
   catch(e){showToast('❌ '+e.message);}
 };
 
-// RENDER FOODS — Duplicate button added
 window.renderFoods=()=>{
   const q=document.getElementById('foodSearch').value.toLowerCase();
   const rf=document.getElementById('foodRestFilter').value;
