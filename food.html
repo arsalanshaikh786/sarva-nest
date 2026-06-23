@@ -17,7 +17,6 @@
 html{-webkit-text-size-adjust:100%}
 body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt)}
 
-/* NAV */
 nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px solid var(--bdr);z-index:100;height:52px;padding:0 .85rem;display:flex;align-items:center;justify-content:space-between;gap:.4rem}
 .logo{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brand);flex:1}
 .logo span{color:var(--txt)}
@@ -32,7 +31,6 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 #restView,#menuView{animation:fadeUp .2s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
-/* RESTAURANT VIEW */
 .hero{margin-top:52px;background:linear-gradient(135deg,#FFF1EB,#FFEBD8);padding:1.4rem 1rem 1.2rem;text-align:center;border-bottom:1px solid var(--bdr)}
 .hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,5vw,2.2rem);line-height:1.1;margin-bottom:.25rem}
 .hero h1 em{color:var(--brand);font-style:normal}
@@ -41,7 +39,6 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .chip{background:#fff;border:1px solid var(--bdr);border-radius:50px;padding:.2rem .65rem;font-size:.7rem;color:var(--mut);display:flex;align-items:center;gap:3px}
 .chip i{color:var(--brand);font-size:.75rem}
 
-/* SEARCH/FILTER */
 .ctrl-bar{padding:.7rem 1rem .25rem;display:flex;flex-direction:column;gap:.4rem}
 .ctrl-search{position:relative}
 .ctrl-search i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:.85rem}
@@ -53,13 +50,11 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .fbtn.active,.fbtn:active{border-color:var(--brand);background:var(--bl);color:var(--brand)}
 .sort-sel{border:1.5px solid var(--bdr);background:#fff;border-radius:50px;padding:.3rem .75rem;font-family:'DM Sans',sans-serif;font-size:.72rem;cursor:pointer;outline:none;color:var(--mut);-webkit-appearance:none;flex-shrink:0}
 
-/* CUISINE PILLS */
 .cat-bar{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:none;padding:.15rem 1rem .5rem}
 .cat-bar::-webkit-scrollbar{display:none}
 .cpill{white-space:nowrap;border:1.5px solid var(--bdr);background:#fff;border-radius:50px;padding:.26rem .7rem;font-size:.72rem;cursor:pointer;transition:all .18s;color:var(--mut);flex-shrink:0}
 .cpill.active{background:var(--brand);border-color:var(--brand);color:#fff}
 
-/* RESTAURANT GRID */
 .page-wrap{padding:.2rem 1rem 5rem}
 .sec-lbl{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;margin-bottom:.65rem;display:flex;align-items:center;gap:.35rem}
 .rest-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
@@ -80,7 +75,6 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .rest-time{font-size:.68rem;color:var(--mut);display:flex;align-items:center;gap:2px}
 .closed-badge{font-size:.6rem;background:#FFEBEE;color:#C62828;border-radius:50px;padding:2px 6px;font-weight:600}
 
-/* MENU VIEW */
 .rest-hero{margin-top:52px;height:165px;position:relative;overflow:hidden}
 @media(min-width:600px){.rest-hero{height:200px}}
 .rest-hero img{width:100%;height:100%;object-fit:cover}
@@ -91,111 +85,33 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .rh-chip{font-size:.7rem;display:flex;align-items:center;gap:3px;opacity:.9}
 .cuisine-tag{font-size:.6rem;background:var(--brand);color:#fff;border-radius:50px;padding:2px 7px;font-weight:600}
 
-/* MENU FILTERS */
 .menu-ctrl{padding:.6rem 1rem .15rem;display:flex;flex-direction:column;gap:.35rem}
 .menu-ctrl .ctrl-row{gap:.3rem}
 
-/* FOODS GRID — 2 col always */
 .foods-outer{padding:0 .85rem}
-.foods-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:.6rem;
-  margin-bottom:1rem;
-}
+.foods-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
 @media(min-width:760px){.foods-grid{grid-template-columns:repeat(3,1fr)}}
 
-.food-card{
-  background:var(--card);
-  border-radius:var(--r);
-  border:1px solid var(--bdr);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.food-card img{
-  width:100%;
-  height:105px;   /* was 130px */
-  object-fit:cover;
-  display:block;
-}
-.food-card-body{
-  padding:.58rem;  /* was .78rem */
-  flex:1;
-  display:flex;
-  flex-direction:column;
-}
+.food-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden;display:flex;flex-direction:column}
+.food-card img{width:100%;height:105px;object-fit:cover;display:block}
+.food-card-body{padding:.58rem;flex:1;display:flex;flex-direction:column}
 .ftags{display:flex;gap:.22rem;flex-wrap:wrap;margin-bottom:.25rem}
 .ftag{font-size:.58rem;padding:1px 5px;border-radius:50px;font-weight:600}
 .fveg{background:#E8F5E9;color:#2E7D32}
 .fnveg{background:#FFF1EB;color:var(--brand)}
 .fbest{background:#FFF3E0;color:#E65100}
 .fspicy{background:#FFF3E0;color:#E65100}
-
-.food-name{
-  font-weight:700;
-  font-size:.78rem;  /* was .86rem */
-  margin-bottom:.1rem;
-  line-height:1.25;
-}
-.food-desc{
-  font-size:.66rem;  /* was .72rem */
-  color:var(--mut);
-  line-height:1.35;
-  margin-bottom:.35rem;
-  flex:1;
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-}
-.food-bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:.35rem;
-}
-.food-price{
-  font-family:'Playfair Display',serif;
-  font-size:.88rem;  /* was .95rem */
-  font-weight:700;
-}
+.food-name{font-weight:700;font-size:.78rem;margin-bottom:.1rem;line-height:1.25}
+.food-desc{font-size:.66rem;color:var(--mut);line-height:1.35;margin-bottom:.35rem;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.food-bottom{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+.food-price{font-family:'Playfair Display',serif;font-size:.88rem;font-weight:700}
 .food-rating{font-size:.64rem;color:var(--mut);display:flex;align-items:center;gap:2px}
-
-.add-btn{
-  width:100%;
-  background:var(--brand);
-  color:#fff;
-  border:none;
-  border-radius:7px;
-  padding:.36rem;   /* was .44rem */
-  font-family:'DM Sans',sans-serif;
-  font-size:.74rem; /* was .8rem */
-  font-weight:600;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-}
+.add-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:7px;padding:.36rem;font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px}
 .add-btn:active{background:var(--bd)}
-.qty-ctrl{
-  width:100%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:var(--bl);
-  border-radius:7px;
-  overflow:hidden;
-}
-.qty-btn{
-  background:none;border:none;color:var(--brand);
-  font-size:1rem;padding:.28rem .55rem;
-  cursor:pointer;font-weight:700;line-height:1;
-}
+.qty-ctrl{width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--bl);border-radius:7px;overflow:hidden}
+.qty-btn{background:none;border:none;color:var(--brand);font-size:1rem;padding:.28rem .55rem;cursor:pointer;font-weight:700;line-height:1}
 .qty-num{font-weight:700;color:var(--brand);font-size:.78rem}
 
-/* CART SHEET */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:150;display:none;align-items:flex-end}
 .cart-overlay.open{display:flex}
 .cart-sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:1rem 1rem 2rem;animation:sheetUp .25s ease}
@@ -224,12 +140,10 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .place-btn:active{background:var(--bd)}
 .place-btn:disabled{background:#ccc;cursor:default}
 
-/* FAB CART */
 .fab-cart{position:fixed;bottom:1.2rem;right:1.2rem;background:var(--brand);color:#fff;border:none;border-radius:50px;padding:.6rem 1rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:none;align-items:center;gap:5px;box-shadow:0 4px 16px rgba(232,82,26,.4);z-index:120}
 .fab-cart.show{display:flex}
 .fab-badge{background:#fff;color:var(--brand);border-radius:50%;width:18px;height:18px;font-size:.66rem;display:flex;align-items:center;justify-content:center;font-weight:700}
 
-/* TRACKING */
 .track-wrap{padding:0 1rem 4rem}
 .track-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:1rem}
 .track-title{font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:.7rem}
@@ -256,7 +170,6 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .p-dot.active{border-color:var(--brand);color:var(--brand);background:var(--bl)}
 .cancel-btn{background:#FFEBEE;color:#C62828;border:none;border-radius:7px;padding:.26rem .6rem;font-family:'DM Sans',sans-serif;font-size:.66rem;font-weight:600;cursor:pointer;margin-top:.35rem}
 
-/* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;display:none;align-items:flex-end;justify-content:center}
 @media(min-width:520px){.modal-ov{align-items:center}}
 .modal-ov.open{display:flex}
@@ -273,13 +186,11 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .modal-add{background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.55rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
 .modal-add:active{background:var(--bd)}
 
-/* SKELETON */
 .skel{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shim 1.4s infinite;border-radius:8px}
 @keyframes shim{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .skel-card{background:#fff;border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden}
 .si{height:105px}.sb{padding:.65rem}.sl{height:9px;margin-bottom:6px}.sl.s{width:55%}.sbtn{height:28px;margin-top:.38rem}
 
-/* TOAST */
 .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1208;color:#fff;padding:.52rem 1rem;border-radius:50px;font-size:.74rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;max-width:88vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -302,7 +213,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
     <p>Choose your restaurant and pick favourites</p>
     <div class="chips">
       <span class="chip"><i class="ti ti-clock"></i> 30–45 min</span>
-      <span class="chip"><i class="ti ti-truck"></i> Free above ₹299</span>
+      <span class="chip" id="heroFreeChip"><i class="ti ti-truck"></i> Free above ₹299</span>
       <span class="chip"><i class="ti ti-shield-check"></i> Hygienic</span>
     </div>
   </div>
@@ -378,7 +289,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
     <div id="cartExtra" style="display:none">
       <div style="padding-top:.5rem">
         <div class="cr"><span>Subtotal</span><span id="cSub">₹0</span></div>
-        <div class="cr"><span>Delivery</span><span id="cDel">₹20</span></div>
+        <div class="cr"><span>Delivery</span><span id="cDel">₹0</span></div>
         <div class="cr" id="cDiscRow" style="display:none;color:var(--ok)"><span>Discount</span><span id="cDisc">-₹0</span></div>
         <div class="cart-total"><span>Total</span><span id="cTotal">₹0</span></div>
       </div>
@@ -430,7 +341,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
@@ -444,8 +355,30 @@ const app = initializeApp(cfg);
 const db = getFirestore(app);
 const BOT = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT = "5547663296";
-const DEL_FEE=40, FREE_MIN=299;
 const COUPONS={FIRST50:50,SAVE30:30,ZESTORA20:20};
+
+// ══════════════════════════════════════════════
+// ✨ DYNAMIC DELIVERY SETTINGS — Firebase se load honge
+//    Jab tak load na ho tab default values use hongi
+// ══════════════════════════════════════════════
+let DEL_FEE = 40;      // default fallback
+let FREE_MIN = 299;    // default fallback
+
+async function loadDeliverySettings() {
+  try {
+    const snap = await getDoc(doc(db, 'settings', 'delivery'));
+    if (snap.exists()) {
+      const d = snap.data();
+      DEL_FEE  = typeof d.deliveryFee     === 'number' ? d.deliveryFee     : DEL_FEE;
+      FREE_MIN = typeof d.freeDeliveryMin === 'number' ? d.freeDeliveryMin : FREE_MIN;
+    }
+  } catch(e) {
+    console.warn('Delivery settings load failed, using defaults:', e);
+  }
+  // hero chip update
+  const chip = document.getElementById('heroFreeChip');
+  if (chip) chip.innerHTML = `<i class="ti ti-truck"></i> Free above ₹${FREE_MIN}`;
+}
 
 let allRests=[], menuFoods=[], curRest=null;
 let cart=JSON.parse(localStorage.getItem('z_cart')||'{}');
@@ -631,6 +564,7 @@ function renderCartUI(){
     document.getElementById('cartExtra').style.display='none'; return;
   }
   const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
+  // ✨ Firebase se aayi values use karein
   const fee=sub>=FREE_MIN?0:DEL_FEE;
   const total=sub+fee-discount;
   document.getElementById('cartBody').innerHTML=items.map(i=>`
@@ -642,12 +576,10 @@ function renderCartUI(){
     </div>`).join('');
   document.getElementById('cartExtra').style.display='block';
   document.getElementById('cSub').textContent='₹'+sub;
-  document.getElementById('cDel').textContent=fee===0?'FREE':'₹'+fee;
+  document.getElementById('cDel').textContent=fee===0?`FREE (₹${FREE_MIN}+ order)`:'₹'+fee;
   document.getElementById('cTotal').textContent='₹'+total;
   if(discount){ document.getElementById('cDiscRow').style.display='flex'; document.getElementById('cDisc').textContent='-₹'+discount; }
 
-  /* 🔽 AUTO-FILL: prefer the logged-in user's saved profile (sn_user),
-     fall back to the last order's details (zN/zE/zM/zA) if not logged in */
   const su = JSON.parse(localStorage.getItem('sn_user') || 'null');
   document.getElementById('oName').value    = su?.name    || localStorage.getItem('zN') || '';
   document.getElementById('oEmail').value   = su?.email   || localStorage.getItem('zE') || '';
@@ -680,6 +612,7 @@ window.placeOrder=async function(){
   const btn=document.getElementById('placeBtn');
   btn.disabled=true; btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Placing…';
   const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
+  // ✨ Firebase delivery settings use karein order mein bhi
   const fee=sub>=FREE_MIN?0:DEL_FEE;
   const total=sub+fee-discount;
   const order={name,email,mobile,address,payment,notes,cart:items,subtotal:sub,deliveryFee:fee,discount,total,
@@ -689,17 +622,11 @@ window.placeOrder=async function(){
     await addDoc(collection(db,'food_orders'),order);
     const lines=items.map(i=>`• ${i.name} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
     const msg=`🍽️ *New Order — ${order.orderId}*\n🏪 *${order.restaurantName}*\n\n👤 *${name}*\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n💳 ${payment}\n\n🛒 *Items:*\n${lines}\n\n💰 *Total: ₹${total}*${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString('en-IN')}`;
-   await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/x-www-form-urlencoded"
-  },
-  body: new URLSearchParams({
-    token: "nnrwv6lvl11p1nlv",
-    to: "919307320279",
-    body: msg
-  })
-});
+    await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: new URLSearchParams({token:"nnrwv6lvl11p1nlv",to:"919307320279",body:msg})
+    });
     localStorage.setItem('zN',name); localStorage.setItem('zE',email); localStorage.setItem('zM',mobile); localStorage.setItem('zA',address);
     cart={}; discount=0; saveCart(); renderCartUI(); renderFoods();
     document.getElementById('fabCart').classList.remove('show');
@@ -755,21 +682,23 @@ document.getElementById('foodModal').addEventListener('click',e=>{ if(e.target==
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2700); }
 window.showToast=showToast;
 
-/* 🔽 NEW: easy one-tap access to order tracking from the top nav */
 window.scrollToTrack=function(){
   const sec=document.getElementById('trackSection');
   sec.scrollIntoView({behavior:'smooth',block:'start'});
   const emailField=document.getElementById('trackEmail');
-  if(emailField.value.trim()){
-    // email already known (logged in / previous order) — auto search
-    trackOrder();
-  } else {
-    emailField.focus();
-  }
+  if(emailField.value.trim()) trackOrder();
+  else emailField.focus();
 };
 
-loadRestaurants();
-renderCartUI();
+// ══════════════════════════════════════════════
+// APP INIT — delivery settings pehle load karo
+// ══════════════════════════════════════════════
+async function init(){
+  await loadDeliverySettings();   // Firebase se fee & free minimum lao
+  await loadRestaurants();        // Phir restaurants
+  renderCartUI();                 // Cart mein already updated values use hongi
+}
+init();
 </script>
 </body>
 </html>
