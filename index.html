@@ -102,6 +102,32 @@ body{
 }
 .top-profile .tp-text{overflow:hidden;text-overflow:ellipsis;}
 
+/* ─ LANG TOGGLE ─ */
+.lang-toggle{
+  position:fixed;top:56px;right:12px;
+  z-index:1001;
+  background:#fff;
+  border:2px solid var(--saffron);
+  border-radius:30px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  box-shadow:0 4px 14px rgba(0,0,0,.13);
+  font-family:'Poppins',sans-serif;
+  font-size:11px;font-weight:800;
+}
+.lang-toggle button{
+  padding:6px 11px;border:none;background:transparent;
+  cursor:pointer;color:var(--muted);transition:background .2s,color .2s;
+  font-family:'Poppins',sans-serif;font-size:11px;font-weight:800;
+  min-height:30px;
+}
+.lang-toggle button.lang-active{
+  background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
+  color:#fff;
+}
+.lang-toggle .lang-sep{width:1px;height:18px;background:#F0D5B0;flex-shrink:0;}
+
 /* ─ RANGOLI HEADER ─ */
 header{
   background:linear-gradient(160deg,#7A1E1E 0%,var(--saffron-deep) 40%,var(--saffron) 70%,#F0A500 100%);
@@ -109,21 +135,16 @@ header{
   text-align:center;color:#fff;
   position:relative;overflow:hidden;
 }
-
-/* Rangoli SVG pattern overlay */
 header::before{
   content:'';position:absolute;inset:0;
   background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18' y1='18' x2='62' y2='62'/%3E%3Cline x1='62' y1='18' x2='18' y2='62'/%3E%3C/g%3E%3C/svg%3E");
   opacity:1;
 }
-
-/* Diya dots decoration */
 header::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:8px;
   background:repeating-linear-gradient(90deg,#F0A500 0,#F0A500 8px,var(--green) 8px,var(--green) 16px,#fff 16px,#fff 24px);
   opacity:.7;
 }
-
 .header-eyebrow{
   font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;
   font-size:13px;letter-spacing:3px;opacity:.8;
@@ -163,8 +184,6 @@ header h1{
   content:'';position:absolute;inset:0;
   background:linear-gradient(to top,rgba(26,15,0,.7) 0%,transparent 55%);
 }
-
-/* Rangoli-style caption frame */
 .caption{position:absolute;bottom:16px;left:16px;color:#fff;z-index:2;}
 .caption h2{
   font-family:'Tiro Devanagari Marathi','Syne',sans-serif;
@@ -205,7 +224,7 @@ header h1{
 .search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
 #clearSearch{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;display:none;color:var(--muted);}
 
-/* ─ DIVIDER with rangoli motif ─ */
+/* ─ DIVIDER ─ */
 .rangoli-divider{
   display:flex;align-items:center;gap:12px;
   padding:0 16px;max-width:1200px;margin:22px auto 10px;
@@ -222,7 +241,7 @@ header h1{
 .rdivider-motif{font-size:20px;flex-shrink:0;}
 .see-all{font-size:13px;color:var(--saffron-deep);font-weight:700;text-decoration:none;white-space:nowrap;}
 
-/* ─ SECTION TITLE (legacy fallback) ─ */
+/* ─ SECTION TITLE ─ */
 .section-title{padding:22px 16px 10px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;}
 .section-title h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:clamp(1.2rem,5vw,1.55rem);font-weight:700;}
 
@@ -232,7 +251,6 @@ header h1{
   gap:14px;padding:0 16px 4px;
   max-width:1200px;margin:0 auto;
 }
-
 .card{
   background:var(--card);
   border-radius:var(--radius);
@@ -242,8 +260,6 @@ header h1{
   transition:transform .2s,box-shadow .2s;
   border:1.5px solid #F5E8D0;
 }
-
-/* Saffron corner arc */
 .card::before{
   content:'';position:absolute;top:-32px;right:-32px;
   width:80px;height:80px;border-radius:50%;
@@ -297,7 +313,7 @@ header h1{
   display:flex;align-items:center;gap:14px;
   background:#fff;border-radius:16px;
   padding:16px;box-shadow:0 4px 14px rgba(232,101,10,.08);
-  border:1.5px solid #F5E8D0;
+  border:1.5px solid #F5EDD6;
 }
 .step-num{
   width:42px;height:42px;border-radius:50%;flex-shrink:0;
@@ -309,7 +325,7 @@ header h1{
 .step-text h4{font-size:15px;font-weight:700;font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;}
 .step-text p{font-size:12px;color:var(--muted);margin-top:2px;}
 
-/* ─ BOTTOM STRIP ─ */
+/* ─ FESTIVE STRIP ─ */
 .festive-strip{
   background:linear-gradient(90deg,var(--green) 0%,var(--green-light) 50%,var(--green) 100%);
   margin:24px 16px;border-radius:14px;
@@ -531,14 +547,22 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
   <span class="tp-text" id="tpText">लॉगिन</span>
 </button>
 
+<!-- Language Toggle -->
+<div class="lang-toggle" id="langToggle">
+  <button id="btnMr" class="lang-active" onclick="setLang('mr')">मर</button>
+  <div class="lang-sep"></div>
+  <button id="btnEn" onclick="setLang('en')">EN</button>
+</div>
+
 <!-- Toast -->
 <div id="toast"></div>
 
 <!-- Header -->
 <header>
-   <h1>सर्व नेस्ट</h1>
+  <p class="header-eyebrow">🪔 अकोले, महाराष्ट्र 🪔</p>
+  <h1>सर्व नेस्ट</h1>
   <p class="header-tagline">जलद · विश्वासू · व्यावसायिक</p>
- </header>
+</header>
 
 <!-- Slider -->
 <section class="slider" id="sliderEl">
@@ -579,9 +603,6 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
     <button id="clearSearch" aria-label="Clear">✕</button>
   </div>
 </div>
-
-  
-
 
 <!-- Services -->
 <div class="rangoli-divider" id="services">
@@ -674,6 +695,8 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
   </div>
 </div>
 
+<!-- Footer -->
+
 <!-- WhatsApp FAB -->
 <a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="WhatsApp वर चॅट करा">💬</a>
 
@@ -685,7 +708,6 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
   <a href="#contact" id="nav-contact"><span class="icon">📞</span>संपर्क</a>
 </nav>
 
-<!-- Footer -->
 
 <!-- ACCOUNT MODAL -->
 <div class="modal-overlay" id="accountModalOverlay" onclick="if(event.target===this) closeAccountModal()">
@@ -1083,6 +1105,263 @@ clearBtn.addEventListener("click",()=>{searchInput.value="";clearBtn.style.displ
 document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(a=>{
   a.addEventListener("click",function(){document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(x=>x.classList.remove("active"));this.classList.add("active");});
 });
+
+// ── LANGUAGE TOGGLE ──
+const T = {
+  mr: {
+    pageTitle:"सर्व नेस्ट - अकोले सेवा केंद्र",
+    locationPill:"📍 अकोले, महाराष्ट्र",
+    tpLoginText:"लॉगिन",
+    headerEyebrow:"🪔 अकोले, महाराष्ट्र 🪔",
+    headerH1:"सर्व नेस्ट",
+    headerTagline:"जलद · विश्वासू · व्यावसायिक",
+    slide1h:"जेवण डिलिव्हरी", slide1p:"ताजे व गरम — जलद डिलिव्हरी", slide1badge:"🍛 अकोले स्पेशल",
+    slide2h:"होम सर्व्हिसेस",  slide2p:"तज्ञ व्यावसायिक दारापर्यंत",   slide2badge:"🏠 घरी सेवा",
+    slide3h:"सुरक्षा सेवा",    slide3p:"विश्वासू व सुरक्षित रक्षक",   slide3badge:"🛡️ सुरक्षित",
+    searchPH:"सेवा शोधा...",
+    statLbl1:"ग्राहक", statLbl2:"सेवा", statLbl3:"रेटिंग", statLbl4:"उपलब्ध",
+    svcHeading:"लोकप्रिय सेवा", seeAll:"सर्व पहा",
+    card1h:"जेवण डिलिव्हरी",    card1p:"ताजे जेवण जलद डिलिव्हरी.",        card1a:"ऑर्डर करा",
+    card2h:"भाजीपाला डिलिव्हरी",card2p:"ताजा भाजीपाला घरपोच.",           card2a:"ऑर्डर करा",
+    card3h:"किराणा डिलिव्हरी",  card3p:"किराणा सामान घरपोच.",              card3a:"ऑर्डर करा",
+    card4h:"बुकबझार",            card4p:"जुनी पुस्तके विका व खरेदी करा.", card4a:"पहा",
+    card5h:"लाँड्री सेवा",       card5p:"कपडे घेणे व परत देणे.",           card5a:"बुक करा",
+    noResults:"😕 सेवा सापडली नाही",
+    howHead:"कसे काम करते?",
+    step1h:"सेवा निवडा",  step1p:"आमच्या विविध सेवांमधून निवड करा.",
+    step2h:"बुक करा",     step2p:"तुमच्या वेळेनुसार बुकिंग करा. तात्काळ पुष्टी.",
+    step3h:"तज्ञ येतो",  step3p:"आमचा तज्ञ तुमच्या दारात येतो.",
+    step1num:"१", step2num:"२", step3num:"३",
+    festiveH:"अकोलेच्या लोकांसाठी, अकोलेच्या लोकांकडून",
+    festiveP:"स्थानिक सेवा — विश्वासार्ह व जलद",
+    contactH:"📞 संपर्क साधा", whatsappBtn:"💬 WhatsApp", callBtn:"📞 फोन करा", emailBtn:"📧 ईमेल",
+    navHome:"मुख्य", navTrack:"ट्रॅक", navAccount:"खाते", navContact:"संपर्क",
+    footerTagline:"अकोले, महाराष्ट्र — भारत",
+    footerL1:"गोपनीयता", footerL2:"अटी", footerL3:"संपर्क",
+    footerCopy:"© 2025 सर्व नेस्ट. सर्व हक्क राखीव.",
+    myAccount:"माझे खाते", myProfile:"माझे प्रोफाइल", myEditProfile:"प्रोफाइल संपादित करा",
+    tabReg:"नोंदणी करा", tabLog:"लॉगिन",
+    regTitle:"खाते तयार करा",
+    phName:"पूर्ण नाव", phAge:"वय", phMobile:"मोबाइल नंबर", phWA:"WhatsApp नंबर",
+    phAddr:"पत्ता", phEmail:"ईमेल पत्ता", phPass:"पासवर्ड (किमान ६ अक्षरे)", phConfirm:"पासवर्ड पुष्टी करा",
+    phPassLogin:"पासवर्ड",
+    photoHintAdd:"प्रोफाइल फोटो जोडा (पर्यायी)", photoHintChange:"फोटो बदलण्यासाठी टॅप करा",
+    regBtn:"खाते तयार करा",
+    logTitle:"स्वागत आहे 👋",
+    forgotLink:"पासवर्ड विसरलात?",
+    logBtn:"लॉगिन करा",
+    editProfileBtn:"✏️ प्रोफाइल संपादित करा",
+    logoutBtn:"🚪 लॉगआउट",
+    editTitle:"प्रोफाइल संपादित करा",
+    cancelBtn:"रद्द करा", saveBtn:"बदल जतन करा",
+    lblMobile:"मोबाइल", lblWA:"WhatsApp", lblAddr:"पत्ता", lblAge:"वय",
+  },
+  en: {
+    pageTitle:"Sarva Nest - Akole Service Platform",
+    locationPill:"📍 Akole, Maharashtra",
+    tpLoginText:"Login",
+    headerEyebrow:"🪔 Akole, Maharashtra 🪔",
+    headerH1:"Sarva Nest",
+    headerTagline:"Fast · Trusted · Professional",
+    slide1h:"Food Delivery",    slide1p:"Fresh & Hot — Delivered Fast",         slide1badge:"🍛 Akole Special",
+    slide2h:"Home Services",    slide2p:"Professionals At Your Doorstep",        slide2badge:"🏠 Home Service",
+    slide3h:"Security Services",slide3p:"Trusted & Safe Guards",                 slide3badge:"🛡️ Secure",
+    searchPH:"Search services...",
+    statLbl1:"Customers", statLbl2:"Services", statLbl3:"Rating", statLbl4:"Available",
+    svcHeading:"Popular Services", seeAll:"See All",
+    card1h:"Food Delivery",     card1p:"Fresh food delivered quickly.",           card1a:"Order Now",
+    card2h:"Vegetable Delivery",card2p:"Fresh vegetables delivered at home.",     card2a:"Order Now",
+    card3h:"Grocery Delivery",  card3p:"Groceries delivered to your door.",       card3a:"Order Now",
+    card4h:"BookBazaar",        card4p:"Buy and sell used books.",                card4a:"Browse",
+    card5h:"Laundry Service",   card5p:"Pickup and delivery of clothes.",         card5a:"Book Now",
+    noResults:"😕 No services found",
+    howHead:"How It Works",
+    step1h:"Choose a Service", step1p:"Browse and pick from our wide range.",
+    step2h:"Book & Confirm",   step2p:"Schedule at your preferred time. Instant confirmation.",
+    step3h:"Expert Arrives",   step3p:"Our verified professional comes to your door.",
+    step1num:"1", step2num:"2", step3num:"3",
+    festiveH:"By Akole, For Akole",
+    festiveP:"Local services — trusted & fast",
+    contactH:"📞 Get In Touch", whatsappBtn:"💬 WhatsApp", callBtn:"📞 Call Us", emailBtn:"📧 Email",
+    navHome:"Home", navTrack:"Track", navAccount:"Account", navContact:"Contact",
+    footerTagline:"Akole, Maharashtra — India",
+    footerL1:"Privacy", footerL2:"Terms", footerL3:"Contact",
+    footerCopy:"© 2025 Sarva Nest. All rights reserved.",
+    myAccount:"My Account", myProfile:"My Profile", myEditProfile:"Edit Profile",
+    tabReg:"Register", tabLog:"Login",
+    regTitle:"Create Account",
+    phName:"Full Name", phAge:"Age", phMobile:"Mobile Number", phWA:"WhatsApp Number",
+    phAddr:"Address", phEmail:"Email Address", phPass:"Password (min 6 chars)", phConfirm:"Confirm Password",
+    phPassLogin:"Password",
+    photoHintAdd:"Add profile photo (optional)", photoHintChange:"Tap to change photo",
+    regBtn:"Create Account",
+    logTitle:"Welcome Back 👋",
+    forgotLink:"Forgot Password?",
+    logBtn:"Login",
+    editProfileBtn:"✏️ Edit Profile",
+    logoutBtn:"🚪 Logout",
+    editTitle:"Edit Profile",
+    cancelBtn:"Cancel", saveBtn:"Save Changes",
+    lblMobile:"Mobile", lblWA:"WhatsApp", lblAddr:"Address", lblAge:"Age",
+  }
+};
+
+let currentLang = 'mr';
+
+window.setLang = function(lang){
+  currentLang = lang;
+  const t = T[lang];
+  const otherLang = lang === 'mr' ? 'en' : 'mr';
+  document.documentElement.lang = lang;
+
+  // Toggle buttons
+  document.getElementById('btnMr').classList.toggle('lang-active', lang==='mr');
+  document.getElementById('btnEn').classList.toggle('lang-active', lang==='en');
+
+  // Page title
+  document.title = t.pageTitle;
+
+  // Fixed pills
+  document.querySelector('.top-location').textContent = t.locationPill;
+  const tpText = document.getElementById('tpText');
+  // Only update login text if user is not logged in (showing login/language text)
+  if(tpText.textContent === T[otherLang].tpLoginText){
+    tpText.textContent = t.tpLoginText;
+  }
+
+  // Header
+  document.querySelector('.header-eyebrow').textContent = t.headerEyebrow;
+  document.querySelector('header h1').textContent = t.headerH1;
+  document.querySelector('.header-tagline').textContent = t.headerTagline;
+
+  // Slider captions
+  const captions = document.querySelectorAll('.caption');
+  [1,2,3].forEach((n,i)=>{
+    if(!captions[i]) return;
+    captions[i].querySelector('.caption-badge').textContent = t['slide'+n+'badge'];
+    captions[i].querySelector('h2').textContent = t['slide'+n+'h'];
+    captions[i].querySelector('p').textContent  = t['slide'+n+'p'];
+  });
+
+  // Search
+  document.getElementById('searchInput').placeholder = t.searchPH;
+
+  // Stats
+  const statLbls = document.querySelectorAll('.stat-lbl');
+  ['statLbl1','statLbl2','statLbl3','statLbl4'].forEach((k,i)=>{ if(statLbls[i]) statLbls[i].textContent = t[k]; });
+
+  // Section heading — first rangoli-divider
+  const dividers = document.querySelectorAll('.rangoli-divider');
+  dividers[0].querySelector('h2').textContent = t.svcHeading;
+  dividers[0].querySelector('.see-all').textContent = t.seeAll;
+
+  // Service cards
+  const cards = document.querySelectorAll('#serviceGrid .card');
+  [1,2,3,4,5].forEach((n,i)=>{
+    if(!cards[i]) return;
+    cards[i].querySelector('h3').textContent = t['card'+n+'h'];
+    cards[i].querySelector('p').textContent  = t['card'+n+'p'];
+    cards[i].querySelector('a').textContent  = t['card'+n+'a'];
+  });
+  document.getElementById('noResults').textContent = t.noResults;
+
+  // How it works heading — second rangoli-divider
+  if(dividers[1]) dividers[1].querySelector('h2').textContent = t.howHead;
+
+  // Steps
+  const steps = document.querySelectorAll('.step');
+  [1,2,3].forEach((n,i)=>{
+    if(!steps[i]) return;
+    steps[i].querySelector('.step-num').textContent = t['step'+n+'num'];
+    steps[i].querySelector('h4').textContent        = t['step'+n+'h'];
+    steps[i].querySelector('p').textContent         = t['step'+n+'p'];
+  });
+
+  // Festive strip
+  document.querySelector('.festive-strip h4').textContent = t.festiveH;
+  document.querySelector('.festive-strip p').textContent  = t.festiveP;
+
+  // Contact
+  document.querySelector('.contact-strip h3').textContent = t.contactH;
+  const cBtns = document.querySelectorAll('.contact-btn');
+  if(cBtns[0]) cBtns[0].textContent = t.whatsappBtn;
+  if(cBtns[1]) cBtns[1].textContent = t.callBtn;
+  if(cBtns[2]) cBtns[2].textContent = t.emailBtn;
+
+  // ── FIX 1: Bottom nav — icon span preserve karo innerHTML se ──
+  const navItems = document.querySelectorAll('.bottom-nav a, .bottom-nav button');
+  const navKeys  = ['navHome','navTrack','navAccount','navContact'];
+  navItems.forEach((el,i)=>{
+    const icon = el.querySelector('.icon');
+    if(!icon) return;
+    const iconHtml = icon.outerHTML;
+    el.innerHTML = iconHtml + (t[navKeys[i]] || '');
+  });
+
+  // Footer
+  document.querySelector('.footer-tagline').textContent = t.footerTagline;
+  const fLinks = document.querySelectorAll('.footer-links a');
+  if(fLinks[0]) fLinks[0].textContent = t.footerL1;
+  if(fLinks[1]) fLinks[1].textContent = t.footerL2;
+  if(fLinks[2]) fLinks[2].textContent = t.footerL3;
+  document.querySelector('footer > p').textContent = t.footerCopy;
+
+  // ── FIX 2: Auth modal title — dono lang ke values check karo ──
+  const curTitle = document.getElementById('authSectionTitle').textContent;
+  if(curTitle === T[otherLang].myAccount || curTitle === t.myAccount){
+    document.getElementById('authSectionTitle').textContent = t.myAccount;
+  } else if(curTitle === T[otherLang].myProfile || curTitle === t.myProfile){
+    document.getElementById('authSectionTitle').textContent = t.myProfile;
+  } else if(curTitle === T[otherLang].myEditProfile || curTitle === t.myEditProfile){
+    document.getElementById('authSectionTitle').textContent = t.myEditProfile;
+  }
+
+  // Auth tabs
+  const tabs = document.querySelectorAll('.auth-tab');
+  if(tabs[0]) tabs[0].textContent = t.tabReg;
+  if(tabs[1]) tabs[1].textContent = t.tabLog;
+
+  // Register card
+  document.querySelector('#registerCard h2').textContent   = t.regTitle;
+  document.getElementById('reg_name').placeholder          = t.phName;
+  document.getElementById('reg_age').placeholder           = t.phAge;
+  document.getElementById('reg_mobile').placeholder        = t.phMobile;
+  document.getElementById('reg_whatsapp').placeholder      = t.phWA;
+  document.getElementById('reg_address').placeholder       = t.phAddr;
+  document.getElementById('reg_email').placeholder         = t.phEmail;
+  document.getElementById('reg_password').placeholder      = t.phPass;
+  document.getElementById('reg_confirm').placeholder       = t.phConfirm;
+  document.getElementById('photoHint').textContent         = t.photoHintAdd;
+  document.querySelector('#regBtn .btn-text').textContent  = t.regBtn;
+
+  // Login card
+  document.querySelector('#loginCard h2').textContent          = t.logTitle;
+  document.getElementById('log_email').placeholder             = t.phEmail;
+  // ── FIX 3: Login password placeholder — hardcoded string nahi, translation use karo ──
+  document.getElementById('log_password').placeholder          = t.phPassLogin;
+  document.querySelector('.forgot-link').textContent           = t.forgotLink;
+  document.querySelector('#loginBtn .btn-text').textContent    = t.logBtn;
+
+  // Profile card buttons
+  document.querySelector('.edit-profile-btn').textContent = t.editProfileBtn;
+  document.querySelector('.logout-btn').textContent       = t.logoutBtn;
+
+  // Profile labels
+  const infoLabels = document.querySelectorAll('.info-label');
+  const lblKeys = ['lblMobile','lblWA','lblAddr','lblAge'];
+  infoLabels.forEach((el,i)=>{ if(lblKeys[i]) el.textContent = t[lblKeys[i]]; });
+
+  // Edit profile card
+  document.querySelector('#editProfileCard h2').textContent      = t.editTitle;
+  document.getElementById('edit_name').placeholder               = t.phName;
+  document.getElementById('edit_age').placeholder                = t.phAge;
+  document.getElementById('edit_mobile').placeholder             = t.phMobile;
+  document.getElementById('edit_whatsapp').placeholder           = t.phWA;
+  document.getElementById('edit_address').placeholder            = t.phAddr;
+  document.getElementById('editPhotoHint').textContent           = t.photoHintChange;
+  document.querySelector('.cancel-btn').textContent              = t.cancelBtn;
+  document.querySelector('#saveProfileBtn .btn-text').textContent = t.saveBtn;
+};
 </script>
 </body>
 </html>
