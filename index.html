@@ -1,71 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><meta name="google-site-verification" content="RBH8Va8De1ISOVGlsFELAmEgleRvR6TQsJHpsBq6kV4" />
-
+<html lang="mr">
+<head>
+<meta name="google-site-verification" content="RBH8Va8De1ISOVGlsFELAmEgleRvR6TQsJHpsBq6kV4" />
 <meta charset="UTF-8">
-  <title>Sarva Nest - Akole's All-in-One Service Platform</title>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description" content="Sarva Nest is Akole's trusted all-in-one service platform. Order food, vegetables, book plumbers, electricians, carpenters, taxi services, home cleaning and more.">
-
-<meta name="keywords" content="Sarva Nest, Akole Services, Food Delivery Akole, Vegetable Delivery Akole, Electrician Akole, Plumber Akole, Taxi Service Akole, Home Cleaning Akole, Maharashtra Services">
-
+<title>सर्व नेस्ट - अकोले सेवा केंद्र</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="description" content="सर्व नेस्ट - अकोले मधील सर्वोत्तम सेवा मंच. जेवण, भाजीपाला, प्लंबर, इलेक्ट्रिशियन, टॅक्सी आणि बरेच काही.">
+<meta name="keywords" content="Sarva Nest, Akole Services, Food Delivery Akole, Vegetable Delivery Akole, Electrician Akole, Plumber Akole">
 <meta name="author" content="Arsalan Shaikh">
 <meta name="robots" content="index, follow">
-<meta name="language" content="English">
-<meta name="revisit-after" content="7 days">
-
 <link rel="canonical" href="https://www.sarvanest.in/">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Sarva Nest - All In One Service Platform">
-<meta property="og:description" content="Book food delivery, vegetables, plumbers, electricians, taxi and more in Akole.">
-<meta property="og:url" content="https://sarva-nest.vercel.app/">
+<meta property="og:title" content="सर्व नेस्ट - अकोले सेवा केंद्र">
+<meta property="og:description" content="अकोले मधील जेवण, भाजीपाला, प्लंबर, इलेक्ट्रिशियन, टॅक्सी आणि बरेच काही.">
+<meta property="og:url" content="https://www.sarvanest.in/">
 <meta property="og:type" content="website">
-
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Sarva Nest - All In One Service Platform">
-<meta name="twitter:description" content="Akole's trusted online service platform.">
-
-<!-- Local Business SEO -->
 <script type="application/ld+json">
 {
- "@context":"https://schema.org",
- "@type":"LocalBusiness",
- "name":"Sarva Nest",
- "url":"https://www.sarvanest.in/",
+ "@context":"https://schema.org","@type":"LocalBusiness",
+ "name":"सर्व नेस्ट","url":"https://www.sarvanest.in/",
  "telephone":"+919307320279",
- "address":{
-   "@type":"PostalAddress",
-   "addressLocality":"Akole",
-   "addressRegion":"Maharashtra",
-   "addressCountry":"India"
- },
- "description":"All in one service platform in Akole Maharashtra."
+ "address":{"@type":"PostalAddress","addressLocality":"Akole","addressRegion":"Maharashtra","addressCountry":"India"},
+ "description":"अकोले महाराष्ट्र मधील सर्व-in-one सेवा मंच."
 }
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Online Services Store – Akole</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Poppins:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --primary:#4f46e5;--primary-dark:#3730a3;--accent:#7c3aed;
-  --bg:#f0f2ff;--card:#fff;--text:#1e1b4b;--muted:#6b7280;
-  --success:#16a34a;--error:#dc2626;--warn:#d97706;
-  --radius:20px;--tap:48px;
+  --saffron:#E8650A;
+  --saffron-deep:#C4510A;
+  --green:#1B6B35;
+  --green-light:#2A9050;
+  --mati:#F5EDD6;
+  --cream:#FDF8F0;
+  --maroon:#7A1E1E;
+  --text:#1A0F00;
+  --muted:#6B5B45;
+  --card:#FFFFFF;
+  --radius:18px;
+  --tap:48px;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;overflow-x:hidden;padding-bottom:72px;}
+body{
+  background:var(--cream);
+  color:var(--text);
+  font-family:'Poppins',sans-serif;
+  overflow-x:hidden;
+  padding-bottom:76px;
+}
 
 /* ─ TOAST ─ */
 #toast{
   position:fixed;top:16px;left:50%;
   transform:translateX(-50%) translateY(-120px);
-  background:#1e1b4b;color:#fff;
+  background:#1A0F00;color:#fff;
   padding:12px 22px;border-radius:50px;
   font-size:14px;font-weight:700;
   box-shadow:0 8px 28px rgba(0,0,0,.25);
@@ -77,83 +67,125 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
 #toast.error{background:#991b1b;}
 #toast.warn{background:#92400e;}
 
-/* ─ LOADING SPINNER ─ */
+/* ─ LOADING ─ */
 .btn-spinner{display:none;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 .loading .btn-spinner{display:inline-block;}
 .loading .btn-text{opacity:.7;}
 
-/* ─ LOCATION PILL ─ */
+/* ─ TOP LOCATION PILL ─ */
 .top-location{
   position:fixed;top:12px;left:12px;
-  background:var(--primary);color:#fff;
-  padding:8px 14px;border-radius:30px;
+  background:var(--green);color:#fff;
+  padding:7px 14px;border-radius:30px;
   font-size:12px;font-weight:700;
-  z-index:1001;box-shadow:0 4px 14px rgba(79,70,229,.4);
+  z-index:1001;box-shadow:0 4px 14px rgba(27,107,53,.4);
+  font-family:'Poppins',sans-serif;
 }
 
-/* ─ TOP PROFILE PILL (app-style quick access to account) ─ */
+/* ─ TOP PROFILE PILL ─ */
 .top-profile{
   position:fixed;top:12px;right:12px;
   display:flex;align-items:center;gap:6px;
-  background:#fff;color:var(--primary);
+  background:#fff;color:var(--saffron-deep);
   padding:6px 14px 6px 6px;border-radius:30px;
   font-size:12px;font-weight:800;
-  z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.18);
-  text-decoration:none;border:1.5px solid var(--primary);
-  max-width:46vw;overflow:hidden;white-space:nowrap;
-  cursor:pointer;
+  z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  text-decoration:none;border:2px solid var(--saffron);
+  max-width:46vw;overflow:hidden;white-space:nowrap;cursor:pointer;
 }
 .top-profile .tp-avatar{
-  width:24px;height:24px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
+  width:26px;height:26px;border-radius:50%;
+  background:linear-gradient(135deg,var(--saffron),var(--maroon));
   color:#fff;display:flex;align-items:center;justify-content:center;
   font-size:13px;font-weight:900;flex-shrink:0;
 }
 .top-profile .tp-text{overflow:hidden;text-overflow:ellipsis;}
 
-/* ─ HEADER ─ */
+/* ─ RANGOLI HEADER ─ */
 header{
-  background:linear-gradient(145deg,var(--primary),var(--accent));
-  padding:72px 20px 48px;text-align:center;color:#fff;
+  background:linear-gradient(160deg,#7A1E1E 0%,var(--saffron-deep) 40%,var(--saffron) 70%,#F0A500 100%);
+  padding:80px 20px 56px;
+  text-align:center;color:#fff;
   position:relative;overflow:hidden;
 }
+
+/* Rangoli SVG pattern overlay */
 header::before{
   content:'';position:absolute;inset:0;
-  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18' y1='18' x2='62' y2='62'/%3E%3Cline x1='62' y1='18' x2='18' y2='62'/%3E%3C/g%3E%3C/svg%3E");
+  opacity:1;
 }
-header h1{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,7vw,3rem);font-weight:800;position:relative;}
-header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:relative;}
+
+/* Diya dots decoration */
+header::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:8px;
+  background:repeating-linear-gradient(90deg,#F0A500 0,#F0A500 8px,var(--green) 8px,var(--green) 16px,#fff 16px,#fff 24px);
+  opacity:.7;
+}
+
+.header-eyebrow{
+  font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;
+  font-size:13px;letter-spacing:3px;opacity:.8;
+  text-transform:uppercase;position:relative;
+  margin-bottom:8px;
+}
+header h1{
+  font-family:'Tiro Devanagari Marathi','Syne',sans-serif;
+  font-size:clamp(2.2rem,8vw,3.5rem);font-weight:700;
+  line-height:1.1;position:relative;
+  text-shadow:0 2px 12px rgba(0,0,0,.25);
+}
+.header-tagline{
+  font-size:clamp(.85rem,3vw,1rem);
+  opacity:.9;margin-top:8px;position:relative;
+  font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;
+  letter-spacing:.5px;
+}
 .hero-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  margin-top:22px;padding:14px 28px;
-  background:#fff;color:var(--primary);
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:24px;padding:14px 30px;
+  background:#fff;color:var(--saffron-deep);
   border-radius:50px;text-decoration:none;
   font-weight:800;font-size:15px;
-  box-shadow:0 8px 24px rgba(0,0,0,.15);
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
   position:relative;min-height:var(--tap);
-  transition:transform .15s;
+  transition:transform .15s;font-family:'Poppins',sans-serif;
 }
 .hero-btn:active{transform:scale(.96);}
 
 /* ─ SLIDER ─ */
-.slider{position:relative;width:100%;height:clamp(210px,55vw,370px);overflow:hidden;touch-action:pan-y;}
+.slider{position:relative;width:100%;height:clamp(200px,52vw,360px);overflow:hidden;touch-action:pan-y;}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity .8s;}
 .slide.active{opacity:1;}
 .slide img{width:100%;height:100%;object-fit:cover;}
-.slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);}
-.caption{position:absolute;bottom:18px;left:18px;color:#fff;z-index:2;}
-.caption h2{font-family:'Syne',sans-serif;font-size:clamp(1.3rem,5vw,2rem);font-weight:800;line-height:1.1;}
-.caption p{font-size:13px;opacity:.85;margin-top:3px;}
-.slider-dots{position:absolute;bottom:14px;right:16px;display:flex;gap:6px;z-index:10;}
+.slide::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(26,15,0,.7) 0%,transparent 55%);
+}
+
+/* Rangoli-style caption frame */
+.caption{position:absolute;bottom:16px;left:16px;color:#fff;z-index:2;}
+.caption h2{
+  font-family:'Tiro Devanagari Marathi','Syne',sans-serif;
+  font-size:clamp(1.2rem,5vw,1.9rem);font-weight:700;line-height:1.1;
+  text-shadow:0 2px 8px rgba(0,0,0,.4);
+}
+.caption p{font-size:12px;opacity:.85;margin-top:3px;font-weight:600;}
+.caption-badge{
+  display:inline-block;background:var(--saffron);
+  color:#fff;font-size:10px;font-weight:800;
+  padding:3px 10px;border-radius:20px;margin-bottom:6px;
+  letter-spacing:.5px;text-transform:uppercase;
+}
+.slider-dots{position:absolute;bottom:14px;right:14px;display:flex;gap:6px;z-index:10;}
 .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);border:none;cursor:pointer;padding:0;transition:.3s;}
-.dot.active{background:#fff;transform:scale(1.3);}
+.dot.active{background:var(--saffron);transform:scale(1.35);}
 .prev,.next{
   position:absolute;top:50%;transform:translateY(-50%);
-  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
-  border:none;color:#fff;font-size:20px;
-  width:40px;height:40px;border-radius:50%;
-  cursor:pointer;z-index:10;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.3);color:#fff;font-size:20px;
+  width:38px;height:38px;border-radius:50%;cursor:pointer;z-index:10;
   display:flex;align-items:center;justify-content:center;
 }
 .prev{left:10px;}.next{right:10px;}
@@ -163,67 +195,98 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
 .search-box{position:relative;}
 .search-box input{
   width:100%;padding:14px 44px 14px 46px;
-  border:none;border-radius:16px;
-  font-size:15px;font-family:'Nunito',sans-serif;
-  background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.08);
-  outline:none;color:var(--text);min-height:var(--tap);
+  border:2px solid #E8D5B5;border-radius:14px;
+  font-size:15px;font-family:'Poppins',sans-serif;
+  background:#fff;outline:none;color:var(--text);
+  transition:border-color .2s;min-height:var(--tap);
+  box-shadow:0 4px 16px rgba(232,101,10,.08);
 }
+.search-box input:focus{border-color:var(--saffron);}
 .search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
-#clearSearch{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  background:none;border:none;font-size:18px;cursor:pointer;
-  display:none;color:var(--muted);
-}
+#clearSearch{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;cursor:pointer;display:none;color:var(--muted);}
 
-/* ─ SECTION TITLE ─ */
+/* ─ DIVIDER with rangoli motif ─ */
+.rangoli-divider{
+  display:flex;align-items:center;gap:12px;
+  padding:0 16px;max-width:1200px;margin:22px auto 10px;
+}
+.rangoli-divider h2{
+  font-family:'Tiro Devanagari Marathi','Syne',sans-serif;
+  font-size:clamp(1.15rem,5vw,1.5rem);font-weight:700;
+  white-space:nowrap;color:var(--text);
+}
+.rdivider-line{flex:1;height:2px;
+  background:repeating-linear-gradient(90deg,var(--saffron) 0,var(--saffron) 6px,transparent 6px,transparent 10px);
+  opacity:.4;
+}
+.rdivider-motif{font-size:20px;flex-shrink:0;}
+.see-all{font-size:13px;color:var(--saffron-deep);font-weight:700;text-decoration:none;white-space:nowrap;}
+
+/* ─ SECTION TITLE (legacy fallback) ─ */
 .section-title{padding:22px 16px 10px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;}
-.section-title h2{font-family:'Syne',sans-serif;font-size:clamp(1.2rem,5vw,1.55rem);font-weight:800;}
-.see-all{font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;}
+.section-title h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:clamp(1.2rem,5vw,1.55rem);font-weight:700;}
 
 /* ─ SERVICE CARDS ─ */
 .container{
   display:grid;grid-template-columns:repeat(2,1fr);
-  gap:12px;padding:0 16px 4px;
+  gap:14px;padding:0 16px 4px;
   max-width:1200px;margin:0 auto;
 }
+
 .card{
-  background:var(--card);border-radius:var(--radius);
+  background:var(--card);
+  border-radius:var(--radius);
   padding:20px 14px;text-align:center;
-  box-shadow:0 6px 20px rgba(79,70,229,.08);
+  box-shadow:0 4px 18px rgba(232,101,10,.10);
   cursor:pointer;position:relative;overflow:hidden;
-  transition:transform .2s;
+  transition:transform .2s,box-shadow .2s;
+  border:1.5px solid #F5E8D0;
 }
+
+/* Saffron corner arc */
 .card::before{
-  content:'';position:absolute;top:-28px;right:-28px;
-  width:75px;height:75px;border-radius:50%;
-  background:linear-gradient(135deg,var(--primary),var(--accent));opacity:.07;
+  content:'';position:absolute;top:-32px;right:-32px;
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--saffron),#F0A500);
+  opacity:.10;
 }
+.card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--saffron),var(--green));
+  opacity:0;transition:opacity .2s;border-radius:0 0 var(--radius) var(--radius);
+}
+.card:hover::after,.card:focus::after{opacity:1;}
 .card:active{transform:scale(.97);}
-.card img{width:54px;height:54px;object-fit:contain;margin-bottom:10px;}
-.card h3{color:var(--text);font-size:14px;font-weight:800;margin-bottom:5px;line-height:1.2;}
-.card p{color:var(--muted);font-size:12px;margin-bottom:14px;line-height:1.4;}
+.card img{width:54px;height:54px;object-fit:contain;margin-bottom:10px;filter:drop-shadow(0 2px 6px rgba(232,101,10,.2));}
+.card h3{color:var(--text);font-size:14px;font-weight:700;margin-bottom:5px;line-height:1.3;}
+.card p{color:var(--muted);font-size:11.5px;margin-bottom:14px;line-height:1.5;}
 .card a{
   display:inline-block;padding:9px 18px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
+  background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
   color:#fff;text-decoration:none;border-radius:30px;
-  font-weight:800;font-size:12px;min-height:36px;line-height:1.6;
+  font-weight:700;font-size:12px;min-height:36px;line-height:1.6;
+  box-shadow:0 3px 10px rgba(232,101,10,.3);
+  transition:transform .15s;
 }
-.no-results{
-  grid-column:1/-1;text-align:center;
-  padding:32px;color:var(--muted);font-weight:700;
-  display:none;
-}
+.card a:active{transform:scale(.96);}
+.no-results{grid-column:1/-1;text-align:center;padding:32px;color:var(--muted);font-weight:700;display:none;}
 
 /* ─ STATS STRIP ─ */
 .stats-strip{
   display:flex;justify-content:space-around;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  margin:20px 16px;border-radius:var(--radius);
-  padding:18px 10px;max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
+  background:linear-gradient(135deg,var(--maroon) 0%,var(--saffron-deep) 50%,var(--saffron) 100%);
+  margin:24px 16px;border-radius:var(--radius);
+  padding:20px 10px;max-width:calc(1200px - 32px);
+  margin-left:auto;margin-right:auto;
+  position:relative;overflow:hidden;
 }
-.stat{text-align:center;color:#fff;}
-.stat-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;line-height:1;}
-.stat-lbl{font-size:11px;opacity:.8;margin-top:3px;font-weight:700;}
+.stats-strip::before{
+  content:'';position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='20' cy='20' r='8' fill='none' stroke='%23ffffff' stroke-opacity='0.06' stroke-width='1'/%3E%3C/svg%3E");
+}
+.stat{text-align:center;color:#fff;position:relative;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;line-height:1;}
+.stat-lbl{font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;font-size:11px;opacity:.85;margin-top:3px;font-weight:600;}
 
 /* ─ HOW IT WORKS ─ */
 .steps{
@@ -233,27 +296,42 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
 .step{
   display:flex;align-items:center;gap:14px;
   background:#fff;border-radius:16px;
-  padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.06);
+  padding:16px;box-shadow:0 4px 14px rgba(232,101,10,.08);
+  border:1.5px solid #F5E8D0;
 }
 .step-num{
-  width:40px;height:40px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;font-weight:900;font-size:16px;
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
+  color:#fff;font-weight:900;font-size:17px;
   display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 10px rgba(232,101,10,.3);
 }
-.step-text h4{font-size:15px;font-weight:800;}
+.step-text h4{font-size:15px;font-weight:700;font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;}
 .step-text p{font-size:12px;color:var(--muted);margin-top:2px;}
 
-/* ─ AUTH MODAL (popup, opened from top profile pill / bottom nav) ─ */
+/* ─ BOTTOM STRIP ─ */
+.festive-strip{
+  background:linear-gradient(90deg,var(--green) 0%,var(--green-light) 50%,var(--green) 100%);
+  margin:24px 16px;border-radius:14px;
+  padding:14px 20px;color:#fff;
+  display:flex;align-items:center;gap:12px;
+  max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
+  box-shadow:0 6px 20px rgba(27,107,53,.25);
+}
+.festive-strip .fs-icon{font-size:28px;flex-shrink:0;}
+.festive-strip h4{font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;font-size:15px;font-weight:700;}
+.festive-strip p{font-size:12px;opacity:.85;margin-top:2px;}
+
+/* ─ AUTH MODAL ─ */
 .modal-overlay{
-  position:fixed;inset:0;background:rgba(17,15,45,.55);
+  position:fixed;inset:0;background:rgba(26,15,0,.6);
   z-index:2000;display:none;
   align-items:flex-end;justify-content:center;
-  backdrop-filter:blur(2px);
+  backdrop-filter:blur(3px);
 }
 .modal-overlay.open{display:flex;}
 .modal-sheet{
-  background:var(--bg);width:100%;max-width:500px;
+  background:var(--cream);width:100%;max-width:500px;
   max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;
   padding:14px 16px 28px;position:relative;
   animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1);
@@ -263,7 +341,7 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
   .modal-overlay{align-items:center;}
   .modal-sheet{border-radius:24px;max-height:85vh;}
 }
-.modal-handle{width:40px;height:5px;background:#d8d8f0;border-radius:10px;margin:4px auto 10px;}
+.modal-handle{width:40px;height:5px;background:#D8C9A8;border-radius:10px;margin:4px auto 10px;}
 .modal-close{
   position:absolute;top:14px;right:14px;
   width:34px;height:34px;border-radius:50%;
@@ -275,151 +353,133 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
 /* ─ AUTH ─ */
 .auth-container{padding:0 4px;display:flex;flex-direction:column;gap:14px;max-width:500px;margin:0 auto;}
 .auth-tabs{display:flex;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.06);}
-.auth-tab{flex:1;padding:14px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;transition:.3s;}
-.auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
-.auth-card{background:#fff;padding:24px 20px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;}
+.auth-tab{flex:1;padding:14px;border:none;background:transparent;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;transition:.3s;}
+.auth-tab.active{background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));color:#fff;}
+.auth-card{background:#fff;padding:24px 20px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;border:1.5px solid #F0E0C0;}
 .auth-card.visible{display:block;}
-.auth-card h2{font-family:'Syne',sans-serif;margin-bottom:18px;font-size:1.4rem;}
+.auth-card h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;margin-bottom:18px;font-size:1.4rem;color:var(--text);}
 
-/* ─ PHOTO UPLOAD (register) ─ */
+/* Photo upload */
 .photo-upload-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;}
 .photo-circle{
   width:88px;height:88px;border-radius:50%;position:relative;
-  background:#f0f0fa;border:2.5px dashed #c7c5ef;
+  background:#FDF5E6;border:2.5px dashed #D4A96A;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;overflow:hidden;transition:border-color .2s,background .2s;
 }
 .photo-circle:active{transform:scale(.97);}
-.photo-circle.has-image{border:2.5px solid var(--primary);background:#fff;}
+.photo-circle.has-image{border:2.5px solid var(--saffron);}
 .photo-circle img{width:100%;height:100%;object-fit:cover;display:none;}
 .photo-circle img.show{display:block;}
 .photo-plus{font-size:26px;color:var(--muted);}
 .photo-circle.has-image .photo-plus{
   display:flex;align-items:center;justify-content:center;
   position:absolute;bottom:0;right:0;width:28px;height:28px;
-  background:var(--primary);color:#fff;border-radius:50%;
+  background:var(--saffron);color:#fff;border-radius:50%;
   font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,.25);
 }
-.photo-spinner{
-  display:none;position:absolute;inset:0;border-radius:50%;
-  align-items:center;justify-content:center;background:rgba(255,255,255,.75);
-}
+.photo-spinner{display:none;position:absolute;inset:0;border-radius:50%;align-items:center;justify-content:center;background:rgba(255,255,255,.75);}
 .photo-spinner.show{display:flex;}
-.photo-spinner::after{
-  content:'';width:26px;height:26px;border:3px solid #e0e0f5;
-  border-top-color:var(--primary);border-radius:50%;animation:spin .7s linear infinite;
-}
+.photo-spinner::after{content:'';width:26px;height:26px;border:3px solid #F0E0C0;border-top-color:var(--saffron);border-radius:50%;animation:spin .7s linear infinite;}
 .photo-hint{font-size:11px;color:var(--muted);font-weight:700;margin-top:8px;}
 
-/* Input groups with validation */
+/* Input groups */
 .input-group{position:relative;margin-bottom:12px;}
 .field-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
 .input-group input{
   width:100%;padding:14px 42px 14px 44px;
-  border:2px solid #f0f0f0;border-radius:14px;
-  font-family:'Nunito',sans-serif;font-size:15px;
-  background:#fafafa;outline:none;color:var(--text);
+  border:2px solid #EDD9B5;border-radius:14px;
+  font-family:'Poppins',sans-serif;font-size:15px;
+  background:#FDFAF5;outline:none;color:var(--text);
   transition:border-color .2s;min-height:var(--tap);
 }
-.input-group input:focus{border-color:var(--primary);background:#fff;}
-.input-group input.valid{border-color:#16a34a;}
+.input-group input:focus{border-color:var(--saffron);background:#fff;}
+.input-group input.valid{border-color:var(--green);}
 .input-group input.invalid{border-color:#dc2626;}
 .valid-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;display:none;}
-.field-error{font-size:11px;color:var(--error);font-weight:700;margin-top:4px;margin-left:4px;display:none;}
-
-/* Password toggle */
+.field-error{font-size:11px;color:#dc2626;font-weight:700;margin-top:4px;margin-left:4px;display:none;}
 .pass-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);}
-
-/* Password strength */
 .pw-strength{height:4px;border-radius:4px;background:#eee;margin:-8px 0 10px;overflow:hidden;}
 .pw-strength-bar{height:100%;width:0;border-radius:4px;transition:width .3s,background .3s;}
 
 .auth-card button.submit-btn{
   width:100%;padding:15px;border:none;border-radius:14px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;font-family:'Nunito',sans-serif;
+  background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
+  color:#fff;font-family:'Poppins',sans-serif;
   font-weight:800;font-size:16px;cursor:pointer;
   min-height:var(--tap);
-  box-shadow:0 6px 18px rgba(79,70,229,.35);
-  display:flex;align-items:center;justify-content:center;
-  transition:opacity .2s;
+  box-shadow:0 6px 18px rgba(232,101,10,.35);
+  display:flex;align-items:center;justify-content:center;transition:opacity .2s;
 }
 .auth-card button.submit-btn:active{opacity:.9;}
 .auth-card button.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
-
-.forgot-link{display:block;text-align:right;font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;margin:-4px 0 14px;}
+.forgot-link{display:block;text-align:right;font-size:13px;color:var(--saffron-deep);font-weight:700;text-decoration:none;margin:-4px 0 14px;}
 
 /* ─ PROFILE ─ */
 .profile-card{padding:0 4px;background:transparent;display:none;max-width:500px;margin:0 auto;}
-.profile-card-inner{background:#fff;padding:28px 22px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);}
+.profile-card-inner{background:#fff;padding:28px 22px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);border:1.5px solid #F0E0C0;}
 .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
 .avatar{
   width:62px;height:62px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
+  background:linear-gradient(135deg,var(--saffron-deep),var(--maroon));
   display:flex;align-items:center;justify-content:center;
-  font-size:26px;color:#fff;font-weight:900; 
+  font-size:26px;color:#fff;font-weight:900;
 }
-.profile-header-text h2{font-family:'Syne',sans-serif;font-size:1.3rem;}
+.profile-header-text h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.3rem;}
 .profile-header-text p{color:var(--muted);font-size:13px;}
-.profile-info{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #f3f4f6;font-size:14px;}
+.profile-info{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #F5EDD6;font-size:14px;}
 .profile-info:last-of-type{border-bottom:none;}
 .info-icon{font-size:20px;flex-shrink:0;}
 .info-label{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
 .info-value{font-weight:700;margin-top:2px;}
 .edit-profile-btn{
   margin-top:18px;width:100%;padding:14px;border:none;border-radius:14px;
-  background:#eef2ff;color:var(--primary);font-family:'Nunito',sans-serif;
+  background:#FFF3E6;color:var(--saffron-deep);font-family:'Poppins',sans-serif;
   font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);
+  border:1.5px solid #FFD4A0;
 }
-.logout-btn{margin-top:10px;width:100%;padding:14px;border:none;border-radius:14px;background:#fee2e2;color:#dc2626;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);}
+.logout-btn{margin-top:10px;width:100%;padding:14px;border:none;border-radius:14px;background:#fee2e2;color:#dc2626;font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);}
 .edit-btn-row{display:flex;gap:10px;}
 .edit-btn-row .submit-btn{flex:1.4;}
-.cancel-btn{
-  flex:1;padding:15px;border:2px solid #eee;border-radius:14px;
-  background:#fff;color:var(--muted);font-family:'Nunito',sans-serif;
-  font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);
-}
-
-/* ─ TESTIMONIALS ─ */
-.testimonials{padding:0 16px;display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto;}
-.review{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.06);}
-.review-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
-.rev-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;flex-shrink:0;}
-.rev-name{font-weight:800;font-size:14px;}
-.stars{color:#f59e0b;font-size:13px;}
-.rev-text{font-size:13px;color:var(--muted);line-height:1.5;}
+.cancel-btn{flex:1;padding:15px;border:2px solid #EDD9B5;border-radius:14px;background:#fff;color:var(--muted);font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);}
 
 /* ─ CONTACT STRIP ─ */
 .contact-strip{
-  margin:20px 16px;border-radius:var(--radius);
-  background:#fff;padding:20px;
+  margin:24px 16px;border-radius:var(--radius);
+  background:#fff;padding:22px;
   box-shadow:0 4px 14px rgba(0,0,0,.06);
   max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
+  border:1.5px solid #F0E0C0;
 }
-.contact-strip h3{font-family:'Syne',sans-serif;font-size:1.1rem;margin-bottom:14px;}
+.contact-strip h3{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.1rem;margin-bottom:14px;color:var(--text);}
 .contact-btns{display:flex;gap:10px;flex-wrap:wrap;}
 .contact-btn{
   display:inline-flex;align-items:center;gap:7px;
   padding:12px 18px;border-radius:50px;font-weight:800;
   font-size:13px;text-decoration:none;min-height:44px;
-  transition:transform .15s;
+  transition:transform .15s;font-family:'Poppins',sans-serif;
 }
 .contact-btn:active{transform:scale(.95);}
 .contact-btn.whatsapp-btn{background:#25d366;color:#fff;}
-.contact-btn.call-btn{background:var(--primary);color:#fff;}
-.contact-btn.email-btn{background:#f3f4f6;color:var(--text);}
+.contact-btn.call-btn{background:var(--saffron-deep);color:#fff;}
+.contact-btn.email-btn{background:#F5EDD6;color:var(--text);border:1.5px solid #D4A96A;}
 
 /* ─ FOOTER ─ */
-footer{background:#1e1b4b;color:#fff;text-align:center;padding:36px 20px 20px;margin-top:24px;}
-footer h2{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:8px;}
+footer{
+  background:linear-gradient(160deg,#1A0F00,#3B1A00);
+  color:#fff;text-align:center;padding:36px 20px 20px;margin-top:24px;
+}
+footer h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.4rem;margin-bottom:6px;}
+.footer-tagline{font-size:13px;opacity:.6;margin-bottom:14px;font-family:'Tiro Devanagari Marathi','Poppins',sans-serif;}
 footer .footer-links{display:flex;justify-content:center;gap:16px;margin:12px 0;flex-wrap:wrap;}
-footer .footer-links a{color:rgba(255,255,255,.6);font-size:13px;font-weight:700;text-decoration:none;}
-footer p{font-size:12px;opacity:.45;margin-top:8px;}
+footer .footer-links a{color:rgba(255,255,255,.55);font-size:13px;font-weight:700;text-decoration:none;}
+footer p{font-size:12px;opacity:.35;margin-top:10px;}
+.footer-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(232,101,10,.5),transparent);margin:14px 0;}
 
 /* ─ WHATSAPP FAB ─ */
 .whatsapp-fab{
-  position:fixed;bottom:84px;right:16px;
-  width:52px;height:52px;background:#25d366;
+  position:fixed;bottom:88px;right:16px;
+  width:54px;height:54px;background:#25d366;
   border-radius:50%;display:flex;align-items:center;justify-content:center;
   box-shadow:0 6px 18px rgba(37,211,102,.45);
   z-index:998;text-decoration:none;font-size:26px;
@@ -429,41 +489,46 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 
 /* ─ BOTTOM NAV ─ */
 .bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;background:#fff;
+  position:fixed;bottom:0;left:0;right:0;
+  background:#fff;
   display:flex;justify-content:space-around;
   padding:8px 0 calc(8px + env(safe-area-inset-bottom));
-  box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:999;
+  box-shadow:0 -2px 20px rgba(232,101,10,.12);
+  z-index:999;
+  border-top:2px solid #F5EDD6;
 }
-.bottom-nav a{
+.bottom-nav a,.bottom-nav button{
   display:flex;flex-direction:column;align-items:center;gap:2px;
   text-decoration:none;color:var(--muted);
   font-size:10px;font-weight:700;padding:4px 8px;
   border-radius:12px;min-width:var(--tap);transition:color .2s;
-  background:none;border:none;cursor:pointer;
+  background:none;border:none;cursor:pointer;font-family:'Poppins',sans-serif;
 }
-.bottom-nav a .icon{font-size:22px;line-height:1;}
-.bottom-nav a.active{color:var(--primary);}
+.bottom-nav a .icon,.bottom-nav button .icon{font-size:22px;line-height:1;}
+.bottom-nav a.active,.bottom-nav button.active{color:var(--saffron-deep);}
 
 /* ─ DESKTOP ─ */
-@media(min-width:600px){
-  .container{grid-template-columns:repeat(3,1fr);}
-}
+@media(min-width:600px){.container{grid-template-columns:repeat(3,1fr);}}
 @media(min-width:900px){
   .container{grid-template-columns:repeat(4,1fr);}
   .steps{flex-direction:row;max-width:1200px;}
-  .testimonials{flex-direction:row;max-width:1200px;}
 }
+
+/* Edit profile card */
+#editProfileCard{background:#fff;padding:24px 20px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;border:1.5px solid #F0E0C0;}
+#editProfileCard.visible{display:block;}
+#editProfileCard h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;margin-bottom:18px;font-size:1.4rem;}
 </style>
 </head>
 <body>
 
 <!-- Location -->
-<div class="top-location">📍 Akole, Maharashtra</div>
+<div class="top-location">📍 अकोले, महाराष्ट्र</div>
 
-<!-- Top Profile Pill (app-style quick access to account) -->
+<!-- Top Profile Pill -->
 <button type="button" class="top-profile" id="topProfile" onclick="openAccountModal()">
   <span class="tp-avatar" id="tpAvatar">👤</span>
-  <span class="tp-text" id="tpText">Login</span>
+  <span class="tp-text" id="tpText">लॉगिन</span>
 </button>
 
 <!-- Toast -->
@@ -471,141 +536,176 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 
 <!-- Header -->
 <header>
-  <h1>Sarva-Nest</h1>
-  <p>Fast · Trusted · Professional</p>
-</header>
+   <h1>सर्व नेस्ट</h1>
+  <p class="header-tagline">जलद · विश्वासू · व्यावसायिक</p>
+ </header>
 
 <!-- Slider -->
 <section class="slider" id="sliderEl">
   <div class="slide active">
     <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Food Delivery">
-    <div class="caption"><h2>Food Delivery</h2><p>Fresh & Hot — Delivered Fast</p></div>
+    <div class="caption">
+      <div class="caption-badge">🍛 अकोले स्पेशल</div>
+      <h2>जेवण डिलिव्हरी</h2>
+      <p>ताजे व गरम — जलद डिलिव्हरी</p>
+    </div>
   </div>
   <div class="slide">
     <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Home Services">
-    <div class="caption"><h2>Home Services</h2><p>Professionals At Your Doorstep</p></div>
+    <div class="caption">
+      <div class="caption-badge">🏠 घरी सेवा</div>
+      <h2>होम सर्व्हिसेस</h2>
+      <p>तज्ञ व्यावसायिक दारापर्यंत</p>
+    </div>
   </div>
   <div class="slide">
     <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Security">
-    <div class="caption"><h2>Security Services</h2><p>Trusted & Safe Guards</p></div>
+    <div class="caption">
+      <div class="caption-badge">🛡️ सुरक्षित</div>
+      <h2>सुरक्षा सेवा</h2>
+      <p>विश्वासू व सुरक्षित रक्षक</p>
+    </div>
   </div>
   <button class="prev" aria-label="Previous">&#8249;</button>
   <button class="next" aria-label="Next">&#8250;</button>
   <div class="slider-dots" id="sliderDots"></div>
 </section>
 
-
 <!-- Search -->
 <div class="search-wrap">
   <div class="search-box">
     <span class="search-icon">🔍</span>
-    <input type="search" id="searchInput" placeholder="Search services..." autocomplete="off">
+    <input type="search" id="searchInput" placeholder="सेवा शोधा..." autocomplete="off">
     <button id="clearSearch" aria-label="Clear">✕</button>
   </div>
 </div>
 
+  
+
+
 <!-- Services -->
-<div class="section-title" id="services">
-  <h2>Popular Services</h2>
-  <a href="#" class="see-all">See all</a>
+<div class="rangoli-divider" id="services">
+  <div class="rdivider-motif">🌸</div>
+  <h2>लोकप्रिय सेवा</h2>
+  <div class="rdivider-line"></div>
+  <a href="#" class="see-all">सर्व पहा</a>
 </div>
 
 <div class="container" id="serviceGrid">
-  <div class="card" data-name="food delivery">
+  <div class="card" data-name="food delivery जेवण">
     <img src="https://cdn-icons-png.flaticon.com/128/1037/1037855.png" alt="Food">
-    <h3>Food Delivery</h3><p>Fresh food delivered quickly.</p>
-    <a href="food.html">Order Now</a>
-  </div>  <div class="card" data-name="food delivery">
-    <img src="https://cdn-icons-png.flaticon.com/128/2805/2805947.png" alt="Food">
-    <h3>vegitable Delivery</h3><p>Fresh vegetables delivered quickly.</p>
-    <a href="veggie-delivery.html">Order Now</a>
+    <h3>जेवण डिलिव्हरी</h3>
+    <p>ताजे जेवण जलद डिलिव्हरी.</p>
+    <a href="food.html">ऑर्डर करा</a>
   </div>
-   <div class="card" data-name="food delivery">
-    <img src="https://img.icons8.com/?size=80&id=v1ZowcUYJcqz&format=png" alt="Food">
-    <h3>Groceries delivery</h3><p>Fresh Groceries delivered quickly.</p>
-    <a href="grocery-store.html">Order Now</a>
+  <div class="card" data-name="vegetable delivery भाजीपाला">
+    <img src="https://cdn-icons-png.flaticon.com/128/2805/2805947.png" alt="Vegetable">
+    <h3>भाजीपाला डिलिव्हरी</h3>
+    <p>ताजा भाजीपाला घरपोच.</p>
+    <a href="veggie-delivery.html">ऑर्डर करा</a>
   </div>
- 
- 
- 
-  <div class="card" data-name="cleaning home">
-    <img src="https://tse1.mm.bing.net/th/id/OIP.bwzYgM-7cQ1whDm5eTvnXgHaHa?r=0&cb=thfvnextfalcon2&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Cleaning">
-    <h3>BookBazzar</h3><p>Sell and Buy our books </p>
-    <a href="bookbazaar.html">Sell Or Buy</a>
+  <div class="card" data-name="groceries किराणा">
+    <img src="https://img.icons8.com/?size=80&id=v1ZowcUYJcqz&format=png" alt="Grocery">
+    <h3>किराणा डिलिव्हरी</h3>
+    <p>किराणा सामान घरपोच.</p>
+    <a href="grocery-store.html">ऑर्डर करा</a>
   </div>
-  <div class="card" data-name="laundry washing clothes">
+  <div class="card" data-name="book bazaar पुस्तक">
+    <img src="https://cdn-icons-png.flaticon.com/128/2232/2232688.png" alt="Books">
+    <h3>बुकबझार</h3>
+    <p>जुनी पुस्तके विका व खरेदी करा.</p>
+    <a href="bookbazaar.html">पहा</a>
+  </div>
+  <div class="card" data-name="laundry washing कपडे">
     <img src="https://img.icons8.com/color/96/washing-machine.png" alt="Laundry">
-    <h3>Laundry</h3><p>Pick-up & delivery service.</p>
-    <a href="loundary.html">Book Now</a>
+    <h3>लाँड्री सेवा</h3>
+    <p>कपडे घेणे व परत देणे.</p>
+    <a href="loundary.html">बुक करा</a>
   </div>
-
-  
-  <div class="no-results" id="noResults">😕 No services found</div>
+  <div class="no-results" id="noResults">😕 सेवा सापडली नाही</div>
 </div>
 
 <!-- How it Works -->
-<div class="section-title" style="margin-top:8px;">
-  <h2>How It Works</h2>
+<div class="rangoli-divider" style="margin-top:28px;">
+  <div class="rdivider-motif">🪔</div>
+  <h2>कसे काम करते?</h2>
+  <div class="rdivider-line"></div>
 </div>
 <div class="steps">
   <div class="step">
-    <div class="step-num">1</div>
-    <div class="step-text"><h4>Choose a Service</h4><p>Browse and pick from our wide range of services.</p></div>
+    <div class="step-num">१</div>
+    <div class="step-text">
+      <h4>सेवा निवडा</h4>
+      <p>आमच्या विविध सेवांमधून निवड करा.</p>
+    </div>
   </div>
   <div class="step">
-    <div class="step-num">2</div>
-    <div class="step-text"><h4>Book & Confirm</h4><p>Schedule at your preferred time. Instant confirmation.</p></div>
+    <div class="step-num">२</div>
+    <div class="step-text">
+      <h4>बुक करा</h4>
+      <p>तुमच्या वेळेनुसार बुकिंग करा. तात्काळ पुष्टी.</p>
+    </div>
   </div>
   <div class="step">
-    <div class="step-num">3</div>
-    <div class="step-text"><h4>Expert Arrives</h4><p>Our verified professional comes to your doorstep.</p></div>
+    <div class="step-num">३</div>
+    <div class="step-text">
+      <h4>तज्ञ येतो</h4>
+      <p>आमचा तज्ञ तुमच्या दारात येतो.</p>
+    </div>
   </div>
 </div>
 
+<!-- Festive green strip -->
+<div class="festive-strip">
+  <span class="fs-icon">🌿</span>
+  <div>
+    <h4>अकोलेच्या लोकांसाठी, अकोलेच्या लोकांकडून</h4>
+    <p>स्थानिक सेवा — विश्वासार्ह व जलद</p>
+  </div>
+</div>
 
 <!-- Contact Strip -->
 <div class="contact-strip" id="contact">
-  <h3>📞 Get In Touch</h3>
+  <h3>📞 संपर्क साधा</h3>
   <div class="contact-btns">
     <a href="https://wa.me/919307320279" class="contact-btn whatsapp-btn">💬 WhatsApp</a>
-    <a href="tel:+919307320279" class="contact-btn call-btn">📞 Call Us</a>
-    <a href="mailto:info@onlineservicesstore.in" class="contact-btn email-btn">📧 Email</a>
+    <a href="tel:+919307320279" class="contact-btn call-btn">📞 फोन करा</a>
+    <a href="mailto:info@onlineservicesstore.in" class="contact-btn email-btn">📧 ईमेल</a>
   </div>
 </div>
 
 <!-- WhatsApp FAB -->
-<a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="Chat on WhatsApp">💬</a>
+<a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="WhatsApp वर चॅट करा">💬</a>
 
 <!-- Bottom Nav -->
 <nav class="bottom-nav">
-  <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>Home</a>
-  <a href="order-tracking (1).html" id="nav-services"><span class="icon">⚡</span>Track</a>
-  <button type="button" id="nav-account" onclick="openAccountModal()"><span class="icon">👤</span>Account</button>
-  <a href="#contact" id="nav-contact"><span class="icon">📞</span>Contact</a>
+  <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>मुख्य</a>
+  <a href="order-tracking (1).html" id="nav-services"><span class="icon">⚡</span>ट्रॅक</a>
+  <button type="button" id="nav-account" onclick="openAccountModal()"><span class="icon">👤</span>खाते</button>
+  <a href="#contact" id="nav-contact"><span class="icon">📞</span>संपर्क</a>
 </nav>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- ACCOUNT MODAL (Login / Register / Profile)   -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- Footer -->
+
+<!-- ACCOUNT MODAL -->
 <div class="modal-overlay" id="accountModalOverlay" onclick="if(event.target===this) closeAccountModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <button class="modal-close" onclick="closeAccountModal()" aria-label="Close">✕</button>
 
     <div class="section-title" id="account" style="padding:6px 4px 10px;">
-      <h2 id="authSectionTitle">My Account</h2>
+      <h2 id="authSectionTitle">माझे खाते</h2>
     </div>
 
     <div class="auth-container" id="authContainer">
       <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab('register')">Register</button>
-        <button class="auth-tab" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab active" onclick="switchTab('register')">नोंदणी करा</button>
+        <button class="auth-tab" onclick="switchTab('login')">लॉगिन</button>
       </div>
 
       <!-- Register -->
       <div class="auth-card visible" id="registerCard">
-        <h2>Create Account</h2>
-
+        <h2>खाते तयार करा</h2>
         <div class="photo-upload-wrap">
           <div class="photo-circle" id="photoCircle" onclick="document.getElementById('imageFile').click()">
             <img id="preview" alt="Profile preview">
@@ -614,96 +714,27 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
           </div>
           <input type="file" id="imageFile" accept="image/*" style="display:none" onchange="uploadToCloudinary()">
           <input type="hidden" id="imageUrl" value="">
-          <p class="photo-hint" id="photoHint">Add profile photo (optional)</p>
+          <p class="photo-hint" id="photoHint">प्रोफाइल फोटो जोडा (पर्यायी)</p>
         </div>
-
-        <div class="input-group">
-          <span class="field-icon">👤</span>
-          <input type="text" id="reg_name" placeholder="Full Name" autocomplete="name">
-          <span class="valid-icon" id="vi_name"></span>
-          <div class="field-error" id="fe_name">Please enter your full name</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">🎂</span>
-          <input type="number" id="reg_age" placeholder="Age" min="10" max="100" inputmode="numeric">
-          <span class="valid-icon" id="vi_age"></span>
-          <div class="field-error" id="fe_age">Enter a valid age (10–100)</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">📱</span>
-          <input type="tel" id="reg_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
-          <span class="valid-icon" id="vi_mobile"></span>
-          <div class="field-error" id="fe_mobile">Enter a valid 10-digit mobile number</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">💬</span>
-          <input type="tel" id="reg_whatsapp" placeholder="WhatsApp Number" inputmode="tel" maxlength="10">
-          <span class="valid-icon" id="vi_whatsapp"></span>
-          <div class="field-error" id="fe_whatsapp">Enter a valid 10-digit WhatsApp number</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">🏠</span>
-          <input type="text" id="reg_address" placeholder="Address" autocomplete="street-address">
-          <span class="valid-icon" id="vi_address"></span>
-          <div class="field-error" id="fe_address">Please enter your address</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">📧</span>
-          <input type="email" id="reg_email" placeholder="Email Address" autocomplete="email" inputmode="email">
-          <span class="valid-icon" id="vi_reg_email"></span>
-          <div class="field-error" id="fe_reg_email">Enter a valid email address</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">🔒</span>
-          <input type="password" id="reg_password" placeholder="Password (min 6 chars)" autocomplete="new-password">
-          <button class="pass-toggle" type="button" onclick="togglePass('reg_password',this)">👁️</button>
-          <div class="field-error" id="fe_reg_pass">Password must be at least 6 characters</div>
-        </div>
+        <div class="input-group"><span class="field-icon">👤</span><input type="text" id="reg_name" placeholder="पूर्ण नाव" autocomplete="name"><span class="valid-icon" id="vi_name"></span><div class="field-error" id="fe_name">कृपया पूर्ण नाव टाका</div></div>
+        <div class="input-group"><span class="field-icon">🎂</span><input type="number" id="reg_age" placeholder="वय" min="10" max="100" inputmode="numeric"><span class="valid-icon" id="vi_age"></span><div class="field-error" id="fe_age">वैध वय टाका (१०–१००)</div></div>
+        <div class="input-group"><span class="field-icon">📱</span><input type="tel" id="reg_mobile" placeholder="मोबाइल नंबर" inputmode="tel" maxlength="10"><span class="valid-icon" id="vi_mobile"></span><div class="field-error" id="fe_mobile">१०-अंकी मोबाइल नंबर टाका</div></div>
+        <div class="input-group"><span class="field-icon">💬</span><input type="tel" id="reg_whatsapp" placeholder="WhatsApp नंबर" inputmode="tel" maxlength="10"><span class="valid-icon" id="vi_whatsapp"></span><div class="field-error" id="fe_whatsapp">१०-अंकी WhatsApp नंबर टाका</div></div>
+        <div class="input-group"><span class="field-icon">🏠</span><input type="text" id="reg_address" placeholder="पत्ता" autocomplete="street-address"><span class="valid-icon" id="vi_address"></span><div class="field-error" id="fe_address">कृपया पत्ता टाका</div></div>
+        <div class="input-group"><span class="field-icon">📧</span><input type="email" id="reg_email" placeholder="ईमेल पत्ता" autocomplete="email" inputmode="email"><span class="valid-icon" id="vi_reg_email"></span><div class="field-error" id="fe_reg_email">वैध ईमेल पत्ता टाका</div></div>
+        <div class="input-group"><span class="field-icon">🔒</span><input type="password" id="reg_password" placeholder="पासवर्ड (किमान ६ अक्षरे)" autocomplete="new-password"><button class="pass-toggle" type="button" onclick="togglePass('reg_password',this)">👁️</button><div class="field-error" id="fe_reg_pass">पासवर्ड किमान ६ अक्षरांचा असावा</div></div>
         <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
-
-        <div class="input-group">
-          <span class="field-icon">🔒</span>
-          <input type="password" id="reg_confirm" placeholder="Confirm Password" autocomplete="new-password">
-          <button class="pass-toggle" type="button" onclick="togglePass('reg_confirm',this)">👁️</button>
-          <div class="field-error" id="fe_confirm">Passwords do not match</div>
-        </div>
-
-        <button class="submit-btn" id="regBtn" onclick="registerUser()">
-          <span class="btn-text">Create Account</span>
-          <span class="btn-spinner"></span>
-        </button>
+        <div class="input-group"><span class="field-icon">🔒</span><input type="password" id="reg_confirm" placeholder="पासवर्ड पुष्टी करा" autocomplete="new-password"><button class="pass-toggle" type="button" onclick="togglePass('reg_confirm',this)">👁️</button><div class="field-error" id="fe_confirm">पासवर्ड जुळत नाही</div></div>
+        <button class="submit-btn" id="regBtn" onclick="registerUser()"><span class="btn-text">खाते तयार करा</span><span class="btn-spinner"></span></button>
       </div>
 
       <!-- Login -->
       <div class="auth-card" id="loginCard">
-        <h2>Welcome Back 👋</h2>
-
-        <div class="input-group">
-          <span class="field-icon">📧</span>
-          <input type="email" id="log_email" placeholder="Email Address" autocomplete="email" inputmode="email">
-          <span class="valid-icon" id="vi_log_email"></span>
-          <div class="field-error" id="fe_log_email">Enter a valid email address</div>
-        </div>
-
-        <div class="input-group">
-          <span class="field-icon">🔒</span>
-          <input type="password" id="log_password" placeholder="Password" autocomplete="current-password">
-          <button class="pass-toggle" type="button" onclick="togglePass('log_password',this)">👁️</button>
-          <div class="field-error" id="fe_log_pass">Please enter your password</div>
-        </div>
-
-        <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
-
-        <button class="submit-btn" id="loginBtn" onclick="loginUser()">
-          <span class="btn-text">Login</span>
-          <span class="btn-spinner"></span>
-        </button>
+        <h2>स्वागत आहे 👋</h2>
+        <div class="input-group"><span class="field-icon">📧</span><input type="email" id="log_email" placeholder="ईमेल पत्ता" autocomplete="email" inputmode="email"><span class="valid-icon" id="vi_log_email"></span><div class="field-error" id="fe_log_email">वैध ईमेल पत्ता टाका</div></div>
+        <div class="input-group"><span class="field-icon">🔒</span><input type="password" id="log_password" placeholder="पासवर्ड" autocomplete="current-password"><button class="pass-toggle" type="button" onclick="togglePass('log_password',this)">👁️</button><div class="field-error" id="fe_log_pass">कृपया पासवर्ड टाका</div></div>
+        <a href="#" class="forgot-link" onclick="forgotPassword(event)">पासवर्ड विसरलात?</a>
+        <button class="submit-btn" id="loginBtn" onclick="loginUser()"><span class="btn-text">लॉगिन करा</span><span class="btn-spinner"></span></button>
       </div>
     </div>
 
@@ -717,19 +748,18 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
             <p id="profileEmail">–</p>
           </div>
         </div>
-        <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">Mobile</div><div class="info-value" id="profileMobile">–</div></div></div>
+        <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">मोबाइल</div><div class="info-value" id="profileMobile">–</div></div></div>
         <div class="profile-info"><span class="info-icon">💬</span><div><div class="info-label">WhatsApp</div><div class="info-value" id="profileWhatsapp">–</div></div></div>
-        <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">Address</div><div class="info-value" id="profileAddress">–</div></div></div>
-        <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">Age</div><div class="info-value" id="profileAge">–</div></div></div>
-        <button class="edit-profile-btn" onclick="openEditProfile()">✏️ Edit Profile</button>
-        <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+        <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">पत्ता</div><div class="info-value" id="profileAddress">–</div></div></div>
+        <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">वय</div><div class="info-value" id="profileAge">–</div></div></div>
+        <button class="edit-profile-btn" onclick="openEditProfile()">✏️ प्रोफाइल संपादित करा</button>
+        <button class="logout-btn" onclick="logoutUser()">🚪 लॉगआउट</button>
       </div>
     </div>
 
     <!-- Edit Profile -->
-    <div class="auth-card" id="editProfileCard">
-      <h2>Edit Profile</h2>
-
+    <div id="editProfileCard">
+      <h2>प्रोफाइल संपादित करा</h2>
       <div class="photo-upload-wrap">
         <div class="photo-circle" id="editPhotoCircle" onclick="document.getElementById('editImageFile').click()">
           <img id="editPreview" alt="Profile preview">
@@ -738,72 +768,27 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
         </div>
         <input type="file" id="editImageFile" accept="image/*" style="display:none" onchange="uploadEditPhoto()">
         <input type="hidden" id="editImageUrl" value="">
-        <p class="photo-hint" id="editPhotoHint">Tap to change photo</p>
+        <p class="photo-hint" id="editPhotoHint">फोटो बदलण्यासाठी टॅप करा</p>
       </div>
-
-      <div class="input-group">
-        <span class="field-icon">👤</span>
-        <input type="text" id="edit_name" placeholder="Full Name" autocomplete="name">
-        <span class="valid-icon" id="vi_edit_name"></span>
-        <div class="field-error" id="fe_edit_name">Please enter your full name</div>
-      </div>
-
-      <div class="input-group">
-        <span class="field-icon">🎂</span>
-        <input type="number" id="edit_age" placeholder="Age" min="10" max="100" inputmode="numeric">
-        <span class="valid-icon" id="vi_edit_age"></span>
-        <div class="field-error" id="fe_edit_age">Enter a valid age (10–100)</div>
-      </div>
-
-      <div class="input-group">
-        <span class="field-icon">📱</span>
-        <input type="tel" id="edit_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
-        <span class="valid-icon" id="vi_edit_mobile"></span>
-        <div class="field-error" id="fe_edit_mobile">Enter a valid 10-digit mobile number</div>
-      </div>
-
-      <div class="input-group">
-        <span class="field-icon">💬</span>
-        <input type="tel" id="edit_whatsapp" placeholder="WhatsApp Number" inputmode="tel" maxlength="10">
-        <span class="valid-icon" id="vi_edit_whatsapp"></span>
-        <div class="field-error" id="fe_edit_whatsapp">Enter a valid 10-digit WhatsApp number</div>
-      </div>
-
-      <div class="input-group">
-        <span class="field-icon">🏠</span>
-        <input type="text" id="edit_address" placeholder="Address" autocomplete="street-address">
-        <span class="valid-icon" id="vi_edit_address"></span>
-        <div class="field-error" id="fe_edit_address">Please enter your address</div>
-      </div>
-
+      <div class="input-group"><span class="field-icon">👤</span><input type="text" id="edit_name" placeholder="पूर्ण नाव" autocomplete="name"><span class="valid-icon" id="vi_edit_name"></span><div class="field-error" id="fe_edit_name">कृपया पूर्ण नाव टाका</div></div>
+      <div class="input-group"><span class="field-icon">🎂</span><input type="number" id="edit_age" placeholder="वय" min="10" max="100" inputmode="numeric"><span class="valid-icon" id="vi_edit_age"></span><div class="field-error" id="fe_edit_age">वैध वय टाका</div></div>
+      <div class="input-group"><span class="field-icon">📱</span><input type="tel" id="edit_mobile" placeholder="मोबाइल नंबर" inputmode="tel" maxlength="10"><span class="valid-icon" id="vi_edit_mobile"></span><div class="field-error" id="fe_edit_mobile">१०-अंकी मोबाइल नंबर टाका</div></div>
+      <div class="input-group"><span class="field-icon">💬</span><input type="tel" id="edit_whatsapp" placeholder="WhatsApp नंबर" inputmode="tel" maxlength="10"><span class="valid-icon" id="vi_edit_whatsapp"></span><div class="field-error" id="fe_edit_whatsapp">१०-अंकी WhatsApp नंबर टाका</div></div>
+      <div class="input-group"><span class="field-icon">🏠</span><input type="text" id="edit_address" placeholder="पत्ता" autocomplete="street-address"><span class="valid-icon" id="vi_edit_address"></span><div class="field-error" id="fe_edit_address">कृपया पत्ता टाका</div></div>
       <div class="edit-btn-row">
-        <button class="cancel-btn" type="button" onclick="closeEditProfile()">Cancel</button>
-        <button class="submit-btn" id="saveProfileBtn" onclick="saveProfileEdits()">
-          <span class="btn-text">Save Changes</span>
-          <span class="btn-spinner"></span>
-        </button>
+        <button class="cancel-btn" type="button" onclick="closeEditProfile()">रद्द करा</button>
+        <button class="submit-btn" id="saveProfileBtn" onclick="saveProfileEdits()"><span class="btn-text">बदल जतन करा</span><span class="btn-spinner"></span></button>
       </div>
     </div>
+
   </div>
 </div>
 
-
-<!-- ═══════════════════════════════════════════ -->
-<!-- FIREBASE MODULE                              -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- FIREBASE MODULE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-  sendPasswordResetEmail
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {
-  getFirestore, doc, setDoc, getDoc, updateDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
@@ -817,598 +802,286 @@ const firebaseConfig = {
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
+let currentUserData = null;
+let currentUid = null;
 
-let currentUserData = null; /* cached profile data for Edit Profile prefill/save */
-let currentUid       = null;
-
-/* ── Friendly Firebase error messages ── */
 function friendlyError(code){
   const map = {
-    "auth/email-already-in-use"   : "This email is already registered. Try logging in.",
-    "auth/invalid-email"          : "Please enter a valid email address.",
-    "auth/weak-password"          : "Password is too weak. Use at least 6 characters.",
-    "auth/user-not-found"         : "No account found with this email.",
-    "auth/wrong-password"         : "Incorrect password. Please try again.",
-    "auth/invalid-credential"     : "Wrong email or password. Please check and try again.",
-    "auth/too-many-requests"      : "Too many attempts. Please wait a few minutes and try again.",
-    "auth/network-request-failed" : "Network error. Please check your internet connection.",
-    "auth/user-disabled"          : "This account has been disabled. Contact support.",
-    "auth/popup-closed-by-user"   : "Sign-in popup was closed. Please try again.",
+    "auth/email-already-in-use":"हा ईमेल आधीच नोंदणीकृत आहे. लॉगिन करण्याचा प्रयत्न करा.",
+    "auth/invalid-email":"कृपया वैध ईमेल पत्ता टाका.",
+    "auth/weak-password":"पासवर्ड खूप कमकुवत आहे. किमान ६ अक्षरे वापरा.",
+    "auth/user-not-found":"या ईमेलसह कोणतेही खाते सापडले नाही.",
+    "auth/wrong-password":"चुकीचा पासवर्ड. पुन्हा प्रयत्न करा.",
+    "auth/invalid-credential":"चुकीचा ईमेल किंवा पासवर्ड.",
+    "auth/too-many-requests":"खूप प्रयत्न. काही मिनिटे थांबा.",
+    "auth/network-request-failed":"नेटवर्क त्रुटी. इंटरनेट तपासा.",
   };
-  return map[code] || "Something went wrong. Please try again.";
+  return map[code] || "काहीतरी चुकले. पुन्हा प्रयत्न करा.";
 }
 
-/* ── REGISTER ── */
 window.registerUser = async () => {
   if(!window.validateRegister()) return;
-
-  const name     = document.getElementById("reg_name").value.trim();
-  const age      = document.getElementById("reg_age").value.trim();
-  const mobile   = document.getElementById("reg_mobile").value.trim();
-  const whatsapp = document.getElementById("reg_whatsapp").value.trim();
-  const address  = document.getElementById("reg_address").value.trim();
-  const email    = document.getElementById("reg_email").value.trim();
-  const password = document.getElementById("reg_password").value;
-  const photoUrl = document.getElementById("imageUrl").value.trim();
-
-  const btn = document.getElementById("regBtn");
-  btn.disabled = true; btn.classList.add("loading");
-
+  const name=document.getElementById("reg_name").value.trim(), age=document.getElementById("reg_age").value.trim(), mobile=document.getElementById("reg_mobile").value.trim(), whatsapp=document.getElementById("reg_whatsapp").value.trim(), address=document.getElementById("reg_address").value.trim(), email=document.getElementById("reg_email").value.trim(), password=document.getElementById("reg_password").value, photoUrl=document.getElementById("imageUrl").value.trim();
+  const btn=document.getElementById("regBtn"); btn.disabled=true; btn.classList.add("loading");
   try {
-    const uc = await createUserWithEmailAndPassword(auth, email, password);
-    await setDoc(doc(db,"users",uc.user.uid), {name,age,mobile,whatsapp,address,email,photoUrl,uid:uc.user.uid,createdAt:new Date().toISOString()});
-    showToast("✅ Account created! Welcome, "+name.split(" ")[0]+"!", "success");
-    closeAccountModal();
-  } catch(e) {
-    showToast("❌ "+friendlyError(e.code), "error");
-  } finally {
-    btn.disabled = false; btn.classList.remove("loading");
-  }
+    const uc=await createUserWithEmailAndPassword(auth,email,password);
+    await setDoc(doc(db,"users",uc.user.uid),{name,age,mobile,whatsapp,address,email,photoUrl,uid:uc.user.uid,createdAt:new Date().toISOString()});
+    showToast("✅ खाते तयार झाले! स्वागत, "+name.split(" ")[0]+"!","success"); closeAccountModal();
+  } catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
+  finally{ btn.disabled=false; btn.classList.remove("loading"); }
 };
 
-/* ── LOGIN ── */
 window.loginUser = async () => {
   if(!window.validateLogin()) return;
-
-  const email    = document.getElementById("log_email").value.trim();
-  const password = document.getElementById("log_password").value;
-
-  const btn = document.getElementById("loginBtn");
-  btn.disabled = true; btn.classList.add("loading");
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    showToast("✅ Login successful!", "success");
-    closeAccountModal();
-  } catch(e) {
-    showToast("❌ "+friendlyError(e.code), "error");
-  } finally {
-    btn.disabled = false; btn.classList.remove("loading");
-  }
+  const email=document.getElementById("log_email").value.trim(), password=document.getElementById("log_password").value;
+  const btn=document.getElementById("loginBtn"); btn.disabled=true; btn.classList.add("loading");
+  try { await signInWithEmailAndPassword(auth,email,password); showToast("✅ लॉगिन यशस्वी!","success"); closeAccountModal(); }
+  catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
+  finally{ btn.disabled=false; btn.classList.remove("loading"); }
 };
 
-/* ── FORGOT PASSWORD ── */
 window.forgotPassword = async (e) => {
   e.preventDefault();
-  const email = document.getElementById("log_email").value.trim();
-  if(!email){showToast("⚠️ Enter your email first, then tap Forgot Password","warn");return;}
-  try {
-    await sendPasswordResetEmail(auth, email);
-    showToast("📧 Reset email sent! Check your inbox.", "success");
-  } catch(e) {
-    showToast("❌ "+friendlyError(e.code), "error");
-  }
+  const email=document.getElementById("log_email").value.trim();
+  if(!email){showToast("⚠️ आधी ईमेल टाका","warn");return;}
+  try{ await sendPasswordResetEmail(auth,email); showToast("📧 रीसेट ईमेल पाठवला!","success"); }
+  catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
 };
 
-/* ── AUTH STATE ── */
 onAuthStateChanged(auth, async (user) => {
   if(user){
-    document.getElementById("authContainer").style.display = "none";
-    document.getElementById("profileCard").style.display   = "block";
-    document.getElementById("authSectionTitle").textContent = "My Profile";
-    document.getElementById("nav-account").querySelector(".icon").textContent = "✅";
-
-    const snap = await getDoc(doc(db,"users",user.uid));
+    document.getElementById("authContainer").style.display="none";
+    document.getElementById("profileCard").style.display="block";
+    document.getElementById("authSectionTitle").textContent="माझे प्रोफाइल";
+    document.getElementById("nav-account").querySelector(".icon").textContent="✅";
+    const snap=await getDoc(doc(db,"users",user.uid));
     if(snap.exists()){
-      const d = snap.data();
-      currentUserData = d;
-      currentUid      = user.uid;
-      document.getElementById("profileName").innerText     = d.name    || "–";
-      document.getElementById("profileEmail").innerText    = d.email   || "–";
-      document.getElementById("profileMobile").innerText   = d.mobile  || "–";
-      document.getElementById("profileWhatsapp").innerText = d.whatsapp|| "–";
-      document.getElementById("profileAddress").innerText  = d.address || "–";
-      document.getElementById("profileAge").innerText      = d.age     || "–";
-
-      /* update avatars: show uploaded photo if present, else fallback to initial */
-      const avatarEl   = document.getElementById("avatarInitial");
-      const tpAvatarEl = document.getElementById("tpAvatar");
-      const initial    = (d.name||"?")[0].toUpperCase();
+      const d=snap.data(); currentUserData=d; currentUid=user.uid;
+      document.getElementById("profileName").innerText=d.name||"–";
+      document.getElementById("profileEmail").innerText=d.email||"–";
+      document.getElementById("profileMobile").innerText=d.mobile||"–";
+      document.getElementById("profileWhatsapp").innerText=d.whatsapp||"–";
+      document.getElementById("profileAddress").innerText=d.address||"–";
+      document.getElementById("profileAge").innerText=d.age||"–";
+      const avatarEl=document.getElementById("avatarInitial"), tpAvatarEl=document.getElementById("tpAvatar"), initial=(d.name||"?")[0].toUpperCase();
       if(d.photoUrl){
-        avatarEl.innerHTML   = `<img src="${d.photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-        tpAvatarEl.innerHTML = `<img src="${d.photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-      } else {
-        avatarEl.innerText   = initial;
-        tpAvatarEl.innerText = initial;
-      }
-      document.getElementById("tpText").textContent = (d.name||"My Account").split(" ")[0];
-
-      /* save logged-in user's data to a shared localStorage key
-         so other pages (food.html, taxi.html, etc.) can auto-fill order forms */
-      localStorage.setItem("sn_user", JSON.stringify({
-        name: d.name || "",
-        email: d.email || "",
-        mobile: d.mobile || "",
-        whatsapp: d.whatsapp || "",
-        address: d.address || "",
-        photoUrl: d.photoUrl || ""
-      }));
+        avatarEl.innerHTML=`<img src="${d.photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        tpAvatarEl.innerHTML=`<img src="${d.photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+      } else { avatarEl.innerText=initial; tpAvatarEl.innerText=initial; }
+      document.getElementById("tpText").textContent=(d.name||"माझे खाते").split(" ")[0];
+      localStorage.setItem("sn_user",JSON.stringify({name:d.name||"",email:d.email||"",mobile:d.mobile||"",whatsapp:d.whatsapp||"",address:d.address||"",photoUrl:d.photoUrl||""}));
     }
   } else {
-    document.getElementById("authContainer").style.display = "flex";
-    document.getElementById("profileCard").style.display   = "none";
-    document.getElementById("authSectionTitle").textContent = "My Account";
-    document.getElementById("nav-account").querySelector(".icon").textContent = "👤";
-
-    /* reset the top profile pill when logged out */
-    document.getElementById("tpAvatar").textContent = "👤";
-    document.getElementById("tpText").textContent    = "Login";
+    document.getElementById("authContainer").style.display="flex";
+    document.getElementById("profileCard").style.display="none";
+    document.getElementById("authSectionTitle").textContent="माझे खाते";
+    document.getElementById("nav-account").querySelector(".icon").textContent="👤";
+    document.getElementById("tpAvatar").textContent="👤";
+    document.getElementById("tpText").textContent="लॉगिन";
   }
 });
 
-/* ── EDIT PROFILE ── */
 window.openEditProfile = function(){
   if(!currentUserData) return;
-  document.getElementById("edit_name").value     = currentUserData.name     || "";
-  document.getElementById("edit_age").value      = currentUserData.age      || "";
-  document.getElementById("edit_mobile").value    = currentUserData.mobile  || "";
-  document.getElementById("edit_whatsapp").value  = currentUserData.whatsapp|| "";
-  document.getElementById("edit_address").value   = currentUserData.address || "";
-  document.getElementById("editImageUrl").value   = currentUserData.photoUrl|| "";
-
-  const preview = document.getElementById("editPreview");
-  const circle  = document.getElementById("editPhotoCircle");
-  const hint    = document.getElementById("editPhotoHint");
-  if(currentUserData.photoUrl){
-    preview.src = currentUserData.photoUrl;
-    preview.classList.add("show");
-    circle.classList.add("has-image");
-    hint.textContent = "Tap to change photo";
-  } else {
-    preview.classList.remove("show");
-    circle.classList.remove("has-image");
-    hint.textContent = "Add profile photo (optional)";
-  }
-
-  ["edit_name","edit_age","edit_mobile","edit_whatsapp","edit_address"].forEach(id=>{
-    const el = document.getElementById(id);
-    if(el) el.classList.remove("valid","invalid");
-  });
-
-  document.getElementById("profileCard").style.display     = "none";
+  document.getElementById("edit_name").value=currentUserData.name||"";
+  document.getElementById("edit_age").value=currentUserData.age||"";
+  document.getElementById("edit_mobile").value=currentUserData.mobile||"";
+  document.getElementById("edit_whatsapp").value=currentUserData.whatsapp||"";
+  document.getElementById("edit_address").value=currentUserData.address||"";
+  document.getElementById("editImageUrl").value=currentUserData.photoUrl||"";
+  const preview=document.getElementById("editPreview"), circle=document.getElementById("editPhotoCircle"), hint=document.getElementById("editPhotoHint");
+  if(currentUserData.photoUrl){ preview.src=currentUserData.photoUrl; preview.classList.add("show"); circle.classList.add("has-image"); hint.textContent="फोटो बदलण्यासाठी टॅप करा"; }
+  else { preview.classList.remove("show"); circle.classList.remove("has-image"); hint.textContent="प्रोफाइल फोटो जोडा (पर्यायी)"; }
+  ["edit_name","edit_age","edit_mobile","edit_whatsapp","edit_address"].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.remove("valid","invalid"); });
+  document.getElementById("profileCard").style.display="none";
   document.getElementById("editProfileCard").classList.add("visible");
-  document.getElementById("authSectionTitle").textContent  = "Edit Profile";
+  document.getElementById("authSectionTitle").textContent="प्रोफाइल संपादित करा";
 };
 
 window.closeEditProfile = function(){
   document.getElementById("editProfileCard").classList.remove("visible");
-  document.getElementById("profileCard").style.display    = "block";
-  document.getElementById("authSectionTitle").textContent = "My Profile";
+  document.getElementById("profileCard").style.display="block";
+  document.getElementById("authSectionTitle").textContent="माझे प्रोफाइल";
 };
 
 window.uploadEditPhoto = async function(){
-  const file = document.getElementById("editImageFile").files[0];
-  if(!file) return;
-
-  const circle  = document.getElementById("editPhotoCircle");
-  const preview = document.getElementById("editPreview");
-  const spinner = document.getElementById("editPhotoSpinner");
-  const hint    = document.getElementById("editPhotoHint");
-
+  const file=document.getElementById("editImageFile").files[0]; if(!file) return;
+  const circle=document.getElementById("editPhotoCircle"), preview=document.getElementById("editPreview"), spinner=document.getElementById("editPhotoSpinner"), hint=document.getElementById("editPhotoHint");
   spinner.classList.add("show");
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "ml_default");
-
+  const formData=new FormData(); formData.append("file",file); formData.append("upload_preset","ml_default");
   try {
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",
-      { method: "POST", body: formData }
-    );
-    const data = await response.json();
-
-    if(data.secure_url){
-      document.getElementById("editImageUrl").value = data.secure_url;
-      preview.src = data.secure_url;
-      preview.classList.add("show");
-      circle.classList.add("has-image");
-      hint.textContent = "Tap to change photo";
-      showToast("✅ Photo uploaded!","success");
-    } else {
-      showToast("❌ Photo upload failed, try again","error");
-      console.log(data);
-    }
-  } catch(err){
-    console.error(err);
-    showToast("❌ Error uploading photo","error");
-  } finally {
-    spinner.classList.remove("show");
-  }
+    const response=await fetch("https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",{method:"POST",body:formData});
+    const data=await response.json();
+    if(data.secure_url){ document.getElementById("editImageUrl").value=data.secure_url; preview.src=data.secure_url; preview.classList.add("show"); circle.classList.add("has-image"); hint.textContent="फोटो बदलण्यासाठी टॅप करा"; showToast("✅ फोटो अपलोड झाला!","success"); }
+    else { showToast("❌ फोटो अपलोड अयशस्वी","error"); }
+  } catch(err){ showToast("❌ फोटो अपलोड त्रुटी","error"); }
+  finally{ spinner.classList.remove("show"); }
 };
 
 window.saveProfileEdits = async function(){
   if(!window.validateEditProfile()) return;
-  if(!currentUid){ showToast("❌ Not logged in","error"); return; }
-
-  const name     = document.getElementById("edit_name").value.trim();
-  const age      = document.getElementById("edit_age").value.trim();
-  const mobile   = document.getElementById("edit_mobile").value.trim();
-  const whatsapp = document.getElementById("edit_whatsapp").value.trim();
-  const address  = document.getElementById("edit_address").value.trim();
-  const photoUrl = document.getElementById("editImageUrl").value.trim();
-
-  const btn = document.getElementById("saveProfileBtn");
-  btn.disabled = true; btn.classList.add("loading");
-
+  if(!currentUid){ showToast("❌ लॉगिन केलेले नाही","error"); return; }
+  const name=document.getElementById("edit_name").value.trim(), age=document.getElementById("edit_age").value.trim(), mobile=document.getElementById("edit_mobile").value.trim(), whatsapp=document.getElementById("edit_whatsapp").value.trim(), address=document.getElementById("edit_address").value.trim(), photoUrl=document.getElementById("editImageUrl").value.trim();
+  const btn=document.getElementById("saveProfileBtn"); btn.disabled=true; btn.classList.add("loading");
   try {
-    await updateDoc(doc(db,"users",currentUid), {name,age,mobile,whatsapp,address,photoUrl});
-
-    /* refresh cached data + on-screen profile + avatars + sn_user without reload */
-    currentUserData = {...currentUserData, name,age,mobile,whatsapp,address,photoUrl};
-
-    document.getElementById("profileName").innerText     = name    || "–";
-    document.getElementById("profileMobile").innerText   = mobile  || "–";
-    document.getElementById("profileWhatsapp").innerText = whatsapp|| "–";
-    document.getElementById("profileAddress").innerText  = address || "–";
-    document.getElementById("profileAge").innerText      = age     || "–";
-
-    const avatarEl   = document.getElementById("avatarInitial");
-    const tpAvatarEl = document.getElementById("tpAvatar");
-    const initial    = (name||"?")[0].toUpperCase();
-    if(photoUrl){
-      avatarEl.innerHTML   = `<img src="${photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-      tpAvatarEl.innerHTML = `<img src="${photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-    } else {
-      avatarEl.innerText   = initial;
-      tpAvatarEl.innerText = initial;
-    }
-    document.getElementById("tpText").textContent = (name||"My Account").split(" ")[0];
-
-    localStorage.setItem("sn_user", JSON.stringify({
-      name, email: currentUserData.email || "", mobile, whatsapp, address, photoUrl
-    }));
-
-    showToast("✅ Profile updated!","success");
-    closeEditProfile();
-  } catch(e){
-    console.error(e);
-    showToast("❌ Could not save changes. Try again.","error");
-  } finally {
-    btn.disabled = false; btn.classList.remove("loading");
-  }
+    await updateDoc(doc(db,"users",currentUid),{name,age,mobile,whatsapp,address,photoUrl});
+    currentUserData={...currentUserData,name,age,mobile,whatsapp,address,photoUrl};
+    document.getElementById("profileName").innerText=name||"–";
+    document.getElementById("profileMobile").innerText=mobile||"–";
+    document.getElementById("profileWhatsapp").innerText=whatsapp||"–";
+    document.getElementById("profileAddress").innerText=address||"–";
+    document.getElementById("profileAge").innerText=age||"–";
+    const avatarEl=document.getElementById("avatarInitial"), tpAvatarEl=document.getElementById("tpAvatar"), initial=(name||"?")[0].toUpperCase();
+    if(photoUrl){ avatarEl.innerHTML=`<img src="${photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`; tpAvatarEl.innerHTML=`<img src="${photoUrl}" alt="Profile photo" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`; }
+    else { avatarEl.innerText=initial; tpAvatarEl.innerText=initial; }
+    document.getElementById("tpText").textContent=(name||"माझे खाते").split(" ")[0];
+    localStorage.setItem("sn_user",JSON.stringify({name,email:currentUserData.email||"",mobile,whatsapp,address,photoUrl}));
+    showToast("✅ प्रोफाइल अपडेट झाले!","success"); closeEditProfile();
+  } catch(e){ showToast("❌ बदल जतन करता आले नाहीत.","error"); }
+  finally{ btn.disabled=false; btn.classList.remove("loading"); }
 };
 
-/* ── LOGOUT ── */
 window.logoutUser = async () => {
   await signOut(auth);
-  localStorage.removeItem("sn_user");
-  currentUserData = null;
-  currentUid      = null;
-  document.getElementById("tpAvatar").textContent = "👤";
-  document.getElementById("tpText").textContent    = "Login";
-  showToast("👋 Logged out successfully.", "success");
+  localStorage.removeItem("sn_user"); currentUserData=null; currentUid=null;
+  document.getElementById("tpAvatar").textContent="👤";
+  document.getElementById("tpText").textContent="लॉगिन";
+  showToast("👋 लॉगआउट यशस्वी.","success");
 };
 </script>
 
-<!-- ═════════════════════════════════════════ -->
-<!-- NON-MODULE JS                              -->
-<!-- ═════════════════════════════════════════ -->
+<!-- NON-MODULE JS -->
 <script>
-/* ── ACCOUNT MODAL OPEN/CLOSE ── */
-window.openAccountModal = function(){
-  document.getElementById("accountModalOverlay").classList.add("open");
-  document.body.style.overflow = "hidden";
+window.openAccountModal=function(){document.getElementById("accountModalOverlay").classList.add("open");document.body.style.overflow="hidden";};
+window.closeAccountModal=function(){
+  document.getElementById("accountModalOverlay").classList.remove("open");document.body.style.overflow="";
+  const editCard=document.getElementById("editProfileCard");
+  if(editCard&&editCard.classList.contains("visible")){editCard.classList.remove("visible");document.getElementById("profileCard").style.display="block";document.getElementById("authSectionTitle").textContent="माझे प्रोफाइल";}
 };
-window.closeAccountModal = function(){
-  document.getElementById("accountModalOverlay").classList.remove("open");
-  document.body.style.overflow = "";
-  /* if edit-profile was open, snap back to profile view for next time */
-  const editCard = document.getElementById("editProfileCard");
-  if(editCard && editCard.classList.contains("visible")){
-    editCard.classList.remove("visible");
-    document.getElementById("profileCard").style.display = "block";
-    document.getElementById("authSectionTitle").textContent = "My Profile";
-  }
-};
-/* Close on Escape key */
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "Escape") closeAccountModal();
-});
+document.addEventListener("keydown",(e)=>{if(e.key==="Escape") closeAccountModal();});
 
-/* ── PHOTO UPLOAD (Cloudinary) ── */
-window.uploadToCloudinary = async function(){
-  const file = document.getElementById("imageFile").files[0];
-  if(!file) return;
-
-  const circle  = document.getElementById("photoCircle");
-  const preview = document.getElementById("preview");
-  const spinner = document.getElementById("photoSpinner");
-  const hint    = document.getElementById("photoHint");
-
+window.uploadToCloudinary=async function(){
+  const file=document.getElementById("imageFile").files[0]; if(!file) return;
+  const circle=document.getElementById("photoCircle"), preview=document.getElementById("preview"), spinner=document.getElementById("photoSpinner"), hint=document.getElementById("photoHint");
   spinner.classList.add("show");
-
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "ml_default");
-
+  const formData=new FormData(); formData.append("file",file); formData.append("upload_preset","ml_default");
   try {
-    const response = await fetch(
-      "https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",
-      { method: "POST", body: formData }
-    );
-    const data = await response.json();
-
-    if(data.secure_url){
-      document.getElementById("imageUrl").value = data.secure_url;
-      preview.src = data.secure_url;
-      preview.classList.add("show");
-      circle.classList.add("has-image");
-      hint.textContent = "Tap to change photo";
-      showToast("✅ Photo uploaded!","success");
-    } else {
-      showToast("❌ Photo upload failed, try again","error");
-      console.log(data);
-    }
-  } catch(err){
-    console.error(err);
-    showToast("❌ Error uploading photo","error");
-  } finally {
-    spinner.classList.remove("show");
-  }
+    const response=await fetch("https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",{method:"POST",body:formData});
+    const data=await response.json();
+    if(data.secure_url){ document.getElementById("imageUrl").value=data.secure_url; preview.src=data.secure_url; preview.classList.add("show"); circle.classList.add("has-image"); hint.textContent="फोटो बदलण्यासाठी टॅप करा"; showToast("✅ फोटो अपलोड झाला!","success"); }
+    else { showToast("❌ फोटो अपलोड अयशस्वी","error"); }
+  } catch(err){ showToast("❌ फोटो अपलोड त्रुटी","error"); }
+  finally{ spinner.classList.remove("show"); }
 };
 
-/* ── TOAST ── */
-function showToast(msg, type=""){
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className   = "toast show " + type;
-  clearTimeout(t._timer);
-  t._timer = setTimeout(()=>{ t.classList.remove("show"); },3200);
-}
-window.showToast = showToast;
+function showToast(msg,type=""){const t=document.getElementById("toast");t.textContent=msg;t.className="toast show "+type;clearTimeout(t._timer);t._timer=setTimeout(()=>{t.classList.remove("show");},3200);}
+window.showToast=showToast;
+window.togglePass=function(id,btn){const el=document.getElementById(id);if(el.type==="password"){el.type="text";btn.textContent="🙈";}else{el.type="password";btn.textContent="👁️";}};
 
-/* ── PASSWORD TOGGLE ── */
-window.togglePass = function(id, btn){
-  const el = document.getElementById(id);
-  if(el.type === "password"){ el.type="text"; btn.textContent="🙈"; }
-  else                       { el.type="password"; btn.textContent="👁️"; }
-};
-
-/* ── PASSWORD STRENGTH ── */
-document.getElementById("reg_password").addEventListener("input", function(){
-  const val = this.value;
-  const bar = document.getElementById("pwBar");
-  let strength = 0;
-  if(val.length >= 6)  strength++;
-  if(val.length >= 10) strength++;
-  if(/[A-Z]/.test(val)) strength++;
-  if(/[0-9]/.test(val)) strength++;
-  if(/[^a-zA-Z0-9]/.test(val)) strength++;
-  const pct   = (strength/5)*100;
-  const color = strength<=1?"#dc2626":strength<=2?"#d97706":strength<=3?"#16a34a":"#059669";
-  bar.style.width    = pct + "%";
-  bar.style.background = color;
+document.getElementById("reg_password").addEventListener("input",function(){
+  const val=this.value,bar=document.getElementById("pwBar");
+  let s=0;if(val.length>=6)s++;if(val.length>=10)s++;if(/[A-Z]/.test(val))s++;if(/[0-9]/.test(val))s++;if(/[^a-zA-Z0-9]/.test(val))s++;
+  bar.style.width=(s/5*100)+"%";bar.style.background=s<=1?"#dc2626":s<=2?"#d97706":s<=3?"#16a34a":"#059669";
 });
 
-/* ── INLINE VALIDATION HELPERS ── */
-function setValid(id, viId, feId, ok){
-  const el = document.getElementById(id);
-  const vi = document.getElementById(viId);
-  const fe = document.getElementById(feId);
-  if(!el) return;
-  el.classList.toggle("valid",   ok);
-  el.classList.toggle("invalid", !ok);
-  if(vi){ vi.textContent = ok?"✅":""; vi.style.display = ok?"block":"none"; }
-  if(fe){ fe.style.display = ok?"none":"block"; }
+function setValid(id,viId,feId,ok){
+  const el=document.getElementById(id),vi=document.getElementById(viId),fe=document.getElementById(feId);
+  if(!el)return;el.classList.toggle("valid",ok);el.classList.toggle("invalid",!ok);
+  if(vi){vi.textContent=ok?"✅":"";vi.style.display=ok?"block":"none";}
+  if(fe){fe.style.display=ok?"none":"block";}
 }
-function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-function isPhone(v){ return /^[6-9]\d{9}$/.test(v); }
+function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
+function isPhone(v){return /^[6-9]\d{9}$/.test(v);}
 
-/* Live validation on register form */
 ["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"].forEach(id=>{
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.addEventListener("blur", ()=>validateField(id));
-  el.addEventListener("input", ()=>{ el.classList.remove("valid","invalid"); });
+  const el=document.getElementById(id);if(!el)return;
+  el.addEventListener("blur",()=>validateField(id));el.addEventListener("input",()=>{el.classList.remove("valid","invalid");});
 });
-
-/* Live validation on edit-profile form */
 ["edit_name","edit_age","edit_mobile","edit_whatsapp","edit_address"].forEach(id=>{
-  const el = document.getElementById(id);
-  if(!el) return;
-  el.addEventListener("blur", ()=>validateEditField(id));
-  el.addEventListener("input", ()=>{ el.classList.remove("valid","invalid"); });
+  const el=document.getElementById(id);if(!el)return;
+  el.addEventListener("blur",()=>validateEditField(id));el.addEventListener("input",()=>{el.classList.remove("valid","invalid");});
 });
 
 function validateField(id){
-  const el  = document.getElementById(id);
-  const val = el ? el.value.trim() : "";
+  const el=document.getElementById(id),val=el?el.value.trim():"";
   switch(id){
-    case "reg_name":
-      setValid("reg_name","vi_name","fe_name", val.length>=2);
-      break;
-    case "reg_age":
-      setValid("reg_age","vi_age","fe_age", val>=10 && val<=100);
-      break;
-    case "reg_mobile":
-      setValid("reg_mobile","vi_mobile","fe_mobile", isPhone(val));
-      break;
-    case "reg_whatsapp":
-      setValid("reg_whatsapp","vi_whatsapp","fe_whatsapp", isPhone(val));
-      break;
-    case "reg_address":
-      setValid("reg_address","vi_address","fe_address", val.length>=5);
-      break;
-    case "reg_email":
-      setValid("reg_email","vi_reg_email","fe_reg_email", isEmail(val));
-      break;
-    case "reg_password":
-      setValid("reg_password",null,"fe_reg_pass", el.value.length>=6);
-      break;
-    case "reg_confirm":
-      const pw = document.getElementById("reg_password").value;
-      setValid("reg_confirm",null,"fe_confirm", el.value===pw && el.value.length>=6);
-      break;
+    case"reg_name":setValid("reg_name","vi_name","fe_name",val.length>=2);break;
+    case"reg_age":setValid("reg_age","vi_age","fe_age",val>=10&&val<=100);break;
+    case"reg_mobile":setValid("reg_mobile","vi_mobile","fe_mobile",isPhone(val));break;
+    case"reg_whatsapp":setValid("reg_whatsapp","vi_whatsapp","fe_whatsapp",isPhone(val));break;
+    case"reg_address":setValid("reg_address","vi_address","fe_address",val.length>=5);break;
+    case"reg_email":setValid("reg_email","vi_reg_email","fe_reg_email",isEmail(val));break;
+    case"reg_password":setValid("reg_password",null,"fe_reg_pass",el.value.length>=6);break;
+    case"reg_confirm":const pw=document.getElementById("reg_password").value;setValid("reg_confirm",null,"fe_confirm",el.value===pw&&el.value.length>=6);break;
   }
 }
 
-/* ── VALIDATE ALL BEFORE SUBMIT ── */
-window.validateRegister = function(){
-  const fields = ["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"];
+window.validateRegister=function(){
+  const fields=["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"];
   fields.forEach(validateField);
-  const allOk = fields.every(id=>{
-    const el = document.getElementById(id);
-    return el && el.classList.contains("valid");
-  });
-  if(!allOk) showToast("⚠️ Please fix the errors above","warn");
-  return allOk;
+  const allOk=fields.every(id=>{const el=document.getElementById(id);return el&&el.classList.contains("valid");});
+  if(!allOk) showToast("⚠️ वरील त्रुटी दुरुस्त करा","warn");return allOk;
 };
 
 function validateEditField(id){
-  const el  = document.getElementById(id);
-  const val = el ? el.value.trim() : "";
+  const el=document.getElementById(id),val=el?el.value.trim():"";
   switch(id){
-    case "edit_name":
-      setValid("edit_name","vi_edit_name","fe_edit_name", val.length>=2);
-      break;
-    case "edit_age":
-      setValid("edit_age","vi_edit_age","fe_edit_age", val>=10 && val<=100);
-      break;
-    case "edit_mobile":
-      setValid("edit_mobile","vi_edit_mobile","fe_edit_mobile", isPhone(val));
-      break;
-    case "edit_whatsapp":
-      setValid("edit_whatsapp","vi_edit_whatsapp","fe_edit_whatsapp", isPhone(val));
-      break;
-    case "edit_address":
-      setValid("edit_address","vi_edit_address","fe_edit_address", val.length>=5);
-      break;
+    case"edit_name":setValid("edit_name","vi_edit_name","fe_edit_name",val.length>=2);break;
+    case"edit_age":setValid("edit_age","vi_edit_age","fe_edit_age",val>=10&&val<=100);break;
+    case"edit_mobile":setValid("edit_mobile","vi_edit_mobile","fe_edit_mobile",isPhone(val));break;
+    case"edit_whatsapp":setValid("edit_whatsapp","vi_edit_whatsapp","fe_edit_whatsapp",isPhone(val));break;
+    case"edit_address":setValid("edit_address","vi_edit_address","fe_edit_address",val.length>=5);break;
   }
 }
-
-window.validateEditProfile = function(){
-  const fields = ["edit_name","edit_age","edit_mobile","edit_whatsapp","edit_address"];
+window.validateEditProfile=function(){
+  const fields=["edit_name","edit_age","edit_mobile","edit_whatsapp","edit_address"];
   fields.forEach(validateEditField);
-  const allOk = fields.every(id=>{
-    const el = document.getElementById(id);
-    return el && el.classList.contains("valid");
-  });
-  if(!allOk) showToast("⚠️ Please fix the errors above","warn");
-  return allOk;
+  const allOk=fields.every(id=>{const el=document.getElementById(id);return el&&el.classList.contains("valid");});
+  if(!allOk)showToast("⚠️ वरील त्रुटी दुरुस्त करा","warn");return allOk;
+};
+window.validateLogin=function(){
+  const email=document.getElementById("log_email").value.trim(),pass=document.getElementById("log_password").value;
+  let ok=true;
+  if(!isEmail(email)){document.getElementById("fe_log_email").style.display="block";document.getElementById("log_email").classList.add("invalid");ok=false;}
+  else{document.getElementById("fe_log_email").style.display="none";document.getElementById("log_email").classList.remove("invalid");}
+  if(pass.length<1){document.getElementById("fe_log_pass").style.display="block";document.getElementById("log_password").classList.add("invalid");ok=false;}
+  else{document.getElementById("fe_log_pass").style.display="none";document.getElementById("log_password").classList.remove("invalid");}
+  if(!ok)showToast("⚠️ कृपया सर्व माहिती भरा","warn");return ok;
 };
 
-window.validateLogin = function(){
-  const email = document.getElementById("log_email").value.trim();
-  const pass  = document.getElementById("log_password").value;
-  let ok = true;
-  if(!isEmail(email)){
-    document.getElementById("fe_log_email").style.display="block";
-    document.getElementById("log_email").classList.add("invalid");
-    ok = false;
-  } else {
-    document.getElementById("fe_log_email").style.display="none";
-    document.getElementById("log_email").classList.remove("invalid");
-  }
-  if(pass.length < 1){
-    document.getElementById("fe_log_pass").style.display="block";
-    document.getElementById("log_password").classList.add("invalid");
-    ok = false;
-  } else {
-    document.getElementById("fe_log_pass").style.display="none";
-    document.getElementById("log_password").classList.remove("invalid");
-  }
-  if(!ok) showToast("⚠️ Please fill in all fields","warn");
-  return ok;
+["log_email","log_password"].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener("input",()=>el.classList.remove("invalid"));});
+
+window.switchTab=function(tab){
+  document.getElementById("registerCard").classList.toggle("visible",tab==="register");
+  document.getElementById("loginCard").classList.toggle("visible",tab==="login");
+  document.querySelectorAll(".auth-tab").forEach((b,i)=>{b.classList.toggle("active",(tab==="register"&&i===0)||(tab==="login"&&i===1));});
 };
 
-/* Clear invalid on focus for login */
-["log_email","log_password"].forEach(id=>{
-  const el = document.getElementById(id);
-  if(el) el.addEventListener("input",()=>el.classList.remove("invalid"));
-});
-
-/* ── AUTH TABS ── */
-window.switchTab = function(tab){
-  document.getElementById("registerCard").classList.toggle("visible", tab==="register");
-  document.getElementById("loginCard").classList.toggle("visible",    tab==="login");
-  document.querySelectorAll(".auth-tab").forEach((b,i)=>{
-    b.classList.toggle("active",(tab==="register"&&i===0)||(tab==="login"&&i===1));
-  });
-};
-
-/* ── SLIDER ── */
-const slides       = document.querySelectorAll(".slide");
-const dotsWrap     = document.getElementById("sliderDots");
-let idx=0, slTimer;
-
-slides.forEach((_,i)=>{
-  const d = document.createElement("button");
-  d.className="dot"+(i===0?" active":"");
-  d.setAttribute("aria-label","Slide "+(i+1));
-  d.onclick=()=>goTo(i);
-  dotsWrap.appendChild(d);
-});
-
-function goTo(i){
-  slides[idx].classList.remove("active");
-  dotsWrap.children[idx].classList.remove("active");
-  idx=(i+slides.length)%slides.length;
-  slides[idx].classList.add("active");
-  dotsWrap.children[idx].classList.add("active");
-  startTimer();
-}
-function startTimer(){ clearInterval(slTimer); slTimer=setInterval(()=>goTo(idx+1),4200); }
+// SLIDER
+const slides=document.querySelectorAll(".slide"),dotsWrap=document.getElementById("sliderDots");
+let idx=0,slTimer;
+slides.forEach((_,i)=>{const d=document.createElement("button");d.className="dot"+(i===0?" active":"");d.setAttribute("aria-label","Slide "+(i+1));d.onclick=()=>goTo(i);dotsWrap.appendChild(d);});
+function goTo(i){slides[idx].classList.remove("active");dotsWrap.children[idx].classList.remove("active");idx=(i+slides.length)%slides.length;slides[idx].classList.add("active");dotsWrap.children[idx].classList.add("active");startTimer();}
+function startTimer(){clearInterval(slTimer);slTimer=setInterval(()=>goTo(idx+1),4200);}
 document.querySelector(".next").onclick=()=>goTo(idx+1);
 document.querySelector(".prev").onclick=()=>goTo(idx-1);
 startTimer();
+let tx=0;const sl=document.getElementById("sliderEl");
+sl.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},{passive:true});
+sl.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)goTo(dx<0?idx+1:idx-1);},{passive:true});
 
-/* Touch swipe */
-let tx=0;
-const sl=document.getElementById("sliderEl");
-sl.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},     {passive:true});
-sl.addEventListener("touchend",  e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) goTo(dx<0?idx+1:idx-1); }, {passive:true});
-
-/* ── SEARCH ── */
-const searchInput  = document.getElementById("searchInput");
-const clearBtn     = document.getElementById("clearSearch");
-const serviceCards = document.querySelectorAll(".card");
-const noResults    = document.getElementById("noResults");
-
+// SEARCH
+const searchInput=document.getElementById("searchInput"),clearBtn=document.getElementById("clearSearch"),serviceCards=document.querySelectorAll(".card"),noResults=document.getElementById("noResults");
 searchInput.addEventListener("input",()=>{
-  const v = searchInput.value.toLowerCase();
-  clearBtn.style.display = v ? "block" : "none";
-  let visible = 0;
-  serviceCards.forEach(c=>{
-    const matches = ((c.dataset.name||"")+c.innerText.toLowerCase()).includes(v);
-    c.style.display = matches ? "" : "none";
-    if(matches) visible++;
-  });
-  noResults.style.display = visible===0 ? "block" : "none";
+  const v=searchInput.value.toLowerCase();clearBtn.style.display=v?"block":"none";
+  let visible=0;serviceCards.forEach(c=>{const matches=((c.dataset.name||"")+c.innerText.toLowerCase()).includes(v);c.style.display=matches?"":"none";if(matches)visible++;});
+  noResults.style.display=visible===0?"block":"none";
 });
-clearBtn.addEventListener("click",()=>{
-  searchInput.value=""; clearBtn.style.display="none";
-  serviceCards.forEach(c=>c.style.display="");
-  noResults.style.display="none";
-  searchInput.focus();
-});
+clearBtn.addEventListener("click",()=>{searchInput.value="";clearBtn.style.display="none";serviceCards.forEach(c=>c.style.display="");noResults.style.display="none";searchInput.focus();});
 
-/* ── BOTTOM NAV ── */
+// BOTTOM NAV
 document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(a=>{
-  a.addEventListener("click",function(){
-    document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(x=>x.classList.remove("active"));
-    this.classList.add("active");
-  });
+  a.addEventListener("click",function(){document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(x=>x.classList.remove("active"));this.classList.add("active");});
 });
 </script>
 </body>
