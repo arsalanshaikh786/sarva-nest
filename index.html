@@ -1,896 +1,615 @@
 <!DOCTYPE html>
-<html lang="mr">
-<head>
+<html lang="en">
+<head><meta name="google-site-verification" content="RBH8Va8De1ISOVGlsFELAmEgleRvR6TQsJHpsBq6kV4" />
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="google-site-verification" content="RBH8Va8De1ISOVGlsFELAmEgleRvR6TQsJHpsBq6kV4">
-<title>सर्व-नेस्ट – अकोले का अपना सेवा मंच</title>
-<meta name="description" content="सर्व-नेस्ट – अकोले, महाराष्ट्रातील विश्वासू सेवा मंच. जेवण, भाजीपाला, प्लंबर, इलेक्ट्रिशियन, टॅक्सी आणि बरेच काही.">
-<meta name="keywords" content="Sarva Nest, Akole Services, Food Delivery Akole, Vegetable Delivery Akole, Electrician Akole, Plumber Akole, Taxi Service Akole">
+  <title>Sarva Nest - Akole's All-in-One Service Platform</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="description" content="Sarva Nest is Akole's trusted all-in-one service platform. Order food, vegetables, book plumbers, electricians, carpenters, taxi services, home cleaning and more.">
+
+<meta name="keywords" content="Sarva Nest, Akole Services, Food Delivery Akole, Vegetable Delivery Akole, Electrician Akole, Plumber Akole, Taxi Service Akole, Home Cleaning Akole, Maharashtra Services">
+
 <meta name="author" content="Arsalan Shaikh">
+<meta name="robots" content="index, follow">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+
 <link rel="canonical" href="https://www.sarvanest.in/">
-<meta property="og:title" content="सर्व-नेस्ट – अकोलेचा विश्वासू सेवा मंच">
-<meta property="og:description" content="जेवण, भाजी, प्लंबर, इलेक्ट्रिशियन, टॅक्सी सगळं एकाच ठिकाणी.">
-<meta property="og:url" content="https://sarvanest.in/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Sarva Nest - All In One Service Platform">
+<meta property="og:description" content="Book food delivery, vegetables, plumbers, electricians, taxi and more in Akole.">
+<meta property="og:url" content="https://sarva-nest.vercel.app/">
 <meta property="og:type" content="website">
 
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sarva Nest - All In One Service Platform">
+<meta name="twitter:description" content="Akole's trusted online service platform.">
+
+<!-- Local Business SEO -->
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"LocalBusiness","name":"Sarva Nest","url":"https://www.sarvanest.in/","telephone":"+919307320279","address":{"@type":"PostalAddress","addressLocality":"Akole","addressRegion":"Maharashtra","addressCountry":"India"},"description":"All in one service platform in Akole Maharashtra."}
+{
+ "@context":"https://schema.org",
+ "@type":"LocalBusiness",
+ "name":"Sarva Nest",
+ "url":"https://www.sarvanest.in/",
+ "telephone":"+919307320279",
+ "address":{
+   "@type":"PostalAddress",
+   "addressLocality":"Akole",
+   "addressRegion":"Maharashtra",
+   "addressCountry":"India"
+ },
+ "description":"All in one service platform in Akole Maharashtra."
+}
 </script>
-
-<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi:ital@0;1&family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Online Services Store – Akole</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-/* ─── DESIGN TOKENS ─── */
-:root {
-  /* Earthy Maharashtra palette — Saffron soil, neem green, deep jaggery */
-  --saffron:   #E8600A;   /* kesari – marigold / flag saffron         */
-  --saffron-lt:#FFF0E6;
-  --green:     #2D6A2E;   /* kadunimb / paddy green                   */
-  --green-lt:  #EBF5EB;
-  --jaggery:   #7B3F00;   /* gul – deep warm brown                    */
-  --cream:     #FDF6EC;   /* kana kaga – sun-baked earth              */
-  --offwhite:  #FFFDF9;
-  --ink:       #1A1208;
-  --muted:     #7A6652;
-  --border:    #E8DDD0;
-
-  --radius-card: 18px;
-  --radius-pill: 50px;
-  --tap: 48px;
-  --shadow: 0 6px 24px rgba(0,0,0,.10);
+:root{
+  --primary:#4f46e5;--primary-dark:#3730a3;--accent:#7c3aed;
+  --bg:#f0f2ff;--card:#fff;--text:#1e1b4b;--muted:#6b7280;
+  --success:#16a34a;--error:#dc2626;--warn:#d97706;
+  --radius:20px;--tap:48px;
 }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;overflow-x:hidden;padding-bottom:72px;}
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html { scroll-behavior:smooth; }
-body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family: 'Nunito', sans-serif;
-  overflow-x: hidden;
-  padding-bottom: 76px;
-}
-
-/* ── RANGOLI BACKGROUND MOTIF (SVG pattern, CSS only) ── */
-body::before {
-  content:'';
-  position:fixed; inset:0; z-index:-1;
-  background-image:
-    radial-gradient(circle at 1px 1px, rgba(232,96,10,.06) 1px, transparent 0);
-  background-size: 32px 32px;
-  pointer-events:none;
-}
-
-/* ── TOAST ── */
-#toast {
-  position:fixed; top:16px; left:50%;
+/* ─ TOAST ─ */
+#toast{
+  position:fixed;top:16px;left:50%;
   transform:translateX(-50%) translateY(-120px);
-  background:var(--jaggery); color:#fff;
-  padding:12px 24px; border-radius:var(--radius-pill);
-  font-size:14px; font-weight:700;
+  background:#1e1b4b;color:#fff;
+  padding:12px 22px;border-radius:50px;
+  font-size:14px;font-weight:700;
   box-shadow:0 8px 28px rgba(0,0,0,.25);
-  z-index:9999; transition:transform .4s cubic-bezier(.34,1.56,.64,1);
-  white-space:nowrap; max-width:90vw; text-align:center;
+  z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;text-align:center;
 }
-#toast.show { transform:translateX(-50%) translateY(0); }
-#toast.success { background:#1a5c1b; }
-#toast.error   { background:#8b1515; }
-#toast.warn    { background:#7B3F00; }
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.success{background:#166534;}
+#toast.error{background:#991b1b;}
+#toast.warn{background:#92400e;}
 
-/* ── LOADING SPINNER ── */
-.btn-spinner { display:none; width:18px; height:18px; border:3px solid rgba(255,255,255,.4); border-top-color:#fff; border-radius:50%; animation:spin .7s linear infinite; margin-left:8px; }
-@keyframes spin { to { transform:rotate(360deg); } }
-.loading .btn-spinner { display:inline-block; }
-.loading .btn-text   { opacity:.7; }
+/* ─ LOADING SPINNER ─ */
+.btn-spinner{display:none;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-left:8px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading .btn-spinner{display:inline-block;}
+.loading .btn-text{opacity:.7;}
 
-/* ── LOCATION PILL ── */
-.top-location {
-  position:fixed; top:12px; right:12px;
-  background:var(--saffron); color:#fff;
-  padding:8px 14px; border-radius:var(--radius-pill);
-  font-size:12px; font-weight:700;
-  z-index:1001; box-shadow:0 4px 14px rgba(232,96,10,.4);
-  font-family:'Nunito',sans-serif;
-}
-
-/* ── HEADER ── */
-header {
-  position:relative; overflow:hidden;
-  background: linear-gradient(160deg, #7B3F00 0%, #B85A00 40%, #E8600A 100%);
-  padding: 68px 20px 0;
-  text-align:center;
-  color:#fff;
+/* ─ LOCATION PILL ─ */
+.top-location{
+  position:fixed;top:12px;left:12px;
+  background:var(--primary);color:#fff;
+  padding:8px 14px;border-radius:30px;
+  font-size:12px;font-weight:700;
+  z-index:1001;box-shadow:0 4px 14px rgba(79,70,229,.4);
 }
 
-/* Warli-inspired border band */
-header::after {
-  content:'';
-  display:block;
-  height: 28px;
-  margin-top:28px;
-  background:
-    repeating-linear-gradient(90deg,
-      transparent 0px, transparent 18px,
-      rgba(255,255,255,.18) 18px, rgba(255,255,255,.18) 20px
-    ),
-    repeating-linear-gradient(0deg,
-      transparent 0px, transparent 8px,
-      rgba(255,255,255,.10) 8px, rgba(255,255,255,.10) 10px
-    );
+/* ─ TOP PROFILE PILL (app-style quick access to account) ─ */
+.top-profile{
+  position:fixed;top:12px;right:12px;
+  display:flex;align-items:center;gap:6px;
+  background:#fff;color:var(--primary);
+  padding:6px 14px 6px 6px;border-radius:30px;
+  font-size:12px;font-weight:800;
+  z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.18);
+  text-decoration:none;border:1.5px solid var(--primary);
+  max-width:46vw;overflow:hidden;white-space:nowrap;
+}
+.top-profile .tp-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:900;flex-shrink:0;
+}
+.top-profile .tp-text{overflow:hidden;text-overflow:ellipsis;}
+
+/* ─ HEADER ─ */
+header{
+  background:linear-gradient(145deg,var(--primary),var(--accent));
+  padding:72px 20px 48px;text-align:center;color:#fff;
+  position:relative;overflow:hidden;
+}
+header::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='10'/%3E%3C/g%3E%3C/svg%3E");
+}
+header h1{font-family:'Syne',sans-serif;font-size:clamp(1.9rem,7vw,3rem);font-weight:800;position:relative;}
+header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:relative;}
+.hero-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:22px;padding:14px 28px;
+  background:#fff;color:var(--primary);
+  border-radius:50px;text-decoration:none;
+  font-weight:800;font-size:15px;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);
+  position:relative;min-height:var(--tap);
+  transition:transform .15s;
+}
+.hero-btn:active{transform:scale(.96);}
+
+/* ─ SLIDER ─ */
+.slider{position:relative;width:100%;height:clamp(210px,55vw,370px);overflow:hidden;touch-action:pan-y;}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .8s;}
+.slide.active{opacity:1;}
+.slide img{width:100%;height:100%;object-fit:cover;}
+.slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65) 0%,transparent 55%);}
+.caption{position:absolute;bottom:18px;left:18px;color:#fff;z-index:2;}
+.caption h2{font-family:'Syne',sans-serif;font-size:clamp(1.3rem,5vw,2rem);font-weight:800;line-height:1.1;}
+.caption p{font-size:13px;opacity:.85;margin-top:3px;}
+.slider-dots{position:absolute;bottom:14px;right:16px;display:flex;gap:6px;z-index:10;}
+.dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.4);border:none;cursor:pointer;padding:0;transition:.3s;}
+.dot.active{background:#fff;transform:scale(1.3);}
+.prev,.next{
+  position:absolute;top:50%;transform:translateY(-50%);
+  background:rgba(255,255,255,.18);backdrop-filter:blur(6px);
+  border:none;color:#fff;font-size:20px;
+  width:40px;height:40px;border-radius:50%;
+  cursor:pointer;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+}
+.prev{left:10px;}.next{right:10px;}
+
+/* ─ SEARCH ─ */
+.search-wrap{padding:16px 16px 0;max-width:640px;margin:0 auto;}
+.search-box{position:relative;}
+.search-box input{
+  width:100%;padding:14px 44px 14px 46px;
+  border:none;border-radius:16px;
+  font-size:15px;font-family:'Nunito',sans-serif;
+  background:#fff;box-shadow:0 4px 18px rgba(0,0,0,.08);
+  outline:none;color:var(--text);min-height:var(--tap);
+}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
+#clearSearch{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;font-size:18px;cursor:pointer;
+  display:none;color:var(--muted);
 }
 
-.header-badge {
-  display:inline-block;
-  background:rgba(255,255,255,.15);
-  border:1px solid rgba(255,255,255,.3);
-  border-radius:var(--radius-pill);
-  padding:5px 16px; font-size:12px; font-weight:700;
-  letter-spacing:.8px; text-transform:uppercase;
-  margin-bottom:14px;
-}
+/* ─ SECTION TITLE ─ */
+.section-title{padding:22px 16px 10px;display:flex;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;}
+.section-title h2{font-family:'Syne',sans-serif;font-size:clamp(1.2rem,5vw,1.55rem);font-weight:800;}
+.see-all{font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;}
 
-header h1 {
-  font-family:'Baloo 2', cursive;
-  font-size:clamp(2rem,8vw,3.2rem);
-  font-weight:800; line-height:1.05;
-  position:relative;
+/* ─ SERVICE CARDS ─ */
+.container{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:12px;padding:0 16px 4px;
+  max-width:1200px;margin:0 auto;
 }
-.hindi-tagline {
-  font-family:'Tiro Devanagari Marathi', serif;
-  font-size:clamp(1rem,4vw,1.25rem);
-  margin-top:6px; opacity:.92; letter-spacing:.4px;
-  color:#FFD9A0;
+.card{
+  background:var(--card);border-radius:var(--radius);
+  padding:20px 14px;text-align:center;
+  box-shadow:0 6px 20px rgba(79,70,229,.08);
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .2s;
 }
-.eng-sub {
-  font-size:13px; opacity:.7; margin-top:4px; letter-spacing:.3px;
+.card::before{
+  content:'';position:absolute;top:-28px;right:-28px;
+  width:75px;height:75px;border-radius:50%;
+  background:linear-gradient(135deg,var(--primary),var(--accent));opacity:.07;
 }
-
-.hero-cta-row {
-  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
-  margin-top:20px;
+.card:active{transform:scale(.97);}
+.card img{width:54px;height:54px;object-fit:contain;margin-bottom:10px;}
+.card h3{color:var(--text);font-size:14px;font-weight:800;margin-bottom:5px;line-height:1.2;}
+.card p{color:var(--muted);font-size:12px;margin-bottom:14px;line-height:1.4;}
+.card a{
+  display:inline-block;padding:9px 18px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;text-decoration:none;border-radius:30px;
+  font-weight:800;font-size:12px;min-height:36px;line-height:1.6;
 }
-.hero-btn {
-  display:inline-flex; align-items:center; gap:7px;
-  padding:13px 24px; border-radius:var(--radius-pill);
-  font-weight:800; font-size:14px; text-decoration:none;
-  min-height:var(--tap); transition:transform .15s;
-}
-.hero-btn:active { transform:scale(.96); }
-.hero-btn.primary { background:#fff; color:var(--saffron); box-shadow:0 6px 20px rgba(0,0,0,.2); }
-.hero-btn.secondary { background:rgba(255,255,255,.15); color:#fff; border:1.5px solid rgba(255,255,255,.4); }
-
-/* ── SLIDER ── */
-.slider {
-  position:relative; width:100%;
-  height:clamp(200px,52vw,360px);
-  overflow:hidden; touch-action:pan-y;
-}
-.slide { position:absolute; inset:0; opacity:0; transition:opacity .8s; }
-.slide.active { opacity:1; }
-.slide img { width:100%; height:100%; object-fit:cover; }
-.slide::after {
-  content:''; position:absolute; inset:0;
-  background:linear-gradient(to top, rgba(30,10,0,.72) 0%, transparent 55%);
-}
-.caption { position:absolute; bottom:18px; left:18px; color:#fff; z-index:2; }
-.caption h2 { font-family:'Baloo 2',cursive; font-size:clamp(1.2rem,5vw,1.8rem); font-weight:800; line-height:1.1; }
-.caption-marathi { font-family:'Tiro Devanagari Marathi',serif; font-size:13px; color:#FFD9A0; margin-top:3px; }
-.slider-dots { position:absolute; bottom:14px; right:14px; display:flex; gap:6px; z-index:10; }
-.dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,.4); border:none; cursor:pointer; padding:0; transition:.3s; }
-.dot.active { background:#fff; transform:scale(1.3); }
-.prev, .next {
-  position:absolute; top:50%; transform:translateY(-50%);
-  background:rgba(255,255,255,.18); backdrop-filter:blur(6px);
-  border:none; color:#fff; font-size:20px;
-  width:40px; height:40px; border-radius:50%;
-  cursor:pointer; z-index:10;
-  display:flex; align-items:center; justify-content:center;
-}
-.prev { left:10px; } .next { right:10px; }
-
-/* ── MARATHI SLOGAN STRIP ── */
-.slogan-strip {
-  background:var(--green);
-  color:#fff;
-  padding:14px 20px;
-  display:flex; align-items:center; justify-content:center;
-  gap:12px; overflow:hidden;
-}
-.slogan-text {
-  font-family:'Tiro Devanagari Marathi',serif;
-  font-size:clamp(13px,4vw,17px);
-  text-align:center;
-  line-height:1.5;
-  letter-spacing:.3px;
-}
-.slogan-strip .leaf { font-size:20px; flex-shrink:0; }
-
-/* ── SEARCH ── */
-.search-wrap { padding:18px 16px 0; max-width:640px; margin:0 auto; }
-.search-box { position:relative; }
-.search-box input {
-  width:100%; padding:14px 44px 14px 46px;
-  border:2px solid var(--border); border-radius:14px;
-  font-size:15px; font-family:'Nunito',sans-serif;
-  background:var(--offwhite); outline:none; color:var(--ink);
-  min-height:var(--tap); transition:border-color .2s;
-}
-.search-box input:focus { border-color:var(--saffron); }
-.search-icon { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:18px; pointer-events:none; }
-#clearSearch {
-  position:absolute; right:14px; top:50%; transform:translateY(-50%);
-  background:none; border:none; font-size:18px; cursor:pointer;
-  display:none; color:var(--muted);
-}
-
-/* ── SECTION TITLE ── */
-.section-title {
-  padding:22px 16px 10px;
-  display:flex; align-items:center; justify-content:space-between;
-  max-width:1200px; margin:0 auto;
-}
-.section-title h2 {
-  font-family:'Baloo 2',cursive;
-  font-size:clamp(1.15rem,5vw,1.5rem); font-weight:800;
-  display:flex; align-items:center; gap:8px;
-}
-.section-title .sub-marathi {
-  display:block; font-family:'Tiro Devanagari Marathi',serif;
-  font-size:12px; color:var(--muted); font-weight:400; margin-top:1px;
-}
-.see-all { font-size:13px; color:var(--saffron); font-weight:700; text-decoration:none; }
-
-/* ── SERVICE CARDS ── */
-.container {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px; padding:0 16px 4px;
-  max-width:1200px; margin:0 auto;
-}
-.card {
-  background:var(--offwhite); border-radius:var(--radius-card);
-  padding:20px 14px; text-align:center;
-  box-shadow:0 4px 16px rgba(123,63,0,.08);
-  cursor:pointer; position:relative; overflow:hidden;
-  transition:transform .2s, box-shadow .2s;
-  border:1.5px solid var(--border);
-}
-.card::before {
-  content:''; position:absolute; top:-30px; right:-30px;
-  width:80px; height:80px; border-radius:50%;
-  background:radial-gradient(circle, var(--saffron-lt), transparent);
-  opacity:.8;
-}
-.card:active { transform:scale(.97); box-shadow:0 2px 8px rgba(123,63,0,.06); }
-.card img { width:52px; height:52px; object-fit:contain; margin-bottom:10px; }
-.card h3 { color:var(--ink); font-size:14px; font-weight:800; margin-bottom:3px; line-height:1.2; }
-.card .card-marathi { font-family:'Tiro Devanagari Marathi',serif; font-size:11px; color:var(--saffron); font-weight:600; margin-bottom:5px; }
-.card p { color:var(--muted); font-size:11.5px; margin-bottom:14px; line-height:1.4; }
-.card a {
-  display:inline-block; padding:9px 18px;
-  background:linear-gradient(135deg,var(--saffron),var(--jaggery));
-  color:#fff; text-decoration:none; border-radius:var(--radius-pill);
-  font-weight:800; font-size:12px; min-height:36px; line-height:1.6;
-  transition:opacity .2s;
-}
-.card a:active { opacity:.85; }
-.no-results {
-  grid-column:1/-1; text-align:center;
-  padding:32px; color:var(--muted); font-weight:700;
+.no-results{
+  grid-column:1/-1;text-align:center;
+  padding:32px;color:var(--muted);font-weight:700;
   display:none;
 }
 
-/* ── STATS STRIP ── */
-.stats-strip {
-  display:flex; justify-content:space-around;
-  background:linear-gradient(135deg, var(--jaggery), var(--saffron));
-  margin:20px 16px; border-radius:var(--radius-card);
-  padding:20px 10px;
-  max-width:calc(1200px - 32px); margin-left:auto; margin-right:auto;
+/* ─ STATS STRIP ─ */
+.stats-strip{
+  display:flex;justify-content:space-around;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  margin:20px 16px;border-radius:var(--radius);
+  padding:18px 10px;max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
 }
-.stat { text-align:center; color:#fff; }
-.stat-num { font-family:'Baloo 2',cursive; font-size:1.6rem; font-weight:800; line-height:1; }
-.stat-lbl { font-size:11px; opacity:.8; margin-top:3px; font-weight:700; }
-.stat-mr { font-family:'Tiro Devanagari Marathi',serif; font-size:10px; opacity:.65; margin-top:1px; }
+.stat{text-align:center;color:#fff;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;line-height:1;}
+.stat-lbl{font-size:11px;opacity:.8;margin-top:3px;font-weight:700;}
 
-/* ── TRUST BADGE BAND ── */
-.trust-band {
-  background:var(--green-lt);
-  border-top:2px solid var(--green);
-  border-bottom:2px solid var(--green);
-  padding:14px 20px;
-  display:flex; justify-content:center; gap:24px; flex-wrap:wrap;
-  max-width:100%;
+/* ─ HOW IT WORKS ─ */
+.steps{
+  display:flex;flex-direction:column;gap:14px;
+  padding:0 16px 4px;max-width:600px;margin:0 auto;
 }
-.trust-item {
-  display:flex; align-items:center; gap:7px;
-  font-size:12.5px; font-weight:700; color:var(--green);
+.step{
+  display:flex;align-items:center;gap:14px;
+  background:#fff;border-radius:16px;
+  padding:16px;box-shadow:0 4px 14px rgba(0,0,0,.06);
 }
+.step-num{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;font-weight:900;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.step-text h4{font-size:15px;font-weight:800;}
+.step-text p{font-size:12px;color:var(--muted);margin-top:2px;}
 
-/* ── HOW IT WORKS ── */
-.steps {
-  display:flex; flex-direction:column; gap:14px;
-  padding:0 16px 4px; max-width:600px; margin:0 auto;
-}
-.step {
-  display:flex; align-items:center; gap:14px;
-  background:var(--offwhite); border-radius:16px;
-  padding:16px; border:1.5px solid var(--border);
-  box-shadow:0 3px 12px rgba(0,0,0,.05);
-}
-.step-num {
-  width:42px; height:42px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg,var(--saffron),var(--jaggery));
-  color:#fff; font-weight:900; font-size:16px;
-  display:flex; align-items:center; justify-content:center;
-}
-.step-text h4 { font-size:14px; font-weight:800; }
-.step-text .step-mr { font-family:'Tiro Devanagari Marathi',serif; font-size:12px; color:var(--saffron); margin-bottom:2px; }
-.step-text p { font-size:12px; color:var(--muted); margin-top:2px; }
+/* ─ AUTH ─ */
+.auth-container{padding:0 16px;display:flex;flex-direction:column;gap:14px;max-width:500px;margin:0 auto;}
+.auth-tabs{display:flex;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+.auth-tab{flex:1;padding:14px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;transition:.3s;}
+.auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
+.auth-card{background:#fff;padding:24px 20px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;}
+.auth-card.visible{display:block;}
+.auth-card h2{font-family:'Syne',sans-serif;margin-bottom:18px;font-size:1.4rem;}
 
-/* ── AUTH ── */
-.auth-container { padding:0 16px; display:flex; flex-direction:column; gap:14px; max-width:500px; margin:0 auto; }
-.auth-tabs { display:flex; background:var(--offwhite); border-radius:14px; overflow:hidden; box-shadow:var(--shadow); border:1.5px solid var(--border); }
-.auth-tab { flex:1; padding:14px; border:none; background:transparent; font-family:'Nunito',sans-serif; font-size:15px; font-weight:700; color:var(--muted); cursor:pointer; transition:.3s; }
-.auth-tab.active { background:linear-gradient(135deg,var(--saffron),var(--jaggery)); color:#fff; }
-.auth-card { background:var(--offwhite); padding:24px 20px; border-radius:var(--radius-card); box-shadow:var(--shadow); display:none; border:1.5px solid var(--border); }
-.auth-card.visible { display:block; }
-.auth-card h2 { font-family:'Baloo 2',cursive; margin-bottom:4px; font-size:1.4rem; }
-.auth-card .auth-marathi { font-family:'Tiro Devanagari Marathi',serif; font-size:13px; color:var(--saffron); margin-bottom:16px; }
-
-.input-group { position:relative; margin-bottom:12px; }
-.field-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:17px; pointer-events:none; }
-.input-group input {
-  width:100%; padding:14px 42px 14px 44px;
-  border:2px solid var(--border); border-radius:14px;
-  font-family:'Nunito',sans-serif; font-size:15px;
-  background:#FEFAF5; outline:none; color:var(--ink);
-  transition:border-color .2s; min-height:var(--tap);
+/* Input groups with validation */
+.input-group{position:relative;margin-bottom:12px;}
+.field-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
+.input-group input{
+  width:100%;padding:14px 42px 14px 44px;
+  border:2px solid #f0f0f0;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-size:15px;
+  background:#fafafa;outline:none;color:var(--text);
+  transition:border-color .2s;min-height:var(--tap);
 }
-.input-group input:focus { border-color:var(--saffron); background:#fff; }
-.input-group input.valid   { border-color:var(--green); }
-.input-group input.invalid { border-color:#c0392b; }
-.valid-icon { position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:16px; display:none; }
-.field-error { font-size:11px; color:#c0392b; font-weight:700; margin-top:4px; margin-left:4px; display:none; }
-.pass-toggle { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:18px; color:var(--muted); }
-.pw-strength { height:4px; border-radius:4px; background:#e8e0d8; margin:-8px 0 10px; overflow:hidden; }
-.pw-strength-bar { height:100%; width:0; border-radius:4px; transition:width .3s,background .3s; }
+.input-group input:focus{border-color:var(--primary);background:#fff;}
+.input-group input.valid{border-color:#16a34a;}
+.input-group input.invalid{border-color:#dc2626;}
+.valid-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:16px;display:none;}
+.field-error{font-size:11px;color:var(--error);font-weight:700;margin-top:4px;margin-left:4px;display:none;}
 
-.auth-card button.submit-btn {
-  width:100%; padding:15px; border:none; border-radius:14px;
-  background:linear-gradient(135deg,var(--saffron),var(--jaggery));
-  color:#fff; font-family:'Nunito',sans-serif;
-  font-weight:800; font-size:16px; cursor:pointer;
+/* Password toggle */
+.pass-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:18px;color:var(--muted);}
+
+/* Password strength */
+.pw-strength{height:4px;border-radius:4px;background:#eee;margin:-8px 0 10px;overflow:hidden;}
+.pw-strength-bar{height:100%;width:0;border-radius:4px;transition:width .3s,background .3s;}
+
+.auth-card button.submit-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  color:#fff;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:16px;cursor:pointer;
   min-height:var(--tap);
-  box-shadow:0 6px 18px rgba(232,96,10,.35);
-  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 6px 18px rgba(79,70,229,.35);
+  display:flex;align-items:center;justify-content:center;
   transition:opacity .2s;
 }
-.auth-card button.submit-btn:active { opacity:.9; }
-.auth-card button.submit-btn:disabled { opacity:.6; cursor:not-allowed; }
-.forgot-link { display:block; text-align:right; font-size:13px; color:var(--saffron); font-weight:700; text-decoration:none; margin:-4px 0 14px; }
+.auth-card button.submit-btn:active{opacity:.9;}
+.auth-card button.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
 
-/* ── PROFILE ── */
-.profile-card {
-  margin:0 16px; background:var(--offwhite); padding:28px 22px;
-  border-radius:var(--radius-card); box-shadow:var(--shadow); display:none;
-  max-width:500px; margin-left:auto; margin-right:auto;
-  border:1.5px solid var(--border);
-}
-.profile-header { display:flex; align-items:center; gap:16px; margin-bottom:22px; }
-.avatar {
-  width:62px; height:62px; border-radius:50%; flex-shrink:0;
-  background:linear-gradient(135deg,var(--saffron),var(--jaggery));
-  display:flex; align-items:center; justify-content:center;
-  font-size:26px; color:#fff; font-weight:900;
-}
-.profile-header-text h2 { font-family:'Baloo 2',cursive; font-size:1.3rem; }
-.profile-header-text p { color:var(--muted); font-size:13px; }
-.profile-info { display:flex; align-items:center; gap:12px; padding:13px 0; border-bottom:1px solid var(--border); font-size:14px; }
-.profile-info:last-of-type { border-bottom:none; }
-.info-icon { font-size:20px; flex-shrink:0; }
-.info-label { color:var(--muted); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
-.info-value { font-weight:700; margin-top:2px; }
-.logout-btn { margin-top:18px; width:100%; padding:14px; border:none; border-radius:14px; background:#fee2e2; color:#c0392b; font-family:'Nunito',sans-serif; font-weight:800; font-size:15px; cursor:pointer; min-height:var(--tap); }
+.forgot-link{display:block;text-align:right;font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;margin:-4px 0 14px;}
 
-/* ── TESTIMONIALS ── */
-.testimonials { padding:0 16px; display:flex; flex-direction:column; gap:12px; max-width:600px; margin:0 auto; }
-.review {
-  background:var(--offwhite); border-radius:16px; padding:18px;
-  box-shadow:0 3px 12px rgba(0,0,0,.06);
-  border:1.5px solid var(--border); position:relative;
+/* ─ PROFILE ─ */
+.profile-card{margin:0 16px;background:#fff;padding:28px 22px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;max-width:500px;margin-left:auto;margin-right:auto;}
+.profile-header{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
+.avatar{
+  width:62px;height:62px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;font-weight:900; 
 }
-.review::before {
-  content:'"'; font-size:64px; font-family:Georgia,serif;
-  color:var(--saffron-lt); position:absolute; top:4px; right:14px;
-  line-height:1; pointer-events:none;
-}
-.review-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.rev-avatar {
-  width:42px; height:42px; border-radius:50%;
-  background:linear-gradient(135deg,var(--saffron),var(--jaggery));
-  display:flex; align-items:center; justify-content:center;
-  color:#fff; font-weight:900; font-size:16px; flex-shrink:0;
-}
-.rev-name { font-weight:800; font-size:14px; }
-.rev-village { font-size:11px; color:var(--muted); }
-.stars { color:#D97706; font-size:13px; }
-.rev-text { font-size:13px; color:var(--muted); line-height:1.5; }
-.rev-marathi { font-family:'Tiro Devanagari Marathi',serif; font-size:13px; color:var(--ink); font-weight:600; margin-bottom:5px; }
+.profile-header-text h2{font-family:'Syne',sans-serif;font-size:1.3rem;}
+.profile-header-text p{color:var(--muted);font-size:13px;}
+.profile-info{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #f3f4f6;font-size:14px;}
+.profile-info:last-of-type{border-bottom:none;}
+.info-icon{font-size:20px;flex-shrink:0;}
+.info-label{color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.info-value{font-weight:700;margin-top:2px;}
+.logout-btn{margin-top:18px;width:100%;padding:14px;border:none;border-radius:14px;background:#fee2e2;color:#dc2626;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);}
 
-/* ── CONTACT STRIP ── */
-.contact-strip {
-  margin:20px 16px; border-radius:var(--radius-card);
-  background:var(--offwhite); padding:22px;
-  border:1.5px solid var(--border);
+/* ─ TESTIMONIALS ─ */
+.testimonials{padding:0 16px;display:flex;flex-direction:column;gap:12px;max-width:600px;margin:0 auto;}
+.review{background:#fff;border-radius:16px;padding:18px;box-shadow:0 4px 14px rgba(0,0,0,.06);}
+.review-top{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.rev-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;flex-shrink:0;}
+.rev-name{font-weight:800;font-size:14px;}
+.stars{color:#f59e0b;font-size:13px;}
+.rev-text{font-size:13px;color:var(--muted);line-height:1.5;}
+
+/* ─ CONTACT STRIP ─ */
+.contact-strip{
+  margin:20px 16px;border-radius:var(--radius);
+  background:#fff;padding:20px;
   box-shadow:0 4px 14px rgba(0,0,0,.06);
-  max-width:calc(1200px - 32px); margin-left:auto; margin-right:auto;
+  max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
 }
-.contact-strip h3 { font-family:'Baloo 2',cursive; font-size:1.1rem; margin-bottom:4px; }
-.contact-strip .contact-mr { font-family:'Tiro Devanagari Marathi',serif; font-size:12px; color:var(--muted); margin-bottom:14px; }
-.contact-btns { display:flex; gap:10px; flex-wrap:wrap; }
-.contact-btn {
-  display:inline-flex; align-items:center; gap:7px;
-  padding:12px 18px; border-radius:var(--radius-pill); font-weight:800;
-  font-size:13px; text-decoration:none; min-height:44px;
+.contact-strip h3{font-family:'Syne',sans-serif;font-size:1.1rem;margin-bottom:14px;}
+.contact-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.contact-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:12px 18px;border-radius:50px;font-weight:800;
+  font-size:13px;text-decoration:none;min-height:44px;
   transition:transform .15s;
 }
-.contact-btn:active { transform:scale(.95); }
-.contact-btn.whatsapp-btn { background:#25d366; color:#fff; }
-.contact-btn.call-btn     { background:var(--saffron); color:#fff; }
-.contact-btn.email-btn    { background:var(--cream); color:var(--ink); border:1.5px solid var(--border); }
+.contact-btn:active{transform:scale(.95);}
+.contact-btn.whatsapp-btn{background:#25d366;color:#fff;}
+.contact-btn.call-btn{background:var(--primary);color:#fff;}
+.contact-btn.email-btn{background:#f3f4f6;color:var(--text);}
 
-/* ── FOOTER ── */
-footer {
-  background:var(--jaggery); color:#fff;
-  text-align:center; padding:36px 20px 20px; margin-top:24px;
-}
-footer h2 { font-family:'Baloo 2',cursive; font-size:1.3rem; margin-bottom:4px; }
-footer .footer-marathi { font-family:'Tiro Devanagari Marathi',serif; font-size:13px; color:rgba(255,255,255,.65); margin-bottom:12px; }
-.footer-links { display:flex; justify-content:center; gap:16px; margin:12px 0; flex-wrap:wrap; }
-.footer-links a { color:rgba(255,255,255,.6); font-size:13px; font-weight:700; text-decoration:none; }
-footer p { font-size:12px; opacity:.45; margin-top:8px; }
+/* ─ FOOTER ─ */
+footer{background:#1e1b4b;color:#fff;text-align:center;padding:36px 20px 20px;margin-top:24px;}
+footer h2{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:8px;}
+footer .footer-links{display:flex;justify-content:center;gap:16px;margin:12px 0;flex-wrap:wrap;}
+footer .footer-links a{color:rgba(255,255,255,.6);font-size:13px;font-weight:700;text-decoration:none;}
+footer p{font-size:12px;opacity:.45;margin-top:8px;}
 
-/* ── WHATSAPP FAB ── */
-.whatsapp-fab {
-  position:fixed; bottom:88px; right:16px;
-  width:52px; height:52px; background:#25d366;
-  border-radius:50%; display:flex; align-items:center; justify-content:center;
+/* ─ WHATSAPP FAB ─ */
+.whatsapp-fab{
+  position:fixed;bottom:84px;right:16px;
+  width:52px;height:52px;background:#25d366;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
   box-shadow:0 6px 18px rgba(37,211,102,.45);
-  z-index:998; text-decoration:none; font-size:26px; transition:transform .2s;
+  z-index:998;text-decoration:none;font-size:26px;
+  transition:transform .2s;
 }
-.whatsapp-fab:active { transform:scale(.9); }
+.whatsapp-fab:active{transform:scale(.9);}
 
-/* ── BOTTOM NAV ── */
-.bottom-nav {
-  position:fixed; bottom:0; left:0; right:0; background:var(--offwhite);
-  display:flex; justify-content:space-around;
+/* ─ BOTTOM NAV ─ */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;background:#fff;
+  display:flex;justify-content:space-around;
   padding:8px 0 calc(8px + env(safe-area-inset-bottom));
-  box-shadow:0 -2px 16px rgba(0,0,0,.08); z-index:999;
-  border-top:1.5px solid var(--border);
+  box-shadow:0 -4px 20px rgba(0,0,0,.08);z-index:999;
 }
-.bottom-nav a {
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  text-decoration:none; color:var(--muted);
-  font-size:10px; font-weight:700; padding:4px 8px;
-  border-radius:12px; min-width:var(--tap); transition:color .2s;
+.bottom-nav a{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  text-decoration:none;color:var(--muted);
+  font-size:10px;font-weight:700;padding:4px 8px;
+  border-radius:12px;min-width:var(--tap);transition:color .2s;
 }
-.bottom-nav a .icon { font-size:22px; line-height:1; }
-.bottom-nav a.active { color:var(--saffron); }
-.bottom-nav a .nav-mr { font-family:'Tiro Devanagari Marathi',serif; font-size:9px; }
+.bottom-nav a .icon{font-size:22px;line-height:1;}
+.bottom-nav a.active{color:var(--primary);}
 
-/* ── LANGUAGE SWITCH ── */
-.lang-switch {
-  position:fixed; top:12px; left:12px;
-  z-index:1002;
-  display:flex; align-items:center;
-  background:var(--offwhite);
-  border:2px solid var(--border);
-  border-radius:var(--radius-pill);
-  box-shadow:0 4px 14px rgba(0,0,0,.12);
-  overflow:hidden;
-  font-size:12px; font-weight:800;
+/* ─ DESKTOP ─ */
+@media(min-width:600px){
+  .container{grid-template-columns:repeat(3,1fr);}
 }
-.lang-btn {
-  padding:7px 13px;
-  border:none; background:transparent;
-  cursor:pointer; font-family:'Nunito',sans-serif;
-  font-size:12px; font-weight:800;
-  color:var(--muted);
-  transition:background .2s, color .2s;
-  min-height:36px; line-height:1;
-}
-.lang-btn.active {
-  background:var(--saffron);
-  color:#fff;
-  border-radius:var(--radius-pill);
-}
-
-/* ── DIVIDER ── */
-.divider {
-  height:2px;
-  background:repeating-linear-gradient(90deg,
-    var(--saffron) 0px, var(--saffron) 12px,
-    transparent 12px, transparent 20px,
-    var(--green) 20px, var(--green) 32px,
-    transparent 32px, transparent 40px
-  );
-  margin:4px 0;
-  opacity:.35;
-}
-
-/* ── RESPONSIVE ── */
-@media(min-width:600px) { .container { grid-template-columns:repeat(3,1fr); } }
-@media(min-width:900px) {
-  .container { grid-template-columns:repeat(4,1fr); }
-  .steps { flex-direction:row; max-width:1200px; }
-  .testimonials { flex-direction:row; max-width:1200px; }
+@media(min-width:900px){
+  .container{grid-template-columns:repeat(4,1fr);}
+  .steps{flex-direction:row;max-width:1200px;}
+  .testimonials{flex-direction:row;max-width:1200px;}
 }
 </style>
 </head>
 <body>
 
-<!-- Location Pill -->
-<div class="top-location">📍 <span id="locText">अकोले, महाराष्ट्र</span></div>
+<!-- Location -->
+<div class="top-location">📍 Akole, Maharashtra</div>
 
-<!-- Language Switch -->
-<div class="lang-switch">
-  <button class="lang-btn active" id="btnMr" onclick="setLang('mr')">मराठी</button>
-  <button class="lang-btn" id="btnEn" onclick="setLang('en')">EN</button>
-</div>
+<!-- Top Profile Pill (app-style quick access to account) -->
+<a href="#account" class="top-profile" id="topProfile">
+  <span class="tp-avatar" id="tpAvatar">👤</span>
+  <span class="tp-text" id="tpText">Login</span>
+</a>
 
 <!-- Toast -->
 <div id="toast"></div>
 
-<!-- ── HEADER ── -->
+<!-- Header -->
 <header>
-  <div class="header-badge">🌾 अकोलेचा स्वतःचा मंच</div>
-  <h1>सर्व-नेस्ट</h1>
-  <p class="hindi-tagline">घरबसल्या मिळवा सगळ्या सुविधा!</p>
-  <p class="eng-sub">Fast · Trusted · Your Village, Your Service</p>
-  <div class="hero-cta-row">
-    <a href="#services" class="hero-btn primary">🛒 सेवा पाहा</a>
-    <a href="https://wa.me/919307320279" class="hero-btn secondary">💬 WhatsApp करा</a>
-  </div>
+  <h1>Sarva-Nest</h1>
+  <p>Fast · Trusted · Professional</p>
 </header>
 
-<div class="divider"></div>
-
-<!-- ── SLIDER ── -->
+<!-- Slider -->
 <section class="slider" id="sliderEl">
   <div class="slide active">
     <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Food Delivery">
-    <div class="caption">
-      <h2>Food Delivery</h2>
-      <p class="caption-marathi">ताजे जेवण – दारात वेळेत 🍛</p>
-    </div>
-  </div>
-  <div class="slide">
-    <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Fresh Vegetables">
-    <div class="caption">
-      <h2>भाजी & किराणा</h2>
-      <p class="caption-marathi">शेतातून थेट घरी ताज्या भाज्या 🥦</p>
-    </div>
+    <div class="caption"><h2>Food Delivery</h2><p>Fresh & Hot — Delivered Fast</p></div>
   </div>
   <div class="slide">
     <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Home Services">
-    <div class="caption">
-      <h2>Home Services</h2>
-      <p class="caption-marathi">तुमच्या घरी येतो आमचा तज्ज्ञ 🔧</p>
-    </div>
+    <div class="caption"><h2>Home Services</h2><p>Professionals At Your Doorstep</p></div>
   </div>
-  <button class="prev" aria-label="मागे">&#8249;</button>
-  <button class="next" aria-label="पुढे">&#8250;</button>
+  <div class="slide">
+    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Security">
+    <div class="caption"><h2>Security Services</h2><p>Trusted & Safe Guards</p></div>
+  </div>
+  <button class="prev" aria-label="Previous">&#8249;</button>
+  <button class="next" aria-label="Next">&#8250;</button>
   <div class="slider-dots" id="sliderDots"></div>
 </section>
 
-<!-- ── MARATHI SLOGAN STRIP ── -->
-<div class="slogan-strip">
-  <span class="leaf">🌿</span>
-  <p class="slogan-text" id="sloganText">एक अ‍ॅप, शंभर सुविधा – सर्व-नेस्ट तुमच्यासाठी!</p>
-  <span class="leaf">🌿</span>
-</div>
 
-<!-- ── SEARCH ── -->
+<!-- Search -->
 <div class="search-wrap">
   <div class="search-box">
     <span class="search-icon">🔍</span>
-    <input type="search" id="searchInput" placeholder="सेवा शोधा… (Search services)" autocomplete="off">
+    <input type="search" id="searchInput" placeholder="Search services..." autocomplete="off">
     <button id="clearSearch" aria-label="Clear">✕</button>
   </div>
 </div>
 
-<!-- ── SERVICES ── -->
+<!-- Services -->
 <div class="section-title" id="services">
-  <h2>🏡 सेवा निवडा <span class="sub-marathi">Popular Services</span></h2>
-  <a href="#" class="see-all">सर्व पाहा</a>
+  <h2>Popular Services</h2>
+  <a href="#" class="see-all">See all</a>
 </div>
 
 <div class="container" id="serviceGrid">
-
-  <div class="card" data-name="food delivery जेवण">
+  <div class="card" data-name="food delivery">
     <img src="https://cdn-icons-png.flaticon.com/128/1037/1037855.png" alt="Food">
-    <h3>Food Delivery</h3>
-    <div class="card-marathi">जेवण घरपोच</div>
-    <p>ताजे व गरम जेवण लवकर मिळवा.</p>
-    <a href="food.html">ऑर्डर करा</a>
+    <h3>Food Delivery</h3><p>Fresh food delivered quickly.</p>
+    <a href="food.html">Order Now</a>
+  </div>  <div class="card" data-name="food delivery">
+    <img src="https://cdn-icons-png.flaticon.com/128/2805/2805947.png" alt="Food">
+    <h3>vegitable Delivery</h3><p>Fresh vegetables delivered quickly.</p>
+    <a href="veggie-delivery.html">Order Now</a>
   </div>
-
-  <div class="card" data-name="vegetable sabji bhaji delivery भाजी">
-    <img src="https://cdn-icons-png.flaticon.com/128/2805/2805947.png" alt="Vegetables">
-    <h3>भाजीपाला Delivery</h3>
-    <div class="card-marathi">शेतातून थेट घरी</div>
-    <p>शेतकऱ्यांकडून ताज्या भाज्या.</p>
-    <a href="veggie-delivery.html">ऑर्डर करा</a>
+   <div class="card" data-name="food delivery">
+    <img src="https://img.icons8.com/?size=80&id=v1ZowcUYJcqz&format=png" alt="Food">
+    <h3>Groceries delivery</h3><p>Fresh Groceries delivered quickly.</p>
+    <a href="grocery-store.html">Order Now</a>
   </div>
-
-  <div class="card" data-name="grocery kirana kirna किराणा">
-    <img src="https://img.icons8.com/?size=80&id=v1ZowcUYJcqz&format=png" alt="Grocery">
-    <h3>किराणा Delivery</h3>
-    <div class="card-marathi">घरच्या वस्तू दारात</div>
-    <p>सर्व रोजच्या गरजा एका क्लिकवर.</p>
-    <a href="grocery-store.html">ऑर्डर करा</a>
-  </div>
-
-  <div class="card" data-name="plumber plumbing नळ">
+  <div class="card" data-name="plumber plumbing">
     <img src="https://img.icons8.com/color/96/plumber.png" alt="Plumber">
-    <h3>Plumber</h3>
-    <div class="card-marathi">नळकाम तज्ज्ञ</div>
-    <p>घराचे पाणी काम तातडीने दुरुस्त.</p>
-    <a href="fixr-booking.html">बुक करा</a>
+    <h3>Plumber</h3><p>Professional plumbing services.</p>
+    <a href="fixr-booking.html">Book Now</a>
   </div>
-
-  <div class="card" data-name="electrician electrical वीज">
+  <div class="card" data-name="electrician electrical">
     <img src="https://img.icons8.com/color/96/electrical.png" alt="Electrician">
-    <h3>Electrician</h3>
-    <div class="card-marathi">विजेचे काम</div>
-    <p>सुरक्षित व जलद विद्युत दुरुस्ती.</p>
-    <a href="#">बुक करा</a>
+    <h3>Electrician</h3><p>Expert electrical repairs.</p>
+    <a href="#">Book Now</a>
   </div>
-
-  <div class="card" data-name="taxi cab ride रिक्षा">
+  <div class="card" data-name="taxi cab ride">
     <img src="https://img.icons8.com/color/96/taxi.png" alt="Taxi">
-    <h3>Taxi Service</h3>
-    <div class="card-marathi">टॅक्सी बुकिंग</div>
-    <p>परवडणारी व सुरक्षित वाहतूक.</p>
-    <a href="taxi.html">बुक करा</a>
+    <h3>Taxi Service</h3><p>Affordable taxi booking.</p>
+    <a href="taxi.html">Book Ride</a>
   </div>
-
-  <div class="card" data-name="cleaning home साफसफाई">
-    <img src="https://img.icons8.com/color/96/broom.png" alt="Cleaning">
-    <h3>Home Cleaning</h3>
-    <div class="card-marathi">घर स्वच्छता सेवा</div>
-    <p>घर चकाचक स्वच्छ – हमखास!</p>
-    <a href="#">बुक करा</a>
+  <div class="card" data-name="cleaning home">
+    <img src="https://tse1.mm.bing.net/th/id/OIP.bwzYgM-7cQ1whDm5eTvnXgHaHa?r=0&cb=thfvnextfalcon2&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Cleaning">
+    <h3>BookBazzar</h3><p>Sell and Buy our books </p>
+    <a href="bookbazaar.html">Sell Or Buy</a>
   </div>
-
-  <div class="card" data-name="laundry washing clothes कपडे">
+  <div class="card" data-name="laundry washing clothes">
     <img src="https://img.icons8.com/color/96/washing-machine.png" alt="Laundry">
-    <h3>Laundry</h3>
-    <div class="card-marathi">कपडे धुणे सेवा</div>
-    <p>Pick-up & Delivery – तुमच्या दारी.</p>
-    <a href="#">बुक करा</a>
+    <h3>Laundry</h3><p>Pick-up & delivery service.</p>
+    <a href="loundary.html">Book Now</a>
   </div>
-
-  <div class="card" data-name="carpenter furniture wood सुतार">
+  <div class="card" data-name="carpenter furniture wood">
     <img src="https://img.icons8.com/color/96/carpenter.png" alt="Carpenter">
-    <h3>Carpenter</h3>
-    <div class="card-marathi">सुतार काम</div>
-    <p>फर्निचर व लाकडी दुरुस्ती कामे.</p>
-    <a href="#">बुक करा</a>
+    <h3>Carpenter</h3><p>Furniture & woodwork repairs.</p>
+    <a href="#">Book Now</a>
   </div>
-
-  <div class="card" data-name="pest control insects कीटक">
+  <div class="card" data-name="pest control insects">
     <img src="https://img.icons8.com/color/96/pest.png" alt="Pest">
-    <h3>Pest Control</h3>
-    <div class="card-marathi">कीटकनाशक सेवा</div>
-    <p>घर व शेती – कीड मुक्त व्हा.</p>
-    <a href="#">बुक करा</a>
+    <h3>Pest Control</h3><p>Safe & effective pest removal.</p>
+    <a href="#">Book Now</a>
   </div>
-
-  <div class="no-results" id="noResults">😕 सेवा आढळली नाही</div>
+  <div class="no-results" id="noResults">😕 No services found</div>
 </div>
 
-<!-- ── STATS STRIP ── -->
-<div class="stats-strip">
-  <div class="stat">
-    <div class="stat-num">500+</div>
-    <div class="stat-lbl">Happy Customers</div>
-    <div class="stat-mr">समाधानी ग्राहक</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">10+</div>
-    <div class="stat-lbl">Services</div>
-    <div class="stat-mr">सेवा प्रकार</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">50+</div>
-    <div class="stat-lbl">Experts</div>
-    <div class="stat-mr">तज्ज्ञ कर्मचारी</div>
-  </div>
-  <div class="stat">
-    <div class="stat-num">5★</div>
-    <div class="stat-lbl">Rated</div>
-    <div class="stat-mr">रेटिंग</div>
-  </div>
-</div>
-
-<!-- ── TRUST BAND ── -->
-<div class="trust-band">
-  <div class="trust-item">✅ स्थानिक विश्वास</div>
-  <div class="trust-item">🕐 वेळेत सेवा</div>
-  <div class="trust-item">💯 गुणवत्ता हमी</div>
-  <div class="trust-item">🔐 सुरक्षित पेमेंट</div>
-</div>
-
-<!-- ── HOW IT WORKS ── -->
+<!-- How it Works -->
 <div class="section-title" style="margin-top:8px;">
-  <h2>📋 कसे काम करते? <span class="sub-marathi">How It Works</span></h2>
+  <h2>How It Works</h2>
 </div>
 <div class="steps">
   <div class="step">
-    <div class="step-num">१</div>
-    <div class="step-text">
-      <div class="step-mr">सेवा निवडा</div>
-      <h4>Choose a Service</h4>
-      <p>आमच्या विस्तृत सेवांमधून तुमची निवड करा.</p>
-    </div>
+    <div class="step-num">1</div>
+    <div class="step-text"><h4>Choose a Service</h4><p>Browse and pick from our wide range of services.</p></div>
   </div>
   <div class="step">
-    <div class="step-num">२</div>
-    <div class="step-text">
-      <div class="step-mr">बुकिंग करा</div>
-      <h4>Book & Confirm</h4>
-      <p>तुमच्या वेळेनुसार बुकिंग करा. लगेच पुष्टी मिळेल.</p>
-    </div>
+    <div class="step-num">2</div>
+    <div class="step-text"><h4>Book & Confirm</h4><p>Schedule at your preferred time. Instant confirmation.</p></div>
   </div>
   <div class="step">
-    <div class="step-num">३</div>
-    <div class="step-text">
-      <div class="step-mr">तज्ज्ञ येतो</div>
-      <h4>Expert Arrives</h4>
-      <p>आमचा तपासलेला तज्ज्ञ तुमच्या दारी येतो.</p>
-    </div>
+    <div class="step-num">3</div>
+    <div class="step-text"><h4>Expert Arrives</h4><p>Our verified professional comes to your doorstep.</p></div>
   </div>
 </div>
 
-<!-- ── TESTIMONIALS ── -->
-<div class="section-title" style="margin-top:8px;">
-  <h2>💬 ग्राहकांचे अनुभव <span class="sub-marathi">What People Say</span></h2>
-</div>
-<div class="testimonials">
 
-  <div class="review">
-    <div class="review-top">
-      <div class="rev-avatar">र</div>
-      <div>
-        <div class="rev-name">रमेश पवार</div>
-        <div class="rev-village">📍 अकोले गाव</div>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-    <p class="rev-marathi">"सर्व-नेस्ट मुळे घरबसल्या सगळं मिळतं!"</p>
-    <p class="rev-text">खूप छान सेवा! प्लंबर वेळेत आला आणि काम उत्तम केले. अकोल्यासाठी हे खूप गरजेचे होते.</p>
-  </div>
-
-  <div class="review">
-    <div class="review-top">
-      <div class="rev-avatar">स</div>
-      <div>
-        <div class="rev-name">सुनीता शेळके</div>
-        <div class="rev-village">📍 भंडारदरा</div>
-        <div class="stars">★★★★★</div>
-      </div>
-    </div>
-    <p class="rev-marathi">"ताज्या भाज्या घरपोच – धन्यवाद सर्व-नेस्ट!"</p>
-    <p class="rev-text">भाजीपाला डिलिव्हरी अप्रतिम आहे. शेतातून ताज्या भाज्या थेट घरी येतात. किमती पण योग्य आहेत.</p>
-  </div>
-
-  <div class="review">
-    <div class="review-top">
-      <div class="rev-avatar">अ</div>
-      <div>
-        <div class="rev-name">अजय तांबे</div>
-        <div class="rev-village">📍 राजूर</div>
-        <div class="stars">★★★★☆</div>
-      </div>
-    </div>
-    <p class="rev-marathi">"टॅक्सी सेवा खूपच उपयोगी पडली!"</p>
-    <p class="rev-text">रात्री उशिरा टॅक्सी हवी होती, सर्व-नेस्टने लगेच व्यवस्था केली. खूप आभारी आहे.</p>
-  </div>
-
-</div>
-
-<!-- ── AUTH SECTION ── -->
+<!-- Auth Section -->
 <div class="section-title" id="account" style="margin-top:24px;">
-  <h2>👤 <span id="authSectionTitle">माझे खाते</span></h2>
+  <h2 id="authSectionTitle">My Account</h2>
 </div>
 
 <div class="auth-container" id="authContainer">
   <div class="auth-tabs">
-    <button class="auth-tab active" onclick="switchTab('register')">नोंदणी करा</button>
-    <button class="auth-tab" onclick="switchTab('login')">लॉगिन करा</button>
+    <button class="auth-tab active" onclick="switchTab('register')">Register</button>
+    <button class="auth-tab" onclick="switchTab('login')">Login</button>
   </div>
 
   <!-- Register -->
   <div class="auth-card visible" id="registerCard">
-    <h2>खाते तयार करा</h2>
-    <p class="auth-marathi">Create your account – मोफत नोंदणी!</p>
+    <h2>Create Account</h2>
 
     <div class="input-group">
       <span class="field-icon">👤</span>
-      <input type="text" id="reg_name" placeholder="पूर्ण नाव (Full Name)" autocomplete="name">
+      <input type="text" id="reg_name" placeholder="Full Name" autocomplete="name">
       <span class="valid-icon" id="vi_name"></span>
-      <div class="field-error" id="fe_name">कृपया तुमचे पूर्ण नाव टाका</div>
+      <div class="field-error" id="fe_name">Please enter your full name</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">🎂</span>
-      <input type="number" id="reg_age" placeholder="वय (Age)" min="10" max="100" inputmode="numeric">
+      <input type="number" id="reg_age" placeholder="Age" min="10" max="100" inputmode="numeric">
       <span class="valid-icon" id="vi_age"></span>
-      <div class="field-error" id="fe_age">वय १०–१०० च्या दरम्यान असावे</div>
+      <div class="field-error" id="fe_age">Enter a valid age (10–100)</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">📱</span>
-      <input type="tel" id="reg_mobile" placeholder="मोबाइल नंबर" inputmode="tel" maxlength="10">
+      <input type="tel" id="reg_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
       <span class="valid-icon" id="vi_mobile"></span>
-      <div class="field-error" id="fe_mobile">१० अंकी मोबाइल नंबर टाका</div>
+      <div class="field-error" id="fe_mobile">Enter a valid 10-digit mobile number</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">💬</span>
-      <input type="tel" id="reg_whatsapp" placeholder="WhatsApp नंबर" inputmode="tel" maxlength="10">
+      <input type="tel" id="reg_whatsapp" placeholder="WhatsApp Number" inputmode="tel" maxlength="10">
       <span class="valid-icon" id="vi_whatsapp"></span>
-      <div class="field-error" id="fe_whatsapp">१० अंकी WhatsApp नंबर टाका</div>
+      <div class="field-error" id="fe_whatsapp">Enter a valid 10-digit WhatsApp number</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">🏠</span>
-      <input type="text" id="reg_address" placeholder="पत्ता / गाव (Address)" autocomplete="street-address">
+      <input type="text" id="reg_address" placeholder="Address" autocomplete="street-address">
       <span class="valid-icon" id="vi_address"></span>
-      <div class="field-error" id="fe_address">कृपया तुमचा पत्ता टाका</div>
+      <div class="field-error" id="fe_address">Please enter your address</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">📧</span>
-      <input type="email" id="reg_email" placeholder="ईमेल (Email)" autocomplete="email" inputmode="email">
+      <input type="email" id="reg_email" placeholder="Email Address" autocomplete="email" inputmode="email">
       <span class="valid-icon" id="vi_reg_email"></span>
-      <div class="field-error" id="fe_reg_email">योग्य ईमेल टाका</div>
+      <div class="field-error" id="fe_reg_email">Enter a valid email address</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">🔒</span>
-      <input type="password" id="reg_password" placeholder="पासवर्ड (किमान ६ अक्षरे)" autocomplete="new-password">
+      <input type="password" id="reg_password" placeholder="Password (min 6 chars)" autocomplete="new-password">
       <button class="pass-toggle" type="button" onclick="togglePass('reg_password',this)">👁️</button>
-      <div class="field-error" id="fe_reg_pass">पासवर्ड किमान ६ अक्षरे असावा</div>
+      <div class="field-error" id="fe_reg_pass">Password must be at least 6 characters</div>
     </div>
     <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
+
     <div class="input-group">
       <span class="field-icon">🔒</span>
-      <input type="password" id="reg_confirm" placeholder="पासवर्ड पुन्हा टाका" autocomplete="new-password">
+      <input type="password" id="reg_confirm" placeholder="Confirm Password" autocomplete="new-password">
       <button class="pass-toggle" type="button" onclick="togglePass('reg_confirm',this)">👁️</button>
-      <div class="field-error" id="fe_confirm">पासवर्ड जुळत नाही</div>
+      <div class="field-error" id="fe_confirm">Passwords do not match</div>
     </div>
+
     <button class="submit-btn" id="regBtn" onclick="registerUser()">
-      <span class="btn-text">खाते तयार करा 🎉</span>
+      <span class="btn-text">Create Account</span>
       <span class="btn-spinner"></span>
     </button>
   </div>
 
   <!-- Login -->
   <div class="auth-card" id="loginCard">
-    <h2>स्वागत आहे 👋</h2>
-    <p class="auth-marathi">Welcome back – लॉगिन करा!</p>
+    <h2>Welcome Back 👋</h2>
+
     <div class="input-group">
       <span class="field-icon">📧</span>
-      <input type="email" id="log_email" placeholder="ईमेल (Email)" autocomplete="email" inputmode="email">
+      <input type="email" id="log_email" placeholder="Email Address" autocomplete="email" inputmode="email">
       <span class="valid-icon" id="vi_log_email"></span>
-      <div class="field-error" id="fe_log_email">योग्य ईमेल टाका</div>
+      <div class="field-error" id="fe_log_email">Enter a valid email address</div>
     </div>
+
     <div class="input-group">
       <span class="field-icon">🔒</span>
-      <input type="password" id="log_password" placeholder="पासवर्ड" autocomplete="current-password">
+      <input type="password" id="log_password" placeholder="Password" autocomplete="current-password">
       <button class="pass-toggle" type="button" onclick="togglePass('log_password',this)">👁️</button>
-      <div class="field-error" id="fe_log_pass">पासवर्ड टाका</div>
+      <div class="field-error" id="fe_log_pass">Please enter your password</div>
     </div>
-    <a href="#" class="forgot-link" onclick="forgotPassword(event)">पासवर्ड विसरलात?</a>
+
+    <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
+
     <button class="submit-btn" id="loginBtn" onclick="loginUser()">
-      <span class="btn-text">लॉगिन करा</span>
+      <span class="btn-text">Login</span>
       <span class="btn-spinner"></span>
     </button>
   </div>
@@ -905,66 +624,63 @@ footer p { font-size:12px; opacity:.45; margin-top:8px; }
       <p id="profileEmail">–</p>
     </div>
   </div>
-  <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">Mobile / मोबाइल</div><div class="info-value" id="profileMobile">–</div></div></div>
+  <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">Mobile</div><div class="info-value" id="profileMobile">–</div></div></div>
   <div class="profile-info"><span class="info-icon">💬</span><div><div class="info-label">WhatsApp</div><div class="info-value" id="profileWhatsapp">–</div></div></div>
-  <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">Address / पत्ता</div><div class="info-value" id="profileAddress">–</div></div></div>
-  <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">Age / वय</div><div class="info-value" id="profileAge">–</div></div></div>
-  <button class="logout-btn" onclick="logoutUser()">🚪 लॉगआउट करा</button>
+  <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">Address</div><div class="info-value" id="profileAddress">–</div></div></div>
+  <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">Age</div><div class="info-value" id="profileAge">–</div></div></div>
+  <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
 </div>
 
-<!-- ── CONTACT ── -->
+<!-- Contact Strip -->
 <div class="contact-strip" id="contact">
-  <h3>📞 संपर्क करा</h3>
-  <p class="contact-mr">Get In Touch – आम्ही नेहमी तयार आहोत!</p>
+  <h3>📞 Get In Touch</h3>
   <div class="contact-btns">
     <a href="https://wa.me/919307320279" class="contact-btn whatsapp-btn">💬 WhatsApp</a>
-    <a href="tel:+919307320279" class="contact-btn call-btn">📞 फोन करा</a>
-    <a href="mailto:info@sarvanest.in" class="contact-btn email-btn">📧 ईमेल</a>
+    <a href="tel:+919307320279" class="contact-btn call-btn">📞 Call Us</a>
+    <a href="mailto:info@onlineservicesstore.in" class="contact-btn email-btn">📧 Email</a>
   </div>
 </div>
 
-<!-- ── FOOTER ── -->
+<!-- Footer -->
 <footer>
-  <h2>🌾 सर्व-नेस्ट</h2>
-  <p class="footer-marathi">अकोलेचा विश्वासू सेवा मंच – तुमच्यासाठी, तुमच्या गावासाठी</p>
+  <h2>Online Services Store</h2>
   <div class="footer-links">
     <a href="#">Privacy Policy</a>
     <a href="#">Terms of Service</a>
-    <a href="#">About Us / आमच्याबद्दल</a>
-    <a href="#contact">Contact / संपर्क</a>
+    <a href="#">About Us</a>
+    <a href="#contact">Contact</a>
   </div>
-  <p>Developed by Arsalan Shaikh & Onkar Sadgir</p>
-  <p>© 2026 सर्वाधिकार सुरक्षित · All Rights Reserved</p>
+  <p>Developed by Sarvanest Team</p>
+  <p>© 2026 All Rights Reserved</p>
 </footer>
 
 <!-- WhatsApp FAB -->
-<a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="WhatsApp वर चॅट करा">💬</a>
+<a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="Chat on WhatsApp">💬</a>
 
 <!-- Bottom Nav -->
 <nav class="bottom-nav">
-  <a href="#" class="active" id="nav-home">
-    <span class="icon">🏠</span>
-    <span class="nav-mr">मुखपृष्ठ</span>
-  </a>
-  <a href="order-tracking.html" id="nav-track">
-    <span class="icon">⚡</span>
-    <span class="nav-mr">ट्रॅक करा</span>
-  </a>
-  <a href="#account" id="nav-account">
-    <span class="icon">👤</span>
-    <span class="nav-mr">खाते</span>
-  </a>
-  <a href="#contact" id="nav-contact">
-    <span class="icon">📞</span>
-    <span class="nav-mr">संपर्क</span>
-  </a>
+  <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>Home</a>
+  <a href="order-tracking (1).html" id="nav-services"><span class="icon">⚡</span>Track</a>
+  <a href="#account" id="nav-account"><span class="icon">👤</span>Account</a>
+  <a href="#contact" id="nav-contact"><span class="icon">📞</span>Contact</a>
 </nav>
 
-<!-- ── FIREBASE ── -->
+<!-- ═══════════════════════════════════════════ -->
+<!-- FIREBASE MODULE                              -->
+<!-- ═══════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+  sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
@@ -979,445 +695,342 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 
+/* ── Friendly Firebase error messages ── */
 function friendlyError(code){
   const map = {
-    "auth/email-already-in-use":"हा ईमेल आधीच नोंदणीकृत आहे. लॉगिन करून पहा.",
-    "auth/invalid-email":"कृपया योग्य ईमेल पत्ता टाका.",
-    "auth/weak-password":"पासवर्ड कमकुवत आहे. किमान ६ अक्षरे वापरा.",
-    "auth/user-not-found":"या ईमेलशी कोणतेही खाते आढळले नाही.",
-    "auth/wrong-password":"चुकीचा पासवर्ड. कृपया पुन्हा प्रयत्न करा.",
-    "auth/invalid-credential":"चुकीचा ईमेल किंवा पासवर्ड.",
-    "auth/too-many-requests":"खूप जास्त प्रयत्न. काही मिनिटे थांबा.",
-    "auth/network-request-failed":"इंटरनेट कनेक्शन तपासा.",
+    "auth/email-already-in-use"   : "This email is already registered. Try logging in.",
+    "auth/invalid-email"          : "Please enter a valid email address.",
+    "auth/weak-password"          : "Password is too weak. Use at least 6 characters.",
+    "auth/user-not-found"         : "No account found with this email.",
+    "auth/wrong-password"         : "Incorrect password. Please try again.",
+    "auth/invalid-credential"     : "Wrong email or password. Please check and try again.",
+    "auth/too-many-requests"      : "Too many attempts. Please wait a few minutes and try again.",
+    "auth/network-request-failed" : "Network error. Please check your internet connection.",
+    "auth/user-disabled"          : "This account has been disabled. Contact support.",
+    "auth/popup-closed-by-user"   : "Sign-in popup was closed. Please try again.",
   };
-  return map[code] || "काहीतरी चूक झाली. पुन्हा प्रयत्न करा.";
+  return map[code] || "Something went wrong. Please try again.";
 }
 
+/* ── REGISTER ── */
 window.registerUser = async () => {
   if(!window.validateRegister()) return;
-  const name=document.getElementById("reg_name").value.trim();
-  const age=document.getElementById("reg_age").value.trim();
-  const mobile=document.getElementById("reg_mobile").value.trim();
-  const whatsapp=document.getElementById("reg_whatsapp").value.trim();
-  const address=document.getElementById("reg_address").value.trim();
-  const email=document.getElementById("reg_email").value.trim();
-  const password=document.getElementById("reg_password").value;
-  const btn=document.getElementById("regBtn");
-  btn.disabled=true; btn.classList.add("loading");
+
+  const name     = document.getElementById("reg_name").value.trim();
+  const age      = document.getElementById("reg_age").value.trim();
+  const mobile   = document.getElementById("reg_mobile").value.trim();
+  const whatsapp = document.getElementById("reg_whatsapp").value.trim();
+  const address  = document.getElementById("reg_address").value.trim();
+  const email    = document.getElementById("reg_email").value.trim();
+  const password = document.getElementById("reg_password").value;
+
+  const btn = document.getElementById("regBtn");
+  btn.disabled = true; btn.classList.add("loading");
+
   try {
-    const uc=await createUserWithEmailAndPassword(auth,email,password);
-    await setDoc(doc(db,"users",uc.user.uid),{name,age,mobile,whatsapp,address,email,uid:uc.user.uid,createdAt:new Date().toISOString()});
-    showToast("✅ खाते तयार झाले! स्वागत आहे, "+name.split(" ")[0]+"!","success");
-  } catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
-  finally{ btn.disabled=false; btn.classList.remove("loading"); }
+    const uc = await createUserWithEmailAndPassword(auth, email, password);
+    await setDoc(doc(db,"users",uc.user.uid), {name,age,mobile,whatsapp,address,email,uid:uc.user.uid,createdAt:new Date().toISOString()});
+    showToast("✅ Account created! Welcome, "+name.split(" ")[0]+"!", "success");
+  } catch(e) {
+    showToast("❌ "+friendlyError(e.code), "error");
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading");
+  }
 };
 
+/* ── LOGIN ── */
 window.loginUser = async () => {
   if(!window.validateLogin()) return;
-  const email=document.getElementById("log_email").value.trim();
-  const password=document.getElementById("log_password").value;
-  const btn=document.getElementById("loginBtn");
-  btn.disabled=true; btn.classList.add("loading");
+
+  const email    = document.getElementById("log_email").value.trim();
+  const password = document.getElementById("log_password").value;
+
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = true; btn.classList.add("loading");
+
   try {
-    await signInWithEmailAndPassword(auth,email,password);
-    showToast("✅ लॉगिन यशस्वी!","success");
-  } catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
-  finally{ btn.disabled=false; btn.classList.remove("loading"); }
+    await signInWithEmailAndPassword(auth, email, password);
+    showToast("✅ Login successful!", "success");
+  } catch(e) {
+    showToast("❌ "+friendlyError(e.code), "error");
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading");
+  }
 };
 
+/* ── FORGOT PASSWORD ── */
 window.forgotPassword = async (e) => {
   e.preventDefault();
-  const email=document.getElementById("log_email").value.trim();
-  if(!email){showToast("⚠️ आधी ईमेल टाका, मग Forgot Password दाबा","warn");return;}
-  try{ await sendPasswordResetEmail(auth,email); showToast("📧 रीसेट ईमेल पाठवला! इनबॉक्स तपासा.","success"); }
-  catch(e){ showToast("❌ "+friendlyError(e.code),"error"); }
+  const email = document.getElementById("log_email").value.trim();
+  if(!email){showToast("⚠️ Enter your email first, then tap Forgot Password","warn");return;}
+  try {
+    await sendPasswordResetEmail(auth, email);
+    showToast("📧 Reset email sent! Check your inbox.", "success");
+  } catch(e) {
+    showToast("❌ "+friendlyError(e.code), "error");
+  }
 };
 
+/* ── AUTH STATE ── */
 onAuthStateChanged(auth, async (user) => {
   if(user){
-    document.getElementById("authContainer").style.display="none";
-    document.getElementById("profileCard").style.display="block";
-    document.getElementById("authSectionTitle").textContent="माझी प्रोफाइल";
-    document.getElementById("nav-account").querySelector(".icon").textContent="✅";
-    const snap=await getDoc(doc(db,"users",user.uid));
+    document.getElementById("authContainer").style.display = "none";
+    document.getElementById("profileCard").style.display   = "block";
+    document.getElementById("authSectionTitle").textContent = "My Profile";
+    document.getElementById("nav-account").querySelector(".icon").textContent = "✅";
+
+    const snap = await getDoc(doc(db,"users",user.uid));
     if(snap.exists()){
-      const d=snap.data();
-      document.getElementById("profileName").innerText=d.name||"–";
-      document.getElementById("profileEmail").innerText=d.email||"–";
-      document.getElementById("profileMobile").innerText=d.mobile||"–";
-      document.getElementById("profileWhatsapp").innerText=d.whatsapp||"–";
-      document.getElementById("profileAddress").innerText=d.address||"–";
-      document.getElementById("profileAge").innerText=d.age||"–";
-      document.getElementById("avatarInitial").innerText=(d.name||"?")[0].toUpperCase();
+      const d = snap.data();
+      document.getElementById("profileName").innerText     = d.name    || "–";
+      document.getElementById("profileEmail").innerText    = d.email   || "–";
+      document.getElementById("profileMobile").innerText   = d.mobile  || "–";
+      document.getElementById("profileWhatsapp").innerText = d.whatsapp|| "–";
+      document.getElementById("profileAddress").innerText  = d.address || "–";
+      document.getElementById("profileAge").innerText      = d.age     || "–";
+      document.getElementById("avatarInitial").innerText   = (d.name||"?")[0].toUpperCase();
+
+      /* 🔽 NEW: update the top app-style profile pill */
+      document.getElementById("tpAvatar").textContent = (d.name||"?")[0].toUpperCase();
+      document.getElementById("tpText").textContent   = (d.name||"My Account").split(" ")[0];
+
+      /* save logged-in user's data to a shared localStorage key
+         so other pages (food.html, taxi.html, etc.) can auto-fill order forms */
+      localStorage.setItem("sn_user", JSON.stringify({
+        name: d.name || "",
+        email: d.email || "",
+        mobile: d.mobile || "",
+        whatsapp: d.whatsapp || "",
+        address: d.address || ""
+      }));
     }
   } else {
-    document.getElementById("authContainer").style.display="flex";
-    document.getElementById("profileCard").style.display="none";
-    document.getElementById("authSectionTitle").textContent="माझे खाते";
-    document.getElementById("nav-account").querySelector(".icon").textContent="👤";
+    document.getElementById("authContainer").style.display = "flex";
+    document.getElementById("profileCard").style.display   = "none";
+    document.getElementById("authSectionTitle").textContent = "My Account";
+    document.getElementById("nav-account").querySelector(".icon").textContent = "👤";
+
+    /* 🔽 NEW: reset the top profile pill when logged out */
+    document.getElementById("tpAvatar").textContent = "👤";
+    document.getElementById("tpText").textContent    = "Login";
   }
 });
 
+/* ── LOGOUT ── */
 window.logoutUser = async () => {
   await signOut(auth);
-  showToast("👋 लॉगआउट यशस्वी. पुन्हा या!","success");
+  localStorage.removeItem("sn_user");
+  document.getElementById("tpAvatar").textContent = "👤";
+  document.getElementById("tpText").textContent    = "Login";
+  showToast("👋 Logged out successfully.", "success");
 };
 </script>
 
-<!-- ── NON-MODULE JS ── -->
+<!-- ═════════════════════════════════════════ -->
+<!-- NON-MODULE JS                              -->
+<!-- ═════════════════════════════════════════ -->
 <script>
-/* TOAST */
-function showToast(msg,type=""){
-  const t=document.getElementById("toast");
-  t.textContent=msg; t.className="toast show "+type;
+/* ── TOAST ── */
+function showToast(msg, type=""){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className   = "toast show " + type;
   clearTimeout(t._timer);
-  t._timer=setTimeout(()=>t.classList.remove("show"),3400);
+  t._timer = setTimeout(()=>{ t.classList.remove("show"); },3200);
 }
-window.showToast=showToast;
+window.showToast = showToast;
 
-/* ROTATING SLOGANS */
-const slogans=[
-  "एक अ‍ॅप, शंभर सुविधा – सर्व-नेस्ट तुमच्यासाठी!",
-  "घरबसल्या मागवा, वेळेत मिळवा – आमची हमी!",
-  "अकोल्याचा भरोसा – सर्व-नेस्ट!",
-  "शेतकरी ते ग्राहक – थेट नाते, ताजे उत्पादन!",
-  "स्थानिक सेवा, जागतिक दर्जा – सर्व-नेस्ट!"
-];
-let si=0;
-const sloganEl=document.getElementById("sloganText");
-setInterval(()=>{
-  sloganEl.style.opacity="0";
-  setTimeout(()=>{ si=(si+1)%slogans.length; sloganEl.textContent=slogans[si]; sloganEl.style.opacity="1"; },400);
-},4000);
-sloganEl.style.transition="opacity .4s";
-
-/* PASSWORD TOGGLE */
-window.togglePass=function(id,btn){
-  const el=document.getElementById(id);
-  if(el.type==="password"){el.type="text";btn.textContent="🙈";}
-  else{el.type="password";btn.textContent="👁️";}
+/* ── PASSWORD TOGGLE ── */
+window.togglePass = function(id, btn){
+  const el = document.getElementById(id);
+  if(el.type === "password"){ el.type="text"; btn.textContent="🙈"; }
+  else                       { el.type="password"; btn.textContent="👁️"; }
 };
 
-/* PASSWORD STRENGTH */
-document.getElementById("reg_password").addEventListener("input",function(){
-  const val=this.value; const bar=document.getElementById("pwBar");
-  let s=0;
-  if(val.length>=6)s++; if(val.length>=10)s++;
-  if(/[A-Z]/.test(val))s++; if(/[0-9]/.test(val))s++;
-  if(/[^a-zA-Z0-9]/.test(val))s++;
-  bar.style.width=(s/5*100)+"%";
-  bar.style.background=s<=1?"#c0392b":s<=2?"#d97706":s<=3?"#2D6A2E":"#1a5c1b";
+/* ── PASSWORD STRENGTH ── */
+document.getElementById("reg_password").addEventListener("input", function(){
+  const val = this.value;
+  const bar = document.getElementById("pwBar");
+  let strength = 0;
+  if(val.length >= 6)  strength++;
+  if(val.length >= 10) strength++;
+  if(/[A-Z]/.test(val)) strength++;
+  if(/[0-9]/.test(val)) strength++;
+  if(/[^a-zA-Z0-9]/.test(val)) strength++;
+  const pct   = (strength/5)*100;
+  const color = strength<=1?"#dc2626":strength<=2?"#d97706":strength<=3?"#16a34a":"#059669";
+  bar.style.width    = pct + "%";
+  bar.style.background = color;
 });
 
-/* VALIDATION */
-function setValid(id,viId,feId,ok){
-  const el=document.getElementById(id);
-  const vi=viId?document.getElementById(viId):null;
-  const fe=feId?document.getElementById(feId):null;
-  if(!el)return;
-  el.classList.toggle("valid",ok); el.classList.toggle("invalid",!ok);
-  if(vi){vi.textContent=ok?"✅":"";vi.style.display=ok?"block":"none";}
-  if(fe){fe.style.display=ok?"none":"block";}
+/* ── INLINE VALIDATION HELPERS ── */
+function setValid(id, viId, feId, ok){
+  const el = document.getElementById(id);
+  const vi = document.getElementById(viId);
+  const fe = document.getElementById(feId);
+  if(!el) return;
+  el.classList.toggle("valid",   ok);
+  el.classList.toggle("invalid", !ok);
+  if(vi){ vi.textContent = ok?"✅":""; vi.style.display = ok?"block":"none"; }
+  if(fe){ fe.style.display = ok?"none":"block"; }
 }
-function isEmail(v){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);}
-function isPhone(v){return /^[6-9]\d{9}$/.test(v);}
+function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+function isPhone(v){ return /^[6-9]\d{9}$/.test(v); }
 
+/* Live validation on register form */
 ["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"].forEach(id=>{
-  const el=document.getElementById(id);
-  if(!el)return;
-  el.addEventListener("blur",()=>validateField(id));
-  el.addEventListener("input",()=>el.classList.remove("valid","invalid"));
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener("blur", ()=>validateField(id));
+  el.addEventListener("input", ()=>{ el.classList.remove("valid","invalid"); });
 });
 
 function validateField(id){
-  const el=document.getElementById(id);
-  const val=el?el.value.trim():"";
+  const el  = document.getElementById(id);
+  const val = el ? el.value.trim() : "";
   switch(id){
-    case "reg_name":    setValid("reg_name","vi_name","fe_name",val.length>=2);break;
-    case "reg_age":     setValid("reg_age","vi_age","fe_age",val>=10&&val<=100);break;
-    case "reg_mobile":  setValid("reg_mobile","vi_mobile","fe_mobile",isPhone(val));break;
-    case "reg_whatsapp":setValid("reg_whatsapp","vi_whatsapp","fe_whatsapp",isPhone(val));break;
-    case "reg_address": setValid("reg_address","vi_address","fe_address",val.length>=5);break;
-    case "reg_email":   setValid("reg_email","vi_reg_email","fe_reg_email",isEmail(val));break;
-    case "reg_password":setValid("reg_password",null,"fe_reg_pass",el.value.length>=6);break;
+    case "reg_name":
+      setValid("reg_name","vi_name","fe_name", val.length>=2);
+      break;
+    case "reg_age":
+      setValid("reg_age","vi_age","fe_age", val>=10 && val<=100);
+      break;
+    case "reg_mobile":
+      setValid("reg_mobile","vi_mobile","fe_mobile", isPhone(val));
+      break;
+    case "reg_whatsapp":
+      setValid("reg_whatsapp","vi_whatsapp","fe_whatsapp", isPhone(val));
+      break;
+    case "reg_address":
+      setValid("reg_address","vi_address","fe_address", val.length>=5);
+      break;
+    case "reg_email":
+      setValid("reg_email","vi_reg_email","fe_reg_email", isEmail(val));
+      break;
+    case "reg_password":
+      setValid("reg_password",null,"fe_reg_pass", el.value.length>=6);
+      break;
     case "reg_confirm":
-      const pw=document.getElementById("reg_password").value;
-      setValid("reg_confirm",null,"fe_confirm",el.value===pw&&el.value.length>=6);break;
+      const pw = document.getElementById("reg_password").value;
+      setValid("reg_confirm",null,"fe_confirm", el.value===pw && el.value.length>=6);
+      break;
   }
 }
 
-window.validateRegister=function(){
-  const fields=["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"];
+/* ── VALIDATE ALL BEFORE SUBMIT ── */
+window.validateRegister = function(){
+  const fields = ["reg_name","reg_age","reg_mobile","reg_whatsapp","reg_address","reg_email","reg_password","reg_confirm"];
   fields.forEach(validateField);
-  const ok=fields.every(id=>{const el=document.getElementById(id);return el&&el.classList.contains("valid");});
-  if(!ok)showToast("⚠️ वरील चुका दुरुस्त करा","warn");
+  const allOk = fields.every(id=>{
+    const el = document.getElementById(id);
+    return el && el.classList.contains("valid");
+  });
+  if(!allOk) showToast("⚠️ Please fix the errors above","warn");
+  return allOk;
+};
+
+window.validateLogin = function(){
+  const email = document.getElementById("log_email").value.trim();
+  const pass  = document.getElementById("log_password").value;
+  let ok = true;
+  if(!isEmail(email)){
+    document.getElementById("fe_log_email").style.display="block";
+    document.getElementById("log_email").classList.add("invalid");
+    ok = false;
+  } else {
+    document.getElementById("fe_log_email").style.display="none";
+    document.getElementById("log_email").classList.remove("invalid");
+  }
+  if(pass.length < 1){
+    document.getElementById("fe_log_pass").style.display="block";
+    document.getElementById("log_password").classList.add("invalid");
+    ok = false;
+  } else {
+    document.getElementById("fe_log_pass").style.display="none";
+    document.getElementById("log_password").classList.remove("invalid");
+  }
+  if(!ok) showToast("⚠️ Please fill in all fields","warn");
   return ok;
 };
 
-window.validateLogin=function(){
-  const email=document.getElementById("log_email").value.trim();
-  const pass=document.getElementById("log_password").value;
-  let ok=true;
-  if(!isEmail(email)){document.getElementById("fe_log_email").style.display="block";document.getElementById("log_email").classList.add("invalid");ok=false;}
-  else{document.getElementById("fe_log_email").style.display="none";document.getElementById("log_email").classList.remove("invalid");}
-  if(pass.length<1){document.getElementById("fe_log_pass").style.display="block";document.getElementById("log_password").classList.add("invalid");ok=false;}
-  else{document.getElementById("fe_log_pass").style.display="none";document.getElementById("log_password").classList.remove("invalid");}
-  if(!ok)showToast("⚠️ सर्व माहिती भरा","warn");
-  return ok;
-};
-["log_email","log_password"].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener("input",()=>el.classList.remove("invalid"));});
+/* Clear invalid on focus for login */
+["log_email","log_password"].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el) el.addEventListener("input",()=>el.classList.remove("invalid"));
+});
 
-/* AUTH TABS */
-window.switchTab=function(tab){
-  document.getElementById("registerCard").classList.toggle("visible",tab==="register");
-  document.getElementById("loginCard").classList.toggle("visible",tab==="login");
+/* ── AUTH TABS ── */
+window.switchTab = function(tab){
+  document.getElementById("registerCard").classList.toggle("visible", tab==="register");
+  document.getElementById("loginCard").classList.toggle("visible",    tab==="login");
   document.querySelectorAll(".auth-tab").forEach((b,i)=>{
     b.classList.toggle("active",(tab==="register"&&i===0)||(tab==="login"&&i===1));
   });
 };
 
-/* SLIDER */
-const slides=document.querySelectorAll(".slide");
-const dotsWrap=document.getElementById("sliderDots");
-let idx=0,slTimer;
+/* ── SLIDER ── */
+const slides       = document.querySelectorAll(".slide");
+const dotsWrap     = document.getElementById("sliderDots");
+let idx=0, slTimer;
+
 slides.forEach((_,i)=>{
-  const d=document.createElement("button");
+  const d = document.createElement("button");
   d.className="dot"+(i===0?" active":"");
-  d.setAttribute("aria-label","स्लाइड "+(i+1));
-  d.onclick=()=>goTo(i); dotsWrap.appendChild(d);
+  d.setAttribute("aria-label","Slide "+(i+1));
+  d.onclick=()=>goTo(i);
+  dotsWrap.appendChild(d);
 });
+
 function goTo(i){
-  slides[idx].classList.remove("active"); dotsWrap.children[idx].classList.remove("active");
+  slides[idx].classList.remove("active");
+  dotsWrap.children[idx].classList.remove("active");
   idx=(i+slides.length)%slides.length;
-  slides[idx].classList.add("active"); dotsWrap.children[idx].classList.add("active");
+  slides[idx].classList.add("active");
+  dotsWrap.children[idx].classList.add("active");
   startTimer();
 }
-function startTimer(){clearInterval(slTimer);slTimer=setInterval(()=>goTo(idx+1),4500);}
+function startTimer(){ clearInterval(slTimer); slTimer=setInterval(()=>goTo(idx+1),4200); }
 document.querySelector(".next").onclick=()=>goTo(idx+1);
 document.querySelector(".prev").onclick=()=>goTo(idx-1);
 startTimer();
 
+/* Touch swipe */
 let tx=0;
 const sl=document.getElementById("sliderEl");
-sl.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},{passive:true});
-sl.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40)goTo(dx<0?idx+1:idx-1);},{passive:true});
+sl.addEventListener("touchstart",e=>{tx=e.touches[0].clientX;},     {passive:true});
+sl.addEventListener("touchend",  e=>{ const dx=e.changedTouches[0].clientX-tx; if(Math.abs(dx)>40) goTo(dx<0?idx+1:idx-1); }, {passive:true});
 
-/* SEARCH */
-const searchInput=document.getElementById("searchInput");
-const clearBtn=document.getElementById("clearSearch");
-const serviceCards=document.querySelectorAll(".card");
-const noResults=document.getElementById("noResults");
+/* ── SEARCH ── */
+const searchInput  = document.getElementById("searchInput");
+const clearBtn     = document.getElementById("clearSearch");
+const serviceCards = document.querySelectorAll(".card");
+const noResults    = document.getElementById("noResults");
+
 searchInput.addEventListener("input",()=>{
-  const v=searchInput.value.toLowerCase();
-  clearBtn.style.display=v?"block":"none";
-  let visible=0;
+  const v = searchInput.value.toLowerCase();
+  clearBtn.style.display = v ? "block" : "none";
+  let visible = 0;
   serviceCards.forEach(c=>{
-    const m=((c.dataset.name||"")+c.innerText.toLowerCase()).includes(v);
-    c.style.display=m?"":"none";
-    if(m)visible++;
+    const matches = ((c.dataset.name||"")+c.innerText.toLowerCase()).includes(v);
+    c.style.display = matches ? "" : "none";
+    if(matches) visible++;
   });
-  noResults.style.display=visible===0?"block":"none";
+  noResults.style.display = visible===0 ? "block" : "none";
 });
 clearBtn.addEventListener("click",()=>{
   searchInput.value=""; clearBtn.style.display="none";
   serviceCards.forEach(c=>c.style.display="");
-  noResults.style.display="none"; searchInput.focus();
+  noResults.style.display="none";
+  searchInput.focus();
 });
 
-/* BOTTOM NAV */
+/* ── BOTTOM NAV ── */
 document.querySelectorAll(".bottom-nav a").forEach(a=>{
   a.addEventListener("click",function(){
     document.querySelectorAll(".bottom-nav a").forEach(x=>x.classList.remove("active"));
     this.classList.add("active");
   });
 });
-
-/* ── LANGUAGE SWITCH ── */
-const translations = {
-  mr: {
-    locText: "अकोले, महाराष्ट्र",
-    headerBadge: "🌾 अकोलेचा स्वतःचा मंच",
-    headerH1: "सर्व-नेस्ट",
-    headerTagline: "घरबसल्या मिळवा सगळ्या सुविधा!",
-    headerSub: "Fast · Trusted · Your Village, Your Service",
-    heroBtnServices: "🛒 सेवा पाहा",
-    heroBtnWA: "💬 WhatsApp करा",
-    sloganDefault: "एक अ‍ॅप, शंभर सुविधा – सर्व-नेस्ट तुमच्यासाठी!",
-    searchPlaceholder: "सेवा शोधा… (Search services)",
-    sectionServices: "🏡 सेवा निवडा",
-    sectionServicesSub: "Popular Services",
-    sectionHow: "📋 कसे काम करते?",
-    sectionHowSub: "How It Works",
-    sectionTestimonials: "💬 ग्राहकांचे अनुभव",
-    sectionTestimonialsSub: "What People Say",
-    sectionAccount: "👤 माझे खाते",
-    seeAll: "सर्व पाहा",
-    noResults: "😕 सेवा आढळली नाही",
-    tabRegister: "नोंदणी करा",
-    tabLogin: "लॉगिन करा",
-    regTitle: "खाते तयार करा",
-    regSub: "Create your account – मोफत नोंदणी!",
-    regBtn: "खाते तयार करा 🎉",
-    logTitle: "स्वागत आहे 👋",
-    logSub: "Welcome back – लॉगिन करा!",
-    logBtn: "लॉगिन करा",
-    forgotLink: "पासवर्ड विसरलात?",
-    logoutBtn: "🚪 लॉगआउट करा",
-    contactTitle: "📞 संपर्क करा",
-    contactSub: "Get In Touch – आम्ही नेहमी तयार आहोत!",
-    footerTagline: "अकोलेचा विश्वासू सेवा मंच – तुमच्यासाठी, तुमच्या गावासाठी",
-    footerCopy: "© 2026 सर्वाधिकार सुरक्षित · All Rights Reserved",
-    step1mr:"सेवा निवडा", step1h:"Choose a Service", step1p:"आमच्या विस्तृत सेवांमधून तुमची निवड करा.",
-    step2mr:"बुकिंग करा", step2h:"Book & Confirm", step2p:"तुमच्या वेळेनुसार बुकिंग करा. लगेच पुष्टी मिळेल.",
-    step3mr:"तज्ज्ञ येतो",  step3h:"Expert Arrives", step3p:"आमचा तपासलेला तज्ज्ञ तुमच्या दारी येतो.",
-    navHome:"मुखपृष्ठ", navTrack:"ट्रॅक करा", navAccount:"खाते", navContact:"संपर्क",
-    trust1:"✅ स्थानिक विश्वास", trust2:"🕐 वेळेत सेवा", trust3:"💯 गुणवत्ता हमी", trust4:"🔐 सुरक्षित पेमेंट",
-  },
-  en: {
-    locText: "Akole, Maharashtra",
-    headerBadge: "🌾 Akole's Own Platform",
-    headerH1: "Sarva-Nest",
-    headerTagline: "All your services, right at your doorstep!",
-    headerSub: "Fast · Trusted · Your Village, Your Service",
-    heroBtnServices: "🛒 View Services",
-    heroBtnWA: "💬 WhatsApp Us",
-    sloganDefault: "One App, Hundred Services – Sarva-Nest for You!",
-    searchPlaceholder: "Search services...",
-    sectionServices: "🏡 Choose a Service",
-    sectionServicesSub: "Popular Services",
-    sectionHow: "📋 How It Works",
-    sectionHowSub: "Simple 3-Step Process",
-    sectionTestimonials: "💬 Customer Reviews",
-    sectionTestimonialsSub: "What People Say",
-    sectionAccount: "👤 My Account",
-    seeAll: "See All",
-    noResults: "😕 No services found",
-    tabRegister: "Register",
-    tabLogin: "Login",
-    regTitle: "Create Account",
-    regSub: "Sign up for free – it takes 1 minute!",
-    regBtn: "Create Account 🎉",
-    logTitle: "Welcome Back 👋",
-    logSub: "Login to your account",
-    logBtn: "Login",
-    forgotLink: "Forgot Password?",
-    logoutBtn: "🚪 Logout",
-    contactTitle: "📞 Contact Us",
-    contactSub: "We're always ready to help you!",
-    footerTagline: "Akole's trusted service platform – For you, for your village",
-    footerCopy: "© 2026 All Rights Reserved",
-    step1mr:"Step 1", step1h:"Choose a Service", step1p:"Browse and pick from our wide range of services.",
-    step2mr:"Step 2", step2h:"Book & Confirm", step2p:"Schedule at your preferred time. Instant confirmation.",
-    step3mr:"Step 3", step3h:"Expert Arrives", step3p:"Our verified professional comes to your doorstep.",
-    navHome:"Home", navTrack:"Track", navAccount:"Account", navContact:"Contact",
-    trust1:"✅ Local Trust", trust2:"🕐 On-Time Service", trust3:"💯 Quality Assured", trust4:"🔐 Secure Payment",
-  }
-};
-
-const slogansLang = {
-  mr: [
-    "एक अ‍ॅप, शंभर सुविधा – सर्व-नेस्ट तुमच्यासाठी!",
-    "घरबसल्या मागवा, वेळेत मिळवा – आमची हमी!",
-    "अकोल्याचा भरोसा – सर्व-नेस्ट!",
-    "शेतकरी ते ग्राहक – थेट नाते, ताज्या भाज्या!",
-    "स्थानिक सेवा, जागतिक दर्जा – सर्व-नेस्ट!"
-  ],
-  en: [
-    "One App, Hundred Services – Sarva-Nest for You!",
-    "Order from home, get it on time – Guaranteed!",
-    "Akole's Most Trusted Platform!",
-    "Farm to Home – Fresh Vegetables Daily!",
-    "Local Service, World-Class Quality!"
-  ]
-};
-
-let currentLang = 'mr';
-
-window.setLang = function(lang) {
-  currentLang = lang;
-  const t = translations[lang];
-
-  // buttons
-  document.getElementById("btnMr").classList.toggle("active", lang==="mr");
-  document.getElementById("btnEn").classList.toggle("active", lang==="en");
-
-  // location
-  document.getElementById("locText").textContent = t.locText;
-
-  // header
-  document.querySelector(".header-badge").textContent = t.headerBadge;
-  document.querySelector("header h1").textContent = t.headerH1;
-  document.querySelector(".hindi-tagline").textContent = t.headerTagline;
-  document.querySelector(".eng-sub").textContent = t.headerSub;
-  const heroBtns = document.querySelectorAll(".hero-btn");
-  heroBtns[0].textContent = t.heroBtnServices;
-  heroBtns[1].textContent = t.heroBtnWA;
-
-  // slogan
-  si = 0;
-  sloganEl.textContent = slogansLang[lang][0];
-
-  // search
-  document.getElementById("searchInput").placeholder = t.searchPlaceholder;
-
-  // section titles
-  const secTitles = document.querySelectorAll(".section-title h2");
-  secTitles[0].innerHTML = t.sectionServices + ' <span class="sub-marathi">'+t.sectionServicesSub+'</span>';
-  secTitles[1].innerHTML = t.sectionHow + ' <span class="sub-marathi">'+t.sectionHowSub+'</span>';
-  secTitles[2].innerHTML = t.sectionTestimonials + ' <span class="sub-marathi">'+t.sectionTestimonialsSub+'</span>';
-  document.querySelector("#authSectionTitle").textContent = t.sectionAccount.replace("👤 ","");
-  document.querySelector(".see-all").textContent = t.seeAll;
-  document.getElementById("noResults").textContent = t.noResults;
-
-  // How-it-works steps
-  const stepMrs = document.querySelectorAll(".step-mr");
-  const stepH4s = document.querySelectorAll(".step-text h4");
-  const stepPs  = document.querySelectorAll(".step-text p");
-  stepMrs[0].textContent=t.step1mr; stepH4s[0].textContent=t.step1h; stepPs[0].textContent=t.step1p;
-  stepMrs[1].textContent=t.step2mr; stepH4s[1].textContent=t.step2h; stepPs[1].textContent=t.step2p;
-  stepMrs[2].textContent=t.step3mr; stepH4s[2].textContent=t.step3h; stepPs[2].textContent=t.step3p;
-
-  // Trust band
-  const trustItems = document.querySelectorAll(".trust-item");
-  trustItems[0].textContent=t.trust1; trustItems[1].textContent=t.trust2;
-  trustItems[2].textContent=t.trust3; trustItems[3].textContent=t.trust4;
-
-  // Auth tabs
-  document.querySelectorAll(".auth-tab")[0].textContent = t.tabRegister;
-  document.querySelectorAll(".auth-tab")[1].textContent = t.tabLogin;
-  document.querySelector("#registerCard h2").textContent = t.regTitle;
-  document.querySelector("#registerCard .auth-marathi").textContent = t.regSub;
-  document.querySelector("#regBtn .btn-text").textContent = t.regBtn;
-  document.querySelector("#loginCard h2").textContent = t.logTitle;
-  document.querySelector("#loginCard .auth-marathi").textContent = t.logSub;
-  document.querySelector("#loginBtn .btn-text").textContent = t.logBtn;
-  document.querySelector(".forgot-link").textContent = t.forgotLink;
-  document.querySelector(".logout-btn").textContent = t.logoutBtn;
-
-  // Contact
-  document.querySelector(".contact-strip h3").textContent = t.contactTitle;
-  document.querySelector(".contact-mr").textContent = t.contactSub;
-
-  // Footer
-  document.querySelector(".footer-marathi").textContent = t.footerTagline;
-  document.querySelectorAll("footer p")[1].textContent = t.footerCopy;
-
-  // Bottom nav
-  const navSpans = document.querySelectorAll(".bottom-nav a .nav-mr");
-  navSpans[0].textContent=t.navHome; navSpans[1].textContent=t.navTrack;
-  navSpans[2].textContent=t.navAccount; navSpans[3].textContent=t.navContact;
-};
-
-// Override slogan rotator to use current lang
-const origSlogans = slogans;
-setInterval(()=>{
-  sloganEl.style.opacity="0";
-  setTimeout(()=>{
-    si=(si+1)%slogansLang[currentLang].length;
-    sloganEl.textContent=slogansLang[currentLang][si];
-    sloganEl.style.opacity="1";
-  },400);
-},4000);
 </script>
 </body>
 </html>
