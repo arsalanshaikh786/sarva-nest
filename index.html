@@ -102,6 +102,7 @@ body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;over
   z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.18);
   text-decoration:none;border:1.5px solid var(--primary);
   max-width:46vw;overflow:hidden;white-space:nowrap;
+  cursor:pointer;
 }
 .top-profile .tp-avatar{
   width:24px;height:24px;border-radius:50%;
@@ -243,8 +244,36 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
 .step-text h4{font-size:15px;font-weight:800;}
 .step-text p{font-size:12px;color:var(--muted);margin-top:2px;}
 
+/* ─ AUTH MODAL (popup, opened from top profile pill / bottom nav) ─ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(17,15,45,.55);
+  z-index:2000;display:none;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(2px);
+}
+.modal-overlay.open{display:flex;}
+.modal-sheet{
+  background:var(--bg);width:100%;max-width:500px;
+  max-height:88vh;overflow-y:auto;border-radius:24px 24px 0 0;
+  padding:14px 16px 28px;position:relative;
+  animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@media(min-width:600px){
+  .modal-overlay{align-items:center;}
+  .modal-sheet{border-radius:24px;max-height:85vh;}
+}
+.modal-handle{width:40px;height:5px;background:#d8d8f0;border-radius:10px;margin:4px auto 10px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;
+  width:34px;height:34px;border-radius:50%;
+  background:#fff;border:none;font-size:16px;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:2;
+}
+
 /* ─ AUTH ─ */
-.auth-container{padding:0 16px;display:flex;flex-direction:column;gap:14px;max-width:500px;margin:0 auto;}
+.auth-container{padding:0 4px;display:flex;flex-direction:column;gap:14px;max-width:500px;margin:0 auto;}
 .auth-tabs{display:flex;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 14px rgba(0,0,0,.06);}
 .auth-tab{flex:1;padding:14px;border:none;background:transparent;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--muted);cursor:pointer;transition:.3s;}
 .auth-tab.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
@@ -291,7 +320,8 @@ header p{font-size:clamp(.85rem,3vw,1rem);opacity:.85;margin-top:6px;position:re
 .forgot-link{display:block;text-align:right;font-size:13px;color:var(--primary);font-weight:700;text-decoration:none;margin:-4px 0 14px;}
 
 /* ─ PROFILE ─ */
-.profile-card{margin:0 16px;background:#fff;padding:28px 22px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);display:none;max-width:500px;margin-left:auto;margin-right:auto;}
+.profile-card{padding:0 4px;background:transparent;display:none;max-width:500px;margin:0 auto;}
+.profile-card-inner{background:#fff;padding:28px 22px;border-radius:var(--radius);box-shadow:0 6px 24px rgba(0,0,0,.07);}
 .profile-header{display:flex;align-items:center;gap:16px;margin-bottom:22px;}
 .avatar{
   width:62px;height:62px;border-radius:50%;flex-shrink:0;
@@ -367,6 +397,7 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
   text-decoration:none;color:var(--muted);
   font-size:10px;font-weight:700;padding:4px 8px;
   border-radius:12px;min-width:var(--tap);transition:color .2s;
+  background:none;border:none;cursor:pointer;
 }
 .bottom-nav a .icon{font-size:22px;line-height:1;}
 .bottom-nav a.active{color:var(--primary);}
@@ -388,10 +419,10 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 <div class="top-location">📍 Akole, Maharashtra</div>
 
 <!-- Top Profile Pill (app-style quick access to account) -->
-<a href="#account" class="top-profile" id="topProfile">
+<button type="button" class="top-profile" id="topProfile" onclick="openAccountModal()">
   <span class="tp-avatar" id="tpAvatar">👤</span>
   <span class="tp-text" id="tpText">Login</span>
-</a>
+</button>
 
 <!-- Toast -->
 <div id="toast"></div>
@@ -490,127 +521,6 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 </div>
 
 
-<!-- Auth Section -->
-<div class="section-title" id="account" style="margin-top:24px;">
-  <h2 id="authSectionTitle">My Account</h2>
-</div>
-
-<div class="auth-container" id="authContainer">
-  <div class="auth-tabs">
-    <button class="auth-tab active" onclick="switchTab('register')">Register</button>
-    <button class="auth-tab" onclick="switchTab('login')">Login</button>
-  </div>
-
-  <!-- Register -->
-  <div class="auth-card visible" id="registerCard">
-    <h2>Create Account</h2>
-
-    <div class="input-group">
-      <span class="field-icon">👤</span>
-      <input type="text" id="reg_name" placeholder="Full Name" autocomplete="name">
-      <span class="valid-icon" id="vi_name"></span>
-      <div class="field-error" id="fe_name">Please enter your full name</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">🎂</span>
-      <input type="number" id="reg_age" placeholder="Age" min="10" max="100" inputmode="numeric">
-      <span class="valid-icon" id="vi_age"></span>
-      <div class="field-error" id="fe_age">Enter a valid age (10–100)</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">📱</span>
-      <input type="tel" id="reg_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
-      <span class="valid-icon" id="vi_mobile"></span>
-      <div class="field-error" id="fe_mobile">Enter a valid 10-digit mobile number</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">💬</span>
-      <input type="tel" id="reg_whatsapp" placeholder="WhatsApp Number" inputmode="tel" maxlength="10">
-      <span class="valid-icon" id="vi_whatsapp"></span>
-      <div class="field-error" id="fe_whatsapp">Enter a valid 10-digit WhatsApp number</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">🏠</span>
-      <input type="text" id="reg_address" placeholder="Address" autocomplete="street-address">
-      <span class="valid-icon" id="vi_address"></span>
-      <div class="field-error" id="fe_address">Please enter your address</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">📧</span>
-      <input type="email" id="reg_email" placeholder="Email Address" autocomplete="email" inputmode="email">
-      <span class="valid-icon" id="vi_reg_email"></span>
-      <div class="field-error" id="fe_reg_email">Enter a valid email address</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">🔒</span>
-      <input type="password" id="reg_password" placeholder="Password (min 6 chars)" autocomplete="new-password">
-      <button class="pass-toggle" type="button" onclick="togglePass('reg_password',this)">👁️</button>
-      <div class="field-error" id="fe_reg_pass">Password must be at least 6 characters</div>
-    </div>
-    <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
-
-    <div class="input-group">
-      <span class="field-icon">🔒</span>
-      <input type="password" id="reg_confirm" placeholder="Confirm Password" autocomplete="new-password">
-      <button class="pass-toggle" type="button" onclick="togglePass('reg_confirm',this)">👁️</button>
-      <div class="field-error" id="fe_confirm">Passwords do not match</div>
-    </div>
-
-    <button class="submit-btn" id="regBtn" onclick="registerUser()">
-      <span class="btn-text">Create Account</span>
-      <span class="btn-spinner"></span>
-    </button>
-  </div>
-
-  <!-- Login -->
-  <div class="auth-card" id="loginCard">
-    <h2>Welcome Back 👋</h2>
-
-    <div class="input-group">
-      <span class="field-icon">📧</span>
-      <input type="email" id="log_email" placeholder="Email Address" autocomplete="email" inputmode="email">
-      <span class="valid-icon" id="vi_log_email"></span>
-      <div class="field-error" id="fe_log_email">Enter a valid email address</div>
-    </div>
-
-    <div class="input-group">
-      <span class="field-icon">🔒</span>
-      <input type="password" id="log_password" placeholder="Password" autocomplete="current-password">
-      <button class="pass-toggle" type="button" onclick="togglePass('log_password',this)">👁️</button>
-      <div class="field-error" id="fe_log_pass">Please enter your password</div>
-    </div>
-
-    <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
-
-    <button class="submit-btn" id="loginBtn" onclick="loginUser()">
-      <span class="btn-text">Login</span>
-      <span class="btn-spinner"></span>
-    </button>
-  </div>
-</div>
-
-<!-- Profile -->
-<div class="profile-card" id="profileCard">
-  <div class="profile-header">
-    <div class="avatar" id="avatarInitial">?</div>
-    <div class="profile-header-text">
-      <h2 id="profileName">–</h2>
-      <p id="profileEmail">–</p>
-    </div>
-  </div>
-  <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">Mobile</div><div class="info-value" id="profileMobile">–</div></div></div>
-  <div class="profile-info"><span class="info-icon">💬</span><div><div class="info-label">WhatsApp</div><div class="info-value" id="profileWhatsapp">–</div></div></div>
-  <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">Address</div><div class="info-value" id="profileAddress">–</div></div></div>
-  <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">Age</div><div class="info-value" id="profileAge">–</div></div></div>
-  <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
-</div>
-
 <!-- Contact Strip -->
 <div class="contact-strip" id="contact">
   <h3>📞 Get In Touch</h3>
@@ -641,9 +551,141 @@ footer p{font-size:12px;opacity:.45;margin-top:8px;}
 <nav class="bottom-nav">
   <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>Home</a>
   <a href="order-tracking (1).html" id="nav-services"><span class="icon">⚡</span>Track</a>
-  <a href="#account" id="nav-account"><span class="icon">👤</span>Account</a>
+  <button type="button" id="nav-account" onclick="openAccountModal()"><span class="icon">👤</span>Account</button>
   <a href="#contact" id="nav-contact"><span class="icon">📞</span>Contact</a>
 </nav>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- ACCOUNT MODAL (Login / Register / Profile)   -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="accountModalOverlay" onclick="if(event.target===this) closeAccountModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeAccountModal()" aria-label="Close">✕</button>
+
+    <div class="section-title" id="account" style="padding:6px 4px 10px;">
+      <h2 id="authSectionTitle">My Account</h2>
+    </div>
+
+    <div class="auth-container" id="authContainer">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('register')">Register</button>
+        <button class="auth-tab" onclick="switchTab('login')">Login</button>
+      </div>
+
+      <!-- Register -->
+      <div class="auth-card visible" id="registerCard">
+        <h2>Create Account</h2>
+
+        <div class="input-group">
+          <span class="field-icon">👤</span>
+          <input type="text" id="reg_name" placeholder="Full Name" autocomplete="name">
+          <span class="valid-icon" id="vi_name"></span>
+          <div class="field-error" id="fe_name">Please enter your full name</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">🎂</span>
+          <input type="number" id="reg_age" placeholder="Age" min="10" max="100" inputmode="numeric">
+          <span class="valid-icon" id="vi_age"></span>
+          <div class="field-error" id="fe_age">Enter a valid age (10–100)</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">📱</span>
+          <input type="tel" id="reg_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
+          <span class="valid-icon" id="vi_mobile"></span>
+          <div class="field-error" id="fe_mobile">Enter a valid 10-digit mobile number</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">💬</span>
+          <input type="tel" id="reg_whatsapp" placeholder="WhatsApp Number" inputmode="tel" maxlength="10">
+          <span class="valid-icon" id="vi_whatsapp"></span>
+          <div class="field-error" id="fe_whatsapp">Enter a valid 10-digit WhatsApp number</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">🏠</span>
+          <input type="text" id="reg_address" placeholder="Address" autocomplete="street-address">
+          <span class="valid-icon" id="vi_address"></span>
+          <div class="field-error" id="fe_address">Please enter your address</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">📧</span>
+          <input type="email" id="reg_email" placeholder="Email Address" autocomplete="email" inputmode="email">
+          <span class="valid-icon" id="vi_reg_email"></span>
+          <div class="field-error" id="fe_reg_email">Enter a valid email address</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="reg_password" placeholder="Password (min 6 chars)" autocomplete="new-password">
+          <button class="pass-toggle" type="button" onclick="togglePass('reg_password',this)">👁️</button>
+          <div class="field-error" id="fe_reg_pass">Password must be at least 6 characters</div>
+        </div>
+        <div class="pw-strength"><div class="pw-strength-bar" id="pwBar"></div></div>
+
+        <div class="input-group">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="reg_confirm" placeholder="Confirm Password" autocomplete="new-password">
+          <button class="pass-toggle" type="button" onclick="togglePass('reg_confirm',this)">👁️</button>
+          <div class="field-error" id="fe_confirm">Passwords do not match</div>
+        </div>
+
+        <button class="submit-btn" id="regBtn" onclick="registerUser()">
+          <span class="btn-text">Create Account</span>
+          <span class="btn-spinner"></span>
+        </button>
+      </div>
+
+      <!-- Login -->
+      <div class="auth-card" id="loginCard">
+        <h2>Welcome Back 👋</h2>
+
+        <div class="input-group">
+          <span class="field-icon">📧</span>
+          <input type="email" id="log_email" placeholder="Email Address" autocomplete="email" inputmode="email">
+          <span class="valid-icon" id="vi_log_email"></span>
+          <div class="field-error" id="fe_log_email">Enter a valid email address</div>
+        </div>
+
+        <div class="input-group">
+          <span class="field-icon">🔒</span>
+          <input type="password" id="log_password" placeholder="Password" autocomplete="current-password">
+          <button class="pass-toggle" type="button" onclick="togglePass('log_password',this)">👁️</button>
+          <div class="field-error" id="fe_log_pass">Please enter your password</div>
+        </div>
+
+        <a href="#" class="forgot-link" onclick="forgotPassword(event)">Forgot Password?</a>
+
+        <button class="submit-btn" id="loginBtn" onclick="loginUser()">
+          <span class="btn-text">Login</span>
+          <span class="btn-spinner"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-card" id="profileCard">
+      <div class="profile-card-inner">
+        <div class="profile-header">
+          <div class="avatar" id="avatarInitial">?</div>
+          <div class="profile-header-text">
+            <h2 id="profileName">–</h2>
+            <p id="profileEmail">–</p>
+          </div>
+        </div>
+        <div class="profile-info"><span class="info-icon">📱</span><div><div class="info-label">Mobile</div><div class="info-value" id="profileMobile">–</div></div></div>
+        <div class="profile-info"><span class="info-icon">💬</span><div><div class="info-label">WhatsApp</div><div class="info-value" id="profileWhatsapp">–</div></div></div>
+        <div class="profile-info"><span class="info-icon">🏠</span><div><div class="info-label">Address</div><div class="info-value" id="profileAddress">–</div></div></div>
+        <div class="profile-info"><span class="info-icon">🎂</span><div><div class="info-label">Age</div><div class="info-value" id="profileAge">–</div></div></div>
+        <button class="logout-btn" onclick="logoutUser()">🚪 Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════ -->
 <!-- FIREBASE MODULE                              -->
@@ -711,6 +753,7 @@ window.registerUser = async () => {
     const uc = await createUserWithEmailAndPassword(auth, email, password);
     await setDoc(doc(db,"users",uc.user.uid), {name,age,mobile,whatsapp,address,email,uid:uc.user.uid,createdAt:new Date().toISOString()});
     showToast("✅ Account created! Welcome, "+name.split(" ")[0]+"!", "success");
+    closeAccountModal();
   } catch(e) {
     showToast("❌ "+friendlyError(e.code), "error");
   } finally {
@@ -731,6 +774,7 @@ window.loginUser = async () => {
   try {
     await signInWithEmailAndPassword(auth, email, password);
     showToast("✅ Login successful!", "success");
+    closeAccountModal();
   } catch(e) {
     showToast("❌ "+friendlyError(e.code), "error");
   } finally {
@@ -770,7 +814,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("profileAge").innerText      = d.age     || "–";
       document.getElementById("avatarInitial").innerText   = (d.name||"?")[0].toUpperCase();
 
-      /* 🔽 NEW: update the top app-style profile pill */
+      /* update the top app-style profile pill */
       document.getElementById("tpAvatar").textContent = (d.name||"?")[0].toUpperCase();
       document.getElementById("tpText").textContent   = (d.name||"My Account").split(" ")[0];
 
@@ -790,7 +834,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("authSectionTitle").textContent = "My Account";
     document.getElementById("nav-account").querySelector(".icon").textContent = "👤";
 
-    /* 🔽 NEW: reset the top profile pill when logged out */
+    /* reset the top profile pill when logged out */
     document.getElementById("tpAvatar").textContent = "👤";
     document.getElementById("tpText").textContent    = "Login";
   }
@@ -810,6 +854,20 @@ window.logoutUser = async () => {
 <!-- NON-MODULE JS                              -->
 <!-- ═════════════════════════════════════════ -->
 <script>
+/* ── ACCOUNT MODAL OPEN/CLOSE ── */
+window.openAccountModal = function(){
+  document.getElementById("accountModalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+};
+window.closeAccountModal = function(){
+  document.getElementById("accountModalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+};
+/* Close on Escape key */
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape") closeAccountModal();
+});
+
 /* ── TOAST ── */
 function showToast(msg, type=""){
   const t = document.getElementById("toast");
@@ -1005,9 +1063,9 @@ clearBtn.addEventListener("click",()=>{
 });
 
 /* ── BOTTOM NAV ── */
-document.querySelectorAll(".bottom-nav a").forEach(a=>{
+document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(a=>{
   a.addEventListener("click",function(){
-    document.querySelectorAll(".bottom-nav a").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(x=>x.classList.remove("active"));
     this.classList.add("active");
   });
 });
