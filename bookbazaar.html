@@ -45,6 +45,20 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
 .stat-num{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--rust);display:block}
 .stat-lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px}
 
+/* SHOP BY CLASS */
+.class-shop{padding:2rem 1.5rem 1.5rem;background:var(--paper)}
+.class-shop-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:1rem;max-width:1100px;margin-left:auto;margin-right:auto}
+.class-shop-header h2{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:var(--ink)}
+.class-shop-header span{font-size:13px;color:var(--muted)}
+.class-cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;max-width:1100px;margin:0 auto}
+.class-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 10px 14px;text-align:center;cursor:pointer;transition:transform 0.15s,border-color 0.15s,box-shadow 0.15s}
+.class-card:hover{transform:translateY(-3px);border-color:var(--rust);box-shadow:var(--shadow)}
+.class-card-icon{font-size:30px;margin-bottom:8px;display:block}
+.class-card-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.class-card-count{font-size:11.5px;color:var(--rust);font-weight:600}
+.class-card-count.zero{color:var(--muted);font-weight:500}
+@media(max-width:900px){.class-cards{grid-template-columns:repeat(3,1fr)}}
+
 /* SEARCH + FILTERS */
 .toolbar{padding:1.25rem 1.5rem;background:var(--white);border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .search-wrap{flex:1;min-width:200px;position:relative}
@@ -54,6 +68,13 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
 .toolbar select{padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;font-family:'Inter',sans-serif;background:var(--white);color:var(--ink);cursor:pointer}
 .toolbar select:focus{outline:none;border-color:var(--rust)}
 .result-count{font-size:13px;color:var(--muted);margin-left:auto;white-space:nowrap}
+
+/* ACTIVE CLASS FILTER BANNER */
+.active-class-banner{display:none;align-items:center;gap:10px;padding:10px 1.5rem;background:#f5f3ff;border-bottom:1px solid #d0caf8;font-size:14px}
+.active-class-banner.show{display:flex}
+.active-class-banner strong{color:#3c3489}
+.active-class-banner button{margin-left:auto;background:transparent;border:1px solid #d0caf8;color:#3c3489;padding:5px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif}
+.active-class-banner button:hover{background:#eeedfe}
 
 /* MAIN LAYOUT */
 .main{padding:1.5rem}
@@ -170,13 +191,54 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
 .genre-pill:hover{border-color:var(--rust);color:var(--rust)}
 .genre-pill.active{background:var(--rust);border-color:var(--rust);color:var(--white);font-weight:500}
 
+/* REVIEWS / TESTIMONIALS */
+.reviews-section{background:var(--cream);border-top:1px solid var(--border);padding:2.5rem 1.5rem 3rem}
+.reviews-inner{max-width:1100px;margin:0 auto}
+.reviews-header{text-align:center;margin-bottom:1.75rem}
+.reviews-header h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.reviews-summary{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap}
+.reviews-avg{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--rust)}
+.reviews-stars{color:#e0a13a;font-size:18px;letter-spacing:1px}
+.reviews-count{font-size:13px;color:var(--muted)}
+.reviews-write-btn-wrap{text-align:center;margin-bottom:2rem}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.review-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.review-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.review-name{font-weight:600;font-size:14px;color:var(--ink)}
+.review-stars{color:#e0a13a;font-size:14px;letter-spacing:1px}
+.review-text{font-size:13.5px;color:var(--muted);line-height:1.55}
+.review-date{font-size:11px;color:var(--muted);margin-top:8px;opacity:0.75}
+.reviews-empty{text-align:center;padding:2rem 1rem;color:var(--muted);grid-column:1/-1}
+
+/* Review form modal extras */
+.star-picker{display:flex;gap:6px;font-size:30px;cursor:pointer}
+.star-picker span{color:var(--border);transition:color 0.1s}
+.star-picker span.filled{color:#e0a13a}
+
+@media(max-width:600px){
+  .reviews-section{padding:2rem 0.85rem 2.25rem}
+  .reviews-header h2{font-size:21px}
+  .reviews-grid{grid-template-columns:1fr}
+  .reviews-avg{font-size:19px}
+}
+
 @media(max-width:600px){
   .form-grid{grid-template-columns:1fr}
   .books-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr))}
   .nav-links .nav-btn span{display:none}
   .hero-stats{gap:1.25rem}
   .detail-meta{grid-template-columns:1fr}
+
+  /* Academic upload section - mobile friendly */
+  .acad-fields{padding:12px}
+  .acad-fields-inner{grid-template-columns:1fr;gap:10px}
+  .acad-label{font-size:12.5px}
+  .acad-fields .form-group select,
+  .acad-fields .form-group input{padding:11px 12px;font-size:14px}
+
+  #btnTypeGeneral,#btnTypeAcademic{padding:11px 8px!important;font-size:12.5px!important}
 }
+@media(max-width:480px){.class-cards{grid-template-columns:repeat(2,1fr)}.class-card{padding:14px 8px 11px}}
 </style>
 </head>
 <body>
@@ -206,8 +268,23 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
   </div>
 </div>
 
+<!-- SHOP BY CLASS (Home page quick cards) -->
+<div class="class-shop" id="classShopSection">
+  <div class="class-shop-header">
+    <h2>🎓 Shop by Class</h2>
+    <span>Tap a class to see its textbooks</span>
+  </div>
+  <div class="class-cards" id="classCards"></div>
+</div>
+
 <!-- BROWSE PAGE -->
 <div id="page-browse">
+
+  <div class="active-class-banner" id="activeClassBanner">
+    <span>Showing books for <strong id="activeClassLabel"></strong></span>
+    <button onclick="clearClassFilter()">✕ Clear filter</button>
+  </div>
+
   <div class="toolbar">
     <div class="search-wrap">
       <span class="search-icon">🔍</span>
@@ -328,8 +405,17 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
               <input type="text" id="fSubject" placeholder="e.g. Physics, Data Structures">
             </div>
             <div class="form-group">
-              <label>Class / Year / Semester</label>
-              <input type="text" id="fClassYear" placeholder="e.g. 12th, 2nd Year, Sem 3">
+              <label>Class / Year / Semester <span>*</span></label>
+              <select id="fClassYear">
+                <option value="">Select class / level</option>
+                <option value="8th">8th</option>
+                <option value="9th">9th</option>
+                <option value="10th">10th</option>
+                <option value="11th">11th</option>
+                <option value="12th">12th</option>
+                <option value="College">College / Graduation</option>
+                <option value="Other">Other (mention in description)</option>
+              </select>
             </div>
             <div class="form-group">
               <label>University / Board</label>
@@ -375,6 +461,55 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
   <div class="modal" id="detailContent" style="max-width:500px"></div>
 </div>
 
+<!-- REVIEWS / TESTIMONIALS (bottom of page) -->
+<div class="reviews-section">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <h2>💬 What Our Users Say</h2>
+      <div class="reviews-summary">
+        <span class="reviews-avg" id="reviewsAvg">–</span>
+        <span class="reviews-stars" id="reviewsAvgStars"></span>
+        <span class="reviews-count" id="reviewsCount">No reviews yet</span>
+      </div>
+      <div class="reviews-write-btn-wrap">
+        <button class="nav-btn primary" onclick="openReviewModal()">✍️ Write a Review</button>
+      </div>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</div>
+
+<!-- WRITE REVIEW MODAL -->
+<div class="overlay" id="reviewOverlay">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-header">
+      <h2>Write a Review</h2>
+      <button class="close-btn" onclick="closeReviewModal()">✕</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>Your name <span>*</span></label>
+        <input type="text" id="rName" placeholder="e.g. Priya Sharma">
+      </div>
+      <div class="form-group full">
+        <label>Your rating <span>*</span></label>
+        <div class="star-picker" id="starPicker">
+          <span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span>
+        </div>
+        <input type="hidden" id="rRating" value="0">
+      </div>
+      <div class="form-group full">
+        <label>Your review <span>*</span></label>
+        <textarea id="rText" placeholder="Tell others about your experience with BookBazaar…"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel" onclick="closeReviewModal()">Cancel</button>
+      <button class="btn-submit" id="reviewSubmitBtn" onclick="submitReview()">Submit Review</button>
+    </div>
+  </div>
+</div>
+
 <!-- LOADING -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="spinner"></div>
@@ -399,11 +534,27 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const COLL = "bookbazaar_listings";
+const REVIEWS_COLL = "bookbazaar_reviews";
 
 let allBooks = [];
+let allReviews = [];
+let selectedRating = 0;
 let activeGenre = "";
+let activeType = "";
+let activeClassFilter = ""; // "8th","9th","10th","11th","12th","College"
 let editingId = null;
 const SELLER_KEY = "bb_seller_id";
+
+// Cards shown on the home page — class label, icon, and the keywords used
+// to match against a listing's classYear / subject / description fields.
+const CLASS_SHOP_CARDS = [
+  { key:"8th",     label:"8th",     icon:"📘" },
+  { key:"9th",     label:"9th",     icon:"📙" },
+  { key:"10th",    label:"10th",    icon:"📗" },
+  { key:"11th",    label:"11th",    icon:"📕" },
+  { key:"12th",    label:"12th",    icon:"📔" },
+  { key:"College", label:"College", icon:"🎓" }
+];
 
 function getSellerId(){
   if(!localStorage.getItem(SELLER_KEY)) localStorage.setItem(SELLER_KEY,"seller_"+Math.random().toString(36).slice(2,9));
@@ -446,9 +597,83 @@ function showPage(page){
   document.getElementById("page-browse").style.display = page==="browse"?"":"none";
   document.getElementById("page-my").style.display = page==="my"?"":"none";
   document.getElementById("hero-section").style.display = page==="browse"?"":"none";
+  document.getElementById("classShopSection").style.display = page==="browse"?"":"none";
   document.getElementById("tab-browse").classList.toggle("active", page==="browse");
   document.getElementById("tab-my").classList.toggle("active", page==="my");
   if(page==="my") renderMyBooks();
+}
+
+function setBookType(type){
+  document.getElementById("fBookType").value = type;
+  const isAcad = type==="academic";
+  document.getElementById("academicFieldsWrap").style.display = isAcad?"":"none";
+  document.getElementById("genreLabel").innerHTML = isAcad ? "Subject category <span>*</span>" : "Genre <span>*</span>";
+  const gBtn = document.getElementById("btnTypeGeneral");
+  const aBtn = document.getElementById("btnTypeAcademic");
+  if(isAcad){
+    aBtn.style.background="var(--rust)"; aBtn.style.color="#fff"; aBtn.style.borderColor="var(--rust)";
+    gBtn.style.background="transparent"; gBtn.style.color="var(--muted)"; gBtn.style.borderColor="var(--border)";
+  } else {
+    gBtn.style.background="var(--rust)"; gBtn.style.color="#fff"; gBtn.style.borderColor="var(--rust)";
+    aBtn.style.background="transparent"; aBtn.style.color="var(--muted)"; aBtn.style.borderColor="var(--border)";
+  }
+}
+
+function setType(t){
+  activeType = t;
+  document.getElementById("typePillAll").classList.toggle("active", t==="");
+  document.getElementById("typePillGeneral").classList.toggle("active", t==="general");
+  document.getElementById("typePillAcademic").classList.toggle("active", t==="academic");
+  renderBooks();
+}
+
+// Called when a "Shop by Class" card is clicked on the home page
+function filterByClass(classKey){
+  activeClassFilter = classKey;
+  activeType = "academic";
+  document.getElementById("typePillAll").classList.remove("active");
+  document.getElementById("typePillGeneral").classList.remove("active");
+  document.getElementById("typePillAcademic").classList.add("active");
+  document.getElementById("activeClassLabel").textContent = classKey;
+  document.getElementById("activeClassBanner").classList.add("show");
+  renderBooks();
+  document.getElementById("page-browse").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function clearClassFilter(){
+  activeClassFilter = "";
+  document.getElementById("activeClassBanner").classList.remove("show");
+  renderBooks();
+}
+
+// A book "belongs" to a class if its classYear field matches,
+// or (fallback for older/free-text listings) the class string
+// shows up in classYear/subject/description.
+function bookMatchesClass(b, classKey){
+  if(!classKey) return true;
+  const cy = (b.classYear||"").toLowerCase().trim();
+  const key = classKey.toLowerCase();
+  if(cy === key) return true;
+  // fallback fuzzy match for legacy free-text entries
+  const hay = ((b.classYear||"")+" "+(b.subject||"")+" "+(b.description||"")).toLowerCase();
+  if(key==="college"){
+    return hay.includes("college") || hay.includes("graduation") || hay.includes("university") || hay.includes("b.sc") || hay.includes("b.tech") || hay.includes("b.com") || hay.includes("year");
+  }
+  return hay.includes(key+" class") || hay.includes("class "+key) || hay.includes(key+" std") || hay.includes(key+" grade") || new RegExp("\\b"+key.replace("th","")+"(th)?\\b").test(hay);
+}
+
+function renderClassShopCards(){
+  const wrap = document.getElementById("classCards");
+  wrap.innerHTML = CLASS_SHOP_CARDS.map(c=>{
+    const count = allBooks.filter(b=> b.bookType==="academic" && bookMatchesClass(b, c.key)).length;
+    return `
+      <div class="class-card" onclick="filterByClass('${c.key}')">
+        <span class="class-card-icon">${c.icon}</span>
+        <div class="class-card-name">${c.label}</div>
+        <div class="class-card-count ${count===0?'zero':''}">${count} book${count!==1?'s':''}</div>
+      </div>
+    `;
+  }).join("");
 }
 
 function openSellModal(id){
@@ -469,15 +694,29 @@ function openSellModal(id){
       document.getElementById("fDesc").value = b.description||"";
       document.getElementById("fImage").value = b.image||"";
       if(b.image) previewImage(b.image);
+
+      setBookType(b.bookType||"general");
+      if(b.bookType==="academic"){
+        document.getElementById("fSubject").value = b.subject||"";
+        document.getElementById("fClassYear").value = b.classYear||"";
+        document.getElementById("fUniversity").value = b.university||"";
+        document.getElementById("fEdition").value = b.edition||"";
+        document.getElementById("fISBN").value = b.isbn||"";
+        document.getElementById("fPublisher").value = b.publisher||"";
+      }
     }
   } else {
-    ["fName","fContact","fTitle","fAuthor","fDesc","fPrice","fLocation"].forEach(id=>document.getElementById(id).value="");
+    ["fName","fContact","fTitle","fAuthor","fDesc","fPrice","fLocation","fSubject","fClassYear","fUniversity","fEdition","fISBN","fPublisher"].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.value="";
+    });
     document.getElementById("fGenre").value="";
     document.getElementById("fCondition").value="";
     document.getElementById("fImage").value="";
     const p = document.getElementById("imgPreview");
     p.src=""; p.style.display="none";
     document.getElementById("imageFile").value="";
+    setBookType("general");
   }
   document.getElementById("sellOverlay").classList.add("open");
 }
@@ -491,9 +730,29 @@ async function submitBook(){
   const price = parseFloat(document.getElementById("fPrice").value);
   const sellerName = document.getElementById("fName").value.trim();
   const contact = document.getElementById("fContact").value.trim();
+  const bookType = document.getElementById("fBookType").value;
+
   if(!title||!author||!genre||!condition||!price||!sellerName||!contact){
     showToast("Please fill all required fields"); return;
   }
+
+  let academicData = {};
+  if(bookType==="academic"){
+    const subject = document.getElementById("fSubject").value.trim();
+    const classYear = document.getElementById("fClassYear").value;
+    if(!subject || !classYear){
+      showToast("Please fill Subject and Class/Year for academic books"); return;
+    }
+    academicData = {
+      subject,
+      classYear,
+      university: document.getElementById("fUniversity").value.trim(),
+      edition: document.getElementById("fEdition").value.trim(),
+      isbn: document.getElementById("fISBN").value.trim(),
+      publisher: document.getElementById("fPublisher").value.trim()
+    };
+  }
+
   const image = document.getElementById("fImage").value;
   if(!image){ showToast("Please upload a book image"); return; }
 
@@ -502,12 +761,13 @@ async function submitBook(){
   showLoading(true);
 
   const data = {
-    title, author, genre, condition, price,
+    bookType, title, author, genre, condition, price,
     sellerName, contact,
     location: document.getElementById("fLocation").value.trim(),
     description: document.getElementById("fDesc").value.trim(),
     image,
     sellerId: getSellerId(),
+    ...academicData,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
   };
 
@@ -547,10 +807,12 @@ function renderBooks(){
   const sort = document.getElementById("filterSort").value;
 
   let res = allBooks.filter(b=>{
-    const textMatch = !q||(b.title||"").toLowerCase().includes(q)||(b.author||"").toLowerCase().includes(q)||(b.genre||"").toLowerCase().includes(q);
+    const textMatch = !q||(b.title||"").toLowerCase().includes(q)||(b.author||"").toLowerCase().includes(q)||(b.genre||"").toLowerCase().includes(q)||(b.subject||"").toLowerCase().includes(q)||(b.university||"").toLowerCase().includes(q);
     const condMatch = !cond||b.condition===cond;
     const genreMatch = !activeGenre||b.genre===activeGenre;
-    return textMatch&&condMatch&&genreMatch;
+    const typeMatch = !activeType||(b.bookType||"general")===activeType;
+    const classMatch = !activeClassFilter||bookMatchesClass(b, activeClassFilter);
+    return textMatch&&condMatch&&genreMatch&&typeMatch&&classMatch;
   });
 
   if(sort==="price-asc") res.sort((a,b)=>a.price-b.price);
@@ -569,6 +831,7 @@ function renderBooks(){
     <div class="book-card" onclick="openDetail('${b.id}')">
       ${b.image?`<img class="book-cover" src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy">`:`<div class="book-cover-placeholder">📗</div>`}
       <div class="book-body">
+        ${b.bookType==="academic"?`<span class="acad-badge">🎓 ${esc(b.classYear||'Academic')}</span>`:""}
         <div class="book-title">${esc(b.title)}</div>
         <div class="book-author">${esc(b.author)}</div>
         <div class="book-footer">
@@ -601,8 +864,10 @@ function updateStats(){
 function openDetail(id){
   const b = allBooks.find(x=>x.id===id); if(!b) return;
   const isMine = b.sellerId===getSellerId();
+  const isAcad = b.bookType==="academic";
   document.getElementById("detailContent").innerHTML=`
     ${b.image?`<img class="detail-img" src="${esc(b.image)}" alt="${esc(b.title)}">`:`<div class="detail-img-placeholder">📗</div>`}
+    ${isAcad?`<span class="acad-badge">🎓 ${esc(b.classYear||'Academic')}</span>`:""}
     <div class="detail-title">${esc(b.title)}</div>
     <div class="detail-author">by ${esc(b.author)}</div>
     <div class="detail-price">₹${b.price}</div>
@@ -610,6 +875,10 @@ function openDetail(id){
       <div class="meta-item"><label>Genre</label><span>${esc(b.genre)}</span></div>
       <div class="meta-item"><label>Condition</label><span class="cond-tag ${condClass(b.condition)}" style="display:inline-block">${condLabel(b.condition)}</span></div>
       ${b.location?`<div class="meta-item"><label>Location</label><span>📍 ${esc(b.location)}</span></div>`:""}
+      ${isAcad&&b.subject?`<div class="meta-item"><label>Subject</label><span>${esc(b.subject)}</span></div>`:""}
+      ${isAcad&&b.classYear?`<div class="meta-item"><label>Class / Year</label><span>${esc(b.classYear)}</span></div>`:""}
+      ${isAcad&&b.university?`<div class="meta-item"><label>University / Board</label><span>${esc(b.university)}</span></div>`:""}
+      ${isAcad&&b.edition?`<div class="meta-item"><label>Edition</label><span>${esc(b.edition)}</span></div>`:""}
     </div>
     ${b.description?`<div class="detail-desc">${esc(b.description)}</div>`:""}
     <div class="contact-box">
@@ -659,15 +928,117 @@ async function loadBooks(){
     allBooks = snap.docs.map(d=>({id:d.id,...d.data()}));
     renderBooks();
     renderGenrePills();
+    renderClassShopCards();
     updateStats();
   }catch(e){ console.error(e); showToast("Error loading books: "+e.message); }
   finally{ showLoading(false); }
 }
 
+/* ===== REVIEWS / TESTIMONIALS ===== */
+
+function setupStarPicker(){
+  const stars = document.querySelectorAll("#starPicker span");
+  stars.forEach(s=>{
+    s.addEventListener("click",()=>{
+      selectedRating = parseInt(s.dataset.v);
+      document.getElementById("rRating").value = selectedRating;
+      stars.forEach(st=> st.classList.toggle("filled", parseInt(st.dataset.v) <= selectedRating));
+    });
+  });
+}
+
+function openReviewModal(){
+  document.getElementById("rName").value = "";
+  document.getElementById("rText").value = "";
+  selectedRating = 0;
+  document.getElementById("rRating").value = 0;
+  document.querySelectorAll("#starPicker span").forEach(s=>s.classList.remove("filled"));
+  document.getElementById("reviewOverlay").classList.add("open");
+}
+function closeReviewModal(){ document.getElementById("reviewOverlay").classList.remove("open"); }
+
+async function submitReview(){
+  const name = document.getElementById("rName").value.trim();
+  const rating = parseInt(document.getElementById("rRating").value);
+  const text = document.getElementById("rText").value.trim();
+
+  if(!name || !rating || !text){
+    showToast("Please fill your name, rating, and review"); return;
+  }
+
+  const btn = document.getElementById("reviewSubmitBtn");
+  btn.disabled = true; btn.textContent = "Submitting…";
+  showLoading(true);
+
+  try{
+    await db.collection(REVIEWS_COLL).add({
+      name, rating, text,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showToast("Thanks for your review ✅");
+    closeReviewModal();
+    loadReviews();
+  }catch(e){ console.error(e); showToast("Error submitting review: "+e.message); }
+  finally{ btn.disabled=false; btn.textContent="Submit Review"; showLoading(false); }
+}
+
+function starString(rating){
+  const r = Math.round(rating);
+  return "★★★★★".slice(0,r) + "☆☆☆☆☆".slice(0, 5-r);
+}
+
+function formatReviewDate(ts){
+  if(!ts || !ts.seconds) return "";
+  const d = new Date(ts.seconds*1000);
+  return d.toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"});
+}
+
+function renderReviews(){
+  const grid = document.getElementById("reviewsGrid");
+  const avgEl = document.getElementById("reviewsAvg");
+  const avgStarsEl = document.getElementById("reviewsAvgStars");
+  const countEl = document.getElementById("reviewsCount");
+
+  if(!allReviews.length){
+    avgEl.textContent = "–";
+    avgStarsEl.textContent = "";
+    countEl.textContent = "No reviews yet";
+    grid.innerHTML = `<div class="reviews-empty">📝 No reviews yet. Be the first to share your experience!</div>`;
+    return;
+  }
+
+  const avg = allReviews.reduce((s,r)=>s+(r.rating||0),0) / allReviews.length;
+  avgEl.textContent = avg.toFixed(1);
+  avgStarsEl.textContent = starString(avg);
+  countEl.textContent = allReviews.length + " review" + (allReviews.length!==1?"s":"");
+
+  grid.innerHTML = allReviews.map(r=>`
+    <div class="review-card">
+      <div class="review-card-top">
+        <span class="review-name">${esc(r.name)}</span>
+        <span class="review-stars">${starString(r.rating||0)}</span>
+      </div>
+      <div class="review-text">${esc(r.text)}</div>
+      <div class="review-date">${formatReviewDate(r.createdAt)}</div>
+    </div>
+  `).join("");
+}
+
+async function loadReviews(){
+  try{
+    const snap = await db.collection(REVIEWS_COLL).orderBy("createdAt","desc").get();
+    allReviews = snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderReviews();
+  }catch(e){ console.error(e); showToast("Error loading reviews: "+e.message); }
+}
+
 document.getElementById("detailOverlay").addEventListener("click",function(e){ if(e.target===this) closeDetail(); });
 document.getElementById("sellOverlay").addEventListener("click",function(e){ if(e.target===this) closeSellModal(); });
+document.getElementById("reviewOverlay").addEventListener("click",function(e){ if(e.target===this) closeReviewModal(); });
 
+setupStarPicker();
 loadBooks();
+loadReviews();
 </script>
 </body>
 </html>
