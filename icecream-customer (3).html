@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sarva-Nest Ice Cream Parlour | Akole</title>
+<meta name="description" content="Order fresh scoops, cones, sundaes, shakes and matka kulfi online from Sarva-Nest Ice Cream Parlour, Akole.">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pistachio:#7A9B5C; --pistachio-dark:#5C7A42;
+  --strawberry:#E8849A; --strawberry-dark:#D45E78;
+  --vanilla:#FFF6E9; --choco:#5C3A2E; --mango:#F4A024;
+  --text:#3A2B22; --muted:#8A7768;
+  --radius:22px; --tap:48px;
+  --success:#16a34a; --error:#dc2626; --warn:#b45309;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--vanilla);color:var(--text);
+  font-family:'Nunito',sans-serif;overflow-x:hidden;
+  padding-bottom:84px;
+}
+h1,h2,h3,h4{font-family:'Fredoka',sans-serif;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-130px);
+  background:var(--choco);color:#fff;padding:12px 22px;border-radius:50px;
+  font-size:14px;font-weight:700;box-shadow:0 8px 28px rgba(0,0,0,.25);
+  z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;max-width:90vw;text-align:center;
+}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.success{background:#1f6b3a;}
+#toast.error{background:#9c2f3e;}
+#toast.warn{background:var(--warn);}
+
+/* ── TOP BAR ── */
+.top-location{
+  position:fixed;top:12px;left:12px;background:var(--choco);color:#fff;
+  padding:8px 14px;border-radius:30px;font-size:12px;font-weight:700;
+  z-index:1001;box-shadow:0 4px 14px rgba(92,58,46,.35);
+}
+.cart-pill{
+  position:fixed;top:12px;right:12px;display:flex;align-items:center;gap:6px;
+  background:#fff;color:var(--strawberry-dark);padding:8px 16px;border-radius:30px;
+  font-size:13px;font-weight:800;z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  border:1.5px solid var(--strawberry);cursor:pointer;
+}
+.cart-pill .badge{
+  background:var(--strawberry);color:#fff;border-radius:50%;
+  width:20px;height:20px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:900;
+}
+.track-pill{
+  position:fixed;top:58px;right:12px;display:flex;align-items:center;gap:6px;
+  background:#fff;color:var(--pistachio-dark);padding:7px 14px;border-radius:30px;
+  font-size:12px;font-weight:800;z-index:1001;box-shadow:0 4px 14px rgba(0,0,0,.15);
+  border:1.5px solid var(--pistachio);cursor:pointer;
+}
+
+/* ── HEADER ── */
+header{
+  background:linear-gradient(160deg,var(--strawberry),var(--mango));
+  padding:74px 20px 56px;text-align:center;color:#fff;position:relative;overflow:hidden;
+}
+header::before{
+  content:'🍦🍨🍧';position:absolute;font-size:120px;opacity:.12;
+  top:-20px;right:-30px;transform:rotate(15deg);
+}
+header h1{font-size:clamp(1.9rem,7vw,2.8rem);font-weight:700;position:relative;text-shadow:0 2px 10px rgba(0,0,0,.1);}
+header p{font-family:'Nunito',sans-serif;font-size:clamp(.85rem,3vw,1rem);opacity:.92;margin-top:8px;font-weight:700;position:relative;}
+
+/* ── SEARCH ── */
+.search-wrap{padding:16px 16px 0;max-width:640px;margin:0 auto;}
+.search-box{position:relative;}
+.search-box input{
+  width:100%;padding:14px 44px 14px 46px;border:none;border-radius:16px;
+  font-size:15px;font-family:'Nunito',sans-serif;background:#fff;
+  box-shadow:0 4px 18px rgba(92,58,46,.1);outline:none;color:var(--text);min-height:var(--tap);
+}
+.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
+
+/* ── CATEGORY TABS ── */
+.cat-tabs{
+  display:flex;gap:8px;padding:16px 16px 4px;overflow-x:auto;
+  scrollbar-width:none;max-width:1200px;margin:0 auto;
+}
+.cat-tabs::-webkit-scrollbar{display:none;}
+.cat-tab{
+  flex-shrink:0;padding:10px 18px;border-radius:30px;border:2px solid #fff;
+  background:#fff;color:var(--choco);font-weight:800;font-size:13px;
+  cursor:pointer;white-space:nowrap;transition:.2s;font-family:'Nunito',sans-serif;
+}
+.cat-tab.active{background:var(--pistachio);border-color:var(--pistachio);color:#fff;}
+
+/* ── SECTION TITLE ── */
+.section-title{padding:20px 16px 10px;max-width:1200px;margin:0 auto;}
+.section-title h2{font-size:clamp(1.2rem,5vw,1.5rem);font-weight:600;color:var(--choco);}
+
+/* ── MENU GRID — scoop cards ── */
+.menu-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
+  padding:0 16px 8px;max-width:1200px;margin:0 auto;
+}
+.scoop-card{
+  background:#fff;border-radius:26px;padding:16px 12px 18px;text-align:center;
+  box-shadow:0 6px 20px rgba(92,58,46,.08);position:relative;overflow:hidden;
+}
+.scoop-img-wrap{
+  width:88px;height:88px;border-radius:50%;margin:0 auto 10px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#fff,#fef0e2);
+  box-shadow:inset 0 -4px 10px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.06);
+  font-size:42px;overflow:hidden;
+}
+.scoop-img-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+.scoop-card h3{color:var(--choco);font-size:14.5px;font-weight:600;margin-bottom:3px;line-height:1.25;}
+.scoop-card .desc{color:var(--muted);font-size:11.5px;margin-bottom:8px;line-height:1.4;min-height:16px;}
+.scoop-card .price{color:var(--pistachio-dark);font-weight:800;font-size:15px;margin-bottom:10px;}
+.veg-dot{
+  display:inline-block;width:13px;height:13px;border:1.5px solid;border-radius:3px;
+  position:relative;vertical-align:middle;margin-right:4px;
+}
+.veg-dot::after{content:'';position:absolute;inset:2px;border-radius:50%;}
+.veg-dot.veg{border-color:#16a34a;}.veg-dot.veg::after{background:#16a34a;}
+.veg-dot.egg{border-color:#b45309;}.veg-dot.egg::after{background:#b45309;}
+
+.qty-row{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.qty-btn{
+  width:30px;height:30px;border-radius:50%;border:none;
+  background:var(--vanilla);color:var(--choco);font-weight:900;font-size:16px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+}
+.add-btn{
+  display:inline-flex;align-items:center;gap:5px;padding:9px 20px;
+  background:linear-gradient(135deg,var(--strawberry),var(--mango));
+  color:#fff;border:none;border-radius:30px;font-weight:800;font-size:12.5px;
+  cursor:pointer;font-family:'Nunito',sans-serif;min-height:36px;
+}
+.qty-display{font-weight:900;font-size:15px;min-width:20px;}
+
+.no-results{grid-column:1/-1;text-align:center;padding:32px;color:var(--muted);font-weight:700;display:none;}
+
+/* ── FAB CART BUTTON ── */
+.cart-fab{
+  position:fixed;bottom:20px;left:16px;right:16px;max-width:600px;margin:0 auto;
+  background:var(--choco);color:#fff;border-radius:50px;
+  padding:15px 22px;display:none;align-items:center;justify-content:space-between;
+  box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:998;cursor:pointer;
+  font-weight:800;font-size:14px;
+}
+.cart-fab.show{display:flex;}
+.cart-fab .cf-left{display:flex;align-items:center;gap:10px;}
+.cart-fab .cf-count{
+  background:rgba(255,255,255,.2);width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+}
+
+/* ── MODAL (cart/checkout) ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(58,43,34,.55);z-index:2000;display:none;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);
+}
+.modal-overlay.open{display:flex;}
+.modal-sheet{
+  background:var(--vanilla);width:100%;max-width:520px;max-height:88vh;overflow-y:auto;
+  border-radius:26px 26px 0 0;padding:14px 16px 28px;position:relative;
+  animation:sheetUp .28s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@media(min-width:600px){.modal-overlay{align-items:center;}.modal-sheet{border-radius:26px;max-height:85vh;}}
+.modal-handle{width:40px;height:5px;background:#e9d9c4;border-radius:10px;margin:4px auto 10px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;
+  background:#fff;border:none;font-size:16px;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);z-index:2;
+}
+.modal-sheet h2{font-size:1.4rem;color:var(--choco);margin:6px 0 16px;padding-right:30px;}
+
+/* Cart items */
+.cart-item{
+  display:flex;align-items:center;gap:12px;background:#fff;border-radius:18px;
+  padding:12px;margin-bottom:10px;box-shadow:0 3px 12px rgba(92,58,46,.06);
+}
+.cart-item img{width:54px;height:54px;border-radius:50%;object-fit:cover;flex-shrink:0;}
+.cart-item .ci-info{flex:1;}
+.cart-item .ci-name{font-weight:800;font-size:14px;color:var(--choco);}
+.cart-item .ci-price{font-size:12px;color:var(--muted);margin-top:2px;}
+.cart-item .ci-qty{display:flex;align-items:center;gap:8px;}
+.cart-item .ci-remove{
+  background:none;border:none;color:var(--error);font-size:18px;cursor:pointer;padding:4px;
+}
+.empty-cart{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty-cart .ec-icon{font-size:48px;margin-bottom:10px;}
+
+.cart-summary{
+  background:#fff;border-radius:18px;padding:16px;margin-top:6px;
+  box-shadow:0 3px 12px rgba(92,58,46,.06);
+}
+.summary-row{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0;color:var(--muted);}
+.summary-row.total{font-weight:900;font-size:16px;color:var(--choco);border-top:1.5px dashed #e9d9c4;margin-top:6px;padding-top:12px;}
+
+.checkout-btn{
+  width:100%;margin-top:14px;padding:16px;border:none;border-radius:16px;
+  background:linear-gradient(135deg,var(--strawberry),var(--mango));
+  color:#fff;font-weight:800;font-size:16px;cursor:pointer;min-height:var(--tap);
+  font-family:'Nunito',sans-serif;box-shadow:0 8px 20px rgba(232,132,154,.4);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.checkout-btn:disabled{opacity:.6;cursor:not-allowed;}
+.btn-spinner{display:none;width:18px;height:18px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading .btn-spinner{display:inline-block;}
+.loading .btn-text{opacity:.7;}
+
+/* Checkout form */
+.input-group{position:relative;margin-bottom:12px;}
+.field-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:18px;pointer-events:none;}
+.input-group input,.input-group textarea{
+  width:100%;padding:14px 14px 14px 44px;border:2px solid #f0e4d4;border-radius:14px;
+  font-family:'Nunito',sans-serif;font-size:15px;background:#fffaf2;outline:none;
+  color:var(--text);transition:border-color .2s;min-height:var(--tap);
+}
+.input-group textarea{padding-top:14px;resize:vertical;min-height:70px;}
+.input-group input:focus,.input-group textarea:focus{border-color:var(--strawberry);background:#fff;}
+.input-group input.invalid,.input-group textarea.invalid{border-color:var(--error);}
+.field-error{font-size:11px;color:var(--error);font-weight:700;margin-top:4px;margin-left:4px;display:none;}
+
+/* Order success */
+.order-success{text-align:center;padding:30px 16px;}
+.order-success .os-icon{font-size:64px;margin-bottom:14px;}
+.order-success h2{color:var(--choco);margin-bottom:8px;}
+.order-success p{color:var(--muted);font-size:14px;margin-bottom:4px;}
+.order-success .os-id{
+  background:#fff;border-radius:14px;padding:12px;margin:16px 0;font-weight:800;
+  color:var(--pistachio-dark);font-size:15px;box-shadow:0 3px 12px rgba(92,58,46,.06);
+}
+.os-close-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;background:var(--pistachio);
+  color:#fff;font-weight:800;font-size:15px;cursor:pointer;min-height:var(--tap);
+  font-family:'Nunito',sans-serif;
+}
+
+/* ── CONTACT/FOOTER ── */
+.contact-strip{
+  margin:20px 16px;border-radius:var(--radius);background:#fff;padding:20px;
+  box-shadow:0 4px 14px rgba(92,58,46,.07);max-width:calc(1200px - 32px);margin-left:auto;margin-right:auto;
+}
+.contact-strip h3{font-size:1.05rem;margin-bottom:14px;color:var(--choco);}
+.contact-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.contact-btn{
+  display:inline-flex;align-items:center;gap:7px;padding:12px 18px;border-radius:50px;
+  font-weight:800;font-size:13px;text-decoration:none;min-height:44px;
+}
+.contact-btn.whatsapp-btn{background:#25d366;color:#fff;}
+.contact-btn.call-btn{background:var(--choco);color:#fff;}
+
+/* ── ORDER TRACKING ── */
+.track-card{
+  background:#fff;border-radius:20px;padding:18px;margin-bottom:14px;
+  box-shadow:0 4px 16px rgba(92,58,46,.08);
+}
+.track-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+.track-card-head .tc-id{font-weight:900;color:var(--choco);font-size:15px;}
+.track-card-head .tc-time{font-size:11px;color:var(--muted);margin-top:2px;}
+.track-cancelled-badge{
+  background:#ffd9d9;color:#b91c1c;font-size:11px;font-weight:800;
+  padding:4px 10px;border-radius:20px;
+}
+.track-items{font-size:12.5px;color:var(--muted);margin:8px 0 14px;line-height:1.5;}
+.eta-box{
+  display:flex;align-items:center;gap:10px;background:var(--vanilla);border-radius:14px;
+  padding:12px 14px;margin-bottom:16px;
+}
+.eta-box .eta-icon{font-size:24px;}
+.eta-box .eta-text{font-size:12px;color:var(--muted);font-weight:700;}
+.eta-box .eta-time{font-size:15px;color:var(--choco);font-weight:900;font-family:'Fredoka',sans-serif;}
+
+.progress-track{position:relative;padding:0 4px;margin-bottom:6px;}
+.progress-steps{display:flex;justify-content:space-between;position:relative;}
+.progress-line-bg{
+  position:absolute;top:14px;left:14px;right:14px;height:4px;background:#f0e4d4;
+  border-radius:4px;z-index:0;
+}
+.progress-line-fill{
+  position:absolute;top:14px;left:14px;height:4px;background:linear-gradient(90deg,var(--pistachio),var(--strawberry));
+  border-radius:4px;z-index:1;transition:width .4s;
+}
+.progress-step{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;flex:1;}
+.progress-step .ps-dot{
+  width:28px;height:28px;border-radius:50%;background:#f0e4d4;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;
+  border:3px solid #fff;box-shadow:0 0 0 2px #f0e4d4;
+}
+.progress-step.done .ps-dot{background:var(--pistachio);color:#fff;box-shadow:0 0 0 2px var(--pistachio);}
+.progress-step.current .ps-dot{background:var(--strawberry);color:#fff;box-shadow:0 0 0 2px var(--strawberry);animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+.progress-step .ps-label{font-size:9.5px;font-weight:800;color:var(--muted);margin-top:6px;text-align:center;max-width:60px;}
+.progress-step.done .ps-label,.progress-step.current .ps-label{color:var(--choco);}
+
+footer{background:var(--choco);color:#fff;text-align:center;padding:30px 20px 18px;margin-top:10px;}
+footer h2{font-size:1.2rem;margin-bottom:6px;}
+footer p{font-size:11.5px;opacity:.55;margin-top:8px;font-family:'Nunito',sans-serif;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;
+  padding:8px 0 calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(92,58,46,.08);z-index:999;
+}
+.bottom-nav a,.bottom-nav button{
+  display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;
+  color:var(--muted);font-size:10px;font-weight:700;padding:4px 8px;border-radius:12px;
+  min-width:var(--tap);background:none;border:none;cursor:pointer;font-family:'Nunito',sans-serif;
+}
+.bottom-nav a .icon,.bottom-nav button .icon{font-size:22px;line-height:1;}
+.bottom-nav a.active,.bottom-nav button.active{color:var(--strawberry-dark);}
+
+@media(min-width:600px){.menu-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:900px){.menu-grid{grid-template-columns:repeat(4,1fr);}}
+</style>
+</head>
+<body>
+
+<div class="top-location">📍 Akole, Maharashtra</div>
+<button type="button" class="cart-pill" id="cartPill" onclick="openCartModal()">
+  🛒 <span id="cartPillCount">0</span> items
+</button>
+<button type="button" class="track-pill" id="trackPill" onclick="openTrackModal()">
+  📦 Track Order
+</button>
+
+<div id="toast"></div>
+
+<header>
+  <h1>🍦 Sarva-Nest Ice Cream</h1>
+  <p>Hand-scooped · Fresh Daily · Akole's Favourite</p>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="searchInput" placeholder="Search flavours, cones, shakes..." autocomplete="off">
+  </div>
+</div>
+
+<div class="cat-tabs" id="catTabs">
+  <button class="cat-tab active" data-cat="all">All</button>
+  <button class="cat-tab" data-cat="cone">🍦 Cones</button>
+  <button class="cat-tab" data-cat="cup">🍨 Cups & Tubs</button>
+  <button class="cat-tab" data-cat="sundae">🍧 Sundaes</button>
+  <button class="cat-tab" data-cat="shake">🥤 Shakes</button>
+  <button class="cat-tab" data-cat="kulfi">🍡 Kulfi</button>
+</div>
+
+<div class="section-title"><h2>Our Menu</h2></div>
+<div class="menu-grid" id="menuGrid">
+  <div class="no-results" id="noResults">😕 No items match your search</div>
+</div>
+
+<!-- Cart FAB -->
+<div class="cart-fab" id="cartFab" onclick="openCartModal()">
+  <div class="cf-left">
+    <span class="cf-count" id="cfCount">0</span>
+    <span id="cfTotal">View Cart</span>
+  </div>
+  <span>₹0 →</span>
+</div>
+
+<!-- Contact -->
+<div class="contact-strip" id="contact">
+  <h3>📞 Need Help?</h3>
+  <div class="contact-btns">
+    <a href="https://wa.me/919307320279" class="contact-btn whatsapp-btn">💬 WhatsApp</a>
+    <a href="tel:+919307320279" class="contact-btn call-btn">📞 Call Us</a>
+  </div>
+</div>
+
+<footer>
+  <h2>🍦 Sarva-Nest Ice Cream Parlour</h2>
+  <p>© 2026 All Rights Reserved · Akole, Maharashtra</p>
+</footer>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <a href="#" class="active"><span class="icon">🏠</span>Home</a>
+  <button type="button" onclick="document.getElementById('catTabs').scrollIntoView({behavior:'smooth'})"><span class="icon">🍨</span>Menu</button>
+  <button type="button" onclick="openCartModal()"><span class="icon">🛒</span>Cart</button>
+  <button type="button" onclick="openTrackModal()"><span class="icon">📦</span>Track</button>
+  <a href="#contact"><span class="icon">📞</span>Contact</a>
+</nav>
+
+<!-- ═══════ CART / CHECKOUT MODAL ═══════ -->
+<div class="modal-overlay" id="cartModalOverlay" onclick="if(event.target===this) closeCartModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeCartModal()" aria-label="Close">✕</button>
+
+    <!-- Cart view -->
+    <div id="cartView">
+      <h2>🛒 Your Cart</h2>
+      <div id="cartItemsList"></div>
+      <div class="empty-cart" id="emptyCartMsg" style="display:none;">
+        <div class="ec-icon">🍦</div>
+        <p>Your cart is empty. Add some delicious scoops!</p>
+      </div>
+      <div class="cart-summary" id="cartSummaryBox" style="display:none;">
+        <div class="summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0</span></div>
+        <div class="summary-row"><span>Delivery Fee</span><span id="sumDelivery">₹20</span></div>
+        <div class="summary-row total"><span>Total</span><span id="sumTotal">₹0</span></div>
+      </div>
+      <button class="checkout-btn" id="goToCheckoutBtn" onclick="showCheckoutForm()" style="display:none;">
+        Proceed to Checkout →
+      </button>
+    </div>
+
+    <!-- Checkout form view -->
+    <div id="checkoutView" style="display:none;">
+      <h2>📝 Delivery Details</h2>
+
+      <div class="input-group">
+        <span class="field-icon">👤</span>
+        <input type="text" id="ck_name" placeholder="Full Name" autocomplete="name">
+        <div class="field-error" id="fe_ck_name">Please enter your name</div>
+      </div>
+
+      <div class="input-group">
+        <span class="field-icon">📧</span>
+        <input type="email" id="ck_email" placeholder="Email Address" autocomplete="email" inputmode="email">
+        <div class="field-error" id="fe_ck_email">Enter a valid email address</div>
+      </div>
+
+      <div class="input-group">
+        <span class="field-icon">📱</span>
+        <input type="tel" id="ck_mobile" placeholder="Mobile Number" inputmode="tel" maxlength="10">
+        <div class="field-error" id="fe_ck_mobile">Enter a valid 10-digit mobile number</div>
+      </div>
+
+      <div class="input-group">
+        <span class="field-icon">🏠</span>
+        <textarea id="ck_address" placeholder="Full Delivery Address"></textarea>
+        <div class="field-error" id="fe_ck_address">Please enter your delivery address</div>
+      </div>
+
+      <div class="input-group">
+        <span class="field-icon">📝</span>
+        <input type="text" id="ck_notes" placeholder="Notes for delivery (optional)">
+      </div>
+
+      <div class="cart-summary">
+        <div class="summary-row"><span>Subtotal</span><span id="ckSubtotal">₹0</span></div>
+        <div class="summary-row"><span>Delivery Fee</span><span id="ckDelivery">₹20</span></div>
+        <div class="summary-row total"><span>Total</span><span id="ckTotal">₹0</span></div>
+      </div>
+
+      <button class="checkout-btn" id="placeOrderBtn" onclick="placeOrder()">
+        <span class="btn-text">🍦 Place Order</span>
+        <span class="btn-spinner"></span>
+      </button>
+    </div>
+
+    <!-- Order success view -->
+    <div id="successView" style="display:none;">
+      <div class="order-success">
+        <div class="os-icon">🎉</div>
+        <h2>Order Placed!</h2>
+        <p>Your sweet treats are on the way.</p>
+        <p>We'll call you to confirm shortly.</p>
+        <div class="os-id">Order ID: <span id="successOrderId">–</span></div>
+        <button class="os-close-btn" onclick="closeCartModal()">Done</button>
+        <button class="os-close-btn" id="trackThisOrderBtn" style="background:var(--strawberry-dark);margin-top:10px;" onclick="closeCartModal(); openTrackModal();">📦 Track This Order</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TRACK ORDER MODAL ═══════ -->
+<div class="modal-overlay" id="trackModalOverlay" onclick="if(event.target===this) closeTrackModal()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeTrackModal()" aria-label="Close">✕</button>
+
+    <h2 style="font-size:1.4rem;color:var(--choco);margin:6px 0 16px;padding-right:30px;">📦 Track Your Orders</h2>
+
+    <div id="trackLoadingState" style="display:none;text-align:center;padding:30px 16px;color:var(--muted);">
+      <div style="font-size:40px;margin-bottom:10px;">🍦</div>
+      Looking up your orders...
+    </div>
+
+    <div id="trackNoEmailState" style="display:none;text-align:center;padding:24px 16px;">
+      <div style="font-size:44px;margin-bottom:10px;">📧</div>
+      <p style="color:var(--muted);font-size:13.5px;margin-bottom:16px;">We track orders using the email you placed them with. Place an order first, or enter your email below.</p>
+      <div class="input-group" style="text-align:left;">
+        <span class="field-icon">📧</span>
+        <input type="email" id="track_manual_email" placeholder="Enter your email" autocomplete="email">
+      </div>
+      <button class="checkout-btn" onclick="trackByManualEmail()">🔍 Find My Orders</button>
+    </div>
+
+    <div id="trackEmptyState" style="display:none;text-align:center;padding:30px 16px;">
+      <div style="font-size:48px;margin-bottom:10px;">🍦</div>
+      <p style="color:var(--muted);font-size:13.5px;">No orders found for <strong id="trackEmptyEmail"></strong></p>
+      <button class="os-close-btn" style="margin-top:16px;background:var(--pistachio);" onclick="showManualEmailEntry()">Try a different email</button>
+    </div>
+
+    <div id="trackResultsList"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FIREBASE MODULE                              -->
+<!-- ═══════════════════════════════════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, getDocs, addDoc, query, where, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+const DELIVERY_FEE = 20;
+let MENU_ITEMS = [];
+let cart = {}; /* { itemId: { ...item, qty } } */
+
+/* ── LOAD MENU FROM FIRESTORE ── */
+async function loadMenu(){
+  try {
+    const snap = await getDocs(collection(db,"icecream_menu"));
+    MENU_ITEMS = [];
+    snap.forEach(docSnap=>{
+      const d = docSnap.data();
+      if(d.available !== false){
+        MENU_ITEMS.push({ id: docSnap.id, ...d });
+      }
+    });
+    if(MENU_ITEMS.length === 0){
+      MENU_ITEMS = defaultMenu();
+    }
+  } catch(e){
+    console.error("Failed to load menu, using defaults:", e);
+    MENU_ITEMS = defaultMenu();
+  }
+  renderMenu();
+}
+
+/* Fallback menu so the page never looks empty before admin adds real items */
+function defaultMenu(){
+  return [
+    {id:"d1",name:"Classic Vanilla Cone",desc:"Creamy vanilla in a crunchy cone",price:40,category:"cone",icon:"🍦",veg:"veg"},
+    {id:"d2",name:"Choco Lava Cone",desc:"Chocolate ice cream with molten center",price:60,category:"cone",icon:"🍦",veg:"veg"},
+    {id:"d3",name:"Butterscotch Cup",desc:"Crunchy butterscotch in a tub",price:50,category:"cup",icon:"🍨",veg:"veg"},
+    {id:"d4",name:"Mango Tub (500ml)",desc:"Real mango pulp, family pack",price:150,category:"cup",icon:"🍨",veg:"veg"},
+    {id:"d5",name:"Brownie Sundae",desc:"Warm brownie, two scoops, choco syrup",price:120,category:"sundae",icon:"🍧",veg:"egg"},
+    {id:"d6",name:"Oreo Sundae",desc:"Crushed Oreo, vanilla, choco chips",price:110,category:"sundae",icon:"🍧",veg:"veg"},
+    {id:"d7",name:"Oreo Milkshake",desc:"Thick shake blended with Oreo",price:90,category:"shake",icon:"🥤",veg:"veg"},
+    {id:"d8",name:"Mango Milkshake",desc:"Fresh mango blended shake",price:80,category:"shake",icon:"🥤",veg:"veg"},
+    {id:"d9",name:"Matka Kulfi",desc:"Traditional clay-pot kulfi",price:35,category:"kulfi",icon:"🍡",veg:"veg"},
+    {id:"d10",name:"Malai Kulfi Stick",desc:"Rich malai kulfi on a stick",price:30,category:"kulfi",icon:"🍡",veg:"veg"},
+  ];
+}
+
+window.MENU_ITEMS_REF = () => MENU_ITEMS;
+
+function renderMenu(filterCat="all", searchTerm=""){
+  const grid = document.getElementById("menuGrid");
+  const noResults = document.getElementById("noResults");
+  grid.querySelectorAll(".scoop-card").forEach(c=>c.remove());
+
+  const term = searchTerm.toLowerCase();
+  const filtered = MENU_ITEMS.filter(item=>{
+    const catMatch = filterCat === "all" || item.category === filterCat;
+    const searchMatch = !term || (item.name||"").toLowerCase().includes(term) || (item.desc||"").toLowerCase().includes(term);
+    return catMatch && searchMatch;
+  });
+
+  noResults.style.display = filtered.length === 0 ? "block" : "none";
+
+  filtered.forEach(item=>{
+    const card = document.createElement("div");
+    card.className = "scoop-card";
+    card.dataset.id = item.id;
+
+    const vegClass = item.veg === "egg" ? "egg" : "veg";
+    const imgHtml = item.imageUrl
+      ? `<img src="${item.imageUrl}" alt="${item.name}">`
+      : (item.icon || "🍦");
+
+    card.innerHTML = `
+      <div class="scoop-img-wrap">${imgHtml}</div>
+      <h3><span class="veg-dot ${vegClass}"></span>${item.name}</h3>
+      <div class="desc">${item.desc||""}</div>
+      <div class="price">₹${item.price}</div>
+      <div class="qty-row" id="qtyRow_${item.id}"></div>
+    `;
+    grid.appendChild(card);
+    renderQtyControl(item.id);
+  });
+}
+
+function renderQtyControl(itemId){
+  const row = document.getElementById("qtyRow_"+itemId);
+  if(!row) return;
+  const qty = cart[itemId] ? cart[itemId].qty : 0;
+
+  if(qty === 0){
+    row.innerHTML = `<button class="add-btn" onclick="addToCart('${itemId}')">+ Add</button>`;
+  } else {
+    row.innerHTML = `
+      <button class="qty-btn" onclick="changeQty('${itemId}',-1)">−</button>
+      <span class="qty-display">${qty}</span>
+      <button class="qty-btn" onclick="changeQty('${itemId}',1)">+</button>
+    `;
+  }
+}
+
+window.addToCart = function(itemId){
+  const item = MENU_ITEMS.find(i=>i.id===itemId);
+  if(!item) return;
+  if(!cart[itemId]) cart[itemId] = {...item, qty:0};
+  cart[itemId].qty += 1;
+  renderQtyControl(itemId);
+  updateCartUI();
+  showToast(`✅ ${item.name} added!`,"success");
+};
+
+window.changeQty = function(itemId, delta){
+  if(!cart[itemId]) return;
+  cart[itemId].qty += delta;
+  if(cart[itemId].qty <= 0) delete cart[itemId];
+  renderQtyControl(itemId);
+  updateCartUI();
+};
+
+function getCartTotals(){
+  let subtotal = 0, count = 0;
+  Object.values(cart).forEach(c=>{ subtotal += c.price * c.qty; count += c.qty; });
+  const total = count > 0 ? subtotal + DELIVERY_FEE : 0;
+  return {subtotal, count, total};
+}
+
+function updateCartUI(){
+  const {subtotal, count, total} = getCartTotals();
+  document.getElementById("cartPillCount").textContent = count;
+  document.getElementById("cfCount").textContent = count;
+  document.getElementById("cfTotal").textContent = count > 0 ? `₹${subtotal} · View Cart` : "View Cart";
+  document.getElementById("cartFab").classList.toggle("show", count > 0);
+  renderCartItemsList();
+}
+
+function renderCartItemsList(){
+  const list = document.getElementById("cartItemsList");
+  const emptyMsg = document.getElementById("emptyCartMsg");
+  const summaryBox = document.getElementById("cartSummaryBox");
+  const checkoutBtn = document.getElementById("goToCheckoutBtn");
+  list.innerHTML = "";
+
+  const items = Object.values(cart);
+  if(items.length === 0){
+    emptyMsg.style.display = "block";
+    summaryBox.style.display = "none";
+    checkoutBtn.style.display = "none";
+    return;
+  }
+  emptyMsg.style.display = "none";
+  summaryBox.style.display = "block";
+  checkoutBtn.style.display = "flex";
+
+  items.forEach(item=>{
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    const imgHtml = item.imageUrl
+      ? `<img src="${item.imageUrl}" alt="${item.name}">`
+      : `<div style="width:54px;height:54px;border-radius:50%;background:#fef0e2;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">${item.icon||"🍦"}</div>`;
+    div.innerHTML = `
+      ${imgHtml}
+      <div class="ci-info">
+        <div class="ci-name">${item.name}</div>
+        <div class="ci-price">₹${item.price} × ${item.qty} = ₹${item.price*item.qty}</div>
+      </div>
+      <div class="ci-qty">
+        <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+        <span class="qty-display">${item.qty}</span>
+        <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+
+  const {subtotal, total} = getCartTotals();
+  document.getElementById("sumSubtotal").textContent = `₹${subtotal}`;
+  document.getElementById("sumTotal").textContent = `₹${total}`;
+}
+
+/* ── CHECKOUT / PLACE ORDER ── */
+window.showCheckoutForm = function(){
+  document.getElementById("cartView").style.display = "none";
+  document.getElementById("checkoutView").style.display = "block";
+
+  const {subtotal, total} = getCartTotals();
+  document.getElementById("ckSubtotal").textContent = `₹${subtotal}`;
+  document.getElementById("ckTotal").textContent = `₹${total}`;
+
+  /* auto-fill from sn_user if available */
+  try {
+    const saved = JSON.parse(localStorage.getItem("sn_user") || "null");
+    if(saved){
+      document.getElementById("ck_name").value = saved.name || "";
+      document.getElementById("ck_email").value = saved.email || "";
+      document.getElementById("ck_mobile").value = saved.mobile || "";
+      document.getElementById("ck_address").value = saved.address || "";
+    }
+  } catch(e){ /* ignore */ }
+};
+
+function backToCart(){
+  document.getElementById("checkoutView").style.display = "none";
+  document.getElementById("cartView").style.display = "block";
+}
+window.backToCart = backToCart;
+
+function isPhone(v){ return /^[6-9]\d{9}$/.test(v); }
+function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+
+window.placeOrder = async function(){
+  const name    = document.getElementById("ck_name").value.trim();
+  const email   = document.getElementById("ck_email").value.trim().toLowerCase();
+  const mobile  = document.getElementById("ck_mobile").value.trim();
+  const address = document.getElementById("ck_address").value.trim();
+  const notes   = document.getElementById("ck_notes").value.trim();
+
+  let ok = true;
+  if(name.length < 2){ document.getElementById("ck_name").classList.add("invalid"); document.getElementById("fe_ck_name").style.display="block"; ok=false; }
+  else { document.getElementById("ck_name").classList.remove("invalid"); document.getElementById("fe_ck_name").style.display="none"; }
+
+  if(!isEmail(email)){ document.getElementById("ck_email").classList.add("invalid"); document.getElementById("fe_ck_email").style.display="block"; ok=false; }
+  else { document.getElementById("ck_email").classList.remove("invalid"); document.getElementById("fe_ck_email").style.display="none"; }
+
+  if(!isPhone(mobile)){ document.getElementById("ck_mobile").classList.add("invalid"); document.getElementById("fe_ck_mobile").style.display="block"; ok=false; }
+  else { document.getElementById("ck_mobile").classList.remove("invalid"); document.getElementById("fe_ck_mobile").style.display="none"; }
+
+  if(address.length < 5){ document.getElementById("ck_address").classList.add("invalid"); document.getElementById("fe_ck_address").style.display="block"; ok=false; }
+  else { document.getElementById("ck_address").classList.remove("invalid"); document.getElementById("fe_ck_address").style.display="none"; }
+
+  if(!ok){ showToast("⚠️ Please fix the errors above","warn"); return; }
+
+  const items = Object.values(cart).map(c=>({id:c.id,name:c.name,price:c.price,qty:c.qty}));
+  if(items.length === 0){ showToast("⚠️ Your cart is empty","warn"); return; }
+
+  const {subtotal, total} = getCartTotals();
+  const btn = document.getElementById("placeOrderBtn");
+  btn.disabled = true; btn.classList.add("loading");
+
+  try {
+    const orderData = {
+      customerName: name,
+      email: email,
+      mobile: mobile,
+      address: address,
+      notes: notes,
+      items: items,
+      subtotal: subtotal,
+      deliveryFee: DELIVERY_FEE,
+      total: total,
+      status: "pending",
+      createdAt: new Date().toISOString()
+    };
+    const docRef = await addDoc(collection(db,"icecream_orders"), orderData);
+
+    /* save customer info for next time — email is the key used for auto order-tracking match */
+    localStorage.setItem("sn_user", JSON.stringify({
+      ...(JSON.parse(localStorage.getItem("sn_user")||"{}")),
+      name, email, mobile, address
+    }));
+
+    /* notify admin via Telegram (best-effort, non-blocking) */
+    notifyAdminTelegram(docRef.id, orderData);
+
+    document.getElementById("successOrderId").textContent = "#" + docRef.id.slice(-6).toUpperCase();
+    document.getElementById("checkoutView").style.display = "none";
+    document.getElementById("successView").style.display = "block";
+
+    cart = {};
+    updateCartUI();
+    renderMenu(getActiveCategory(), document.getElementById("searchInput").value);
+  } catch(e){
+    console.error(e);
+    showToast("❌ Could not place order. Try again.","error");
+  } finally {
+    btn.disabled = false; btn.classList.remove("loading");
+  }
+};
+
+function notifyAdminTelegram(orderId, order){
+  /* best-effort fire-and-forget; admin can also see orders live in admin dashboard */
+  try {
+    const itemsText = order.items.map(i=>`${i.name} x${i.qty}`).join(", ");
+    const msg = `🍦 New Ice Cream Order #${orderId.slice(-6).toUpperCase()}\n${order.customerName} | ${order.mobile}\n${itemsText}\nTotal: ₹${order.total}\nAddr: ${order.address}`;
+    /* Replace BOT_TOKEN/CHAT_ID with your actual Telegram bot credentials if available */
+    console.log("Telegram notify (configure bot token to enable):", msg);
+  } catch(e){ /* never block order placement on notification failure */ }
+}
+
+function getActiveCategory(){
+  const active = document.querySelector(".cat-tab.active");
+  return active ? active.dataset.cat : "all";
+}
+
+window.openCartModal = function(){
+  document.getElementById("cartModalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("cartView").style.display = "block";
+  document.getElementById("checkoutView").style.display = "none";
+  document.getElementById("successView").style.display = "none";
+  renderCartItemsList();
+};
+window.closeCartModal = function(){
+  document.getElementById("cartModalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+};
+
+/* ── ORDER TRACKING ── */
+const STATUS_STEPS = [
+  {key:"pending",   label:"Order Placed", icon:"📝"},
+  {key:"preparing", label:"Preparing",    icon:"🍦"},
+  {key:"out",       label:"Out for Delivery", icon:"🛵"},
+  {key:"delivered", label:"Delivered",    icon:"🎉"},
+];
+const ETA_MINUTES = {pending:35, preparing:25, out:10, delivered:0};
+
+function getSavedEmail(){
+  try {
+    const saved = JSON.parse(localStorage.getItem("sn_user") || "null");
+    return saved && saved.email ? saved.email.toLowerCase() : null;
+  } catch(e){ return null; }
+}
+
+window.openTrackModal = async function(){
+  document.getElementById("trackModalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+
+  const email = getSavedEmail();
+  /* always pre-fill the manual box too, so if we ever fall back to it, it's not empty */
+  document.getElementById("track_manual_email").value = email || "";
+
+  if(!email){
+    showTrackState("noEmail");
+    return;
+  }
+  await fetchAndRenderOrders(email);
+};
+
+window.closeTrackModal = function(){
+  document.getElementById("trackModalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+};
+
+function showTrackState(state){
+  document.getElementById("trackLoadingState").style.display  = state==="loading"  ? "block" : "none";
+  document.getElementById("trackNoEmailState").style.display  = state==="noEmail"  ? "block" : "none";
+  document.getElementById("trackEmptyState").style.display    = state==="empty"    ? "block" : "none";
+  document.getElementById("trackResultsList").style.display   = state==="results" ? "block" : "none";
+}
+
+window.showManualEmailEntry = function(){
+  const email = getSavedEmail();
+  if(email) document.getElementById("track_manual_email").value = email;
+  showTrackState("noEmail");
+};
+
+window.trackByManualEmail = async function(){
+  const email = document.getElementById("track_manual_email").value.trim().toLowerCase();
+  if(!isEmail(email)){
+    showToast("⚠️ Please enter a valid email","warn");
+    return;
+  }
+  await fetchAndRenderOrders(email);
+};
+
+async function fetchAndRenderOrders(email){
+  showTrackState("loading");
+  try {
+    /* Query by email only (single-field — always auto-indexed by Firestore,
+       no composite index setup needed) and sort newest-first on the client. */
+    const q = query(
+      collection(db,"icecream_orders"),
+      where("email","==", email)
+    );
+    const snap = await getDocs(q);
+    const orders = [];
+    snap.forEach(d=> orders.push({id:d.id, ...d.data()}));
+    orders.sort((a,b)=> new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+    if(orders.length === 0){
+      document.getElementById("trackEmptyEmail").textContent = email;
+      showTrackState("empty");
+      return;
+    }
+
+    renderTrackResults(orders);
+    showTrackState("results");
+  } catch(e){
+    console.error("Order tracking fetch failed:", e);
+    document.getElementById("track_manual_email").value = email;
+    showToast("❌ Could not load your orders. Try again.","error");
+    showTrackState("noEmail");
+  }
+}
+
+function renderTrackResults(orders){
+  const list = document.getElementById("trackResultsList");
+  list.innerHTML = orders.map(o=> buildTrackCard(o)).join("");
+}
+
+function buildTrackCard(order){
+  const status = order.status || "pending";
+  const time = order.createdAt ? new Date(order.createdAt).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "–";
+  const itemsText = (order.items||[]).map(i=>`${i.name} x${i.qty}`).join(", ");
+
+  if(status === "cancelled"){
+    return `
+      <div class="track-card">
+        <div class="track-card-head">
+          <div><div class="tc-id">#${order.id.slice(-6).toUpperCase()}</div><div class="tc-time">${time}</div></div>
+          <span class="track-cancelled-badge">Cancelled</span>
+        </div>
+        <div class="track-items">${itemsText}</div>
+      </div>
+    `;
+  }
+
+  const currentIdx = STATUS_STEPS.findIndex(s=>s.key===status);
+  const safeIdx = currentIdx === -1 ? 0 : currentIdx;
+  const fillPct = safeIdx === 0 ? 0 : (safeIdx / (STATUS_STEPS.length-1)) * 100;
+
+  const stepsHtml = STATUS_STEPS.map((s,i)=>{
+    const stateClass = i < safeIdx ? "done" : (i === safeIdx ? "current" : "");
+    const dotContent = i < safeIdx ? "✓" : s.icon;
+    return `
+      <div class="progress-step ${stateClass}">
+        <div class="ps-dot">${dotContent}</div>
+        <div class="ps-label">${s.label}</div>
+      </div>
+    `;
+  }).join("");
+
+  const etaMin = ETA_MINUTES[status] ?? 0;
+  const etaText = status === "delivered" ? "Delivered!" : `~${etaMin} mins`;
+  const etaIcon = status === "delivered" ? "🎉" : "⏱️";
+
+  return `
+    <div class="track-card">
+      <div class="track-card-head">
+        <div><div class="tc-id">#${order.id.slice(-6).toUpperCase()}</div><div class="tc-time">${time}</div></div>
+      </div>
+      <div class="track-items">${itemsText} · ₹${order.total||0}</div>
+
+      <div class="eta-box">
+        <span class="eta-icon">${etaIcon}</span>
+        <div>
+          <div class="eta-text">${status === "delivered" ? "Status" : "Estimated delivery time"}</div>
+          <div class="eta-time">${etaText}</div>
+        </div>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-steps">
+          <div class="progress-line-bg"></div>
+          <div class="progress-line-fill" style="width:${fillPct}%;"></div>
+          ${stepsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+loadMenu();
+window.renderMenu = renderMenu;
+window.getActiveCategory = getActiveCategory;
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- NON-MODULE JS                                -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+function showToast(msg, type=""){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>{ t.classList.remove("show"); },3200);
+}
+window.showToast = showToast;
+
+document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"){ closeCartModal(); closeTrackModal(); } });
+
+/* Category tabs */
+document.getElementById("catTabs").addEventListener("click",(e)=>{
+  const btn = e.target.closest(".cat-tab");
+  if(!btn) return;
+  document.querySelectorAll(".cat-tab").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderMenu(btn.dataset.cat, document.getElementById("searchInput").value);
+});
+
+/* Search */
+document.getElementById("searchInput").addEventListener("input",(e)=>{
+  renderMenu(getActiveCategory(), e.target.value);
+});
+</script>
+</body>
+</html>
