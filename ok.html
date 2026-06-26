@@ -724,130 +724,53 @@ table tr:hover td{background:#fafafa;}
       </div>
     </div>
 
-    <!-- ── STEP 1: Email + Password ── -->
-    <div id="step1">
-      <div class="login-heading">Sign In 👋</div>
-      <div class="login-sub">Enter your email and password to continue.</div>
+    <div class="login-heading">Welcome back 👋</div>
+    <div class="login-sub">Select your role and enter your secret access key to continue.</div>
 
-      <div class="login-error" id="emailError">
-        <i class="fas fa-circle-xmark"></i>
-        <span id="emailErrorMsg">Invalid email or password.</span>
+    <!-- Role selector -->
+    <div class="role-grid" id="roleGrid" style="grid-template-columns:1fr 1fr;">
+      <div class="role-card founder-card selected" data-role="founder">
+        <span class="role-emoji">👑</span>
+        <div class="role-card-name">Founder</div>
+        <div class="role-card-desc">Full access</div>
       </div>
-
-      <div class="form-group" style="margin-bottom:14px;">
-        <div class="key-input-wrap">
-          <i class="fas fa-envelope key-icon"></i>
-          <input class="key-input" type="email" id="emailInput"
-            placeholder="Your email address…"
-            style="letter-spacing:0;" autocomplete="email">
-        </div>
+      <div class="role-card cofounder-card" data-role="cofounder">
+        <span class="role-emoji">🚀</span>
+        <div class="role-card-name">Co-Founder</div>
+        <div class="role-card-desc">Full access</div>
       </div>
-
-      <div class="form-group" style="margin-bottom:6px;">
-        <div class="key-input-wrap">
-          <i class="fas fa-lock key-icon"></i>
-          <input class="key-input" type="password" id="passwordInput"
-            placeholder="Password…" autocomplete="current-password">
-          <button class="eye-btn" onclick="togglePassVisibility()" type="button">
-            <i class="fas fa-eye" id="passEyeIcon"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="login-hint" style="margin-bottom:22px;">
-        <i class="fas fa-circle-info"></i>
-        Use the account you registered on the platform
-      </div>
-
-      <button class="login-btn" id="emailLoginBtn" onclick="doEmailLogin()">
-        <i class="fas fa-arrow-right-to-bracket"></i>
-        Continue
-      </button>
     </div>
 
-    <!-- ── STEP 2: User preview + Role + Key ── -->
-    <div id="step2" style="display:none;">
+    <!-- Error -->
+    <div class="login-error" id="loginError">
+      <i class="fas fa-circle-xmark"></i>
+      <span id="loginErrorMsg">Invalid access key. Try again.</span>
+    </div>
 
-      <!-- User preview card (photo + naam from Cloudinary/Firestore) -->
-      <div id="userPreviewCard" style="
-        display:flex;align-items:center;gap:14px;
-        background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
-        border-radius:14px;padding:14px 16px;margin-bottom:24px;
-      ">
-        <div id="previewPhotoWrap" style="position:relative;flex-shrink:0;">
-          <img id="previewPhoto" src="" alt=""
-            style="width:52px;height:52px;border-radius:50%;object-fit:cover;
-            border:2px solid rgba(255,255,255,.2);display:none;">
-          <div id="previewInitials" style="
-            width:52px;height:52px;border-radius:50%;
-            background:linear-gradient(135deg,#7c3aed,#a855f7);
-            display:flex;align-items:center;justify-content:center;
-            font-size:20px;font-weight:800;color:white;
-          ">?</div>
-          <div style="
-            position:absolute;bottom:1px;right:1px;
-            width:13px;height:13px;border-radius:50%;
-            background:#10b981;border:2px solid #0f172a;
-          "></div>
-        </div>
-        <div style="flex:1;min-width:0;">
-          <div id="previewName" style="font-size:15px;font-weight:700;color:white;margin-bottom:2px;">Loading…</div>
-          <div id="previewEmail" style="font-size:12px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></div>
-        </div>
-        <button onclick="backToStep1()" style="
-          background:none;border:none;cursor:pointer;
-          color:#475569;font-size:13px;padding:6px 10px;
-          border-radius:8px;font-family:'Inter',sans-serif;
-          font-weight:600;transition:.2s;
-        " onmouseover="this.style.background='rgba(255,255,255,.08)'"
-           onmouseout="this.style.background='none'">
-          <i class="fas fa-arrow-left"></i>
-        </button>
-      </div>
-
-      <div class="login-heading" style="font-size:18px;">Select Role & Key 🔐</div>
-      <div class="login-sub" style="margin-bottom:18px;">Choose your role and enter the secret access key.</div>
-
-      <!-- Role selector -->
-      <div class="role-grid" id="roleGrid" style="grid-template-columns:1fr 1fr;margin-bottom:18px;">
-        <div class="role-card founder-card selected" data-role="founder">
-          <span class="role-emoji">👑</span>
-          <div class="role-card-name">Founder</div>
-          <div class="role-card-desc">Full access</div>
-        </div>
-        <div class="role-card cofounder-card" data-role="cofounder">
-          <span class="role-emoji">🚀</span>
-          <div class="role-card-name">Co-Founder</div>
-          <div class="role-card-desc">Full access</div>
-        </div>
-      </div>
-
-      <!-- Error -->
-      <div class="login-error" id="loginError">
-        <i class="fas fa-circle-xmark"></i>
-        <span id="loginErrorMsg">Invalid access key. Try again.</span>
-      </div>
-
-      <!-- Key input -->
-      <div class="key-input-wrap">
-        <i class="fas fa-key key-icon"></i>
-        <input class="key-input" type="password" id="accessKey"
-          placeholder="Enter secret access key…"
-          autocomplete="off" maxlength="32">
-        <button class="eye-btn" id="eyeBtn" onclick="toggleKeyVisibility()" type="button">
-          <i class="fas fa-eye" id="eyeIcon"></i>
-        </button>
-      </div>
-      <div class="login-hint">
-        <i class="fas fa-circle-info"></i>
-        Each role has a unique secret key
-      </div>
-
-      <button class="login-btn" id="loginBtn" onclick="attemptLogin()">
-        <i class="fas fa-unlock-keyhole"></i>
-        Access Dashboard
+    <!-- Key input -->
+    <div class="key-input-wrap">
+      <i class="fas fa-key key-icon"></i>
+      <input
+        class="key-input"
+        type="password"
+        id="accessKey"
+        placeholder="Enter secret access key…"
+        autocomplete="off"
+        maxlength="32"
+      >
+      <button class="eye-btn" id="eyeBtn" onclick="toggleKeyVisibility()" type="button">
+        <i class="fas fa-eye" id="eyeIcon"></i>
       </button>
     </div>
+    <div class="login-hint">
+      <i class="fas fa-circle-info"></i>
+      Each role has a unique secret key
+    </div>
+
+    <button class="login-btn" id="loginBtn" onclick="attemptLogin()">
+      <i class="fas fa-unlock-keyhole"></i>
+      Access Dashboard
+    </button>
 
   </div>
 </div>
@@ -916,14 +839,10 @@ table tr:hover td{background:#fafafa;}
         <span class="role-badge badge-founder ms-auto" id="sidebarRoleBadge" style="margin-left:auto;">FOUNDER</span>
       </div>
       <div class="user-pill" style="margin-top:8px;">
-        <div class="avatar" id="sidebarAvatar" style="overflow:hidden;padding:0;">
-          <img id="sidebarAvatarImg" src="" alt=""
-            style="width:100%;height:100%;object-fit:cover;display:none;border-radius:50%;">
-          <span id="sidebarAvatarLetter" style="font-size:13px;font-weight:700;">F</span>
-        </div>
+        <div class="avatar" id="sidebarAvatar">F</div>
         <div class="user-info">
           <div class="user-name" id="sidebarUserName">Founder</div>
-          <div class="user-role" id="sidebarUserEmail" style="font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">AdminHub Pro</div>
+          <div class="user-role">AdminHub Pro</div>
         </div>
       </div>
       <button class="logout-btn" onclick="doLogout()">
