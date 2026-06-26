@@ -132,6 +132,15 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
 .btn-secondary{padding:8px 16px;border:1px solid var(--border);border-radius:var(--radius);background:var(--white);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink);transition:all 0.15s}
 .btn-secondary:hover{background:var(--cream);border-color:#b0a890}
 .img-preview{width:100%;max-height:200px;object-fit:cover;border-radius:var(--radius);margin-top:10px;display:none;border:1px solid var(--border)}
+
+/* Multi-image upload previews */
+.img-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.img-preview-item{position:relative;width:84px;height:84px}
+.img-preview-item img{width:100%;height:100%;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
+.img-preview-item .remove-img-btn{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:#fff;border:none;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.img-preview-item .remove-img-btn:hover{background:var(--rust)}
+.img-preview-item .primary-badge{position:absolute;bottom:-2px;left:-2px;background:var(--rust);color:#fff;font-size:9px;padding:1px 5px;border-radius:6px;font-weight:600}
+.upload-hint{font-size:12px;color:var(--muted);margin-top:6px}
 .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
 .btn-cancel{padding:10px 20px;border:1px solid var(--border);border-radius:var(--radius);background:transparent;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;color:var(--muted)}
 .btn-cancel:hover{background:var(--cream)}
@@ -142,6 +151,19 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
 /* DETAIL MODAL */
 .detail-img{width:100%;max-height:280px;object-fit:cover;border-radius:var(--radius);margin-bottom:1.25rem}
 .detail-img-placeholder{width:100%;height:200px;background:var(--cream);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:64px;margin-bottom:1.25rem}
+
+/* Detail gallery */
+.detail-gallery{margin-bottom:1.25rem}
+.gallery-main{position:relative;width:100%;max-height:320px;border-radius:var(--radius);overflow:hidden;background:var(--cream)}
+.gallery-main img{width:100%;max-height:320px;object-fit:cover;display:block}
+.gallery-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.45);color:#fff;border:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.gallery-nav-btn:hover{background:rgba(0,0,0,0.65)}
+.gallery-nav-prev{left:8px}
+.gallery-nav-next{right:8px}
+.gallery-counter{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,0.55);color:#fff;font-size:11px;padding:2px 8px;border-radius:10px}
+.gallery-thumbs{display:flex;gap:6px;margin-top:8px;overflow-x:auto;padding-bottom:2px}
+.gallery-thumbs img{width:54px;height:54px;object-fit:cover;border-radius:6px;cursor:pointer;border:2px solid transparent;flex-shrink:0;opacity:0.75}
+.gallery-thumbs img.active{border-color:var(--rust);opacity:1}
 .detail-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:4px}
 .detail-author{font-size:15px;color:var(--muted);margin-bottom:1rem}
 .detail-price{font-size:28px;font-weight:700;color:var(--rust);margin-bottom:1rem}
@@ -237,6 +259,10 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
   .acad-fields .form-group input{padding:11px 12px;font-size:14px}
 
   #btnTypeGeneral,#btnTypeAcademic{padding:11px 8px!important;font-size:12.5px!important}
+
+  .img-preview-item{width:72px;height:72px}
+  .gallery-main,.gallery-main img{max-height:240px}
+  .gallery-thumbs img{width:46px;height:46px}
 }
 @media(max-width:480px){.class-cards{grid-template-columns:repeat(2,1fr)}.class-card{padding:14px 8px 11px}}
 </style>
@@ -442,11 +468,12 @@ nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 1.5r
         <textarea id="fDesc" placeholder="Notes about condition, missing pages, highlights…"></textarea>
       </div>
       <div class="form-group full">
-        <label>Book image <span>*</span></label>
-        <input type="file" id="imageFile" accept="image/*">
-        <button type="button" class="btn-secondary" onclick="uploadToCloudinary()" style="margin-top:10px">📤 Upload Image</button>
+        <label>Book images <span>*</span></label>
+        <input type="file" id="imageFile" accept="image/*" multiple>
+        <button type="button" class="btn-secondary" onclick="uploadToCloudinary()" style="margin-top:10px">📤 Upload Image(s)</button>
+        <div class="upload-hint">First image becomes the cover photo. Add as many as you like (front, back, inside pages).</div>
         <input type="hidden" id="fImage">
-        <img id="imgPreview" class="img-preview"/>
+        <div class="img-preview-grid" id="imgPreviewGrid"></div>
       </div>
     </div>
     <div class="form-actions">
@@ -570,26 +597,42 @@ function showToast(msg){
 
 function showLoading(v){ document.getElementById("loadingOverlay").classList.toggle("open",v); }
 
-function previewImage(url){
-  const img = document.getElementById("imgPreview");
-  img.src = url;
-  img.style.display = "block";
+let currentImages = []; // array of uploaded image URLs for the open sell/edit form
+
+function renderImagePreviewGrid(){
+  const grid = document.getElementById("imgPreviewGrid");
+  document.getElementById("fImage").value = currentImages.join(",");
+  grid.innerHTML = currentImages.map((url,i)=>`
+    <div class="img-preview-item">
+      <img src="${esc(url)}" alt="preview ${i+1}">
+      ${i===0?'<span class="primary-badge">Cover</span>':''}
+      <button type="button" class="remove-img-btn" onclick="removeImage(${i})" title="Remove">✕</button>
+    </div>
+  `).join("");
 }
 
+window.removeImage = function(index){
+  currentImages.splice(index,1);
+  renderImagePreviewGrid();
+};
+
 window.uploadToCloudinary = async function(){
-  const file = document.getElementById("imageFile").files[0];
-  if(!file){ showToast("Select an image first"); return; }
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "ml_default");
+  const files = Array.from(document.getElementById("imageFile").files);
+  if(!files.length){ showToast("Select image(s) first"); return; }
   try{
-    showToast("Uploading image…");
-    const res = await fetch("https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",{method:"POST",body:formData});
-    const data = await res.json();
-    if(data.error){ showToast(data.error.message); return; }
-    document.getElementById("fImage").value = data.secure_url;
-    previewImage(data.secure_url);
-    showToast("Image uploaded ✅");
+    showToast(files.length>1 ? `Uploading ${files.length} images…` : "Uploading image…");
+    for(const file of files){
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default");
+      const res = await fetch("https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload",{method:"POST",body:formData});
+      const data = await res.json();
+      if(data.error){ showToast(data.error.message); continue; }
+      currentImages.push(data.secure_url);
+    }
+    renderImagePreviewGrid();
+    document.getElementById("imageFile").value = "";
+    showToast("Image(s) uploaded ✅");
   }catch(e){ console.error(e); showToast("Upload failed"); }
 };
 
@@ -692,8 +735,9 @@ function openSellModal(id){
       document.getElementById("fPrice").value = b.price||"";
       document.getElementById("fLocation").value = b.location||"";
       document.getElementById("fDesc").value = b.description||"";
-      document.getElementById("fImage").value = b.image||"";
-      if(b.image) previewImage(b.image);
+      // Backward compatible: old listings have single `image`, new ones have `images` array
+      currentImages = Array.isArray(b.images) ? [...b.images] : (b.image ? [b.image] : []);
+      renderImagePreviewGrid();
 
       setBookType(b.bookType||"general");
       if(b.bookType==="academic"){
@@ -712,9 +756,8 @@ function openSellModal(id){
     });
     document.getElementById("fGenre").value="";
     document.getElementById("fCondition").value="";
-    document.getElementById("fImage").value="";
-    const p = document.getElementById("imgPreview");
-    p.src=""; p.style.display="none";
+    currentImages = [];
+    renderImagePreviewGrid();
     document.getElementById("imageFile").value="";
     setBookType("general");
   }
@@ -753,8 +796,7 @@ async function submitBook(){
     };
   }
 
-  const image = document.getElementById("fImage").value;
-  if(!image){ showToast("Please upload a book image"); return; }
+  if(!currentImages.length){ showToast("Please upload at least one book image"); return; }
 
   const btn = document.getElementById("submitBtn");
   btn.disabled=true; btn.textContent="Saving…";
@@ -765,7 +807,8 @@ async function submitBook(){
     sellerName, contact,
     location: document.getElementById("fLocation").value.trim(),
     description: document.getElementById("fDesc").value.trim(),
-    image,
+    images: currentImages,
+    image: currentImages[0], // kept for backward compatibility with any older code paths
     sellerId: getSellerId(),
     ...academicData,
     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
@@ -801,6 +844,18 @@ async function deleteBook(id){
 function condLabel(c){ return {new:"Like new",good:"Good",fair:"Fair"}[c]||c; }
 function condClass(c){ return "cond-"+c; }
 
+// Returns the full list of image URLs for a book, supporting both the new
+// `images` array and older listings that only have a single `image` field.
+function getBookImages(b){
+  if(Array.isArray(b.images) && b.images.length) return b.images;
+  if(b.image) return [b.image];
+  return [];
+}
+function getCoverImage(b){
+  const imgs = getBookImages(b);
+  return imgs.length ? imgs[0] : null;
+}
+
 function renderBooks(){
   const q = document.getElementById("searchInput").value.toLowerCase();
   const cond = document.getElementById("filterCond").value;
@@ -829,7 +884,7 @@ function renderBooks(){
   }
   grid.innerHTML = res.map(b=>`
     <div class="book-card" onclick="openDetail('${b.id}')">
-      ${b.image?`<img class="book-cover" src="${esc(b.image)}" alt="${esc(b.title)}" loading="lazy">`:`<div class="book-cover-placeholder">📗</div>`}
+      ${getCoverImage(b)?`<img class="book-cover" src="${esc(getCoverImage(b))}" alt="${esc(b.title)}" loading="lazy">`:`<div class="book-cover-placeholder">📗</div>`}
       <div class="book-body">
         ${b.bookType==="academic"?`<span class="acad-badge">🎓 ${esc(b.classYear||'Academic')}</span>`:""}
         <div class="book-title">${esc(b.title)}</div>
@@ -861,12 +916,48 @@ function updateStats(){
   document.getElementById("stat-genres").textContent = new Set(allBooks.map(b=>b.genre).filter(Boolean)).size;
 }
 
+let galleryImages = [];
+let galleryIndex = 0;
+
+function renderGalleryMain(){
+  const main = document.getElementById("galleryMain");
+  if(!main) return;
+  main.innerHTML = `
+    <img src="${esc(galleryImages[galleryIndex])}" alt="Book image ${galleryIndex+1}">
+    ${galleryImages.length>1?`
+      <button class="gallery-nav-btn gallery-nav-prev" onclick="galleryGo(-1)">‹</button>
+      <button class="gallery-nav-btn gallery-nav-next" onclick="galleryGo(1)">›</button>
+      <span class="gallery-counter">${galleryIndex+1} / ${galleryImages.length}</span>
+    `:""}
+  `;
+  document.querySelectorAll(".gallery-thumbs img").forEach((t,i)=> t.classList.toggle("active", i===galleryIndex));
+}
+window.galleryGo = function(dir){
+  galleryIndex = (galleryIndex + dir + galleryImages.length) % galleryImages.length;
+  renderGalleryMain();
+};
+window.galleryJump = function(i){ galleryIndex = i; renderGalleryMain(); };
+
 function openDetail(id){
   const b = allBooks.find(x=>x.id===id); if(!b) return;
   const isMine = b.sellerId===getSellerId();
   const isAcad = b.bookType==="academic";
+  galleryImages = getBookImages(b);
+  galleryIndex = 0;
+
+  const galleryHtml = galleryImages.length ? `
+    <div class="detail-gallery">
+      <div class="gallery-main" id="galleryMain"></div>
+      ${galleryImages.length>1?`
+        <div class="gallery-thumbs">
+          ${galleryImages.map((url,i)=>`<img src="${esc(url)}" onclick="galleryJump(${i})" alt="thumbnail ${i+1}">`).join("")}
+        </div>
+      `:""}
+    </div>
+  ` : `<div class="detail-img-placeholder">📗</div>`;
+
   document.getElementById("detailContent").innerHTML=`
-    ${b.image?`<img class="detail-img" src="${esc(b.image)}" alt="${esc(b.title)}">`:`<div class="detail-img-placeholder">📗</div>`}
+    ${galleryHtml}
     ${isAcad?`<span class="acad-badge">🎓 ${esc(b.classYear||'Academic')}</span>`:""}
     <div class="detail-title">${esc(b.title)}</div>
     <div class="detail-author">by ${esc(b.author)}</div>
@@ -891,6 +982,7 @@ function openDetail(id){
       <button class="btn-cancel" onclick="closeDetail()" style="margin-left:auto">Close</button>
     </div>
   `;
+  if(galleryImages.length) renderGalleryMain();
   document.getElementById("detailOverlay").classList.add("open");
 }
 function closeDetail(){ document.getElementById("detailOverlay").classList.remove("open"); }
@@ -905,7 +997,7 @@ function renderMyBooks(){
   }
   el.innerHTML = mine.map(b=>`
     <div class="my-book-row">
-      <div class="my-book-thumb">${b.image?`<img src="${esc(b.image)}" alt="${esc(b.title)}">`:"📗"}</div>
+      <div class="my-book-thumb">${getCoverImage(b)?`<img src="${esc(getCoverImage(b))}" alt="${esc(b.title)}">`:"📗"}</div>
       <div class="my-book-info">
         <div class="my-book-title">${esc(b.title)}</div>
         <div class="my-book-sub">${esc(b.author)} · ${esc(b.genre)} · <span class="cond-tag ${condClass(b.condition)}" style="font-size:11px">${condLabel(b.condition)}</span></div>
