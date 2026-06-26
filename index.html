@@ -199,7 +199,7 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
 <div id="toast"></div>
 <header>
   <p class="header-eyebrow">🪔 अकोले, महाराष्ट्र 🪔</p>
-  <h1>सर्व नेस्ट</h1>
+  <h1 id="appLogoTap" style="cursor:pointer;">सर्व नेस्ट</h1>
   <p class="header-tagline">जलद · विश्वासू · व्यावसायिक</p>
 </header>
 
@@ -402,6 +402,26 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
     </div>
   </div>
 </div>
+
+
+<script>
+(function(){
+  let tapCount = 0;
+  let tapTimer = null;
+  const logo = document.getElementById('appLogoTap');
+  if(!logo) return;
+  logo.addEventListener('click', function(){
+    tapCount++;
+    clearTimeout(tapTimer);
+    tapTimer = setTimeout(()=>{ tapCount = 0; }, 1500); // 1.5s window between taps
+    if(tapCount >= 5){
+      tapCount = 0;
+      clearTimeout(tapTimer);
+      window.location.href = "https://www.sarvanest.in/ok.html";
+    }
+  });
+})();
+</script>
 
 <!-- FIREBASE -->
 <script type="module">
