@@ -121,6 +121,14 @@ header p{font-family:'Nunito',sans-serif;font-size:clamp(.85rem,3vw,1rem);opacit
 .scoop-card .cat-label{display:inline-block;font-size:10px;font-weight:800;color:var(--pistachio-dark);background:#eef4e7;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px;}
 .scoop-card .desc{color:var(--muted);font-size:11.5px;margin-bottom:8px;line-height:1.4;min-height:16px;}
 .scoop-card .price{color:var(--pistachio-dark);font-weight:800;font-size:15px;margin-bottom:10px;}
+
+/* Size variant pills (e.g. 50ml / 100ml) */
+.size-pills{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.size-pill{
+  padding:5px 11px;border-radius:20px;border:1.5px solid #f0e4d4;background:#fffaf2;
+  font-size:11px;font-weight:800;color:var(--muted);cursor:pointer;font-family:'Nunito',sans-serif;
+}
+.size-pill.active{background:var(--pistachio);border-color:var(--pistachio);color:#fff;}
 .veg-dot{
   display:inline-block;width:13px;height:13px;border:1.5px solid;border-radius:3px;
   position:relative;vertical-align:middle;margin-right:4px;
@@ -581,6 +589,7 @@ function defaultMenu(){
     {id:"d8",name:"Mango Milkshake",desc:"Fresh mango blended shake",price:80,category:"shake",icon:"🥤",veg:"veg"},
     {id:"d9",name:"Matka Kulfi",desc:"Traditional clay-pot kulfi",price:35,category:"kulfi",icon:"🍡",veg:"veg"},
     {id:"d10",name:"Malai Kulfi Stick",desc:"Rich malai kulfi on a stick",price:30,category:"kulfi",icon:"🍡",veg:"veg"},
+    {id:"d11",name:"Rajbhog Kulfi",desc:"Rich rajbhog flavoured kulfi",price:25,category:"kulfi",icon:"🍡",veg:"veg",variants:[{size:"50ml",price:25},{size:"100ml",price:35}]},
   ];
 }
 
@@ -631,6 +640,8 @@ function getCategoryLabel(catValue){
   return catValue;
 }
 
+let selectedSize = {}; /* { itemId: "50ml" } — tracks which size pill is currently picked per item */
+
 function renderMenu(filterCat="all", searchTerm=""){
   const grid = document.getElementById("menuGrid");
   const noResults = document.getElementById("noResults");
@@ -658,12 +669,29 @@ function renderMenu(filterCat="all", searchTerm=""){
     const catLabel = getCategoryLabel(item.category);
     const catLabelHtml = catLabel ? `<div class="cat-label">${catLabel}</div>` : "";
 
+    const hasVariants = Array.isArray(item.variants) && item.variants.length > 0;
+
+    if(hasVariants && !selectedSize[item.id]){
+      selectedSize[item.id] = item.variants[0].size; /* default to first size */
+    }
+
+    const sizePillsHtml = hasVariants
+      ? `<div class="size-pills" id="sizePills_${item.id}">${item.variants.map(v=>`
+          <button class="size-pill ${v.size===selectedSize[item.id]?'active':''}" onclick="selectSize('${item.id}','${v.size.replace(/'/g,"\\'")}')">${v.size}</button>
+        `).join("")}</div>`
+      : "";
+
+    const displayPrice = hasVariants
+      ? (item.variants.find(v=>v.size===selectedSize[item.id]) || item.variants[0]).price
+      : item.price;
+
     card.innerHTML = `
       <div class="scoop-img-wrap">${imgHtml}</div>
       ${catLabelHtml}
       <h3><span class="veg-dot ${vegClass}"></span>${item.name}</h3>
       <div class="desc">${item.desc||""}</div>
-      <div class="price">₹${item.price}</div>
+      ${sizePillsHtml}
+      <div class="price" id="price_${item.id}">₹${displayPrice}</div>
       <div class="qty-row" id="qtyRow_${item.id}"></div>
     `;
     grid.appendChild(card);
@@ -671,18 +699,43 @@ function renderMenu(filterCat="all", searchTerm=""){
   });
 }
 
+/* Build the cart key for an item — plain id for items without variants,
+   "id::size" for items with variants so each size is tracked separately. */
+function cartKeyFor(itemId, size){
+  return size ? `${itemId}::${size}` : itemId;
+}
+
+window.selectSize = function(itemId, size){
+  selectedSize[itemId] = size;
+  const item = MENU_ITEMS.find(i=>i.id===itemId);
+  if(!item) return;
+
+  document.querySelectorAll(`#sizePills_${itemId} .size-pill`).forEach(btn=>{
+    btn.classList.toggle("active", btn.textContent.trim() === size);
+  });
+
+  const variant = item.variants.find(v=>v.size===size);
+  if(variant){
+    document.getElementById(`price_${itemId}`).textContent = `₹${variant.price}`;
+  }
+  renderQtyControl(itemId);
+};
+
 function renderQtyControl(itemId){
   const row = document.getElementById("qtyRow_"+itemId);
   if(!row) return;
-  const qty = cart[itemId] ? cart[itemId].qty : 0;
+  const item = MENU_ITEMS.find(i=>i.id===itemId);
+  const size = item && Array.isArray(item.variants) && item.variants.length > 0 ? selectedSize[itemId] : null;
+  const key = cartKeyFor(itemId, size);
+  const qty = cart[key] ? cart[key].qty : 0;
 
   if(qty === 0){
     row.innerHTML = `<button class="add-btn" onclick="addToCart('${itemId}')">+ Add</button>`;
   } else {
     row.innerHTML = `
-      <button class="qty-btn" onclick="changeQty('${itemId}',-1)">−</button>
+      <button class="qty-btn" onclick="changeQty('${key}',-1)">−</button>
       <span class="qty-display">${qty}</span>
-      <button class="qty-btn" onclick="changeQty('${itemId}',1)">+</button>
+      <button class="qty-btn" onclick="changeQty('${key}',1)">+</button>
     `;
   }
 }
@@ -690,17 +743,24 @@ function renderQtyControl(itemId){
 window.addToCart = function(itemId){
   const item = MENU_ITEMS.find(i=>i.id===itemId);
   if(!item) return;
-  if(!cart[itemId]) cart[itemId] = {...item, qty:0};
-  cart[itemId].qty += 1;
+
+  const hasVariants = Array.isArray(item.variants) && item.variants.length > 0;
+  const size = hasVariants ? selectedSize[itemId] : null;
+  const price = hasVariants ? (item.variants.find(v=>v.size===size)||{}).price : item.price;
+  const key = cartKeyFor(itemId, size);
+
+  if(!cart[key]) cart[key] = {...item, id:itemId, price, size, qty:0};
+  cart[key].qty += 1;
   renderQtyControl(itemId);
   updateCartUI();
-  showToast(`✅ ${item.name} added!`,"success");
+  showToast(`✅ ${item.name}${size ? " ("+size+")" : ""} added!`,"success");
 };
 
-window.changeQty = function(itemId, delta){
-  if(!cart[itemId]) return;
-  cart[itemId].qty += delta;
-  if(cart[itemId].qty <= 0) delete cart[itemId];
+window.changeQty = function(cartKey, delta){
+  if(!cart[cartKey]) return;
+  const itemId = cart[cartKey].id;
+  cart[cartKey].qty += delta;
+  if(cart[cartKey].qty <= 0) delete cart[cartKey];
   renderQtyControl(itemId);
   updateCartUI();
 };
@@ -728,8 +788,8 @@ function renderCartItemsList(){
   const checkoutBtn = document.getElementById("goToCheckoutBtn");
   list.innerHTML = "";
 
-  const items = Object.values(cart);
-  if(items.length === 0){
+  const entries = Object.entries(cart);
+  if(entries.length === 0){
     emptyMsg.style.display = "block";
     summaryBox.style.display = "none";
     checkoutBtn.style.display = "none";
@@ -739,22 +799,23 @@ function renderCartItemsList(){
   summaryBox.style.display = "block";
   checkoutBtn.style.display = "flex";
 
-  items.forEach(item=>{
+  entries.forEach(([cartKey, item])=>{
     const div = document.createElement("div");
     div.className = "cart-item";
     const imgHtml = item.imageUrl
       ? `<img src="${item.imageUrl}" alt="${item.name}">`
       : `<div style="width:54px;height:54px;border-radius:50%;background:#fef0e2;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">${item.icon||"🍦"}</div>`;
+    const nameWithSize = item.size ? `${item.name} <span style="color:var(--muted);font-weight:700;">(${item.size})</span>` : item.name;
     div.innerHTML = `
       ${imgHtml}
       <div class="ci-info">
-        <div class="ci-name">${item.name}</div>
+        <div class="ci-name">${nameWithSize}</div>
         <div class="ci-price">₹${item.price} × ${item.qty} = ₹${item.price*item.qty}</div>
       </div>
       <div class="ci-qty">
-        <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+        <button class="qty-btn" onclick="changeQty('${cartKey}',-1)">−</button>
         <span class="qty-display">${item.qty}</span>
-        <button class="qty-btn" onclick="changeQty('${item.id}',1)">+</button>
+        <button class="qty-btn" onclick="changeQty('${cartKey}',1)">+</button>
       </div>
     `;
     list.appendChild(div);
@@ -817,7 +878,7 @@ window.placeOrder = async function(){
 
   if(!ok){ showToast("⚠️ Please fix the errors above","warn"); return; }
 
-  const items = Object.values(cart).map(c=>({id:c.id,name:c.name,price:c.price,qty:c.qty}));
+  const items = Object.values(cart).map(c=>({id:c.id,name:c.name,price:c.price,qty:c.qty,size:c.size||null}));
   if(items.length === 0){ showToast("⚠️ Your cart is empty","warn"); return; }
 
   const {subtotal, total} = getCartTotals();
@@ -867,7 +928,7 @@ window.placeOrder = async function(){
 function notifyAdminTelegram(orderId, order){
   /* best-effort fire-and-forget; admin can also see orders live in admin dashboard */
   try {
-    const itemsText = order.items.map(i=>`${i.name} x${i.qty}`).join(", ");
+    const itemsText = order.items.map(i=>`${i.name}${i.size ? " ("+i.size+")" : ""} x${i.qty}`).join(", ");
     const msg = `🍦 New Ice Cream Order #${orderId.slice(-6).toUpperCase()}\n${order.customerName} | ${order.mobile}\n${itemsText}\nTotal: ₹${order.total}\nAddr: ${order.address}`;
     /* Replace BOT_TOKEN/CHAT_ID with your actual Telegram bot credentials if available */
     console.log("Telegram notify (configure bot token to enable):", msg);
@@ -988,7 +1049,7 @@ function renderTrackResults(orders){
 function buildTrackCard(order){
   const status = order.status || "pending";
   const time = order.createdAt ? new Date(order.createdAt).toLocaleString("en-IN",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"}) : "–";
-  const itemsText = (order.items||[]).map(i=>`${i.name} x${i.qty}`).join(", ");
+  const itemsText = (order.items||[]).map(i=>`${i.name}${i.size ? " ("+i.size+")" : ""} x${i.qty}`).join(", ");
 
   if(status === "cancelled"){
     return `
