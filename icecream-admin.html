@@ -295,8 +295,8 @@ select.status-select{
     <div class="lg-icon">🍦</div>
     <h2>Admin Login</h2>
     <p>Sarva-Nest Ice Cream Parlour</p>
-    <input type="email" id="admin_email" placeholder="Admin Email" autocomplete="email">
-    <input type="password" id="admin_password" placeholder="Password" autocomplete="current-password">
+    <input type="email" id="admin_email" placeholder="Admin Email" autocomplete="email" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('admin_password').focus();}">
+    <input type="password" id="admin_password" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter'){event.preventDefault();adminLogin();}">
     <button onclick="adminLogin()" id="adminLoginBtn">Login to Dashboard</button>
     <div class="login-err" id="loginErr"></div>
   </div>
@@ -493,8 +493,12 @@ select.status-select{
       <label>Size Variants (optional)</label>
       <div id="variantsList"></div>
       <button type="button" class="add-variant-btn" onclick="addVariantRow()">➕ Add Size Option</button>
-      <p class="variants-hint">e.g. Size: "50ml", Price: 25 — add as many sizes as needed. If you add variants, customers pick a size instead of using the price above.</p>
+      <p class="variants-hint">e.g. Size: "50ml", Price: 25 — add as many sizes as needed. If you add variants, customers pick a size instead of using the price above. Tap the field to pick from sizes/prices you've used before.</p>
     </div>
+
+    <!-- Suggestions auto-built from sizes/prices used across existing menu items -->
+    <datalist id="sizeSuggestions"></datalist>
+    <datalist id="priceSuggestions"></datalist>
 
     <div class="form-group">
       <label>Description</label>
@@ -613,6 +617,7 @@ function startListeners(){
     snap.forEach(d=> allMenuItems.push({id:d.id, ...d.data()}));
     renderAdminMenu();
     syncCategoryOptions();
+    syncVariantSuggestions();
   }, (err)=>{
     console.error("Menu listener error:", err);
   });
@@ -667,7 +672,7 @@ function renderDashboard(){
       <tr>
         <td>#${o.id.slice(-6).toUpperCase()}</td>
         <td>${o.customerName||"–"}</td>
-        <td class="order-items-cell">${(o.items||[]).map(i=>i.name+" x"+i.qty).join(", ")}</td>
+        <td class="order-items-cell">${(o.items||[]).map(i=>i.name+(i.size?" ("+i.size+")":"")+" x"+i.qty).join(", ")}</td>
         <td>₹${o.total||0}</td>
         <td><span class="status-badge status-${o.status||"pending"}">${statusLabel(o.status)}</span></td>
       </tr>
@@ -699,7 +704,7 @@ function renderOrdersTable(){
       <tr>
         <td>#${o.id.slice(-6).toUpperCase()}</td>
         <td>${o.customerName||"–"}<br><span style="color:var(--muted);font-size:11px;">${o.mobile||""}</span></td>
-        <td class="order-items-cell">${(o.items||[]).map(i=>i.name+" x"+i.qty).join(", ")}</td>
+        <td class="order-items-cell">${(o.items||[]).map(i=>i.name+(i.size?" ("+i.size+")":"")+" x"+i.qty).join(", ")}</td>
         <td class="order-items-cell">${o.address||"–"}</td>
         <td>₹${o.total||0}</td>
         <td>
@@ -802,6 +807,29 @@ function syncCategoryOptions(){
   });
 }
 
+/* Builds the size/price suggestion dropdowns from every variant ever used
+   across the menu, so repeated values like "50ml" / 25 / 35 can be picked
+   with one click instead of retyped each time. */
+function syncVariantSuggestions(){
+  const sizeList = document.getElementById("sizeSuggestions");
+  const priceList = document.getElementById("priceSuggestions");
+
+  const sizes = new Set();
+  const prices = new Set();
+
+  allMenuItems.forEach(item=>{
+    if(Array.isArray(item.variants)){
+      item.variants.forEach(v=>{
+        if(v.size) sizes.add(v.size);
+        if(v.price) prices.add(v.price);
+      });
+    }
+  });
+
+  sizeList.innerHTML = Array.from(sizes).map(s=>`<option value="${s}"></option>`).join("");
+  priceList.innerHTML = Array.from(prices).sort((a,b)=>a-b).map(p=>`<option value="${p}"></option>`).join("");
+}
+
 window.handleCategoryChange = function(){
   const select = document.getElementById("item_category");
   const newCatGroup = document.getElementById("newCategoryGroup");
@@ -840,8 +868,8 @@ window.addVariantRow = function(sizeVal="", priceVal=""){
   row.className = "variant-row";
   row.id = rowId;
   row.innerHTML = `
-    <input type="text" class="v-size" placeholder="e.g. 50ml" value="${sizeVal}">
-    <input type="number" class="v-price" placeholder="₹ Price" min="0" value="${priceVal}">
+    <input type="text" class="v-size" placeholder="e.g. 50ml" value="${sizeVal}" list="sizeSuggestions">
+    <input type="number" class="v-price" placeholder="₹ Price" min="0" value="${priceVal}" list="priceSuggestions">
     <button type="button" class="v-remove" onclick="document.getElementById('${rowId}').remove()">✕</button>
   `;
   list.appendChild(row);
@@ -1154,6 +1182,43 @@ document.getElementById("orderFilterTabs").addEventListener("click",(e)=>{
 });
 
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeMenuModal(); });
+
+/* ── ENTER KEY MOVES TO NEXT FIELD (inside the Add/Edit Menu Item modal) ──
+   Pressing Enter in any input/select jumps focus to the next focusable
+   field in the form instead of submitting or doing nothing. The
+   description textarea is skipped (multi-line — Enter should add a new
+   line there). Pressing Enter in the very last field clicks Save. */
+document.getElementById("menuModalOverlay").addEventListener("keydown",(e)=>{
+  if(e.key !== "Enter") return;
+
+  const tag = e.target.tagName;
+  if(tag === "TEXTAREA") return; /* allow normal newlines in description */
+  if(e.target.id === "saveItemBtn") return;
+
+  e.preventDefault();
+
+  const modalBox = document.querySelector("#menuModalOverlay .modal-box");
+  const focusable = Array.from(
+    modalBox.querySelectorAll('input:not([type="hidden"]):not([type="file"]), select, textarea, #saveItemBtn')
+  ).filter(el => el.offsetParent !== null); /* only currently visible fields */
+
+  const currentIndex = focusable.indexOf(e.target);
+  if(currentIndex === -1) return;
+
+  const next = focusable[currentIndex + 1];
+  if(next){
+    if(next.id === "saveItemBtn"){
+      next.click();
+    } else {
+      next.focus();
+      if(typeof next.select === "function" && (next.type === "text" || next.type === "number")) next.select();
+    }
+  } else {
+    document.getElementById("saveItemBtn").click();
+  }
+});
 </script>
 </body>
 </html>
+
+
