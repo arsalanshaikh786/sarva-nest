@@ -127,7 +127,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .tpill{font-size:.6rem;padding:1px 6px;border-radius:50px;font-weight:600}
 .tv{background:#E8F5E9;color:#2E7D32}.tn{background:#FFF1EB;color:var(--brand)}.tb{background:#FFF3E0;color:#E65100}
 .rpill{font-size:.63rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:2px 7px;font-weight:600}
-.food-item-actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .food-price-big{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;flex-shrink:0}
 /* ORDERS */
 .order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
@@ -158,7 +157,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .modal-head{padding:1rem 1.25rem;border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1}
 .modal-head h3{font-family:'Playfair Display',serif;font-size:1rem}
 .modal-close{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--mut);padding:4px;border-radius:6px}
-.modal-body{padding:1rem 1.25rem}
 .empty-st{text-align:center;padding:2.5rem 1rem;color:var(--mut)}
 .empty-st i{font-size:2.2rem;display:block;margin-bottom:.4rem;opacity:.3}
 .empty-st p{font-size:.82rem}
@@ -181,9 +179,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 /* SETTINGS INFO */
 .settings-info{background:var(--bl);border:1px solid rgba(232,82,26,.2);border-radius:10px;padding:.75rem 1rem;font-size:.78rem;color:var(--brand);margin-bottom:1rem;display:flex;align-items:flex-start;gap:7px;line-height:1.45}
 
-/* ══════════════════════════════════════════
-   BANNER SECTION STYLES
-══════════════════════════════════════════ */
+/* ══ PRICE DROPDOWN ══ */
+.price-row{display:flex;gap:.4rem;align-items:stretch}
+.price-row input{flex:1}
+.price-quick-select{padding:.5rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;outline:none;background:#fff;-webkit-appearance:none;color:var(--mut);min-width:90px}
+.price-quick-select:focus{border-color:var(--brand)}
+
+/* ══ VEG TOGGLE BUTTON ══ */
+.veg-toggle-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2px}
+.veg-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.veg-toggle-btn.active-veg{background:#E8F5E9;border-color:#66BB6A;color:#2E7D32}
+.veg-toggle-btn.active-nonveg{background:#FFF1EB;border-color:#E8521A;color:#C03E10}
+.bestseller-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.bestseller-toggle-btn.active{background:#FFF3E0;border-color:#FFA726;color:#E65100}
+.spicy-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.spicy-toggle-btn.active{background:#FFEBEE;border-color:#EF5350;color:#C62828}
+
+/* ══ BANNERS ══ */
 .banner-list{display:flex;flex-direction:column;gap:.75rem;margin-top:.5rem}
 .banner-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden;display:flex;flex-direction:column}
 .banner-preview-strip{height:80px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
@@ -205,8 +217,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .banner-status.inactive{background:#F5F5F5;color:#9E9E9E}
 .banner-card-actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .color-preview{width:20px;height:20px;border-radius:4px;border:1px solid var(--bdr);display:inline-block;flex-shrink:0;vertical-align:middle}
-
-/* LIVE BANNER PREVIEW BOX */
 .live-banner-preview{border-radius:12px;overflow:hidden;margin-top:.5rem;height:120px;position:relative;display:flex;align-items:center;cursor:default;user-select:none}
 .lbp-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
 .lbp-overlay{position:absolute;inset:0}
@@ -301,12 +311,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
     <input type="hidden" id="restEditId"/>
     <div class="form-grid">
-      <div class="fg"><label>Name *</label><input id="rName" placeholder="e.g. Spice Garden" autocapitalize="words"/></div>
-      <div class="fg"><label>Cuisine *</label><input id="rCuisine" placeholder="e.g. North Indian" autocapitalize="words"/></div>
-      <div class="fg"><label>Area</label><input id="rArea" placeholder="e.g. Koregaon Park" autocapitalize="words"/></div>
-      <div class="fg"><label>Delivery Time</label><input id="rTime" placeholder="e.g. 30–40 min"/></div>
-      <div class="fg"><label>Rating</label><input type="number" id="rRating" placeholder="4.5" min="1" max="5" step="0.1"/></div>
-      <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric"/></div>
+      <div class="fg"><label>Name *</label><input id="rName" placeholder="e.g. Spice Garden" autocapitalize="words" data-next="rCuisine"/></div>
+      <div class="fg"><label>Cuisine *</label><input id="rCuisine" placeholder="e.g. North Indian" autocapitalize="words" data-next="rArea"/></div>
+      <div class="fg"><label>Area</label><input id="rArea" placeholder="e.g. Koregaon Park" autocapitalize="words" data-next="rTime"/></div>
+      <div class="fg"><label>Delivery Time</label><input id="rTime" placeholder="e.g. 30–40 min" data-next="rRating"/></div>
+      <div class="fg"><label>Rating</label><input type="number" id="rRating" placeholder="4.5 (optional)" min="1" max="5" step="0.1" data-next="rPhone"/></div>
+      <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric" data-next="rTags"/></div>
       <div class="fg full">
         <label>Cover Image</label>
         <div class="img-search-row"><input type="text" id="rImgQuery" placeholder="Search: e.g. Spice Garden restaurant"/><button onclick="searchImages('r','rImgQuery','rImgResults','rImgSearchBtn')" id="rImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
@@ -315,7 +325,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <div class="img-url-row"><span class="img-url-label">URL:</span><input type="url" id="rImage" placeholder="https://…" oninput="prvImg('rPrv',this.value)"/></div>
         <img id="rPrv" class="img-preview"/>
       </div>
-      <div class="fg full"><label>Tags (comma separated)</label><input id="rTags" placeholder="Biryani, Curry, Tandoor"/></div>
+      <div class="fg full"><label>Tags (comma separated)</label><input id="rTags" placeholder="Biryani, Curry, Tandoor" data-next=""/></div>
       <div class="fg row full"><input type="checkbox" id="rOpen" checked/><label for="rOpen">Currently Open</label></div>
       <div class="fg row full"><input type="checkbox" id="rPop"/><label for="rPop">Mark as Popular 🔥</label></div>
     </div>
@@ -339,9 +349,50 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
     <input type="hidden" id="foodEditId"/>
     <div class="form-grid">
-      <div class="fg full"><label>Restaurant *</label><select id="fRestId"><option value="">— Select Restaurant —</option></select></div>
-      <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words"/></div>
-      <div class="fg"><label>Price (₹) *</label><input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01"/></div>
+      <div class="fg full"><label>Restaurant *</label><select id="fRestId" onchange="rememberRestaurant()"><option value="">— Select Restaurant —</option></select></div>
+      <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words" data-next="fPrice"/></div>
+      <!-- ══ PRICE WITH QUICK SELECT DROPDOWN ══ -->
+      <div class="fg">
+        <label>Price (₹) *</label>
+        <div class="price-row">
+          <input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01" data-next="fRating"/>
+          <select class="price-quick-select" onchange="if(this.value){document.getElementById('fPrice').value=this.value;this.value=''}" title="Quick price select">
+            <option value="">₹ Quick</option>
+            <option value="29">₹29</option>
+            <option value="39">₹39</option>
+            <option value="49">₹49</option>
+            <option value="59">₹59</option>
+            <option value="69">₹69</option>
+            <option value="79">₹79</option>
+            <option value="89">₹89</option>
+            <option value="99">₹99</option>
+            <option value="109">₹109</option>
+            <option value="119">₹119</option>
+            <option value="129">₹129</option>
+            <option value="149">₹149</option>
+            <option value="169">₹169</option>
+            <option value="179">₹179</option>
+            <option value="199">₹199</option>
+            <option value="229">₹229</option>
+            <option value="249">₹249</option>
+            <option value="279">₹279</option>
+            <option value="299">₹299</option>
+            <option value="329">₹329</option>
+            <option value="349">₹349</option>
+            <option value="379">₹379</option>
+            <option value="399">₹399</option>
+            <option value="449">₹449</option>
+            <option value="499">₹499</option>
+            <option value="549">₹549</option>
+            <option value="599">₹599</option>
+            <option value="649">₹649</option>
+            <option value="699">₹699</option>
+            <option value="799">₹799</option>
+            <option value="899">₹899</option>
+            <option value="999">₹999</option>
+          </select>
+        </div>
+      </div>
       <div class="fg full">
         <label>Category</label>
         <div class="pill-box" id="catPillBox">
@@ -365,14 +416,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <div class="custom-add-row"><input type="text" id="fCategoryCustom" placeholder="Custom category…"/><button type="button" onclick="addCustomCategory()">+ Add</button></div>
         <input type="hidden" id="fCategory"/>
       </div>
-      <div class="fg"><label>Rating</label><input type="number" id="fRating" placeholder="4.5" min="1" max="5" step="0.1" inputmode="decimal"/></div>
-      <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish…"></textarea></div>
+      <div class="fg"><label>Rating (optional)</label><input type="number" id="fRating" placeholder="4.5 (optional)" min="1" max="5" step="0.1" inputmode="decimal" data-next="fDesc"/></div>
+      <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish…" data-next="fImage"></textarea></div>
       <div class="fg full">
         <label>Food Image</label>
         <div class="img-search-row"><input type="text" id="fImgQuery" placeholder="Search: e.g. Butter Chicken"/><button onclick="searchImages('f','fImgQuery','fImgResults','fImgSearchBtn')" id="fImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
         <div class="img-search-note">Image search karo ya neeche URL paste karo</div>
         <div id="fImgResults" class="img-results" style="display:none"></div>
-        <div class="img-url-row"><span class="img-url-label">URL:</span><input type="url" id="fImage" placeholder="https://…" oninput="prvImg('fPrv',this.value)"/></div>
+        <div class="img-url-row"><span class="img-url-label">URL:</span><input type="url" id="fImage" placeholder="https://…" oninput="prvImg('fPrv',this.value)" data-next="fCal"/></div>
         <img id="fPrv" class="img-preview"/>
       </div>
       <div class="fg full">
@@ -387,10 +438,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         </div>
         <input type="text" id="fPrepTime" placeholder="Ya custom likho: e.g. 35–45 min" style="padding:.42rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;width:100%;background:#fff;color:var(--txt)"/>
       </div>
-      <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal"/></div>
-      <div class="fg row full"><input type="checkbox" id="fVeg"/><label for="fVeg">🥦 Vegetarian</label></div>
-      <div class="fg row full"><input type="checkbox" id="fBest"/><label for="fBest">🔥 Bestseller</label></div>
-      <div class="fg row full"><input type="checkbox" id="fSpicy"/><label for="fSpicy">🌶 Spicy</label></div>
+      <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal" data-next=""/></div>
+      <!-- ══ VEG / BESTSELLER / SPICY TOGGLE BUTTONS ══ -->
+      <div class="fg full">
+        <label>Tags</label>
+        <div class="veg-toggle-wrap">
+          <button type="button" class="veg-toggle-btn active-veg" id="vegToggleBtn" onclick="toggleVeg()">🥦 Vegetarian</button>
+          <button type="button" class="bestseller-toggle-btn" id="bestToggleBtn" onclick="toggleBest()">🔥 Bestseller</button>
+          <button type="button" class="spicy-toggle-btn" id="spicyToggleBtn" onclick="toggleSpicy()">🌶 Spicy</button>
+        </div>
+        <!-- Hidden inputs for actual values -->
+        <input type="hidden" id="fVegVal" value="true"/>
+        <input type="hidden" id="fBestVal" value="false"/>
+        <input type="hidden" id="fSpicyVal" value="false"/>
+      </div>
     </div>
     <div class="form-actions">
       <button class="btn-pr" id="foodSaveBtn" onclick="saveFood()"><i class="ti ti-check"></i> Save Food Item</button>
@@ -421,16 +482,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   <div id="ordersList"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     BANNERS / OFFERS SECTION
-══════════════════════════════════════════ -->
+<!-- BANNERS -->
 <div class="sec" id="sec-banners">
   <div id="bannerAlert" class="alert"></div>
   <div class="settings-info">
     <i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i>
     <span>Yahan banners banao — restaurant page, menu page, ya dono jagah dikhaoge. Active banners customer site pe auto-slide honge.</span>
   </div>
-
   <div class="form-card">
     <div class="form-card-title">
       <span id="bannerFormTitle">✨ New Banner / Offer</span>
@@ -438,14 +496,14 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
     <input type="hidden" id="bannerEditId"/>
     <div class="form-grid">
-      <div class="fg"><label>Title *</label><input id="bTitle" placeholder="e.g. 50% Off Today!" autocapitalize="words" oninput="updateBannerPreview()"/></div>
-      <div class="fg"><label>Subtitle</label><input id="bSub" placeholder="e.g. Use code SAVE50" oninput="updateBannerPreview()"/></div>
-      <div class="fg"><label>Badge Text</label><input id="bBadge" placeholder="e.g. LIMITED OFFER" oninput="updateBannerPreview()"/></div>
+      <div class="fg"><label>Title *</label><input id="bTitle" placeholder="e.g. 50% Off Today!" autocapitalize="words" oninput="updateBannerPreview()" data-next="bSub"/></div>
+      <div class="fg"><label>Subtitle</label><input id="bSub" placeholder="e.g. Use code SAVE50" oninput="updateBannerPreview()" data-next="bBadge"/></div>
+      <div class="fg"><label>Badge Text</label><input id="bBadge" placeholder="e.g. LIMITED OFFER" oninput="updateBannerPreview()" data-next="bOrder"/></div>
       <div class="fg"><label>Badge Color</label><input type="color" id="bBadgeColor" value="#E8521A" oninput="updateBannerPreview()"/></div>
       <div class="fg"><label>Background Color</label><input type="color" id="bBgColor" value="#1A1208" oninput="updateBannerPreview()"/></div>
       <div class="fg"><label>Display Order</label><input type="number" id="bOrder" placeholder="1" min="1" value="1" inputmode="numeric"/></div>
       <div class="fg full">
-        <label>Banner Image (optional — dikhega background mein)</label>
+        <label>Banner Image (optional)</label>
         <div class="img-search-row"><input type="text" id="bImgQuery" placeholder="Search: e.g. food offer banner"/><button onclick="searchImages('b','bImgQuery','bImgResults','bImgSearchBtn')" id="bImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
         <div class="img-search-note">Image search karo ya neeche URL paste karo</div>
         <div id="bImgResults" class="img-results" style="display:none"></div>
@@ -463,7 +521,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <input type="checkbox" id="bActive" checked/>
         <label for="bActive">✅ Active (customer site pe dikhega)</label>
       </div>
-      <!-- LIVE PREVIEW -->
       <div class="fg full">
         <label>Live Preview</label>
         <div class="live-banner-preview" id="livePreview">
@@ -482,7 +539,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
       <button class="btn-sec" onclick="resetBannerForm()">Reset</button>
     </div>
   </div>
-
   <div class="sec-head"><div class="sec-title"><i class="ti ti-photo-scan" style="color:var(--brand)"></i> All Banners</div></div>
   <div class="banner-list" id="bannerList"><div class="empty-st"><i class="ti ti-photo-scan"></i><p>No banners yet</p></div></div>
 </div>
@@ -499,7 +555,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div class="form-grid">
       <div class="fg">
         <label>Delivery Fee (₹) *</label>
-        <input type="number" id="sDelFee" placeholder="e.g. 40" min="0" step="1" inputmode="numeric"/>
+        <input type="number" id="sDelFee" placeholder="e.g. 40" min="0" step="1" inputmode="numeric" data-next="sFreeMin"/>
         <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Free delivery se kam order pe yeh charge lagega</span>
       </div>
       <div class="fg">
@@ -544,6 +600,80 @@ const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT="5547663296";
 
 let restaurants=[],foods=[],orders=[],banners=[],mgRestId=null;
+let lastSelectedRestId=''; // ✅ Remember last selected restaurant
+
+// ══════════════════════════════════════════════
+// ✅ ENTER KEY → NEXT FIELD
+// ══════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const el = e.target;
+  // Skip textarea (allow newline), selects, buttons
+  if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.tagName === 'BUTTON') return;
+  if (el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio' || el.type === 'color')) return;
+
+  // Login screen special case
+  if (document.getElementById('loginScreen').style.display !== 'none') { doLogin(); return; }
+
+  const nextId = el.dataset.next;
+  if (nextId) {
+    const nextEl = document.getElementById(nextId);
+    if (nextEl) { e.preventDefault(); nextEl.focus(); }
+  } else {
+    // Auto-find next focusable in form
+    const focusable = [...document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea')].filter(x => !x.disabled && x.offsetParent !== null);
+    const idx = focusable.indexOf(el);
+    if (idx !== -1 && idx < focusable.length - 1) { e.preventDefault(); focusable[idx+1].focus(); }
+  }
+});
+
+// ══════════════════════════════════════════════
+// ✅ VEG / BESTSELLER / SPICY TOGGLES
+// ══════════════════════════════════════════════
+window.toggleVeg = () => {
+  const btn = document.getElementById('vegToggleBtn');
+  const val = document.getElementById('fVegVal');
+  const isVeg = val.value === 'true';
+  val.value = isVeg ? 'false' : 'true';
+  btn.className = 'veg-toggle-btn ' + (isVeg ? 'active-nonveg' : 'active-veg');
+  btn.textContent = isVeg ? '🍗 Non-Veg' : '🥦 Vegetarian';
+};
+window.toggleBest = () => {
+  const btn = document.getElementById('bestToggleBtn');
+  const val = document.getElementById('fBestVal');
+  const isOn = val.value === 'true';
+  val.value = isOn ? 'false' : 'true';
+  btn.classList.toggle('active', !isOn);
+};
+window.toggleSpicy = () => {
+  const btn = document.getElementById('spicyToggleBtn');
+  const val = document.getElementById('fSpicyVal');
+  const isOn = val.value === 'true';
+  val.value = isOn ? 'false' : 'true';
+  btn.classList.toggle('active', !isOn);
+};
+function setVegToggle(isVeg) {
+  document.getElementById('fVegVal').value = isVeg ? 'true' : 'false';
+  const btn = document.getElementById('vegToggleBtn');
+  btn.className = 'veg-toggle-btn ' + (isVeg ? 'active-veg' : 'active-nonveg');
+  btn.textContent = isVeg ? '🥦 Vegetarian' : '🍗 Non-Veg';
+}
+function setBestToggle(isOn) {
+  document.getElementById('fBestVal').value = isOn ? 'true' : 'false';
+  document.getElementById('bestToggleBtn').classList.toggle('active', isOn);
+}
+function setSpicyToggle(isOn) {
+  document.getElementById('fSpicyVal').value = isOn ? 'true' : 'false';
+  document.getElementById('spicyToggleBtn').classList.toggle('active', isOn);
+}
+
+// ══════════════════════════════════════════════
+// ✅ REMEMBER RESTAURANT
+// ══════════════════════════════════════════════
+window.rememberRestaurant = () => {
+  const val = document.getElementById('fRestId').value;
+  if (val) lastSelectedRestId = val;
+};
 
 // AUTH
 window.doLogin=()=>{
@@ -553,7 +683,6 @@ window.doLogin=()=>{
   else document.getElementById('loginErr').style.display='block';
 };
 window.doLogout=()=>{document.getElementById('loginScreen').style.display='flex';};
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')doLogin();});
 
 // SIDEBAR
 window.openSidebar=()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('sbOverlay').classList.add('show');};
@@ -612,6 +741,8 @@ async function loadBanners(){
 function populateRestDropdowns(){
   const opts='<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('fRestId').innerHTML=opts;
+  // ✅ Restore last selected restaurant
+  if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
   const rOpt='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('foodRestFilter').innerHTML=rOpt;
   document.getElementById('orderRestFilter').innerHTML=rOpt;
@@ -625,7 +756,7 @@ window.prvImg=(imgId,url)=>{
 };
 
 // ══════════════════════════════════════════════
-// UNIFIED IMAGE SEARCH
+// IMAGE SEARCH
 // ══════════════════════════════════════════════
 window.searchImages=async(prefix,queryId,resultsId,btnId)=>{
   const q=document.getElementById(queryId).value.trim();
@@ -663,7 +794,7 @@ function showAlert(secId,msg,type='err'){
 }
 
 // ══════════════════════════════════════════════
-// ✨ BANNER LIVE PREVIEW
+// BANNER PREVIEW
 // ══════════════════════════════════════════════
 window.updateBannerPreview=()=>{
   const title=document.getElementById('bTitle')?.value||'Banner Title Yahan Dikhega';
@@ -672,15 +803,11 @@ window.updateBannerPreview=()=>{
   const bgColor=document.getElementById('bBgColor')?.value||'#1A1208';
   const badgeColor=document.getElementById('bBadgeColor')?.value||'#E8521A';
   const imgUrl=document.getElementById('bImage')?.value||'';
-
-  const preview=document.getElementById('livePreview');
-  if(!preview)return;
+  const preview=document.getElementById('livePreview');if(!preview)return;
   preview.style.background=bgColor;
-
   const lbpImg=document.getElementById('lbpImg');
   if(imgUrl&&imgUrl.startsWith('http')){lbpImg.src=imgUrl;lbpImg.style.display='block';}
   else{lbpImg.style.display='none';}
-
   document.getElementById('lbpOverlay').style.background=imgUrl?`linear-gradient(to right,${bgColor}ee,${bgColor}88)`:'';
   document.getElementById('lbpTitle').textContent=title||'Banner Title';
   document.getElementById('lbpSub').textContent=sub;
@@ -690,7 +817,7 @@ window.updateBannerPreview=()=>{
 };
 
 // ══════════════════════════════════════════════
-// ✨ BANNER SAVE / EDIT / DELETE
+// BANNER SAVE / EDIT / DELETE
 // ══════════════════════════════════════════════
 window.saveBanner=async()=>{
   const btn=document.getElementById('bannerSaveBtn');
@@ -717,7 +844,6 @@ window.saveBanner=async()=>{
   }catch(e){showAlert('banner','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Banner';}
 };
-
 window.editBanner=id=>{
   const b=banners.find(x=>x.id===id);if(!b)return;
   document.getElementById('bannerEditId').value=id;
@@ -737,19 +863,16 @@ window.editBanner=id=>{
   updateBannerPreview();
   showSec('banners',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-
 window.deleteBanner=async id=>{
   const b=banners.find(x=>x.id===id);
   if(!confirm(`Delete banner "${b?.title}"?`))return;
   try{await deleteDoc(doc(db,'banners',id));showToast('Deleted');await loadBanners();}
   catch(e){showToast('❌ '+e.message);}
 };
-
 window.toggleBannerActive=async(id,val)=>{
   try{await updateDoc(doc(db,'banners',id),{active:val});showToast(val?'✅ Banner Active':'🔴 Banner Inactive');await loadBanners();}
   catch(e){showToast('❌ '+e.message);}
 };
-
 window.resetBannerForm=()=>{
   document.getElementById('bannerEditId').value='';
   ['bTitle','bSub','bBadge','bImage','bImgQuery'].forEach(id=>document.getElementById(id).value='');
@@ -765,7 +888,6 @@ window.resetBannerForm=()=>{
   document.getElementById('bannerCancelBtn').style.display='none';
   updateBannerPreview();
 };
-
 function renderBannerList(){
   const el=document.getElementById('bannerList');
   if(!banners.length){el.innerHTML='<div class="empty-st"><i class="ti ti-photo-scan"></i><p>No banners yet. Upar se add karo!</p></div>';return;}
@@ -801,10 +923,15 @@ function renderBannerList(){
   }).join('');
 }
 
-// CATEGORY PILLS
-document.addEventListener('change',e=>{if(e.target.classList.contains('cpill'))syncCategoryField();});
+// ══════════════════════════════════════════════
+// CATEGORY PILLS — sync to hidden field (Firebase mein store)
+// ══════════════════════════════════════════════
+document.addEventListener('change',e=>{
+  if(e.target.classList.contains('cpill')) syncCategoryField();
+});
 function syncCategoryField(){
-  document.getElementById('fCategory').value=[...document.querySelectorAll('.cpill:checked')].map(c=>c.value).join(', ');
+  const cats=[...document.querySelectorAll('.cpill:checked')].map(c=>c.value).filter(Boolean);
+  document.getElementById('fCategory').value=cats.join(', ');
 }
 window.addCustomCategory=()=>{
   const inp=document.getElementById('fCategoryCustom');const val=inp.value.trim();if(!val){showToast('Category naam likho');return;}
@@ -812,9 +939,17 @@ window.addCustomCategory=()=>{
   const cb=document.createElement('input');cb.type='checkbox';cb.className='cpill';cb.id=id;cb.value=val;
   const lbl=document.createElement('label');lbl.setAttribute('for',id);lbl.textContent=val;
   box.appendChild(cb);box.appendChild(lbl);cb.checked=true;inp.value='';syncCategoryField();box.scrollTop=box.scrollHeight;
+  showToast('✅ "'+val+'" category add hui!');
 };
 document.addEventListener('change',e=>{if(e.target.classList.contains('tpchip'))document.getElementById('fPrepTime').value=e.target.value;});
 document.getElementById('fPrepTime')?.addEventListener('input',function(){if(this.value.trim())document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);});
+
+// ✅ DEFAULT: 25-30 min selected, Veg ON
+function setFoodFormDefaults(){
+  const tp4=document.getElementById('tp4');if(tp4){tp4.checked=true;document.getElementById('fPrepTime').value='25–30 min';}
+  setVegToggle(true);setBestToggle(false);setSpicyToggle(false);
+}
+setFoodFormDefaults();
 
 // RESTAURANT SAVE
 window.saveRestaurant=async()=>{
@@ -898,16 +1033,17 @@ window.manageRestFoods=id=>{
 };
 window.closeMg=()=>{document.getElementById('mgModal').classList.remove('open');};
 document.getElementById('mgModal').addEventListener('click',e=>{if(e.target===document.getElementById('mgModal'))closeMg();});
-window.goAddFood=()=>{const rid=mgRestId;closeMg();showSec('foods',null);if(rid)document.getElementById('fRestId').value=rid;window.scrollTo({top:0,behavior:'smooth'});};
+window.goAddFood=()=>{const rid=mgRestId;closeMg();showSec('foods',null);if(rid){document.getElementById('fRestId').value=rid;lastSelectedRestId=rid;}window.scrollTo({top:0,behavior:'smooth'});};
 window.deleteFoodMg=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));await loadFoods();manageRestFoods(mgRestId);showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
 window.duplicateFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
   document.getElementById('foodEditId').value='';document.getElementById('fRestId').value=f.restaurantId||'';
+  if(f.restaurantId)lastSelectedRestId=f.restaurantId;
   document.getElementById('fName').value=(f.name||'')+' (Copy)';document.getElementById('fPrice').value=f.price!=null?f.price:'';
   document.getElementById('fDesc').value=f.description||'';document.getElementById('fImage').value=f.image||'';
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
-  document.getElementById('fVeg').checked=!!f.veg;document.getElementById('fBest').checked=!!f.bestseller;document.getElementById('fSpicy').checked=!!f.spicy;
+  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -928,31 +1064,57 @@ window.saveFood=async()=>{
     if(!image||!image.startsWith('http')){showAlert('food','Valid image URL required');return;}if(!desc){showAlert('food','Description required');return;}
     const resolvedRestName=getRestName(restId);if(!resolvedRestName){showAlert('food','Restaurant not found. Reload.');return;}
     const ratingRaw=document.getElementById('fRating').value.trim();
-    const data={restaurantId:restId,restaurantName:resolvedRestName,name,price:parseFloat(priceRaw),description:desc,image,category:document.getElementById('fCategory').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,prepTime:document.getElementById('fPrepTime').value.trim(),calories:document.getElementById('fCal').value.trim(),veg:document.getElementById('fVeg').checked,bestseller:document.getElementById('fBest').checked,spicy:document.getElementById('fSpicy').checked};
+    // ✅ Category from hidden field (pill sync)
+    syncCategoryField();
+    const data={
+      restaurantId:restId,
+      restaurantName:resolvedRestName,
+      name,
+      price:parseFloat(priceRaw),
+      description:desc,
+      image,
+      category:document.getElementById('fCategory').value.trim(),
+      rating:ratingRaw?parseFloat(ratingRaw):null, // ✅ Rating optional
+      prepTime:document.getElementById('fPrepTime').value.trim(),
+      calories:document.getElementById('fCal').value.trim(),
+      veg:document.getElementById('fVegVal').value==='true',         // ✅ from toggle
+      bestseller:document.getElementById('fBestVal').value==='true', // ✅ from toggle
+      spicy:document.getElementById('fSpicyVal').value==='true'      // ✅ from toggle
+    };
     if(editId){await updateDoc(doc(db,'foods',editId),data);showToast('✅ Updated!');showAlert('food','Food item updated!','ok');}
     else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food',`Added to ${resolvedRestName}!`,'ok');}
+    // ✅ Remember restaurant after save
+    lastSelectedRestId=restId;
     resetFoodForm();await loadFoods();
   }catch(e){showAlert('food','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Food Item';}
 };
+
 window.resetFoodForm=()=>{
-  document.getElementById('foodEditId').value='';document.getElementById('fRestId').value='';
+  document.getElementById('foodEditId').value='';
   ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
-  ['fVeg','fBest','fSpicy'].forEach(id=>document.getElementById(id).checked=false);
-  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);
-  document.getElementById('fCategoryCustom').value='';document.getElementById('fPrv').style.display='none';
+  document.getElementById('fCategoryCustom').value='';
+  document.getElementById('fPrv').style.display='none';
   document.getElementById('fImgResults').style.display='none';document.getElementById('fImgQuery').value='';
   document.getElementById('foodFormTitle').textContent='Add Food Item';document.getElementById('foodCancelBtn').style.display='none';
   document.getElementById('dupBanner').classList.remove('show');
+  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
+  // ✅ Restore last restaurant
+  if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
+  else document.getElementById('fRestId').value='';
+  // ✅ Defaults: 25-30 min, Veg ON
+  setFoodFormDefaults();
 };
+
 window.editFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
   document.getElementById('foodEditId').value=id;document.getElementById('fRestId').value=f.restaurantId||'';
+  if(f.restaurantId)lastSelectedRestId=f.restaurantId;
   document.getElementById('fName').value=f.name||'';document.getElementById('fPrice').value=f.price!=null?f.price:'';
   document.getElementById('fDesc').value=f.description||'';document.getElementById('fImage').value=f.image||'';
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
-  document.getElementById('fVeg').checked=!!f.veg;document.getElementById('fBest').checked=!!f.bestseller;document.getElementById('fSpicy').checked=!!f.spicy;
+  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -978,6 +1140,7 @@ window.renderFoods=()=>{
         <div class="food-item-tags">
           <span class="tpill ${f.veg?'tv':'tn'}">${f.veg?'Veg':'Non-Veg'}</span>
           ${f.bestseller?'<span class="tpill tb">🔥 Best</span>':''}
+          ${f.spicy?'<span class="tpill" style="background:#FFEBEE;color:#C62828">🌶 Spicy</span>':''}
           <span class="rpill">${rName}</span>
           ${f.category?`<span style="font-size:.62rem;color:var(--mut)">${f.category}</span>`:''}
         </div>
