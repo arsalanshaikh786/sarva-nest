@@ -118,6 +118,7 @@ header p{font-family:'Nunito',sans-serif;font-size:clamp(.85rem,3vw,1rem);opacit
 }
 .scoop-img-wrap img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
 .scoop-card h3{color:var(--choco);font-size:14.5px;font-weight:600;margin-bottom:3px;line-height:1.25;}
+.scoop-card .cat-label{display:inline-block;font-size:10px;font-weight:800;color:var(--pistachio-dark);background:#eef4e7;padding:2px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px;margin-bottom:6px;}
 .scoop-card .desc{color:var(--muted);font-size:11.5px;margin-bottom:8px;line-height:1.4;min-height:16px;}
 .scoop-card .price{color:var(--pistachio-dark);font-weight:800;font-size:15px;margin-bottom:10px;}
 .veg-dot{
@@ -534,6 +535,17 @@ const DELIVERY_FEE = 20;
 let MENU_ITEMS = [];
 let cart = {}; /* { itemId: { ...item, qty } } */
 
+/* Built-in categories — labels used to build tabs + for the cat-tab icon/text.
+   Any OTHER category value found on menu items (i.e. custom ones added from
+   the admin dashboard) gets its own tab auto-generated below. */
+const BUILT_IN_CATEGORIES = [
+  {key:"cone",   label:"🍦 Cones"},
+  {key:"cup",    label:"🍨 Cups & Tubs"},
+  {key:"sundae", label:"🍧 Sundaes"},
+  {key:"shake",  label:"🥤 Shakes"},
+  {key:"kulfi",  label:"🍡 Kulfi"},
+];
+
 /* ── LOAD MENU FROM FIRESTORE ── */
 async function loadMenu(){
   try {
@@ -552,6 +564,7 @@ async function loadMenu(){
     console.error("Failed to load menu, using defaults:", e);
     MENU_ITEMS = defaultMenu();
   }
+  renderCategoryTabs();
   renderMenu();
 }
 
@@ -572,6 +585,51 @@ function defaultMenu(){
 }
 
 window.MENU_ITEMS_REF = () => MENU_ITEMS;
+
+/* ── DYNAMIC CATEGORY TABS ──
+   Builds tabs for all 5 built-in categories that actually have items,
+   PLUS any custom category typed in from the admin dashboard (e.g. "Waffle Bowls"),
+   in the order items for that category first appear. "All" tab is always first. */
+function renderCategoryTabs(){
+  const tabsWrap = document.getElementById("catTabs");
+  const prevActive = tabsWrap.querySelector(".cat-tab.active");
+  const prevActiveCat = prevActive ? prevActive.dataset.cat : "all";
+
+  const categoriesPresent = new Set(MENU_ITEMS.map(i=>i.category).filter(Boolean));
+
+  const tabsHtml = ['<button class="cat-tab" data-cat="all">All</button>'];
+
+  BUILT_IN_CATEGORIES.forEach(c=>{
+    if(categoriesPresent.has(c.key)){
+      tabsHtml.push(`<button class="cat-tab" data-cat="${c.key}">${c.label}</button>`);
+      categoriesPresent.delete(c.key);
+    }
+  });
+
+  /* whatever's left in categoriesPresent is custom (added from admin dashboard) */
+  Array.from(categoriesPresent).forEach(customCat=>{
+    tabsHtml.push(`<button class="cat-tab" data-cat="${customCat}">🏷️ ${customCat}</button>`);
+  });
+
+  tabsWrap.innerHTML = tabsHtml.join("");
+
+  /* keep whichever tab was active before re-render (defaults to "All") */
+  const stillExists = tabsWrap.querySelector(`.cat-tab[data-cat="${cssEscape(prevActiveCat)}"]`);
+  (stillExists || tabsWrap.querySelector('.cat-tab[data-cat="all"]')).classList.add("active");
+}
+
+function cssEscape(v){
+  return String(v).replace(/["\\]/g, '\\$&');
+}
+
+/* Human-readable label for a category value, used on each ice cream card.
+   Built-ins map to their nice name; custom categories (typed in admin) show as-is. */
+function getCategoryLabel(catValue){
+  if(!catValue) return "";
+  const builtIn = BUILT_IN_CATEGORIES.find(c=>c.key===catValue);
+  if(builtIn) return builtIn.label.replace(/^\S+\s/, ""); /* strip leading emoji, keep text */
+  return catValue;
+}
 
 function renderMenu(filterCat="all", searchTerm=""){
   const grid = document.getElementById("menuGrid");
@@ -597,8 +655,12 @@ function renderMenu(filterCat="all", searchTerm=""){
       ? `<img src="${item.imageUrl}" alt="${item.name}">`
       : (item.icon || "🍦");
 
+    const catLabel = getCategoryLabel(item.category);
+    const catLabelHtml = catLabel ? `<div class="cat-label">${catLabel}</div>` : "";
+
     card.innerHTML = `
       <div class="scoop-img-wrap">${imgHtml}</div>
+      ${catLabelHtml}
       <h3><span class="veg-dot ${vegClass}"></span>${item.name}</h3>
       <div class="desc">${item.desc||""}</div>
       <div class="price">₹${item.price}</div>
@@ -1005,7 +1067,7 @@ window.showToast = showToast;
 
 document.addEventListener("keydown",(e)=>{ if(e.key==="Escape"){ closeCartModal(); closeTrackModal(); } });
 
-/* Category tabs */
+/* Category tabs (event delegation — tabs are re-rendered dynamically by loadMenu) */
 document.getElementById("catTabs").addEventListener("click",(e)=>{
   const btn = e.target.closest(".cat-tab");
   if(!btn) return;
