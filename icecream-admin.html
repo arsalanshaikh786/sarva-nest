@@ -155,6 +155,11 @@ select.status-select{
 .admin-menu-card h4{font-size:14px;color:var(--choco);margin-bottom:2px;}
 .admin-menu-card .amc-cat{font-size:10.5px;color:var(--muted);font-weight:700;text-transform:uppercase;}
 .admin-menu-card .amc-price{font-weight:900;color:var(--pistachio-dark);font-size:15px;margin:6px 0;}
+.amc-variants{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.amc-variant-chip{
+  background:#eef4e7;color:var(--pistachio-dark);font-size:10.5px;font-weight:800;
+  padding:3px 9px;border-radius:20px;
+}
 .amc-actions{display:flex;gap:6px;}
 .amc-btn{
   flex:1;padding:7px;border:none;border-radius:10px;font-size:11.5px;font-weight:800;cursor:pointer;
@@ -197,6 +202,27 @@ select.status-select{
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--strawberry);background:#fff;}
 .form-row{display:flex;gap:10px;}
 .form-row .form-group{flex:1;}
+
+/* ── VARIANTS (size/price pairs) ── */
+.variants-section{margin-bottom:13px;}
+.variants-section > label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:5px;}
+.variant-row{display:flex;gap:8px;margin-bottom:8px;align-items:center;}
+.variant-row input{
+  border:2px solid #f0e4d4;border-radius:10px;padding:10px 12px;
+  font-family:'Nunito',sans-serif;font-size:13px;outline:none;background:#fffaf2;min-height:40px;
+}
+.variant-row input:focus{border-color:var(--strawberry);background:#fff;}
+.variant-row .v-size{flex:1.1;}
+.variant-row .v-price{flex:1;}
+.variant-row .v-remove{
+  flex-shrink:0;width:34px;height:34px;border-radius:9px;border:none;
+  background:#ffd9d9;color:#b91c1c;font-size:15px;font-weight:800;cursor:pointer;
+}
+.add-variant-btn{
+  background:#dbe9ff;color:#1d4ed8;border:none;padding:9px 16px;border-radius:10px;
+  font-weight:800;font-size:12.5px;cursor:pointer;font-family:'Nunito',sans-serif;
+}
+.variants-hint{font-size:11px;color:var(--muted);margin-top:4px;}
 
 /* ── PHOTO UPLOAD TABS (file / link) ── */
 .photo-tabs{display:flex;gap:6px;margin-bottom:10px;}
@@ -455,10 +481,19 @@ select.status-select{
         </select>
       </div>
     </div>
+    <p class="variants-hint" id="basePriceHint" style="margin:-8px 0 13px;">This price is used only if no size variants are added below.</p>
 
     <div class="form-group" id="newCategoryGroup" style="display:none;">
       <label>New Category Name</label>
       <input type="text" id="item_new_category" placeholder="e.g. Waffle Bowls">
+    </div>
+
+    <!-- Size/quantity variants (e.g. 50ml ₹25 / 100ml ₹35) -->
+    <div class="variants-section">
+      <label>Size Variants (optional)</label>
+      <div id="variantsList"></div>
+      <button type="button" class="add-variant-btn" onclick="addVariantRow()">➕ Add Size Option</button>
+      <p class="variants-hint">e.g. Size: "50ml", Price: 25 — add as many sizes as needed. If you add variants, customers pick a size instead of using the price above.</p>
     </div>
 
     <div class="form-group">
@@ -707,6 +742,10 @@ function renderAdminMenu(){
   grid.innerHTML = allMenuItems.map(item=>{
     const imgHtml = item.imageUrl ? `<img src="${item.imageUrl}" alt="${item.name}">` : (item.icon||"🍦");
     const unavailClass = item.available === false ? "amc-unavailable" : "";
+    const hasVariants = Array.isArray(item.variants) && item.variants.length > 0;
+    const priceBlockHtml = hasVariants
+      ? `<div class="amc-variants">${item.variants.map(v=>`<span class="amc-variant-chip">${v.size} · ₹${v.price}</span>`).join("")}</div>`
+      : `<div class="amc-price">₹${item.price}</div>`;
     return `
       <div class="admin-menu-card ${unavailClass}">
         <div class="amc-top">
@@ -716,7 +755,7 @@ function renderAdminMenu(){
             <div class="amc-cat">${categoryLabel(item.category)}</div>
           </div>
         </div>
-        <div class="amc-price">₹${item.price}</div>
+        ${priceBlockHtml}
         <div class="amc-toggle-row">
           <input type="checkbox" ${item.available!==false?"checked":""} onchange="toggleItemAvailability('${item.id}', this.checked)" style="width:auto;">
           <span>${item.available!==false ? "Available" : "Hidden from menu"}</span>
@@ -784,6 +823,43 @@ window.toggleItemAvailability = async function(itemId, isAvailable){
   }
 };
 
+/* ── SIZE VARIANTS (dynamic add/remove rows) ── */
+let variantRowCounter = 0;
+
+function renderVariantRows(variants){
+  const list = document.getElementById("variantsList");
+  list.innerHTML = "";
+  variantRowCounter = 0;
+  variants.forEach(v=> addVariantRow(v.size, v.price));
+}
+
+window.addVariantRow = function(sizeVal="", priceVal=""){
+  const list = document.getElementById("variantsList");
+  const rowId = "vrow_" + (variantRowCounter++);
+  const row = document.createElement("div");
+  row.className = "variant-row";
+  row.id = rowId;
+  row.innerHTML = `
+    <input type="text" class="v-size" placeholder="e.g. 50ml" value="${sizeVal}">
+    <input type="number" class="v-price" placeholder="₹ Price" min="0" value="${priceVal}">
+    <button type="button" class="v-remove" onclick="document.getElementById('${rowId}').remove()">✕</button>
+  `;
+  list.appendChild(row);
+};
+
+function collectVariantsFromForm(){
+  const rows = document.querySelectorAll("#variantsList .variant-row");
+  const variants = [];
+  rows.forEach(row=>{
+    const size = row.querySelector(".v-size").value.trim();
+    const price = parseFloat(row.querySelector(".v-price").value);
+    if(size && price > 0){
+      variants.push({size, price});
+    }
+  });
+  return variants;
+}
+
 window.openMenuModal = function(){
   editingItemId = null;
   document.getElementById("menuModalTitle").textContent = "Add Menu Item";
@@ -803,6 +879,7 @@ window.openMenuModal = function(){
   document.getElementById("linkPreviewImg").classList.remove("show");
   document.getElementById("linkPreviewCircle").classList.remove("has-image");
   switchPhotoMode("upload");
+  renderVariantRows([]);
   document.getElementById("menuModalOverlay").classList.add("open");
 };
 
@@ -855,6 +932,7 @@ window.editMenuItem = function(itemId){
     linkCircle.classList.remove("has-image");
   }
   switchPhotoMode("upload");
+  renderVariantRows(Array.isArray(item.variants) ? item.variants : []);
   document.getElementById("menuModalOverlay").classList.add("open");
 };
 
@@ -864,7 +942,8 @@ window.closeMenuModal = function(){
 
 window.saveMenuItem = async function(){
   const name = document.getElementById("item_name").value.trim();
-  const price = parseFloat(document.getElementById("item_price").value);
+  let price = parseFloat(document.getElementById("item_price").value);
+  const variants = collectVariantsFromForm();
 
   let category = document.getElementById("item_category").value;
   if(category === "__add_new__"){
@@ -882,16 +961,27 @@ window.saveMenuItem = async function(){
   const available = document.getElementById("item_available").checked;
   const imageUrl = document.getElementById("itemImageUrl").value.trim();
 
-  if(!name || !price || price <= 0){
-    showToast("⚠️ Please enter a valid name and price","warn");
+  const hasVariants = variants.length > 0;
+
+  if(!name){
+    showToast("⚠️ Please enter an item name","warn");
     return;
+  }
+  if(!hasVariants && (!price || price <= 0)){
+    showToast("⚠️ Please enter a valid price, or add size variants","warn");
+    return;
+  }
+  // If variants are used, store the lowest variant price as the base "price"
+  // field too — so older code paths (sorting, default display) still work.
+  if(hasVariants){
+    price = Math.min(...variants.map(v=>v.price));
   }
 
   const btn = document.getElementById("saveItemBtn");
   btn.disabled = true; btn.classList.add("loading");
 
   try {
-    const itemData = {name, price, category, desc, veg, icon, available, imageUrl};
+    const itemData = {name, price, category, desc, veg, icon, available, imageUrl, variants};
     if(editingItemId){
       await updateDoc(doc(db,"icecream_menu",editingItemId), itemData);
       showToast("✅ Item updated!","success");
