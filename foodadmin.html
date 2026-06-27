@@ -76,7 +76,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-pr:disabled{background:#ccc;cursor:default}
 .btn-sec{background:#fff;color:var(--txt);border:1.5px solid var(--bdr);border-radius:8px;padding:.58rem 1rem;font-family:'DM Sans',sans-serif;font-size:.86rem;cursor:pointer}
 .img-preview{width:100%;height:110px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);margin-top:5px;display:none}
-/* IMAGE SEARCH */
 .img-search-row{display:flex;gap:.4rem;margin-bottom:.4rem}
 .img-search-row input{flex:1;padding:.48rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;background:#fff;color:var(--txt)}
 .img-search-row input:focus{border-color:var(--brand)}
@@ -93,12 +92,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .img-url-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
 .img-loading{text-align:center;padding:.75rem;font-size:.8rem;color:var(--mut)}
 .img-search-note{font-size:.68rem;color:var(--mut);margin-bottom:.3rem}
-/* ALERTS */
 .alert{padding:.6rem .85rem;border-radius:8px;font-size:.82rem;font-weight:500;margin-bottom:.75rem;display:none;align-items:center;gap:6px}
 .alert.show{display:flex}
 .alert.err{background:#FFEBEE;color:var(--err);border:1px solid rgba(198,40,40,.2)}
 .alert.ok{background:#E8F5E9;color:var(--ok);border:1px solid rgba(46,125,50,.2)}
-/* RESTAURANT CARDS */
 .rest-grid{display:grid;grid-template-columns:1fr;gap:.85rem}
 @media(min-width:500px){.rest-grid{grid-template-columns:1fr 1fr}}
 .rest-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden}
@@ -116,7 +113,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
 .btn-sm.tog{border-color:rgba(46,125,50,.3);color:var(--ok)}
 .btn-sm.dup{border-color:rgba(103,58,183,.3);color:#6A1B9A}
-/* FOOD LIST */
 .food-list{display:flex;flex-direction:column;gap:.75rem}
 .food-item-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);display:flex;gap:.75rem;padding:.85rem;align-items:flex-start}
 .food-item-img{width:60px;height:60px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bdr)}
@@ -127,8 +123,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .tpill{font-size:.6rem;padding:1px 6px;border-radius:50px;font-weight:600}
 .tv{background:#E8F5E9;color:#2E7D32}.tn{background:#FFF1EB;color:var(--brand)}.tb{background:#FFF3E0;color:#E65100}
 .rpill{font-size:.63rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:2px 7px;font-weight:600}
-.food-price-big{font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;flex-shrink:0}
-/* ORDERS */
+.vpill{font-size:.6rem;background:#F3E5F5;color:#6A1B9A;border-radius:50px;padding:1px 7px;font-weight:600;border:1px solid rgba(106,27,154,.2)}
 .order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
 .oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;gap:.4rem;flex-wrap:wrap}
 .oc-id{font-weight:700;font-size:.8rem}
@@ -147,7 +142,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .filter-bar{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.85rem}
 .filter-bar input,.filter-bar select{flex:1;min-width:130px;padding:.45rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;background:#fff;-webkit-appearance:none;color:var(--txt)}
 .filter-bar input:focus,.filter-bar select:focus{border-color:var(--brand)}
-/* MODAL */
 .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:250;display:none;align-items:flex-end;justify-content:center}
 @media(min-width:600px){.modal-ov{align-items:center}}
 .modal-ov.open{display:flex}
@@ -160,7 +154,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .empty-st{text-align:center;padding:2.5rem 1rem;color:var(--mut)}
 .empty-st i{font-size:2.2rem;display:block;margin-bottom:.4rem;opacity:.3}
 .empty-st p{font-size:.82rem}
-/* PILL SELECTORS */
 .pill-box{max-height:110px;overflow-y:auto;border:1.5px solid var(--bdr);border-radius:8px;padding:.4rem .5rem;background:#fff;display:flex;flex-wrap:wrap;gap:.35rem}
 .cpill{display:none}
 .cpill+label{display:inline-flex;align-items:center;background:var(--sur);border:1.5px solid var(--bdr);border-radius:50px;padding:.18rem .6rem;font-size:.72rem;color:var(--mut);cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
@@ -171,21 +164,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .custom-add-row{display:flex;gap:.4rem;margin-top:.35rem}
 .custom-add-row input{flex:1;padding:.36rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.8rem;outline:none;background:#fff;color:var(--txt)}
 .custom-add-row button{background:var(--brand);color:#fff;border:none;border-radius:8px;padding:.36rem .7rem;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:700;cursor:pointer;white-space:nowrap}
-/* TOAST */
 .toast{position:fixed;bottom:72px;left:50%;transform:translateX(-50%) translateY(20px);background:#1A1208;color:#fff;padding:.55rem 1.1rem;border-radius:50px;font-size:.8rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .dup-banner{background:linear-gradient(135deg,#F3E5F5,#faf5ff);border:1.5px solid rgba(106,27,154,.2);border-radius:10px;padding:.6rem .9rem;font-size:.78rem;color:#6A1B9A;display:none;align-items:center;gap:6px;margin-bottom:.75rem;font-weight:500}
 .dup-banner.show{display:flex}
-/* SETTINGS INFO */
 .settings-info{background:var(--bl);border:1px solid rgba(232,82,26,.2);border-radius:10px;padding:.75rem 1rem;font-size:.78rem;color:var(--brand);margin-bottom:1rem;display:flex;align-items:flex-start;gap:7px;line-height:1.45}
-
-/* ══ PRICE DROPDOWN ══ */
 .price-row{display:flex;gap:.4rem;align-items:stretch}
 .price-row input{flex:1}
 .price-quick-select{padding:.5rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;outline:none;background:#fff;-webkit-appearance:none;color:var(--mut);min-width:90px}
 .price-quick-select:focus{border-color:var(--brand)}
-
-/* ══ VEG TOGGLE BUTTON ══ */
 .veg-toggle-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2px}
 .veg-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
 .veg-toggle-btn.active-veg{background:#E8F5E9;border-color:#66BB6A;color:#2E7D32}
@@ -224,6 +211,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .lbp-badge{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:50px;margin-bottom:5px;color:#fff}
 .lbp-title{font-family:'Playfair Display',serif;font-size:1.05rem;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,.35);margin-bottom:2px}
 .lbp-sub{font-size:.72rem;opacity:.9;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+
+/* ══ VARIANTS ══ */
+.variants-section-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;gap:5px;margin-bottom:.45rem}
+.variant-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem;min-height:4px}
+.variant-row{display:flex;gap:.4rem;align-items:center}
+.variant-row .v-name{flex:1;padding:.46rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);transition:border-color .2s;-webkit-appearance:none}
+.variant-row .v-name:focus{border-color:var(--brand)}
+.variant-row .v-price{width:90px;flex:0 0 90px;padding:.46rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);transition:border-color .2s;-webkit-appearance:none;text-align:center}
+.variant-row .v-price:focus{border-color:var(--brand)}
+.variant-rm{background:none;border:1.5px solid rgba(198,40,40,.2);color:var(--err);border-radius:7px;padding:.35rem .48rem;cursor:pointer;font-size:.76rem;flex-shrink:0;line-height:1;transition:background .15s}
+.variant-rm:hover{background:#FFEBEE}
+.add-variant-btn{background:var(--bl);color:var(--brand);border:1.5px dashed var(--brand);border-radius:8px;padding:.38rem .85rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .18s;margin-top:.15rem}
+.add-variant-btn:hover{background:var(--brand);color:#fff;border-style:solid}
+.variant-hint{font-size:.65rem;color:var(--mut);margin-top:.35rem;line-height:1.5;display:flex;align-items:flex-start;gap:4px}
+.variant-hint i{font-size:.72rem;margin-top:1px;flex-shrink:0;color:var(--brand);opacity:.7}
+.variants-wrapper{border:1.5px solid var(--bdr);border-radius:10px;padding:.75rem;background:var(--sur);grid-column:1/-1}
 
 @media(min-width:768px){
   .bottom-nav{display:none}
@@ -351,48 +354,49 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     <div class="form-grid">
       <div class="fg full"><label>Restaurant *</label><select id="fRestId" onchange="rememberRestaurant()"><option value="">— Select Restaurant —</option></select></div>
       <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words" data-next="fPrice"/></div>
-      <!-- ══ PRICE WITH QUICK SELECT DROPDOWN ══ -->
+      <!-- PRICE WITH QUICK SELECT -->
       <div class="fg">
-        <label>Price (₹) *</label>
+        <label>Base Price (₹) *</label>
         <div class="price-row">
           <input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01" data-next="fRating"/>
           <select class="price-quick-select" onchange="if(this.value){document.getElementById('fPrice').value=this.value;this.value=''}" title="Quick price select">
             <option value="">₹ Quick</option>
-            <option value="29">₹29</option>
-            <option value="39">₹39</option>
-            <option value="49">₹49</option>
-            <option value="59">₹59</option>
-            <option value="69">₹69</option>
-            <option value="79">₹79</option>
-            <option value="89">₹89</option>
-            <option value="99">₹99</option>
-            <option value="109">₹109</option>
-            <option value="119">₹119</option>
-            <option value="129">₹129</option>
-            <option value="149">₹149</option>
-            <option value="169">₹169</option>
-            <option value="179">₹179</option>
-            <option value="199">₹199</option>
-            <option value="229">₹229</option>
-            <option value="249">₹249</option>
-            <option value="279">₹279</option>
-            <option value="299">₹299</option>
-            <option value="329">₹329</option>
-            <option value="349">₹349</option>
-            <option value="379">₹379</option>
-            <option value="399">₹399</option>
-            <option value="449">₹449</option>
-            <option value="499">₹499</option>
-            <option value="549">₹549</option>
-            <option value="599">₹599</option>
-            <option value="649">₹649</option>
-            <option value="699">₹699</option>
-            <option value="799">₹799</option>
-            <option value="899">₹899</option>
-            <option value="999">₹999</option>
+            <option value="29">₹29</option><option value="39">₹39</option><option value="49">₹49</option>
+            <option value="59">₹59</option><option value="69">₹69</option><option value="79">₹79</option>
+            <option value="89">₹89</option><option value="99">₹99</option><option value="109">₹109</option>
+            <option value="119">₹119</option><option value="129">₹129</option><option value="149">₹149</option>
+            <option value="169">₹169</option><option value="179">₹179</option><option value="199">₹199</option>
+            <option value="229">₹229</option><option value="249">₹249</option><option value="279">₹279</option>
+            <option value="299">₹299</option><option value="329">₹329</option><option value="349">₹349</option>
+            <option value="379">₹379</option><option value="399">₹399</option><option value="449">₹449</option>
+            <option value="499">₹499</option><option value="549">₹549</option><option value="599">₹599</option>
+            <option value="649">₹649</option><option value="699">₹699</option><option value="799">₹799</option>
+            <option value="899">₹899</option><option value="999">₹999</option>
           </select>
         </div>
+        <span style="font-size:.63rem;color:var(--mut);margin-top:2px">Agar variants hain toh yeh base price hogi (size picker mein override hogi)</span>
       </div>
+
+      <!-- ══ VARIANTS SECTION ══ -->
+      <div class="fg full">
+        <div class="variants-wrapper">
+          <div class="variants-section-label">
+            <i class="ti ti-stack-2" style="color:var(--brand)"></i>
+            Size / Quantity Variants
+            <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — optional</span>
+          </div>
+          <div class="variant-list" id="variantList"></div>
+          <button type="button" class="add-variant-btn" onclick="addVariantRow()">
+            <i class="ti ti-plus"></i> Add Variant
+          </button>
+          <div class="variant-hint">
+            <i class="ti ti-info-circle"></i>
+            Example: <strong>Half</strong> → ₹50 &nbsp;|&nbsp; <strong>Full</strong> → ₹100 &nbsp;|&nbsp; <strong>Small/Medium/Large</strong> etc.<br/>
+            Agar variant add kiya toh customer ko size choose karna hoga. Koi variant nahi = seedha add hoga.
+          </div>
+        </div>
+      </div>
+
       <div class="fg full">
         <label>Category</label>
         <div class="pill-box" id="catPillBox">
@@ -439,7 +443,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <input type="text" id="fPrepTime" placeholder="Ya custom likho: e.g. 35–45 min" style="padding:.42rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;width:100%;background:#fff;color:var(--txt)"/>
       </div>
       <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal" data-next=""/></div>
-      <!-- ══ VEG / BESTSELLER / SPICY TOGGLE BUTTONS ══ -->
+      <!-- VEG / BESTSELLER / SPICY TOGGLE BUTTONS -->
       <div class="fg full">
         <label>Tags</label>
         <div class="veg-toggle-wrap">
@@ -447,7 +451,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
           <button type="button" class="bestseller-toggle-btn" id="bestToggleBtn" onclick="toggleBest()">🔥 Bestseller</button>
           <button type="button" class="spicy-toggle-btn" id="spicyToggleBtn" onclick="toggleSpicy()">🌶 Spicy</button>
         </div>
-        <!-- Hidden inputs for actual values -->
         <input type="hidden" id="fVegVal" value="true"/>
         <input type="hidden" id="fBestVal" value="false"/>
         <input type="hidden" id="fSpicyVal" value="false"/>
@@ -540,7 +543,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
   </div>
   <div class="sec-head"><div class="sec-title"><i class="ti ti-photo-scan" style="color:var(--brand)"></i> All Banners</div></div>
-  <div class="banner-list" id="bannerList"><div class="empty-st"><i class="ti ti-photo-scan"></i><p>No banners yet</p></div></div>
+  <div class="banner-list" id="bannerList"><div class="empty-st"><i class="ti ti-photo-scan"></i><p>No banners yet. Upar se add karo!</p></div></div>
 </div>
 
 <!-- DELIVERY SETTINGS -->
@@ -580,7 +583,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <div class="modal-ov" id="mgModal">
   <div class="modal-box">
     <div class="modal-head"><h3 id="mgTitle">Restaurant Foods</h3><button class="modal-close" onclick="closeMg()"><i class="ti ti-x"></i></button></div>
-    <div class="modal-body">
+    <div class="modal-body" style="padding:1rem">
       <div id="mgList"></div>
       <button class="btn-pr" style="width:100%;margin-top:.85rem;justify-content:center" onclick="goAddFood()"><i class="ti ti-plus"></i> Add Food to This Restaurant</button>
     </div>
@@ -600,36 +603,75 @@ const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT="5547663296";
 
 let restaurants=[],foods=[],orders=[],banners=[],mgRestId=null;
-let lastSelectedRestId=''; // ✅ Remember last selected restaurant
+let lastSelectedRestId='';
 
 // ══════════════════════════════════════════════
-// ✅ ENTER KEY → NEXT FIELD
+// ✅ VARIANTS — Size/Quantity options
 // ══════════════════════════════════════════════
+let variantCount = 0;
+
+window.addVariantRow = (name='', price='') => {
+  variantCount++;
+  const id = 'vrow_' + variantCount;
+  const row = document.createElement('div');
+  row.className = 'variant-row';
+  row.id = id;
+  row.innerHTML = `
+    <input type="text" class="v-name" placeholder="e.g. Half / Full / Small" value="${name}" autocapitalize="words" style="flex:1;padding:.46rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);-webkit-appearance:none"/>
+    <input type="number" class="v-price" placeholder="Price ₹" value="${price}" min="0" step="0.01" inputmode="decimal" style="width:90px;flex:0 0 90px;padding:.46rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);-webkit-appearance:none;text-align:center"/>
+    <button type="button" class="variant-rm" onclick="removeVariantRow('${id}')" title="Remove"><i class="ti ti-trash" style="font-size:.76rem"></i></button>`;
+  document.getElementById('variantList').appendChild(row);
+  // focus new name field
+  setTimeout(()=>row.querySelector('.v-name').focus(), 50);
+};
+
+window.removeVariantRow = (id) => {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+};
+
+function getVariants() {
+  const rows = document.querySelectorAll('#variantList .variant-row');
+  const variants = [];
+  rows.forEach(row => {
+    const name = row.querySelector('.v-name').value.trim();
+    const priceVal = row.querySelector('.v-price').value;
+    const price = parseFloat(priceVal);
+    if (name && !isNaN(price) && price >= 0) variants.push({ name, price });
+  });
+  return variants;
+}
+
+function setVariants(arr) {
+  document.getElementById('variantList').innerHTML = '';
+  variantCount = 0;
+  if (arr && arr.length) arr.forEach(v => addVariantRow(v.name, v.price));
+}
+
+function clearVariants() {
+  document.getElementById('variantList').innerHTML = '';
+  variantCount = 0;
+}
+
+// ENTER KEY NAV
 document.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
   const el = e.target;
-  // Skip textarea (allow newline), selects, buttons
   if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.tagName === 'BUTTON') return;
   if (el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio' || el.type === 'color')) return;
-
-  // Login screen special case
   if (document.getElementById('loginScreen').style.display !== 'none') { doLogin(); return; }
-
   const nextId = el.dataset.next;
   if (nextId) {
     const nextEl = document.getElementById(nextId);
     if (nextEl) { e.preventDefault(); nextEl.focus(); }
   } else {
-    // Auto-find next focusable in form
     const focusable = [...document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea')].filter(x => !x.disabled && x.offsetParent !== null);
     const idx = focusable.indexOf(el);
     if (idx !== -1 && idx < focusable.length - 1) { e.preventDefault(); focusable[idx+1].focus(); }
   }
 });
 
-// ══════════════════════════════════════════════
-// ✅ VEG / BESTSELLER / SPICY TOGGLES
-// ══════════════════════════════════════════════
+// VEG / BESTSELLER / SPICY TOGGLES
 window.toggleVeg = () => {
   const btn = document.getElementById('vegToggleBtn');
   const val = document.getElementById('fVegVal');
@@ -667,9 +709,6 @@ function setSpicyToggle(isOn) {
   document.getElementById('spicyToggleBtn').classList.toggle('active', isOn);
 }
 
-// ══════════════════════════════════════════════
-// ✅ REMEMBER RESTAURANT
-// ══════════════════════════════════════════════
 window.rememberRestaurant = () => {
   const val = document.getElementById('fRestId').value;
   if (val) lastSelectedRestId = val;
@@ -684,11 +723,9 @@ window.doLogin=()=>{
 };
 window.doLogout=()=>{document.getElementById('loginScreen').style.display='flex';};
 
-// SIDEBAR
 window.openSidebar=()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('sbOverlay').classList.add('show');};
 window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');};
 
-// NAV
 window.showSec=(id,el)=>{
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+id).classList.add('active');
@@ -700,7 +737,6 @@ window.showSec=(id,el)=>{
   if(id==='banners'){updateBannerPreview();}
 };
 
-// LOAD ALL
 async function loadAll(){await Promise.all([loadRestaurants(),loadFoods(),loadOrders(),loadBanners()]);}
 window.refreshAll=()=>{showToast('Refreshing…');loadAll().then(()=>showToast('✅ Done'));};
 
@@ -741,7 +777,6 @@ async function loadBanners(){
 function populateRestDropdowns(){
   const opts='<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('fRestId').innerHTML=opts;
-  // ✅ Restore last selected restaurant
   if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
   const rOpt='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('foodRestFilter').innerHTML=rOpt;
@@ -755,9 +790,7 @@ window.prvImg=(imgId,url)=>{
   else img.style.display='none';
 };
 
-// ══════════════════════════════════════════════
 // IMAGE SEARCH
-// ══════════════════════════════════════════════
 window.searchImages=async(prefix,queryId,resultsId,btnId)=>{
   const q=document.getElementById(queryId).value.trim();
   const resultsEl=document.getElementById(resultsId);
@@ -793,9 +826,7 @@ function showAlert(secId,msg,type='err'){
   setTimeout(()=>el.classList.remove('show'),4500);
 }
 
-// ══════════════════════════════════════════════
 // BANNER PREVIEW
-// ══════════════════════════════════════════════
 window.updateBannerPreview=()=>{
   const title=document.getElementById('bTitle')?.value||'Banner Title Yahan Dikhega';
   const sub=document.getElementById('bSub')?.value||'';
@@ -816,9 +847,7 @@ window.updateBannerPreview=()=>{
   else lbpBadge.style.display='none';
 };
 
-// ══════════════════════════════════════════════
 // BANNER SAVE / EDIT / DELETE
-// ══════════════════════════════════════════════
 window.saveBanner=async()=>{
   const btn=document.getElementById('bannerSaveBtn');
   btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
@@ -826,18 +855,7 @@ window.saveBanner=async()=>{
     const editId=document.getElementById('bannerEditId').value.trim();
     const title=document.getElementById('bTitle').value.trim();
     if(!title){showAlert('banner','Banner title required!');return;}
-    const data={
-      title,
-      subtitle:document.getElementById('bSub').value.trim(),
-      badge:document.getElementById('bBadge').value.trim(),
-      badgeColor:document.getElementById('bBadgeColor').value,
-      bgColor:document.getElementById('bBgColor').value,
-      image:document.getElementById('bImage').value.trim(),
-      order:parseInt(document.getElementById('bOrder').value)||1,
-      showOnRestaurant:document.getElementById('bPageRest').checked,
-      showOnMenu:document.getElementById('bPageMenu').checked,
-      active:document.getElementById('bActive').checked,
-    };
+    const data={title,subtitle:document.getElementById('bSub').value.trim(),badge:document.getElementById('bBadge').value.trim(),badgeColor:document.getElementById('bBadgeColor').value,bgColor:document.getElementById('bBgColor').value,image:document.getElementById('bImage').value.trim(),order:parseInt(document.getElementById('bOrder').value)||1,showOnRestaurant:document.getElementById('bPageRest').checked,showOnMenu:document.getElementById('bPageMenu').checked,active:document.getElementById('bActive').checked};
     if(editId){await updateDoc(doc(db,'banners',editId),data);showToast('✅ Banner updated!');showAlert('banner','Banner update ho gaya!','ok');}
     else{await addDoc(collection(db,'banners'),{...data,createdAt:serverTimestamp()});showToast('✅ Banner added!');showAlert('banner','Naya banner add ho gaya!','ok');}
     resetBannerForm();await loadBanners();
@@ -847,21 +865,14 @@ window.saveBanner=async()=>{
 window.editBanner=id=>{
   const b=banners.find(x=>x.id===id);if(!b)return;
   document.getElementById('bannerEditId').value=id;
-  document.getElementById('bTitle').value=b.title||'';
-  document.getElementById('bSub').value=b.subtitle||'';
-  document.getElementById('bBadge').value=b.badge||'';
-  document.getElementById('bBadgeColor').value=b.badgeColor||'#E8521A';
-  document.getElementById('bBgColor').value=b.bgColor||'#1A1208';
-  document.getElementById('bImage').value=b.image||'';
-  document.getElementById('bOrder').value=b.order||1;
-  document.getElementById('bPageRest').checked=b.showOnRestaurant!==false;
-  document.getElementById('bPageMenu').checked=b.showOnMenu!==false;
-  document.getElementById('bActive').checked=b.active!==false;
-  prvImg('bPrv',b.image);
-  document.getElementById('bannerFormTitle').textContent='Edit: '+b.title;
+  document.getElementById('bTitle').value=b.title||'';document.getElementById('bSub').value=b.subtitle||'';
+  document.getElementById('bBadge').value=b.badge||'';document.getElementById('bBadgeColor').value=b.badgeColor||'#E8521A';
+  document.getElementById('bBgColor').value=b.bgColor||'#1A1208';document.getElementById('bImage').value=b.image||'';
+  document.getElementById('bOrder').value=b.order||1;document.getElementById('bPageRest').checked=b.showOnRestaurant!==false;
+  document.getElementById('bPageMenu').checked=b.showOnMenu!==false;document.getElementById('bActive').checked=b.active!==false;
+  prvImg('bPrv',b.image);document.getElementById('bannerFormTitle').textContent='Edit: '+b.title;
   document.getElementById('bannerCancelBtn').style.display='block';
-  updateBannerPreview();
-  showSec('banners',null);window.scrollTo({top:0,behavior:'smooth'});
+  updateBannerPreview();showSec('banners',null);window.scrollTo({top:0,behavior:'smooth'});
 };
 window.deleteBanner=async id=>{
   const b=banners.find(x=>x.id===id);
@@ -876,17 +887,12 @@ window.toggleBannerActive=async(id,val)=>{
 window.resetBannerForm=()=>{
   document.getElementById('bannerEditId').value='';
   ['bTitle','bSub','bBadge','bImage','bImgQuery'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('bBgColor').value='#1A1208';
-  document.getElementById('bBadgeColor').value='#E8521A';
-  document.getElementById('bOrder').value='1';
-  document.getElementById('bPageRest').checked=true;
-  document.getElementById('bPageMenu').checked=true;
-  document.getElementById('bActive').checked=true;
-  document.getElementById('bPrv').style.display='none';
-  document.getElementById('bImgResults').style.display='none';
+  document.getElementById('bBgColor').value='#1A1208';document.getElementById('bBadgeColor').value='#E8521A';
+  document.getElementById('bOrder').value='1';document.getElementById('bPageRest').checked=true;
+  document.getElementById('bPageMenu').checked=true;document.getElementById('bActive').checked=true;
+  document.getElementById('bPrv').style.display='none';document.getElementById('bImgResults').style.display='none';
   document.getElementById('bannerFormTitle').textContent='✨ New Banner / Offer';
-  document.getElementById('bannerCancelBtn').style.display='none';
-  updateBannerPreview();
+  document.getElementById('bannerCancelBtn').style.display='none';updateBannerPreview();
 };
 function renderBannerList(){
   const el=document.getElementById('bannerList');
@@ -898,13 +904,11 @@ function renderBannerList(){
       <div class="banner-preview-strip" style="background:${b.bgColor||'#1A1208'}">
         ${b.image?`<img src="${b.image}" onerror="this.style.display='none'" alt=""/>`:''}
         <div style="position:absolute;inset:0;background:${b.image?`linear-gradient(to right,${b.bgColor||'#1A1208'}dd,${b.bgColor||'#1A1208'}55)`:''}"></div>
-        <div class="banner-preview-overlay">
-          <div class="banner-preview-text">
-            ${b.badge?`<span class="bp-badge" style="background:${b.badgeColor||'#E8521A'}">${b.badge}</span>`:''}
-            <div class="bp-title">${b.title}</div>
-            ${b.subtitle?`<div class="bp-sub">${b.subtitle}</div>`:''}
-          </div>
-        </div>
+        <div class="banner-preview-overlay"><div class="banner-preview-text">
+          ${b.badge?`<span class="bp-badge" style="background:${b.badgeColor||'#E8521A'}">${b.badge}</span>`:''}
+          <div class="bp-title">${b.title}</div>
+          ${b.subtitle?`<div class="bp-sub">${b.subtitle}</div>`:''}
+        </div></div>
       </div>
       <div class="banner-card-body">
         <div class="banner-meta">
@@ -923,9 +927,7 @@ function renderBannerList(){
   }).join('');
 }
 
-// ══════════════════════════════════════════════
-// CATEGORY PILLS — sync to hidden field (Firebase mein store)
-// ══════════════════════════════════════════════
+// CATEGORY PILLS
 document.addEventListener('change',e=>{
   if(e.target.classList.contains('cpill')) syncCategoryField();
 });
@@ -944,7 +946,6 @@ window.addCustomCategory=()=>{
 document.addEventListener('change',e=>{if(e.target.classList.contains('tpchip'))document.getElementById('fPrepTime').value=e.target.value;});
 document.getElementById('fPrepTime')?.addEventListener('input',function(){if(this.value.trim())document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);});
 
-// ✅ DEFAULT: 25-30 min selected, Veg ON
 function setFoodFormDefaults(){
   const tp4=document.getElementById('tp4');if(tp4){tp4.checked=true;document.getElementById('fPrepTime').value='25–30 min';}
   setVegToggle(true);setBestToggle(false);setSpicyToggle(false);
@@ -1024,7 +1025,8 @@ window.manageRestFoods=id=>{
   document.getElementById('mgList').innerHTML=list.length
     ?list.map(f=>`<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
         <img src="${f.image||''}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)" onerror="this.style.display='none'"/>
-        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.82rem">${f.name}</div><div style="font-size:.7rem;color:var(--mut)">₹${f.price}${f.veg?' · 🥦':''}</div></div>
+        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.82rem">${f.name}</div>
+          <div style="font-size:.7rem;color:var(--mut)">₹${f.price}${f.veg?' · 🥦':''}${f.variants&&f.variants.length?' · <span style="color:#6A1B9A;font-weight:700">'+f.variants.length+' variants</span>':''}</div></div>
         <button class="btn-sm dup" onclick="duplicateFood('${f.id}');closeMg()"><i class="ti ti-copy"></i></button>
         <button class="btn-sm del" onclick="deleteFoodMg('${f.id}')"><i class="ti ti-trash"></i></button>
       </div>`).join('')
@@ -1044,6 +1046,7 @@ window.duplicateFood=id=>{
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
   setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
+  setVariants(f.variants||[]);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -1052,7 +1055,7 @@ window.duplicateFood=id=>{
   showSec('foods',null);window.scrollTo({top:0,behavior:'smooth'});showToast('📋 Duplicate — naam/price change karo!');
 };
 
-// FOOD SAVE
+// FOOD SAVE ✅ WITH VARIANTS
 window.saveFood=async()=>{
   const btn=document.getElementById('foodSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
@@ -1064,26 +1067,24 @@ window.saveFood=async()=>{
     if(!image||!image.startsWith('http')){showAlert('food','Valid image URL required');return;}if(!desc){showAlert('food','Description required');return;}
     const resolvedRestName=getRestName(restId);if(!resolvedRestName){showAlert('food','Restaurant not found. Reload.');return;}
     const ratingRaw=document.getElementById('fRating').value.trim();
-    // ✅ Category from hidden field (pill sync)
     syncCategoryField();
+
+    // ✅ Collect variants
+    const variants = getVariants();
+
     const data={
-      restaurantId:restId,
-      restaurantName:resolvedRestName,
-      name,
-      price:parseFloat(priceRaw),
-      description:desc,
-      image,
-      category:document.getElementById('fCategory').value.trim(),
-      rating:ratingRaw?parseFloat(ratingRaw):null, // ✅ Rating optional
+      restaurantId:restId,restaurantName:resolvedRestName,name,price:parseFloat(priceRaw),
+      description:desc,image,category:document.getElementById('fCategory').value.trim(),
+      rating:ratingRaw?parseFloat(ratingRaw):null,
       prepTime:document.getElementById('fPrepTime').value.trim(),
       calories:document.getElementById('fCal').value.trim(),
-      veg:document.getElementById('fVegVal').value==='true',         // ✅ from toggle
-      bestseller:document.getElementById('fBestVal').value==='true', // ✅ from toggle
-      spicy:document.getElementById('fSpicyVal').value==='true'      // ✅ from toggle
+      veg:document.getElementById('fVegVal').value==='true',
+      bestseller:document.getElementById('fBestVal').value==='true',
+      spicy:document.getElementById('fSpicyVal').value==='true',
+      variants: variants   // ✅ Save variants to Firestore
     };
     if(editId){await updateDoc(doc(db,'foods',editId),data);showToast('✅ Updated!');showAlert('food','Food item updated!','ok');}
     else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food',`Added to ${resolvedRestName}!`,'ok');}
-    // ✅ Remember restaurant after save
     lastSelectedRestId=restId;
     resetFoodForm();await loadFoods();
   }catch(e){showAlert('food','Error: '+e.message);showToast('❌ '+e.message);}
@@ -1099,10 +1100,9 @@ window.resetFoodForm=()=>{
   document.getElementById('foodFormTitle').textContent='Add Food Item';document.getElementById('foodCancelBtn').style.display='none';
   document.getElementById('dupBanner').classList.remove('show');
   document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
-  // ✅ Restore last restaurant
+  clearVariants();  // ✅ Clear variants too
   if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
   else document.getElementById('fRestId').value='';
-  // ✅ Defaults: 25-30 min, Veg ON
   setFoodFormDefaults();
 };
 
@@ -1115,6 +1115,7 @@ window.editFood=id=>{
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
   setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
+  setVariants(f.variants||[]);  // ✅ Load variants
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -1123,6 +1124,7 @@ window.editFood=id=>{
   showSec('foods',null);window.scrollTo({top:0,behavior:'smooth'});
 };
 window.deleteFood=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');await loadFoods();}catch(e){showToast('❌ '+e.message);}};
+
 window.renderFoods=()=>{
   const q=document.getElementById('foodSearch').value.toLowerCase();const rf=document.getElementById('foodRestFilter').value;
   let list=[...foods];
@@ -1132,6 +1134,8 @@ window.renderFoods=()=>{
   if(!list.length){el.innerHTML='<div class="empty-st"><i class="ti ti-bowl"></i><p>No food items found</p></div>';return;}
   el.innerHTML=list.map(f=>{
     const rName=f.restaurantName||getRestName(f.restaurantId)||'—';
+    const varBadge=f.variants&&f.variants.length
+      ?`<span class="vpill"><i class="ti ti-stack-2" style="font-size:.6rem;vertical-align:-1px"></i> ${f.variants.length} sizes</span>`:'';
     return `<div class="food-item-card">
       <img class="food-item-img" src="${f.image||''}" alt="${f.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100'"/>
       <div class="food-item-body">
@@ -1143,8 +1147,9 @@ window.renderFoods=()=>{
           ${f.spicy?'<span class="tpill" style="background:#FFEBEE;color:#C62828">🌶 Spicy</span>':''}
           <span class="rpill">${rName}</span>
           ${f.category?`<span style="font-size:.62rem;color:var(--mut)">${f.category}</span>`:''}
+          ${varBadge}
         </div>
-        <div class="food-item-actions">
+        <div class="food-item-actions" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.25rem">
           <button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm dup" onclick="duplicateFood('${f.id}')"><i class="ti ti-copy"></i> Dup</button>
           <button class="btn-sm del" onclick="deleteFood('${f.id}')"><i class="ti ti-trash"></i> Del</button>
@@ -1172,7 +1177,9 @@ window.renderOrders=()=>{
   el.innerHTML=list.map(o=>orderCardHTML(o,true)).join('');
 };
 function orderCardHTML(o,showUpdate){
-  const st=o.status||'pending';const items=(o.cart||[]).map(i=>i.name+(i.qty>1?` ×${i.qty}`:'')).join(', ');
+  const st=o.status||'pending';
+  // ✅ Show variant in item list
+  const items=(o.cart||[]).map(i=>i.name+(i.variantName?' ('+i.variantName+')':``)+(i.qty>1?` ×${i.qty}`:'')).join(', ');
   const t=o.timestamp?new Date(o.timestamp):null;const rName=o.restaurantName||getRestName(o.restaurantId)||'—';
   return `<div class="order-card">
     <div class="oc-head"><div><div class="oc-id">${o.orderId||o.id?.slice(0,10)||'—'}</div><div class="oc-sub">${o.name||'—'} · ${o.email||''}</div></div><span class="st-badge st-${st}">${st.replace(/_/g,' ')}</span></div>
@@ -1224,7 +1231,6 @@ window.saveSettings=async()=>{
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);}
 window.showToast=showToast;
 
-// Init
 updateBannerPreview();
 </script>
 </body>
