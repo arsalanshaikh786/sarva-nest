@@ -101,6 +101,7 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .fnveg{background:#FFF1EB;color:var(--brand)}
 .fbest{background:#FFF3E0;color:#E65100}
 .fspicy{background:#FFF3E0;color:#E65100}
+.fvar{background:#F3E5F5;color:#6A1B9A;display:flex;align-items:center;gap:2px}
 .food-name{font-weight:700;font-size:.78rem;margin-bottom:.1rem;line-height:1.25}
 .food-desc{font-size:.66rem;color:var(--mut);line-height:1.35;margin-bottom:.35rem;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .food-bottom{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
@@ -108,9 +109,35 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .food-rating{font-size:.64rem;color:var(--mut);display:flex;align-items:center;gap:2px}
 .add-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:7px;padding:.36rem;font-family:'DM Sans',sans-serif;font-size:.74rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px}
 .add-btn:active{background:var(--bd)}
+.add-btn.has-variants{background:var(--brand);position:relative}
+.add-btn.has-variants::after{content:'▾';margin-left:1px;font-size:.7rem}
 .qty-ctrl{width:100%;display:flex;align-items:center;justify-content:space-between;background:var(--bl);border-radius:7px;overflow:hidden}
 .qty-btn{background:none;border:none;color:var(--brand);font-size:1rem;padding:.28rem .55rem;cursor:pointer;font-weight:700;line-height:1}
 .qty-num{font-weight:700;color:var(--brand);font-size:.78rem}
+
+/* ══ VARIANT PICKER SHEET ══ */
+.var-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:160;display:none;align-items:flex-end}
+.var-overlay.open{display:flex}
+.var-sheet{background:var(--card);border-radius:20px 20px 0 0;width:100%;padding:1.1rem 1rem 2.2rem;animation:sheetUp .23s ease;max-height:70vh;overflow-y:auto}
+.var-handle{width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto .75rem}
+.var-food-row{display:flex;gap:.7rem;align-items:center;margin-bottom:.85rem;padding-bottom:.75rem;border-bottom:1px solid var(--bdr)}
+.var-food-img{width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid var(--bdr);flex-shrink:0}
+.var-food-name{font-family:'Playfair Display',serif;font-size:.92rem;margin-bottom:.1rem}
+.var-food-sub{font-size:.68rem;color:var(--mut)}
+.var-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.55rem}
+.var-options{display:flex;flex-direction:column;gap:.45rem;margin-bottom:1rem}
+.var-option{display:flex;align-items:center;justify-content:space-between;border:1.5px solid var(--bdr);border-radius:10px;padding:.62rem .9rem;cursor:pointer;transition:all .18s;background:#fff;user-select:none}
+.var-option.sel{border-color:var(--brand);background:var(--bl)}
+.var-option-left{display:flex;align-items:center;gap:.5rem}
+.var-radio{width:17px;height:17px;border-radius:50%;border:2px solid var(--bdr);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.var-option.sel .var-radio{border-color:var(--brand);background:var(--brand)}
+.var-radio-dot{width:7px;height:7px;border-radius:50%;background:#fff;display:none}
+.var-option.sel .var-radio-dot{display:block}
+.var-option-name{font-weight:600;font-size:.84rem}
+.var-option-price{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--brand);font-weight:700}
+.var-add-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.65rem;font-family:'DM Sans',sans-serif;font-size:.86rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:background .18s}
+.var-add-btn:active{background:var(--bd)}
+.var-add-btn:disabled{background:#ccc;cursor:default}
 
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:150;display:none;align-items:flex-end}
 .cart-overlay.open{display:flex}
@@ -337,6 +364,25 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
   </div>
 </div>
 
+<!-- ══ VARIANT PICKER SHEET ══ -->
+<div class="var-overlay" id="varOverlay" onclick="closeVarPickerIfOutside(event)">
+  <div class="var-sheet" id="varSheet">
+    <div class="var-handle"></div>
+    <div class="var-food-row">
+      <img class="var-food-img" id="varFoodImg" src="" alt="" onerror="this.style.display='none'"/>
+      <div>
+        <div class="var-food-name" id="varFoodName"></div>
+        <div class="var-food-sub" id="varFoodSub"></div>
+      </div>
+    </div>
+    <div class="var-label">Choose Size / Quantity</div>
+    <div class="var-options" id="varOptions"></div>
+    <button class="var-add-btn" id="varAddBtn" disabled onclick="confirmVariantAdd()">
+      <i class="ti ti-shopping-cart"></i> Add to Cart
+    </button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -353,16 +399,10 @@ const cfg = {
 };
 const app = initializeApp(cfg);
 const db = getFirestore(app);
-const BOT = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
-const CHAT = "5547663296";
 const COUPONS={FIRST50:50,SAVE30:30,ZESTORA20:20};
 
-// ══════════════════════════════════════════════
-// ✨ DYNAMIC DELIVERY SETTINGS — Firebase se load honge
-//    Jab tak load na ho tab default values use hongi
-// ══════════════════════════════════════════════
-let DEL_FEE = 40;      // default fallback
-let FREE_MIN = 299;    // default fallback
+let DEL_FEE = 40;
+let FREE_MIN = 299;
 
 async function loadDeliverySettings() {
   try {
@@ -373,9 +413,8 @@ async function loadDeliverySettings() {
       FREE_MIN = typeof d.freeDeliveryMin === 'number' ? d.freeDeliveryMin : FREE_MIN;
     }
   } catch(e) {
-    console.warn('Delivery settings load failed, using defaults:', e);
+    console.warn('Delivery settings load failed:', e);
   }
-  // hero chip update
   const chip = document.getElementById('heroFreeChip');
   if (chip) chip.innerHTML = `<i class="ti ti-truck"></i> Free above ₹${FREE_MIN}`;
 }
@@ -385,6 +424,70 @@ let cart=JSON.parse(localStorage.getItem('z_cart')||'{}');
 let cartRestId=localStorage.getItem('z_cart_rest')||null;
 let discount=0;
 let rFilter='all', rCuisine='All', mFilter='all', mCat='All';
+
+// ══════════════════════════════════════════════
+// ✅ VARIANT PICKER STATE
+// ══════════════════════════════════════════════
+let varPickerFood = null;
+let varPickerSelected = null; // {name, price}
+
+function openVariantPicker(food) {
+  varPickerFood = food;
+  varPickerSelected = null;
+  document.getElementById('varFoodImg').src = food.image || '';
+  document.getElementById('varFoodName').textContent = food.name;
+  document.getElementById('varFoodSub').textContent = food.description ? food.description.slice(0,55)+(food.description.length>55?'…':'') : '';
+  const opts = document.getElementById('varOptions');
+  opts.innerHTML = food.variants.map((v,i) => `
+    <div class="var-option" id="vo_${i}" onclick="selectVariant(${i},'${v.name.replace(/'/g,"\\'")}',${v.price})">
+      <div class="var-option-left">
+        <div class="var-radio"><div class="var-radio-dot"></div></div>
+        <span class="var-option-name">${v.name}</span>
+      </div>
+      <span class="var-option-price">₹${v.price}</span>
+    </div>`).join('');
+  document.getElementById('varAddBtn').disabled = true;
+  document.getElementById('varAddBtn').textContent = 'Select a size first';
+  document.getElementById('varAddBtn').innerHTML = '<i class="ti ti-shopping-cart"></i> Select a size first';
+  document.getElementById('varOverlay').classList.add('open');
+}
+
+window.selectVariant = (idx, name, price) => {
+  varPickerSelected = { name, price };
+  document.querySelectorAll('.var-option').forEach((el,i) => el.classList.toggle('sel', i===idx));
+  const btn = document.getElementById('varAddBtn');
+  btn.disabled = false;
+  btn.innerHTML = `<i class="ti ti-shopping-cart"></i> Add ${name} — ₹${price}`;
+};
+
+window.confirmVariantAdd = () => {
+  if (!varPickerFood || !varPickerSelected) return;
+  // Create a cart key that includes variant: foodId__variantName
+  const cartKey = varPickerFood.id + '__' + varPickerSelected.name;
+  if (!cart[cartKey]) {
+    cart[cartKey] = {
+      ...varPickerFood,
+      cartKey,
+      price: varPickerSelected.price,    // override price with variant price
+      variantName: varPickerSelected.name, // store variant name for display
+      qty: 0
+    };
+  }
+  cart[cartKey].qty++;
+  saveCart(); renderCartUI(); renderFoods();
+  document.getElementById('fabCart').classList.add('show');
+  showToast(`${varPickerFood.name} (${varPickerSelected.name}) added 🛒`);
+  closeVarPicker();
+  closeModal();
+};
+
+window.closeVarPicker = () => {
+  document.getElementById('varOverlay').classList.remove('open');
+  varPickerFood = null; varPickerSelected = null;
+};
+window.closeVarPickerIfOutside = (e) => {
+  if (e.target === document.getElementById('varOverlay')) closeVarPicker();
+};
 
 async function loadRestaurants(){
   try{
@@ -509,39 +612,90 @@ window.setMF=function(el){ mFilter=el.dataset.mf; document.querySelectorAll('.me
 window.setMC=function(c,el){ mCat=c; document.querySelectorAll('#menuCatBar .cpill').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderFoods(); };
 document.getElementById('menuSearch').addEventListener('input',renderFoods);
 
+function hasVariants(food) {
+  return food.variants && food.variants.length > 0;
+}
+
+// ✅ Get total qty for a food (sum all variants)
+function foodTotalQty(food) {
+  if (hasVariants(food)) {
+    return food.variants.reduce((s, v) => {
+      const k = food.id + '__' + v.name;
+      return s + (cart[k]?.qty || 0);
+    }, 0);
+  }
+  return cart[food.id]?.qty || 0;
+}
+
 function renderFoods(){
   const g=document.getElementById('foodsGrid');
   const l=filteredFoods();
   if(!l.length){ g.innerHTML=`<div style="color:var(--mut);text-align:center;grid-column:1/-1;padding:2.5rem"><i class="ti ti-search-off" style="font-size:2rem;display:block;margin-bottom:.4rem;opacity:.3"></i><p style="font-size:.78rem">No dishes found</p></div>`; return; }
   g.innerHTML=l.map(food=>{
-    const qty=(cart[food.id]?.qty)||0;
+    const totalQty = foodTotalQty(food);
+    const foodHasVariants = hasVariants(food);
     const tags=[food.veg?'<span class="ftag fveg">Veg</span>':'<span class="ftag fnveg">Non-Veg</span>',
       food.bestseller?'<span class="ftag fbest">🔥</span>':'',
-      food.spicy?'<span class="ftag fspicy">🌶</span>':''].join('');
-    const ctrl=qty>0
-      ?`<div class="qty-ctrl"><button class="qty-btn" onclick="chgQty('${food.id}',-1,event)">−</button><span class="qty-num">${qty}</span><button class="qty-btn" onclick="chgQty('${food.id}',1,event)">+</button></div>`
-      :`<button class="add-btn" onclick="addCart(${JSON.stringify(food).replace(/"/g,'&quot;')},event)"><i class="ti ti-plus"></i> Add</button>`;
+      food.spicy?'<span class="ftag fspicy">🌶</span>':'',
+      foodHasVariants?`<span class="ftag fvar"><i class="ti ti-stack-2" style="font-size:.55rem"></i> ${food.variants.length} sizes</span>`:''].join('');
+
+    // Price display: show "From ₹X" if variants
+    const priceDisplay = foodHasVariants
+      ? `From ₹${Math.min(...food.variants.map(v=>v.price))}`
+      : `₹${food.price}`;
+
+    let ctrl;
+    if (foodHasVariants) {
+      // Show total qty badge + picker button
+      if (totalQty > 0) {
+        ctrl = `<div style="display:flex;align-items:center;gap:.35rem">
+          <div class="qty-ctrl" style="flex:1">
+            <button class="qty-btn" onclick="openVariantPickerFromCard(${JSON.stringify(food).replace(/"/g,'&quot;')},event)">−/+</button>
+            <span class="qty-num">${totalQty}</span>
+            <button class="qty-btn" onclick="openVariantPickerFromCard(${JSON.stringify(food).replace(/"/g,'&quot;')},event)">+</button>
+          </div>
+        </div>
+        <div style="font-size:.6rem;color:var(--mut);text-align:center;margin-top:2px">Tap to change sizes</div>`;
+      } else {
+        ctrl = `<button class="add-btn has-variants" onclick="openVariantPickerFromCard(${JSON.stringify(food).replace(/"/g,'&quot;')},event)"><i class="ti ti-stack-2"></i> Choose Size</button>`;
+      }
+    } else {
+      // Normal item — no variants
+      ctrl = totalQty > 0
+        ? `<div class="qty-ctrl"><button class="qty-btn" onclick="chgQty('${food.id}',-1,event)">−</button><span class="qty-num">${totalQty}</span><button class="qty-btn" onclick="chgQty('${food.id}',1,event)">+</button></div>`
+        : `<button class="add-btn" onclick="addCart(${JSON.stringify(food).replace(/"/g,'&quot;')},event)"><i class="ti ti-plus"></i> Add</button>`;
+    }
+
     return `<div class="food-card" onclick="openModal(${JSON.stringify(food).replace(/"/g,'&quot;')})">
       <img src="${food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'}" alt="${food.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400'"/>
       <div class="food-card-body">
         <div class="ftags">${tags}</div>
         <div class="food-name">${food.name}</div>
         <div class="food-desc">${food.description||'A freshly prepared dish made with quality ingredients.'}</div>
-        <div class="food-bottom"><span class="food-price">₹${food.price}</span><span class="food-rating"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.62rem"></i> ${food.rating||'4.5'}</span></div>
+        <div class="food-bottom"><span class="food-price">${priceDisplay}</span><span class="food-rating"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.62rem"></i> ${food.rating||'4.5'}</span></div>
         ${ctrl}
       </div>
     </div>`;
   }).join('');
 }
 
+// ✅ Open variant picker from food card
+window.openVariantPickerFromCard = function(food, e) {
+  if (e) e.stopPropagation();
+  openVariantPicker(food);
+};
+
 window.addCart=function(food,e){
   if(e) e.stopPropagation();
-  if(!cart[food.id]) cart[food.id]={...food,qty:0};
+  // If variants exist, open picker instead
+  if(hasVariants(food)){ openVariantPicker(food); return; }
+  if(!cart[food.id]) cart[food.id]={...food,cartKey:food.id,qty:0};
   cart[food.id].qty++;
   saveCart(); renderCartUI(); renderFoods();
   document.getElementById('fabCart').classList.add('show');
   showToast(food.name+' added 🛒');
 };
+
 window.chgQty=function(id,delta,e){
   if(e) e.stopPropagation();
   if(!cart[id]) return;
@@ -551,7 +705,13 @@ window.chgQty=function(id,delta,e){
   const total=Object.values(cart).reduce((s,i)=>s+i.qty,0);
   if(total===0) document.getElementById('fabCart').classList.remove('show');
 };
-window.rmCartItem=function(id){ delete cart[id]; saveCart(); renderCartUI(); renderFoods(); if(!Object.keys(cart).length) document.getElementById('fabCart').classList.remove('show'); };
+
+window.rmCartItem=function(key){
+  delete cart[key];
+  saveCart(); renderCartUI(); renderFoods();
+  if(!Object.keys(cart).length) document.getElementById('fabCart').classList.remove('show');
+};
+
 function saveCart(){ localStorage.setItem('z_cart',JSON.stringify(cart)); }
 
 function renderCartUI(){
@@ -564,15 +724,15 @@ function renderCartUI(){
     document.getElementById('cartExtra').style.display='none'; return;
   }
   const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
-  // ✨ Firebase se aayi values use karein
   const fee=sub>=FREE_MIN?0:DEL_FEE;
   const total=sub+fee-discount;
+  // ✅ Show variant name in cart item
   document.getElementById('cartBody').innerHTML=items.map(i=>`
     <div class="cart-item">
-      <div class="ci-name">${i.name}</div>
+      <div class="ci-name">${i.name}${i.variantName?` <span style="font-size:.62rem;color:var(--mut);font-weight:400">(${i.variantName})</span>`:''}</div>
       <div class="ci-qty">×${i.qty}</div>
       <div class="ci-price">₹${(+i.price*i.qty).toFixed(0)}</div>
-      <button class="ci-rm" onclick="rmCartItem('${i.id}')"><i class="ti ti-x" style="font-size:.68rem;color:#aaa"></i></button>
+      <button class="ci-rm" onclick="rmCartItem('${i.cartKey||i.id}')"><i class="ti ti-x" style="font-size:.68rem;color:#aaa"></i></button>
     </div>`).join('');
   document.getElementById('cartExtra').style.display='block';
   document.getElementById('cSub').textContent='₹'+sub;
@@ -612,15 +772,21 @@ window.placeOrder=async function(){
   const btn=document.getElementById('placeBtn');
   btn.disabled=true; btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Placing…';
   const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
-  // ✨ Firebase delivery settings use karein order mein bhi
   const fee=sub>=FREE_MIN?0:DEL_FEE;
   const total=sub+fee-discount;
-  const order={name,email,mobile,address,payment,notes,cart:items,subtotal:sub,deliveryFee:fee,discount,total,
+  const order={name,email,mobile,address,payment,notes,
+    cart:items.map(i=>({
+      id:i.id, name:i.name,
+      variantName:i.variantName||null,   // ✅ include variant
+      price:i.price, qty:i.qty
+    })),
+    subtotal:sub,deliveryFee:fee,discount,total,
     restaurantId:curRest?.id||'',restaurantName:curRest?.name||'',
     status:'pending',timestamp:Date.now(),orderId:'ZST'+Date.now().toString().slice(-6)};
   try{
     await addDoc(collection(db,'food_orders'),order);
-    const lines=items.map(i=>`• ${i.name} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
+    // ✅ Show variant in Telegram/WhatsApp notification
+    const lines=items.map(i=>`• ${i.name}${i.variantName?' ('+i.variantName+')':''} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
     const msg=`🍽️ *New Order — ${order.orderId}*\n🏪 *${order.restaurantName}*\n\n👤 *${name}*\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n💳 ${payment}\n\n🛒 *Items:*\n${lines}\n\n💰 *Total: ₹${total}*${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString('en-IN')}`;
     await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
       method: "POST",
@@ -654,10 +820,12 @@ window.trackOrder=async function(){
     const prog=`<div class="progress-bar">${steps.map(([ic,lb],i)=>`<div class="p-step"><div class="p-dot ${i<si?'done':i===si?'active':''}"><i class="ti ${ic}" style="font-size:.58rem"></i></div><span>${lb}</span></div>`).join('')}</div>`;
     const cancel=mins<=5&&o.status==='pending'?`<button class="cancel-btn" onclick="cancelOrder('${d.id}','${email}')">✕ Cancel (${Math.max(0,(5-mins)).toFixed(0)}m left)</button>`:
       (o.status==='pending'?'<p style="font-size:.66rem;color:var(--mut);margin-top:.3rem">Cancellation window expired.</p>':'');
+    // ✅ Show variant in tracking
+    const itemsStr=(o.cart||[]).map(i=>i.name+(i.variantName?` (${i.variantName})`:'')+' ×'+(i.qty||1)).join(' · ');
     html+=`<div class="o-card">
       <div class="o-head"><div><div class="o-id">${o.orderId||'Order'} — ${o.name}</div><div class="o-sub">${o.restaurantName||''} · ${t.toLocaleString('en-IN')} · ₹${o.total||0}</div></div><span class="st-badge st-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>
       ${prog}
-      <div style="font-size:.68rem;color:var(--mut)">${(o.cart||[]).map(i=>i.name+' ×'+(i.qty||1)).join(' · ')}</div>${cancel}
+      <div style="font-size:.68rem;color:var(--mut)">${itemsStr}</div>${cancel}
     </div>`;
   });
   res.innerHTML=html||'<p style="color:var(--mut);font-size:.76rem;margin-top:.6rem">No orders found for this email.</p>';
@@ -668,12 +836,29 @@ window.openModal=function(food){
   document.getElementById('mImg').src=food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600';
   document.getElementById('mName').textContent=food.name;
   document.getElementById('mDesc').textContent=food.description||'A delicious freshly prepared dish.';
-  document.getElementById('mPrice').textContent='₹'+food.price;
+  // ✅ Price: show "From ₹X" if variants
+  const hasV = hasVariants(food);
+  document.getElementById('mPrice').textContent = hasV
+    ? 'From ₹'+Math.min(...food.variants.map(v=>v.price))
+    : '₹'+food.price;
   document.getElementById('mRating').textContent=food.rating||'4.5';
   document.getElementById('mTime').textContent=food.prepTime||'20–25 min';
   document.getElementById('mCal').textContent=food.calories?food.calories+' kcal':'N/A';
-  document.getElementById('mTags').innerHTML=[food.veg?'<span class="ftag fveg">Veg</span>':'<span class="ftag fnveg">Non-Veg</span>',food.bestseller?'<span class="ftag fbest">🔥</span>':'',food.spicy?'<span class="ftag fspicy">🌶</span>':''].join('');
-  document.getElementById('mAddBtn').onclick=()=>{ addCart(food,null); closeModal(); };
+  document.getElementById('mTags').innerHTML=[
+    food.veg?'<span class="ftag fveg">Veg</span>':'<span class="ftag fnveg">Non-Veg</span>',
+    food.bestseller?'<span class="ftag fbest">🔥</span>':'',
+    food.spicy?'<span class="ftag fspicy">🌶</span>':'',
+    hasV?`<span class="ftag fvar"><i class="ti ti-stack-2" style="font-size:.55rem"></i> ${food.variants.length} sizes</span>`:''
+  ].join('');
+
+  const addBtn = document.getElementById('mAddBtn');
+  if (hasV) {
+    addBtn.innerHTML = '<i class="ti ti-stack-2"></i> Choose Size';
+    addBtn.onclick = () => { openVariantPicker(food); };
+  } else {
+    addBtn.innerHTML = '<i class="ti ti-shopping-cart"></i> Add to cart';
+    addBtn.onclick = () => { addCart(food,null); closeModal(); };
+  }
   document.getElementById('foodModal').classList.add('open');
 };
 window.closeModal=function(){ document.getElementById('foodModal').classList.remove('open'); };
@@ -690,13 +875,10 @@ window.scrollToTrack=function(){
   else emailField.focus();
 };
 
-// ══════════════════════════════════════════════
-// APP INIT — delivery settings pehle load karo
-// ══════════════════════════════════════════════
 async function init(){
-  await loadDeliverySettings();   // Firebase se fee & free minimum lao
-  await loadRestaurants();        // Phir restaurants
-  renderCartUI();                 // Cart mein already updated values use hongi
+  await loadDeliverySettings();
+  await loadRestaurants();
+  renderCartUI();
 }
 init();
 </script>
