@@ -16,6 +16,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
 body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min-height:100vh}
+
+/* ── LOGIN ── */
 .login-screen{position:fixed;inset:0;background:var(--sur);z-index:300;display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-box{background:var(--card);border:1px solid var(--bdr);border-radius:20px;padding:2rem 1.75rem;width:100%;max-width:340px;text-align:center;box-shadow:var(--sh)}
 .login-box h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brand);margin-bottom:.2rem}
@@ -24,10 +26,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .login-box input:focus{border-color:var(--brand)}
 .login-btn{width:100%;background:var(--brand);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
 .login-err{color:var(--err);font-size:.78rem;margin-top:.5rem;display:none}
+.login-hint{font-size:.72rem;color:var(--mut);margin-top:.75rem;padding:.55rem .75rem;background:var(--bl);border-radius:8px;text-align:left;border:1px solid rgba(232,82,26,.15)}
+
+/* ── RESTAURANT MODE BANNER ── */
+.rest-mode-bar{background:linear-gradient(135deg,var(--brand),var(--bd));color:#fff;padding:.35rem 1rem;font-size:.74rem;font-weight:600;text-align:center;display:none;position:fixed;top:58px;left:0;right:0;z-index:99}
+.rest-mode-bar.show{display:block}
+body.rest-mode .main{padding-top:86px}
+
 .topbar{position:fixed;top:0;left:0;right:0;height:58px;background:var(--card);border-bottom:1px solid var(--bdr);z-index:100;display:flex;align-items:center;padding:0 1rem;gap:.75rem}
 .menu-toggle{background:none;border:none;font-size:1.3rem;color:var(--txt);cursor:pointer;padding:4px}
 .topbar-logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand);flex:1}
 .tb-btn{background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:4px}
+.tb-role-badge{background:var(--bl);color:var(--brand);border:1px solid rgba(232,82,26,.3);border-radius:50px;padding:.2rem .65rem;font-size:.68rem;font-weight:700;white-space:nowrap}
+
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--card);border-top:1px solid var(--bdr);display:flex;z-index:100}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:.58rem;color:var(--mut);transition:color .2s;padding:4px 0;border:none;background:none;font-family:'DM Sans',sans-serif}
 .bnav-item i{font-size:1.2rem}
@@ -46,6 +57,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .sb-item i{font-size:.95rem;width:16px}
 .sb-badge{margin-left:auto;background:var(--brand);color:#fff;font-size:.6rem;font-weight:700;min-width:17px;height:17px;border-radius:50px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 .sb-bottom{margin-top:auto;padding:.65rem;border-top:1px solid var(--bdr)}
+.sb-user-info{padding:.5rem .65rem;margin-bottom:.4rem;background:var(--sur);border-radius:8px;font-size:.72rem;color:var(--mut)}
+.sb-user-info strong{display:block;color:var(--txt);font-size:.78rem;margin-bottom:1px}
 .logout-btn{width:100%;background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.42rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
 .logout-btn:hover{border-color:var(--err);color:var(--err)}
 .main{padding-top:58px;padding-bottom:68px;min-height:100vh}
@@ -113,6 +126,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .btn-sm.manage{border-color:rgba(232,82,26,.3);color:var(--brand)}
 .btn-sm.tog{border-color:rgba(46,125,50,.3);color:var(--ok)}
 .btn-sm.dup{border-color:rgba(103,58,183,.3);color:#6A1B9A}
+.btn-sm.pass{border-color:rgba(21,101,192,.3);color:#1565C0}
 .food-list{display:flex;flex-direction:column;gap:.75rem}
 .food-item-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);display:flex;gap:.75rem;padding:.85rem;align-items:flex-start}
 .food-item-img{width:60px;height:60px;border-radius:10px;object-fit:cover;flex-shrink:0;border:1px solid var(--bdr)}
@@ -123,7 +137,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .tpill{font-size:.6rem;padding:1px 6px;border-radius:50px;font-weight:600}
 .tv{background:#E8F5E9;color:#2E7D32}.tn{background:#FFF1EB;color:var(--brand)}.tb{background:#FFF3E0;color:#E65100}
 .rpill{font-size:.63rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:2px 7px;font-weight:600}
-.vpill{font-size:.6rem;background:#F3E5F5;color:#6A1B9A;border-radius:50px;padding:1px 7px;font-weight:600;border:1px solid rgba(106,27,154,.2)}
+.variant-price-list{display:flex;flex-wrap:wrap;gap:.25rem;margin-top:.2rem}
+.vp-chip{font-size:.6rem;background:#F3E5F5;color:#6A1B9A;border:1px solid rgba(106,27,154,.18);border-radius:50px;padding:1px 7px;font-weight:600;white-space:nowrap}
 .order-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);padding:.9rem;margin-bottom:.75rem}
 .oc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;gap:.4rem;flex-wrap:wrap}
 .oc-id{font-weight:700;font-size:.8rem}
@@ -169,20 +184,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .dup-banner{background:linear-gradient(135deg,#F3E5F5,#faf5ff);border:1.5px solid rgba(106,27,154,.2);border-radius:10px;padding:.6rem .9rem;font-size:.78rem;color:#6A1B9A;display:none;align-items:center;gap:6px;margin-bottom:.75rem;font-weight:500}
 .dup-banner.show{display:flex}
 .settings-info{background:var(--bl);border:1px solid rgba(232,82,26,.2);border-radius:10px;padding:.75rem 1rem;font-size:.78rem;color:var(--brand);margin-bottom:1rem;display:flex;align-items:flex-start;gap:7px;line-height:1.45}
-.price-row{display:flex;gap:.4rem;align-items:stretch}
-.price-row input{flex:1}
-.price-quick-select{padding:.5rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.82rem;cursor:pointer;outline:none;background:#fff;-webkit-appearance:none;color:var(--mut);min-width:90px}
-.price-quick-select:focus{border-color:var(--brand)}
-.veg-toggle-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2px}
-.veg-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
-.veg-toggle-btn.active-veg{background:#E8F5E9;border-color:#66BB6A;color:#2E7D32}
-.veg-toggle-btn.active-nonveg{background:#FFF1EB;border-color:#E8521A;color:#C03E10}
-.bestseller-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
-.bestseller-toggle-btn.active{background:#FFF3E0;border-color:#FFA726;color:#E65100}
-.spicy-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
-.spicy-toggle-btn.active{background:#FFEBEE;border-color:#EF5350;color:#C62828}
+.pass-section{background:linear-gradient(135deg,#E3F2FD,#f0f8ff);border:1.5px solid #90CAF9;border-radius:10px;padding:.75rem .9rem;margin-top:.5rem;grid-column:1/-1}
+.pass-section-title{font-size:.67rem;font-weight:700;color:#1565C0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;display:flex;align-items:center;gap:5px}
+.pass-row{display:flex;gap:.4rem;align-items:center}
+.pass-row input{flex:1;padding:.46rem .75rem;border:1.5px solid #90CAF9;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.86rem;outline:none;background:#fff;color:var(--txt)}
+.pass-row input:focus{border-color:#1565C0}
+.pass-row button{background:#1565C0;color:#fff;border:none;border-radius:8px;padding:.46rem .85rem;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:4px}
+.pass-hint{font-size:.66rem;color:#1565C0;margin-top:.35rem;opacity:.8}
+.pass-current{font-size:.7rem;color:#1565C0;background:rgba(21,101,192,.08);border-radius:6px;padding:.25rem .55rem;margin-top:.3rem;font-family:monospace;display:none}
+.rest-mode-info{background:linear-gradient(135deg,var(--bl),#fff8f5);border:1.5px solid rgba(232,82,26,.25);border-radius:12px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:.6rem}
+.rest-mode-info i{color:var(--brand);font-size:1.1rem;flex-shrink:0;margin-top:1px}
+.rest-mode-info-text{font-size:.78rem;color:var(--brand);line-height:1.5}
+.rest-mode-info-text strong{font-size:.82rem;color:var(--bd)}
 
-/* ══ BANNERS ══ */
+/* ── BANNERS ── */
 .banner-list{display:flex;flex-direction:column;gap:.75rem;margin-top:.5rem}
 .banner-card{background:var(--card);border-radius:var(--r);border:1px solid var(--bdr);overflow:hidden;display:flex;flex-direction:column}
 .banner-preview-strip{height:80px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
@@ -202,7 +217,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .banner-status{display:inline-flex;align-items:center;gap:3px;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:50px}
 .banner-status.active{background:#E8F5E9;color:#2E7D32}
 .banner-status.inactive{background:#F5F5F5;color:#9E9E9E}
-.banner-card-actions{display:flex;gap:.35rem;flex-wrap:wrap}
 .color-preview{width:20px;height:20px;border-radius:4px;border:1px solid var(--bdr);display:inline-block;flex-shrink:0;vertical-align:middle}
 .live-banner-preview{border-radius:12px;overflow:hidden;margin-top:.5rem;height:120px;position:relative;display:flex;align-items:center;cursor:default;user-select:none}
 .lbp-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
@@ -212,7 +226,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .lbp-title{font-family:'Playfair Display',serif;font-size:1.05rem;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,.35);margin-bottom:2px}
 .lbp-sub{font-size:.72rem;opacity:.9;text-shadow:0 1px 4px rgba(0,0,0,.3)}
 
-/* ══ VARIANTS ══ */
+/* ── VARIANTS ── */
 .variants-section-label{font-size:.67rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;gap:5px;margin-bottom:.45rem}
 .variant-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.5rem;min-height:4px}
 .variant-row{display:flex;gap:.4rem;align-items:center}
@@ -227,10 +241,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 .variant-hint{font-size:.65rem;color:var(--mut);margin-top:.35rem;line-height:1.5;display:flex;align-items:flex-start;gap:4px}
 .variant-hint i{font-size:.72rem;margin-top:1px;flex-shrink:0;color:var(--brand);opacity:.7}
 .variants-wrapper{border:1.5px solid var(--bdr);border-radius:10px;padding:.75rem;background:var(--sur);grid-column:1/-1}
+.veg-toggle-wrap{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:2px}
+.veg-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.veg-toggle-btn.active-veg{background:#E8F5E9;border-color:#66BB6A;color:#2E7D32}
+.veg-toggle-btn.active-nonveg{background:#FFF1EB;border-color:#E8521A;color:#C03E10}
+.bestseller-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.bestseller-toggle-btn.active{background:#FFF3E0;border-color:#FFA726;color:#E65100}
+.spicy-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
+.spicy-toggle-btn.active{background:#FFEBEE;border-color:#EF5350;color:#C62828}
 
 @media(min-width:768px){
   .bottom-nav{display:none}
   .main{padding-top:58px;padding-bottom:0}
+  body.rest-mode .main{padding-top:86px}
   .toast{bottom:1.5rem}
   .content{padding:1.5rem 1.75rem;max-width:1100px;margin:0 auto}
 }
@@ -238,43 +261,73 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 </head>
 <body>
 
+<!-- ══ LOGIN ══ -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <h2>Zestora</h2>
-    <p>Admin Panel — Sign in</p>
-    <input type="text" id="lUser" placeholder="Username" autocomplete="off" autocapitalize="off"/>
+    <p id="loginSubtitle">Admin Panel — Sign in</p>
+    <input type="text" id="lUser" placeholder="Username or Restaurant ID" autocomplete="off" autocapitalize="off"/>
     <input type="password" id="lPass" placeholder="Password" autocomplete="current-password"/>
-    <button class="login-btn" onclick="doLogin()">Sign In</button>
-    <div class="login-err" id="loginErr">Wrong username or password</div>
-    <p style="font-size:.68rem;color:var(--mut);margin-top:.65rem">admin / zestora2025</p>
+    <button class="login-btn" onclick="doLogin()" id="loginBtn">Sign In</button>
+    <div class="login-err" id="loginErr">Wrong credentials. Try again.</div>
+    <div class="login-hint">
+      <strong style="color:var(--brand);font-size:.74rem">ℹ️ How to login:</strong><br/>
+      Super Admin: <code>admin</code> / <code>zestora2025</code><br/>
+      Restaurant: Enter Restaurant ID + password set by admin
+    </div>
   </div>
+</div>
+
+<!-- Restaurant mode banner -->
+<div class="rest-mode-bar" id="restModeBar">
+  🏪 Restaurant Admin Mode — <span id="restModeRestName"></span>
 </div>
 
 <div class="sb-overlay" id="sbOverlay" onclick="closeSidebar()"></div>
 <aside class="sidebar" id="sidebar">
   <div class="sb-head"><div class="logo">Zestora</div><button class="sb-close" onclick="closeSidebar()"><i class="ti ti-x"></i></button></div>
-  <div class="sb-sec">Overview</div>
-  <div class="sb-item active" onclick="showSec('dashboard',this);closeSidebar()"><i class="ti ti-dashboard"></i> Dashboard</div>
-  <div class="sb-sec">Manage</div>
-  <div class="sb-item" onclick="showSec('restaurants',this);closeSidebar()"><i class="ti ti-building-store"></i> Restaurants <span class="sb-badge" id="restCount">0</span></div>
-  <div class="sb-item" onclick="showSec('foods',this);closeSidebar()"><i class="ti ti-tools-kitchen-2"></i> Food Items <span class="sb-badge" id="foodCount">0</span></div>
-  <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
-  <div class="sb-sec">Content</div>
-  <div class="sb-item" onclick="showSec('banners',this);closeSidebar()"><i class="ti ti-photo-scan"></i> Banners / Offers <span class="sb-badge" id="bannerCount">0</span></div>
-  <div class="sb-sec">Config</div>
-  <div class="sb-item" onclick="showSec('settings',this);closeSidebar()"><i class="ti ti-settings"></i> Delivery Settings</div>
-  <div class="sb-bottom"><button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button></div>
+
+  <!-- Admin-only sections -->
+  <div id="sb-admin-sections">
+    <div class="sb-sec">Overview</div>
+    <div class="sb-item active" onclick="showSec('dashboard',this);closeSidebar()"><i class="ti ti-dashboard"></i> Dashboard</div>
+    <div class="sb-sec">Manage</div>
+    <div class="sb-item" onclick="showSec('restaurants',this);closeSidebar()"><i class="ti ti-building-store"></i> Restaurants <span class="sb-badge" id="restCount">0</span></div>
+    <div class="sb-item" onclick="showSec('foods',this);closeSidebar()"><i class="ti ti-tools-kitchen-2"></i> Food Items <span class="sb-badge" id="foodCount">0</span></div>
+    <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
+    <div class="sb-sec">Content</div>
+    <div class="sb-item" onclick="showSec('banners',this);closeSidebar()"><i class="ti ti-photo-scan"></i> Banners / Offers <span class="sb-badge" id="bannerCount">0</span></div>
+    <div class="sb-sec">Config</div>
+    <div class="sb-item" onclick="showSec('settings',this);closeSidebar()"><i class="ti ti-settings"></i> Delivery Settings</div>
+  </div>
+
+  <!-- Restaurant-only sections -->
+  <div id="sb-rest-sections" style="display:none">
+    <div class="sb-sec">My Restaurant</div>
+    <div class="sb-item active" onclick="showSec('foods',this);closeSidebar()"><i class="ti ti-tools-kitchen-2"></i> My Food Items <span class="sb-badge" id="foodCount2">0</span></div>
+    <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> My Orders <span class="sb-badge" id="orderCount2">0</span></div>
+  </div>
+
+  <div class="sb-bottom">
+    <div class="sb-user-info">
+      <strong id="sbUserName">Admin</strong>
+      <span id="sbUserRole">Super Admin</span>
+    </div>
+    <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
+  </div>
 </aside>
 
 <div class="topbar">
   <button class="menu-toggle" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
-  <div class="topbar-logo">Zestora</div>
-  <div style="display:flex;gap:.5rem">
+  <div class="topbar-logo" id="topbarLogo">Zestora</div>
+  <div style="display:flex;gap:.5rem;align-items:center">
+    <span class="tb-role-badge" id="topbarRoleBadge" style="display:none"></span>
     <button class="tb-btn" onclick="refreshAll()"><i class="ti ti-refresh"></i></button>
   </div>
 </div>
 
-<nav class="bottom-nav">
+<!-- Bottom nav - admin -->
+<nav class="bottom-nav" id="adminBottomNav">
   <button class="bnav-item active" id="bn-dashboard" onclick="showSec('dashboard',this)"><i class="ti ti-dashboard"></i>Home</button>
   <button class="bnav-item" id="bn-restaurants" onclick="showSec('restaurants',this)">
     <div style="position:relative;display:inline-block"><i class="ti ti-building-store"></i><span class="bnav-badge" id="rBadge">0</span></div>Rests
@@ -290,7 +343,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   </button>
 </nav>
 
-<div class="main"><div class="content">
+<!-- Bottom nav - restaurant mode -->
+<nav class="bottom-nav" id="restBottomNav" style="display:none">
+  <button class="bnav-item active" id="rbn-foods" onclick="showSec('foods',this)">
+    <div style="position:relative;display:inline-block"><i class="ti ti-tools-kitchen-2"></i><span class="bnav-badge" id="fBadge2">0</span></div>My Foods
+  </button>
+  <button class="bnav-item" id="rbn-orders" onclick="showSec('orders',this)">
+    <div style="position:relative;display:inline-block"><i class="ti ti-receipt"></i><span class="bnav-badge" id="oBadge2">0</span></div>My Orders
+  </button>
+</nav>
+
+<div class="main" id="mainArea"><div class="content">
 
 <!-- DASHBOARD -->
 <div class="sec active" id="sec-dashboard">
@@ -331,6 +394,20 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
       <div class="fg full"><label>Tags (comma separated)</label><input id="rTags" placeholder="Biryani, Curry, Tandoor" data-next=""/></div>
       <div class="fg row full"><input type="checkbox" id="rOpen" checked/><label for="rOpen">Currently Open</label></div>
       <div class="fg row full"><input type="checkbox" id="rPop"/><label for="rPop">Mark as Popular 🔥</label></div>
+
+      <!-- ══ RESTAURANT ADMIN PASSWORD SECTION ══ -->
+      <div class="pass-section full" id="restPassSection">
+        <div class="pass-section-title"><i class="ti ti-shield-lock"></i> Restaurant Admin Password</div>
+        <div class="pass-row">
+          <input type="text" id="rAdminPass" placeholder="Set password for restaurant login (optional)" autocomplete="new-password"/>
+          <button type="button" onclick="generatePass()"><i class="ti ti-refresh"></i> Generate</button>
+        </div>
+        <div class="pass-current" id="rPassCurrent"></div>
+        <div class="pass-hint">
+          🔑 Restaurant owner yeh password use karega: <strong>Restaurant ID</strong> as username + <strong>yeh password</strong><br/>
+          Woh sirf apne foods aur orders dekh/manage kar sakta hai.
+        </div>
+      </div>
     </div>
     <div class="form-actions">
       <button class="btn-pr" id="restSaveBtn" onclick="saveRestaurant()"><i class="ti ti-check"></i> Save Restaurant</button>
@@ -345,6 +422,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <div class="sec" id="sec-foods">
   <div id="foodAlert" class="alert"></div>
   <div class="dup-banner" id="dupBanner"><i class="ti ti-copy"></i> Item duplicate hua — naam aur price change karo. Save karoge toh naya item banega.</div>
+
+  <!-- Restaurant mode info banner -->
+  <div class="rest-mode-info" id="restModeInfoFood" style="display:none">
+    <i class="ti ti-lock"></i>
+    <div class="rest-mode-info-text">
+      <strong id="restModeRestNameFood">Restaurant Name</strong> — Restaurant Admin Mode<br/>
+      Aap sirf apne restaurant ke food items add/edit/delete kar sakte ho.
+    </div>
+  </div>
+
   <div class="form-card">
     <div class="form-card-title">
       <span id="foodFormTitle">Add Food Item</span>
@@ -352,51 +439,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
     <input type="hidden" id="foodEditId"/>
     <div class="form-grid">
-      <div class="fg full"><label>Restaurant *</label><select id="fRestId" onchange="rememberRestaurant()"><option value="">— Select Restaurant —</option></select></div>
+      <div class="fg full" id="restSelectWrap"><label>Restaurant *</label><select id="fRestId" onchange="rememberRestaurant()"><option value="">— Select Restaurant —</option></select></div>
       <div class="fg"><label>Food Name *</label><input id="fName" placeholder="e.g. Butter Chicken" autocapitalize="words" data-next="fPrice"/></div>
-      <!-- PRICE WITH QUICK SELECT -->
       <div class="fg">
-        <label>Base Price (₹) *</label>
-        <div class="price-row">
-          <input type="number" id="fPrice" placeholder="280" inputmode="decimal" min="0" step="0.01" data-next="fRating"/>
-          <select class="price-quick-select" onchange="if(this.value){document.getElementById('fPrice').value=this.value;this.value=''}" title="Quick price select">
-            <option value="">₹ Quick</option>
-            <option value="29">₹29</option><option value="39">₹39</option><option value="49">₹49</option>
-            <option value="59">₹59</option><option value="69">₹69</option><option value="79">₹79</option>
-            <option value="89">₹89</option><option value="99">₹99</option><option value="109">₹109</option>
-            <option value="119">₹119</option><option value="129">₹129</option><option value="149">₹149</option>
-            <option value="169">₹169</option><option value="179">₹179</option><option value="199">₹199</option>
-            <option value="229">₹229</option><option value="249">₹249</option><option value="279">₹279</option>
-            <option value="299">₹299</option><option value="329">₹329</option><option value="349">₹349</option>
-            <option value="379">₹379</option><option value="399">₹399</option><option value="449">₹449</option>
-            <option value="499">₹499</option><option value="549">₹549</option><option value="599">₹599</option>
-            <option value="649">₹649</option><option value="699">₹699</option><option value="799">₹799</option>
-            <option value="899">₹899</option><option value="999">₹999</option>
-          </select>
-        </div>
-        <span style="font-size:.63rem;color:var(--mut);margin-top:2px">Agar variants hain toh yeh base price hogi (size picker mein override hogi)</span>
+        <label>Base Price (₹)</label>
+        <input type="number" id="fPrice" placeholder="280 (optional if variants set)" inputmode="decimal" min="0" step="0.01" data-next="fRating"/>
+        <span style="font-size:.63rem;color:var(--mut);margin-top:2px">Variants set hain toh yeh optional hai</span>
       </div>
-
-      <!-- ══ VARIANTS SECTION ══ -->
       <div class="fg full">
         <div class="variants-wrapper">
-          <div class="variants-section-label">
-            <i class="ti ti-stack-2" style="color:var(--brand)"></i>
-            Size / Quantity Variants
-            <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — optional</span>
-          </div>
+          <div class="variants-section-label"><i class="ti ti-stack-2" style="color:var(--brand)"></i> Size / Quantity Variants <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — optional</span></div>
           <div class="variant-list" id="variantList"></div>
-          <button type="button" class="add-variant-btn" onclick="addVariantRow()">
-            <i class="ti ti-plus"></i> Add Variant
-          </button>
-          <div class="variant-hint">
-            <i class="ti ti-info-circle"></i>
-            Example: <strong>Half</strong> → ₹50 &nbsp;|&nbsp; <strong>Full</strong> → ₹100 &nbsp;|&nbsp; <strong>Small/Medium/Large</strong> etc.<br/>
-            Agar variant add kiya toh customer ko size choose karna hoga. Koi variant nahi = seedha add hoga.
-          </div>
+          <button type="button" class="add-variant-btn" onclick="addVariantRow()"><i class="ti ti-plus"></i> Add Variant</button>
+          <div class="variant-hint"><i class="ti ti-info-circle"></i>Example: <strong>Half</strong> → ₹50 &nbsp;|&nbsp; <strong>Full</strong> → ₹100</div>
         </div>
       </div>
-
       <div class="fg full">
         <label>Category</label>
         <div class="pill-box" id="catPillBox">
@@ -421,13 +478,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <input type="hidden" id="fCategory"/>
       </div>
       <div class="fg"><label>Rating (optional)</label><input type="number" id="fRating" placeholder="4.5 (optional)" min="1" max="5" step="0.1" inputmode="decimal" data-next="fDesc"/></div>
-      <div class="fg full"><label>Description *</label><textarea id="fDesc" placeholder="Describe the dish…" data-next="fImage"></textarea></div>
+      <div class="fg full"><label>Description</label><textarea id="fDesc" placeholder="Describe the dish… (optional)" data-next="fImage"></textarea></div>
       <div class="fg full">
-        <label>Food Image</label>
-        <div class="img-search-row"><input type="text" id="fImgQuery" placeholder="Search: e.g. Butter Chicken"/><button onclick="searchImages('f','fImgQuery','fImgResults','fImgSearchBtn')" id="fImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
-        <div class="img-search-note">Image search karo ya neeche URL paste karo</div>
-        <div id="fImgResults" class="img-results" style="display:none"></div>
-        <div class="img-url-row"><span class="img-url-label">URL:</span><input type="url" id="fImage" placeholder="https://…" oninput="prvImg('fPrv',this.value)" data-next="fCal"/></div>
+        <label>Food Image URL</label>
+        <div class="img-url-row" style="margin-top:0"><span class="img-url-label">URL:</span><input type="url" id="fImage" placeholder="https://…" oninput="prvImg('fPrv',this.value)" data-next="fCal"/></div>
         <img id="fPrv" class="img-preview"/>
       </div>
       <div class="fg full">
@@ -443,7 +497,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <input type="text" id="fPrepTime" placeholder="Ya custom likho: e.g. 35–45 min" style="padding:.42rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.85rem;outline:none;width:100%;background:#fff;color:var(--txt)"/>
       </div>
       <div class="fg"><label>Calories</label><input id="fCal" placeholder="480 kcal" data-next=""/></div>
-      <!-- VEG / BESTSELLER / SPICY TOGGLE BUTTONS -->
       <div class="fg full">
         <label>Tags</label>
         <div class="veg-toggle-wrap">
@@ -462,7 +515,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
     </div>
   </div>
   <div class="sec-head"><div class="sec-title"><i class="ti ti-tools-kitchen-2" style="color:var(--brand)"></i> All Food Items</div></div>
-  <div class="filter-bar">
+  <div class="filter-bar" id="foodFilterBar">
     <input id="foodSearch" placeholder="Search food…" oninput="renderFoods()"/>
     <select id="foodRestFilter" onchange="renderFoods()"><option value="">All Restaurants</option></select>
   </div>
@@ -471,7 +524,16 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 
 <!-- ORDERS -->
 <div class="sec" id="sec-orders">
-  <div class="sec-head"><div class="sec-title"><i class="ti ti-receipt" style="color:var(--brand)"></i> All Orders</div></div>
+  <div class="sec-head"><div class="sec-title"><i class="ti ti-receipt" style="color:var(--brand)"></i> <span id="ordersTitle">All Orders</span></div></div>
+
+  <!-- Restaurant mode orders info -->
+  <div class="rest-mode-info" id="restModeInfoOrders" style="display:none">
+    <i class="ti ti-lock"></i>
+    <div class="rest-mode-info-text">
+      <strong id="restModeRestNameOrders">Restaurant</strong> — Sirf aapke restaurant ke orders dikh rahe hain.
+    </div>
+  </div>
+
   <div class="filter-bar">
     <input id="orderSearch" placeholder="Search name / email…" oninput="renderOrders()"/>
     <select id="orderStatusFilter" onchange="renderOrders()">
@@ -480,7 +542,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
       <option value="preparing">Preparing</option><option value="out_for_delivery">Out for Delivery</option>
       <option value="delivered">Delivered</option><option value="cancelled">Cancelled</option>
     </select>
-    <select id="orderRestFilter" onchange="renderOrders()"><option value="">All Restaurants</option></select>
+    <select id="orderRestFilter" onchange="renderOrders()" class="admin-only-filter"><option value="">All Restaurants</option></select>
   </div>
   <div id="ordersList"><div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div></div>
 </div>
@@ -488,10 +550,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <!-- BANNERS -->
 <div class="sec" id="sec-banners">
   <div id="bannerAlert" class="alert"></div>
-  <div class="settings-info">
-    <i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i>
-    <span>Yahan banners banao — restaurant page, menu page, ya dono jagah dikhaoge. Active banners customer site pe auto-slide honge.</span>
-  </div>
+  <div class="settings-info"><i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i><span>Yahan banners banao — restaurant page, menu page, ya dono jagah dikhaoge. Active banners customer site pe auto-slide honge.</span></div>
   <div class="form-card">
     <div class="form-card-title">
       <span id="bannerFormTitle">✨ New Banner / Offer</span>
@@ -520,10 +579,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
           <label style="display:flex;align-items:center;gap:6px;font-size:.84rem;font-weight:500;cursor:pointer"><input type="checkbox" id="bPageMenu" checked style="width:17px;height:17px;accent-color:var(--brand)"/> 🍽️ Food/Menu Page</label>
         </div>
       </div>
-      <div class="fg row full">
-        <input type="checkbox" id="bActive" checked/>
-        <label for="bActive">✅ Active (customer site pe dikhega)</label>
-      </div>
+      <div class="fg row full"><input type="checkbox" id="bActive" checked/><label for="bActive">✅ Active (customer site pe dikhega)</label></div>
       <div class="fg full">
         <label>Live Preview</label>
         <div class="live-banner-preview" id="livePreview">
@@ -549,10 +605,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
 <!-- DELIVERY SETTINGS -->
 <div class="sec" id="sec-settings">
   <div id="settingsAlert" class="alert"></div>
-  <div class="settings-info">
-    <i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i>
-    <span>Yahan jo bhi set karoge woh customer website pe automatically apply ho jaega.</span>
-  </div>
+  <div class="settings-info"><i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i><span>Yahan jo bhi set karoge woh customer website pe automatically apply ho jaega.</span></div>
   <div class="form-card">
     <div class="form-card-title"><span><i class="ti ti-truck" style="color:var(--brand);vertical-align:-2px"></i> Delivery Charges</span></div>
     <div class="form-grid">
@@ -567,9 +620,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
         <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Isse zyada order pe delivery free</span>
       </div>
     </div>
-    <div class="form-actions">
-      <button class="btn-pr" id="settingsSaveBtn" onclick="saveSettings()"><i class="ti ti-device-floppy"></i> Save Settings</button>
-    </div>
+    <div class="form-actions"><button class="btn-pr" id="settingsSaveBtn" onclick="saveSettings()"><i class="ti ti-device-floppy"></i> Save Settings</button></div>
   </div>
   <div class="form-card" style="margin-top:0">
     <div class="form-card-title">Current Live Settings</div>
@@ -590,6 +641,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--sur);color:var(--txt);min
   </div>
 </div>
 
+<!-- RESTAURANT PASSWORD MODAL -->
+<div class="modal-ov" id="passModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>🔑 Restaurant Login</h3>
+      <button class="modal-close" onclick="closePassModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div style="padding:1.1rem">
+      <div id="passModalContent"></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -602,127 +666,198 @@ const db=getFirestore(app);
 const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT="5547663296";
 
+// ══ SESSION STATE ══
+let session = { role: null, restaurantId: null, restaurantName: null };
+// role: 'admin' | 'restaurant'
+
 let restaurants=[],foods=[],orders=[],banners=[],mgRestId=null;
 let lastSelectedRestId='';
 
 // ══════════════════════════════════════════════
-// ✅ VARIANTS — Size/Quantity options
+// LOGIN / LOGOUT
 // ══════════════════════════════════════════════
-let variantCount = 0;
+window.doLogin = async () => {
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  const u = document.getElementById('lUser').value.trim();
+  const p = document.getElementById('lPass').value.trim();
+  document.getElementById('loginErr').style.display = 'none';
 
+  // Super admin check
+  if (u === 'admin' && p === 'zestora2025') {
+    session = { role: 'admin', restaurantId: null, restaurantName: 'Super Admin' };
+    applySession();
+    btn.disabled = false; btn.textContent = 'Sign In';
+    return;
+  }
+
+  // Restaurant admin check — username = restaurant ID, password = adminPassword field
+  try {
+    const restDoc = await getDoc(doc(db, 'restaurants', u));
+    if (restDoc.exists()) {
+      const data = restDoc.data();
+      if (data.adminPassword && data.adminPassword === p) {
+        session = { role: 'restaurant', restaurantId: u, restaurantName: data.name || u };
+        applySession();
+        btn.disabled = false; btn.textContent = 'Sign In';
+        return;
+      }
+    }
+  } catch(e) { /* network issue - fall through */ }
+
+  document.getElementById('loginErr').style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Sign In';
+};
+
+window.doLogout = () => {
+  session = { role: null, restaurantId: null, restaurantName: null };
+  document.getElementById('loginScreen').style.display = 'flex';
+  // Reset UI to default admin state for next login
+  document.getElementById('lUser').value = '';
+  document.getElementById('lPass').value = '';
+};
+
+function applySession() {
+  document.getElementById('loginScreen').style.display = 'none';
+  const isAdmin = session.role === 'admin';
+  const isRest = session.role === 'restaurant';
+
+  // Sidebar sections
+  document.getElementById('sb-admin-sections').style.display = isAdmin ? '' : 'none';
+  document.getElementById('sb-rest-sections').style.display = isRest ? '' : 'none';
+
+  // Bottom navs
+  document.getElementById('adminBottomNav').style.display = isAdmin ? '' : 'none';
+  document.getElementById('restBottomNav').style.display = isRest ? '' : 'none';
+
+  // Top bar
+  const roleBadge = document.getElementById('topbarRoleBadge');
+  if (isRest) {
+    roleBadge.textContent = '🏪 ' + session.restaurantName;
+    roleBadge.style.display = '';
+    document.getElementById('topbarLogo').textContent = 'Zestora';
+  } else {
+    roleBadge.textContent = '⚡ Admin';
+    roleBadge.style.display = '';
+  }
+
+  // Restaurant mode bar
+  const modeBar = document.getElementById('restModeBar');
+  if (isRest) {
+    modeBar.classList.add('show');
+    document.getElementById('restModeRestName').textContent = session.restaurantName;
+    document.body.classList.add('rest-mode');
+  } else {
+    modeBar.classList.remove('show');
+    document.body.classList.remove('rest-mode');
+  }
+
+  // Sidebar user info
+  document.getElementById('sbUserName').textContent = isAdmin ? 'Super Admin' : session.restaurantName;
+  document.getElementById('sbUserRole').textContent = isAdmin ? '⚡ Full Access' : '🏪 Restaurant Admin';
+
+  // Food section UI tweaks
+  const restModeInfoFood = document.getElementById('restModeInfoFood');
+  if (isRest) {
+    restModeInfoFood.style.display = 'flex';
+    document.getElementById('restModeRestNameFood').textContent = session.restaurantName;
+    document.getElementById('restSelectWrap').style.display = 'none'; // hide restaurant dropdown for rest admin
+    document.getElementById('foodRestFilter').parentElement.style.display = 'none';
+  } else {
+    restModeInfoFood.style.display = 'none';
+    document.getElementById('restSelectWrap').style.display = '';
+  }
+
+  // Orders UI
+  const restModeInfoOrders = document.getElementById('restModeInfoOrders');
+  const orderRestFilterEl = document.querySelector('.admin-only-filter');
+  if (isRest) {
+    restModeInfoOrders.style.display = 'flex';
+    document.getElementById('restModeRestNameOrders').textContent = session.restaurantName;
+    document.getElementById('ordersTitle').textContent = 'My Orders';
+    if (orderRestFilterEl) orderRestFilterEl.style.display = 'none';
+  } else {
+    restModeInfoOrders.style.display = 'none';
+    document.getElementById('ordersTitle').textContent = 'All Orders';
+    if (orderRestFilterEl) orderRestFilterEl.style.display = '';
+  }
+
+  loadAll().then(() => {
+    if (isRest) {
+      // Start on foods section
+      showSec('foods', null);
+      // Pre-select restaurant in food form
+      lastSelectedRestId = session.restaurantId;
+      document.getElementById('fRestId').value = session.restaurantId;
+    } else {
+      showSec('dashboard', null);
+    }
+  });
+}
+
+// ══ VARIANTS ══
+let variantCount = 0;
 window.addVariantRow = (name='', price='') => {
   variantCount++;
   const id = 'vrow_' + variantCount;
   const row = document.createElement('div');
-  row.className = 'variant-row';
-  row.id = id;
+  row.className = 'variant-row'; row.id = id;
   row.innerHTML = `
     <input type="text" class="v-name" placeholder="e.g. Half / Full / Small" value="${name}" autocapitalize="words" style="flex:1;padding:.46rem .7rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);-webkit-appearance:none"/>
-    <input type="number" class="v-price" placeholder="Price ₹" value="${price}" min="0" step="0.01" inputmode="decimal" style="width:90px;flex:0 0 90px;padding:.46rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);-webkit-appearance:none;text-align:center"/>
+    <input type="number" class="v-price" placeholder="₹" value="${price}" min="0" step="0.01" inputmode="decimal" style="width:90px;flex:0 0 90px;padding:.46rem .6rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.84rem;outline:none;background:#fff;color:var(--txt);-webkit-appearance:none;text-align:center"/>
     <button type="button" class="variant-rm" onclick="removeVariantRow('${id}')" title="Remove"><i class="ti ti-trash" style="font-size:.76rem"></i></button>`;
   document.getElementById('variantList').appendChild(row);
-  // focus new name field
   setTimeout(()=>row.querySelector('.v-name').focus(), 50);
 };
-
-window.removeVariantRow = (id) => {
-  const el = document.getElementById(id);
-  if (el) el.remove();
-};
-
+window.removeVariantRow = id => { const el=document.getElementById(id);if(el)el.remove(); };
 function getVariants() {
-  const rows = document.querySelectorAll('#variantList .variant-row');
-  const variants = [];
-  rows.forEach(row => {
-    const name = row.querySelector('.v-name').value.trim();
-    const priceVal = row.querySelector('.v-price').value;
-    const price = parseFloat(priceVal);
-    if (name && !isNaN(price) && price >= 0) variants.push({ name, price });
+  const rows=document.querySelectorAll('#variantList .variant-row');
+  const variants=[];
+  rows.forEach(row=>{
+    const name=row.querySelector('.v-name').value.trim();
+    const price=parseFloat(row.querySelector('.v-price').value);
+    if(name&&!isNaN(price)&&price>=0)variants.push({name,price});
   });
   return variants;
 }
+function setVariants(arr) { document.getElementById('variantList').innerHTML='';variantCount=0;if(arr&&arr.length)arr.forEach(v=>addVariantRow(v.name,v.price)); }
+function clearVariants() { document.getElementById('variantList').innerHTML='';variantCount=0; }
 
-function setVariants(arr) {
-  document.getElementById('variantList').innerHTML = '';
-  variantCount = 0;
-  if (arr && arr.length) arr.forEach(v => addVariantRow(v.name, v.price));
-}
-
-function clearVariants() {
-  document.getElementById('variantList').innerHTML = '';
-  variantCount = 0;
-}
+// ══ GENERATE RANDOM PASSWORD ══
+window.generatePass = () => {
+  const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let pass='';for(let i=0;i<8;i++)pass+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('rAdminPass').value=pass;
+  showToast('🔑 Password generated: '+pass);
+};
 
 // ENTER KEY NAV
 document.addEventListener('keydown', e => {
-  if (e.key !== 'Enter') return;
-  const el = e.target;
-  if (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || el.tagName === 'BUTTON') return;
-  if (el.tagName === 'INPUT' && (el.type === 'checkbox' || el.type === 'radio' || el.type === 'color')) return;
-  if (document.getElementById('loginScreen').style.display !== 'none') { doLogin(); return; }
-  const nextId = el.dataset.next;
-  if (nextId) {
-    const nextEl = document.getElementById(nextId);
-    if (nextEl) { e.preventDefault(); nextEl.focus(); }
-  } else {
-    const focusable = [...document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=color]), select, textarea')].filter(x => !x.disabled && x.offsetParent !== null);
-    const idx = focusable.indexOf(el);
-    if (idx !== -1 && idx < focusable.length - 1) { e.preventDefault(); focusable[idx+1].focus(); }
+  if(e.key!=='Enter')return;
+  const el=e.target;
+  if(el.tagName==='TEXTAREA'||el.tagName==='SELECT'||el.tagName==='BUTTON')return;
+  if(el.tagName==='INPUT'&&(el.type==='checkbox'||el.type==='radio'||el.type==='color'))return;
+  if(document.getElementById('loginScreen').style.display!=='none'){doLogin();return;}
+  const nextId=el.dataset.next;
+  if(nextId){const nextEl=document.getElementById(nextId);if(nextEl){e.preventDefault();nextEl.focus();}}
+  else{
+    const focusable=[...document.querySelectorAll('input:not([type=hidden]):not([type=checkbox]):not([type=radio]):not([type=color]),select,textarea')].filter(x=>!x.disabled&&x.offsetParent!==null);
+    const idx=focusable.indexOf(el);
+    if(idx!==-1&&idx<focusable.length-1){e.preventDefault();focusable[idx+1].focus();}
   }
 });
 
 // VEG / BESTSELLER / SPICY TOGGLES
-window.toggleVeg = () => {
-  const btn = document.getElementById('vegToggleBtn');
-  const val = document.getElementById('fVegVal');
-  const isVeg = val.value === 'true';
-  val.value = isVeg ? 'false' : 'true';
-  btn.className = 'veg-toggle-btn ' + (isVeg ? 'active-nonveg' : 'active-veg');
-  btn.textContent = isVeg ? '🍗 Non-Veg' : '🥦 Vegetarian';
-};
-window.toggleBest = () => {
-  const btn = document.getElementById('bestToggleBtn');
-  const val = document.getElementById('fBestVal');
-  const isOn = val.value === 'true';
-  val.value = isOn ? 'false' : 'true';
-  btn.classList.toggle('active', !isOn);
-};
-window.toggleSpicy = () => {
-  const btn = document.getElementById('spicyToggleBtn');
-  const val = document.getElementById('fSpicyVal');
-  const isOn = val.value === 'true';
-  val.value = isOn ? 'false' : 'true';
-  btn.classList.toggle('active', !isOn);
-};
-function setVegToggle(isVeg) {
-  document.getElementById('fVegVal').value = isVeg ? 'true' : 'false';
-  const btn = document.getElementById('vegToggleBtn');
-  btn.className = 'veg-toggle-btn ' + (isVeg ? 'active-veg' : 'active-nonveg');
-  btn.textContent = isVeg ? '🥦 Vegetarian' : '🍗 Non-Veg';
-}
-function setBestToggle(isOn) {
-  document.getElementById('fBestVal').value = isOn ? 'true' : 'false';
-  document.getElementById('bestToggleBtn').classList.toggle('active', isOn);
-}
-function setSpicyToggle(isOn) {
-  document.getElementById('fSpicyVal').value = isOn ? 'true' : 'false';
-  document.getElementById('spicyToggleBtn').classList.toggle('active', isOn);
-}
+window.toggleVeg=()=>{const btn=document.getElementById('vegToggleBtn');const val=document.getElementById('fVegVal');const isVeg=val.value==='true';val.value=isVeg?'false':'true';btn.className='veg-toggle-btn '+(isVeg?'active-nonveg':'active-veg');btn.textContent=isVeg?'🍗 Non-Veg':'🥦 Vegetarian';};
+window.toggleBest=()=>{const btn=document.getElementById('bestToggleBtn');const val=document.getElementById('fBestVal');const isOn=val.value==='true';val.value=isOn?'false':'true';btn.classList.toggle('active',!isOn);};
+window.toggleSpicy=()=>{const btn=document.getElementById('spicyToggleBtn');const val=document.getElementById('fSpicyVal');const isOn=val.value==='true';val.value=isOn?'false':'true';btn.classList.toggle('active',!isOn);};
+function setVegToggle(isVeg){document.getElementById('fVegVal').value=isVeg?'true':'false';const btn=document.getElementById('vegToggleBtn');btn.className='veg-toggle-btn '+(isVeg?'active-veg':'active-nonveg');btn.textContent=isVeg?'🥦 Vegetarian':'🍗 Non-Veg';}
+function setBestToggle(isOn){document.getElementById('fBestVal').value=isOn?'true':'false';document.getElementById('bestToggleBtn').classList.toggle('active',isOn);}
+function setSpicyToggle(isOn){document.getElementById('fSpicyVal').value=isOn?'true':'false';document.getElementById('spicyToggleBtn').classList.toggle('active',isOn);}
 
-window.rememberRestaurant = () => {
-  const val = document.getElementById('fRestId').value;
-  if (val) lastSelectedRestId = val;
-};
+window.rememberRestaurant=()=>{const val=document.getElementById('fRestId').value;if(val)lastSelectedRestId=val;};
 
-// AUTH
-window.doLogin=()=>{
-  const u=document.getElementById('lUser').value.trim();
-  const p=document.getElementById('lPass').value.trim();
-  if(u==='admin'&&p==='zestora2025'){document.getElementById('loginScreen').style.display='none';loadAll();}
-  else document.getElementById('loginErr').style.display='block';
-};
-window.doLogout=()=>{document.getElementById('loginScreen').style.display='flex';};
-
+// ══ SIDEBAR ══
 window.openSidebar=()=>{document.getElementById('sidebar').classList.add('open');document.getElementById('sbOverlay').classList.add('show');};
 window.closeSidebar=()=>{document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');};
 
@@ -732,11 +867,12 @@ window.showSec=(id,el)=>{
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
   if(el&&el.classList.contains('sb-item'))el.classList.add('active');
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
-  const bn=document.getElementById('bn-'+id);if(bn)bn.classList.add('active');
+  const bn=document.getElementById('bn-'+id)||document.getElementById('rbn-'+id);if(bn)bn.classList.add('active');
   if(id==='settings')loadSettingsDisplay();
-  if(id==='banners'){updateBannerPreview();}
+  if(id==='banners')updateBannerPreview();
 };
 
+// ══ DATA LOADING ══
 async function loadAll(){await Promise.all([loadRestaurants(),loadFoods(),loadOrders(),loadBanners()]);}
 window.refreshAll=()=>{showToast('Refreshing…');loadAll().then(()=>showToast('✅ Done'));};
 
@@ -745,25 +881,28 @@ async function loadRestaurants(){
   catch(e){restaurants=[];}
   const n=restaurants.length;
   ['restCount','rBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  document.getElementById('d-rests').textContent=n;
+  const dRests=document.getElementById('d-rests');if(dRests)dRests.textContent=n;
   populateRestDropdowns();renderRestGrid();
 }
 async function loadFoods(){
   try{const snap=await getDocs(collection(db,'foods'));foods=snap.docs.map(d=>({id:d.id,...d.data()}));}
   catch(e){foods=[];}
-  const n=foods.length;
-  ['foodCount','fBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  document.getElementById('d-foods').textContent=n;
+  // Count filtered for restaurant mode
+  const myFoods=session.role==='restaurant'?foods.filter(f=>f.restaurantId===session.restaurantId):foods;
+  const n=session.role==='restaurant'?myFoods.length:foods.length;
+  ['foodCount','fBadge','foodCount2','fBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+  const dFoods=document.getElementById('d-foods');if(dFoods)dFoods.textContent=n;
   renderFoods();
 }
 async function loadOrders(){
   try{const snap=await getDocs(collection(db,'food_orders'));orders=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));}
   catch(e){orders=[];}
-  const pending=orders.filter(o=>!o.status||o.status==='pending').length;
-  const rev=orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
-  ['orderCount','oBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=orders.length;});
-  document.getElementById('d-pending').textContent=pending;
-  document.getElementById('d-rev').textContent='₹'+rev.toLocaleString('en-IN');
+  const myOrders=session.role==='restaurant'?orders.filter(o=>o.restaurantId===session.restaurantId||o.restaurantName===session.restaurantName):orders;
+  const pending=myOrders.filter(o=>!o.status||o.status==='pending').length;
+  const rev=myOrders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
+  ['orderCount','oBadge','orderCount2','oBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=myOrders.length;});
+  const dPend=document.getElementById('d-pending');if(dPend)dPend.textContent=pending;
+  const dRev=document.getElementById('d-rev');if(dRev)dRev.textContent='₹'+rev.toLocaleString('en-IN');
   renderRecentOrders();renderOrders();
 }
 async function loadBanners(){
@@ -777,83 +916,61 @@ async function loadBanners(){
 function populateRestDropdowns(){
   const opts='<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('fRestId').innerHTML=opts;
-  if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
+  if(session.role==='restaurant'){
+    document.getElementById('fRestId').value=session.restaurantId;
+  } else if(lastSelectedRestId){
+    document.getElementById('fRestId').value=lastSelectedRestId;
+  }
   const rOpt='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
   document.getElementById('foodRestFilter').innerHTML=rOpt;
   document.getElementById('orderRestFilter').innerHTML=rOpt;
 }
 const getRestName=id=>restaurants.find(r=>r.id===id)?.name||'';
 
-window.prvImg=(imgId,url)=>{
-  const img=document.getElementById(imgId);
-  if(url&&url.startsWith('http')){img.src=url;img.style.display='block';}
-  else img.style.display='none';
-};
+window.prvImg=(imgId,url)=>{const img=document.getElementById(imgId);if(url&&url.startsWith('http')){img.src=url;img.style.display='block';}else img.style.display='none';};
 
 // IMAGE SEARCH
 window.searchImages=async(prefix,queryId,resultsId,btnId)=>{
-  const q=document.getElementById(queryId).value.trim();
-  const resultsEl=document.getElementById(resultsId);
-  const btnEl=document.getElementById(btnId);
+  const q=document.getElementById(queryId).value.trim();const resultsEl=document.getElementById(resultsId);const btnEl=document.getElementById(btnId);
   if(!q){showToast('Search term likho pehle');return;}
   btnEl.disabled=true;btnEl.innerHTML='<i class="ti ti-loader-2"></i> Searching…';
-  resultsEl.style.display='grid';
-  resultsEl.innerHTML='<div class="img-loading" style="grid-column:1/-1">Searching…</div>';
+  resultsEl.style.display='grid';resultsEl.innerHTML='<div class="img-loading" style="grid-column:1/-1">Searching…</div>';
   try{
     const url=`https://api.unsplash.com/search/photos?query=${encodeURIComponent(q)}&per_page=8&client_id=pP8mPq4IUV6p0tGFPTdu0o-i9_5DCrG4Odc1dCiY6cs`;
     const res=await fetch(url);const data=await res.json();
     const imgs=data.results||[];
     if(!imgs.length){resultsEl.innerHTML='<div class="img-loading" style="grid-column:1/-1">Koi result nahi mila.</div>';return;}
-    const urlInputId=prefix==='r'?'rImage':prefix==='f'?'fImage':'bImage';
-    const prvId=prefix==='r'?'rPrv':prefix==='f'?'fPrv':'bPrv';
+    const urlInputId=prefix==='r'?'rImage':'bImage';const prvId=prefix==='r'?'rPrv':'bPrv';
     resultsEl.innerHTML=imgs.map(img=>`<img class="img-thumb" src="${img.urls.small}" loading="lazy"
       onclick="selImg('${urlInputId}','${prvId}','${resultsId}','${img.urls.regular}',this)${prefix==='b'?';updateBannerPreview()':''}"
       onerror="this.style.display='none'"/>`).join('');
   }catch(e){resultsEl.innerHTML='<div class="img-loading" style="grid-column:1/-1;color:var(--err)">Search nahi chali. URL paste karo.</div>';}
   finally{btnEl.disabled=false;btnEl.innerHTML='<i class="ti ti-brand-google"></i> Search';}
 };
+window.selImg=(urlId,prvId,resId,url,el)=>{document.getElementById(urlId).value=url;prvImg(prvId,url);document.getElementById(resId).querySelectorAll('.img-thumb').forEach(t=>t.classList.remove('selected'));el.classList.add('selected');showToast('✅ Image selected!');};
 
-window.selImg=(urlId,prvId,resId,url,el)=>{
-  document.getElementById(urlId).value=url;prvImg(prvId,url);
-  document.getElementById(resId).querySelectorAll('.img-thumb').forEach(t=>t.classList.remove('selected'));
-  el.classList.add('selected');showToast('✅ Image selected!');
-};
+function showAlert(secId,msg,type='err'){const el=document.getElementById(secId+'Alert');if(!el)return;el.className='alert '+type+' show';el.innerHTML=`<i class="ti ti-${type==='err'?'alert-circle':'circle-check'}"></i> ${msg}`;setTimeout(()=>el.classList.remove('show'),4500);}
 
-function showAlert(secId,msg,type='err'){
-  const el=document.getElementById(secId+'Alert');if(!el)return;
-  el.className='alert '+type+' show';
-  el.innerHTML=`<i class="ti ti-${type==='err'?'alert-circle':'circle-check'}"></i> ${msg}`;
-  setTimeout(()=>el.classList.remove('show'),4500);
-}
-
-// BANNER PREVIEW
+// ══ BANNER PREVIEW ══
 window.updateBannerPreview=()=>{
-  const title=document.getElementById('bTitle')?.value||'Banner Title Yahan Dikhega';
-  const sub=document.getElementById('bSub')?.value||'';
-  const badge=document.getElementById('bBadge')?.value||'';
-  const bgColor=document.getElementById('bBgColor')?.value||'#1A1208';
-  const badgeColor=document.getElementById('bBadgeColor')?.value||'#E8521A';
-  const imgUrl=document.getElementById('bImage')?.value||'';
+  const title=document.getElementById('bTitle')?.value||'Banner Title Yahan Dikhega';const sub=document.getElementById('bSub')?.value||'';
+  const badge=document.getElementById('bBadge')?.value||'';const bgColor=document.getElementById('bBgColor')?.value||'#1A1208';
+  const badgeColor=document.getElementById('bBadgeColor')?.value||'#E8521A';const imgUrl=document.getElementById('bImage')?.value||'';
   const preview=document.getElementById('livePreview');if(!preview)return;
   preview.style.background=bgColor;
   const lbpImg=document.getElementById('lbpImg');
-  if(imgUrl&&imgUrl.startsWith('http')){lbpImg.src=imgUrl;lbpImg.style.display='block';}
-  else{lbpImg.style.display='none';}
+  if(imgUrl&&imgUrl.startsWith('http')){lbpImg.src=imgUrl;lbpImg.style.display='block';}else{lbpImg.style.display='none';}
   document.getElementById('lbpOverlay').style.background=imgUrl?`linear-gradient(to right,${bgColor}ee,${bgColor}88)`:'';
-  document.getElementById('lbpTitle').textContent=title||'Banner Title';
-  document.getElementById('lbpSub').textContent=sub;
+  document.getElementById('lbpTitle').textContent=title||'Banner Title';document.getElementById('lbpSub').textContent=sub;
   const lbpBadge=document.getElementById('lbpBadge');
-  if(badge){lbpBadge.textContent=badge;lbpBadge.style.background=badgeColor;lbpBadge.style.display='inline-block';}
-  else lbpBadge.style.display='none';
+  if(badge){lbpBadge.textContent=badge;lbpBadge.style.background=badgeColor;lbpBadge.style.display='inline-block';}else lbpBadge.style.display='none';
 };
 
-// BANNER SAVE / EDIT / DELETE
+// ══ BANNER CRUD ══
 window.saveBanner=async()=>{
-  const btn=document.getElementById('bannerSaveBtn');
-  btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
+  const btn=document.getElementById('bannerSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
-    const editId=document.getElementById('bannerEditId').value.trim();
-    const title=document.getElementById('bTitle').value.trim();
+    const editId=document.getElementById('bannerEditId').value.trim();const title=document.getElementById('bTitle').value.trim();
     if(!title){showAlert('banner','Banner title required!');return;}
     const data={title,subtitle:document.getElementById('bSub').value.trim(),badge:document.getElementById('bBadge').value.trim(),badgeColor:document.getElementById('bBadgeColor').value,bgColor:document.getElementById('bBgColor').value,image:document.getElementById('bImage').value.trim(),order:parseInt(document.getElementById('bOrder').value)||1,showOnRestaurant:document.getElementById('bPageRest').checked,showOnMenu:document.getElementById('bPageMenu').checked,active:document.getElementById('bActive').checked};
     if(editId){await updateDoc(doc(db,'banners',editId),data);showToast('✅ Banner updated!');showAlert('banner','Banner update ho gaya!','ok');}
@@ -864,26 +981,16 @@ window.saveBanner=async()=>{
 };
 window.editBanner=id=>{
   const b=banners.find(x=>x.id===id);if(!b)return;
-  document.getElementById('bannerEditId').value=id;
-  document.getElementById('bTitle').value=b.title||'';document.getElementById('bSub').value=b.subtitle||'';
+  document.getElementById('bannerEditId').value=id;document.getElementById('bTitle').value=b.title||'';document.getElementById('bSub').value=b.subtitle||'';
   document.getElementById('bBadge').value=b.badge||'';document.getElementById('bBadgeColor').value=b.badgeColor||'#E8521A';
   document.getElementById('bBgColor').value=b.bgColor||'#1A1208';document.getElementById('bImage').value=b.image||'';
   document.getElementById('bOrder').value=b.order||1;document.getElementById('bPageRest').checked=b.showOnRestaurant!==false;
   document.getElementById('bPageMenu').checked=b.showOnMenu!==false;document.getElementById('bActive').checked=b.active!==false;
-  prvImg('bPrv',b.image);document.getElementById('bannerFormTitle').textContent='Edit: '+b.title;
-  document.getElementById('bannerCancelBtn').style.display='block';
+  prvImg('bPrv',b.image);document.getElementById('bannerFormTitle').textContent='Edit: '+b.title;document.getElementById('bannerCancelBtn').style.display='block';
   updateBannerPreview();showSec('banners',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-window.deleteBanner=async id=>{
-  const b=banners.find(x=>x.id===id);
-  if(!confirm(`Delete banner "${b?.title}"?`))return;
-  try{await deleteDoc(doc(db,'banners',id));showToast('Deleted');await loadBanners();}
-  catch(e){showToast('❌ '+e.message);}
-};
-window.toggleBannerActive=async(id,val)=>{
-  try{await updateDoc(doc(db,'banners',id),{active:val});showToast(val?'✅ Banner Active':'🔴 Banner Inactive');await loadBanners();}
-  catch(e){showToast('❌ '+e.message);}
-};
+window.deleteBanner=async id=>{const b=banners.find(x=>x.id===id);if(!confirm(`Delete banner "${b?.title}"?`))return;try{await deleteDoc(doc(db,'banners',id));showToast('Deleted');await loadBanners();}catch(e){showToast('❌ '+e.message);}};
+window.toggleBannerActive=async(id,val)=>{try{await updateDoc(doc(db,'banners',id),{active:val});showToast(val?'✅ Banner Active':'🔴 Banner Inactive');await loadBanners();}catch(e){showToast('❌ '+e.message);}};
 window.resetBannerForm=()=>{
   document.getElementById('bannerEditId').value='';
   ['bTitle','bSub','bBadge','bImage','bImgQuery'].forEach(id=>document.getElementById(id).value='');
@@ -891,8 +998,7 @@ window.resetBannerForm=()=>{
   document.getElementById('bOrder').value='1';document.getElementById('bPageRest').checked=true;
   document.getElementById('bPageMenu').checked=true;document.getElementById('bActive').checked=true;
   document.getElementById('bPrv').style.display='none';document.getElementById('bImgResults').style.display='none';
-  document.getElementById('bannerFormTitle').textContent='✨ New Banner / Offer';
-  document.getElementById('bannerCancelBtn').style.display='none';updateBannerPreview();
+  document.getElementById('bannerFormTitle').textContent='✨ New Banner / Offer';document.getElementById('bannerCancelBtn').style.display='none';updateBannerPreview();
 };
 function renderBannerList(){
   const el=document.getElementById('bannerList');
@@ -927,14 +1033,9 @@ function renderBannerList(){
   }).join('');
 }
 
-// CATEGORY PILLS
-document.addEventListener('change',e=>{
-  if(e.target.classList.contains('cpill')) syncCategoryField();
-});
-function syncCategoryField(){
-  const cats=[...document.querySelectorAll('.cpill:checked')].map(c=>c.value).filter(Boolean);
-  document.getElementById('fCategory').value=cats.join(', ');
-}
+// ══ CATEGORY PILLS ══
+document.addEventListener('change',e=>{if(e.target.classList.contains('cpill'))syncCategoryField();});
+function syncCategoryField(){const cats=[...document.querySelectorAll('.cpill:checked')].map(c=>c.value).filter(Boolean);document.getElementById('fCategory').value=cats.join(', ');}
 window.addCustomCategory=()=>{
   const inp=document.getElementById('fCategoryCustom');const val=inp.value.trim();if(!val){showToast('Category naam likho');return;}
   const id='cpC'+Date.now();const box=document.getElementById('catPillBox');
@@ -946,68 +1047,174 @@ window.addCustomCategory=()=>{
 document.addEventListener('change',e=>{if(e.target.classList.contains('tpchip'))document.getElementById('fPrepTime').value=e.target.value;});
 document.getElementById('fPrepTime')?.addEventListener('input',function(){if(this.value.trim())document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);});
 
-function setFoodFormDefaults(){
-  const tp4=document.getElementById('tp4');if(tp4){tp4.checked=true;document.getElementById('fPrepTime').value='25–30 min';}
-  setVegToggle(true);setBestToggle(false);setSpicyToggle(false);
-}
+function setFoodFormDefaults(){const tp4=document.getElementById('tp4');if(tp4){tp4.checked=true;document.getElementById('fPrepTime').value='25–30 min';}setVegToggle(true);setBestToggle(false);setSpicyToggle(false);}
 setFoodFormDefaults();
 
-// RESTAURANT SAVE
+// ══ RESTAURANT CRUD ══
 window.saveRestaurant=async()=>{
   const btn=document.getElementById('restSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
     const id=document.getElementById('restEditId').value.trim();
     const name=document.getElementById('rName').value.trim();const cuisine=document.getElementById('rCuisine').value.trim();const image=document.getElementById('rImage').value.trim();
-    if(!name){showAlert('rest','Restaurant name is required');return;}if(!cuisine){showAlert('rest','Cuisine type is required');return;}
-    if(!image){showAlert('rest','Cover image URL is required');return;}if(!image.startsWith('http')){showAlert('rest','Image URL must start with http://');return;}
+    if(!name){showAlert('rest','Restaurant name is required');return;}
+    if(!cuisine){showAlert('rest','Cuisine type is required');return;}
+    if(!image){showAlert('rest','Cover image URL is required');return;}
+    if(!image.startsWith('http')){showAlert('rest','Image URL must start with http://');return;}
     const tagsRaw=document.getElementById('rTags').value.trim();const ratingRaw=document.getElementById('rRating').value.trim();
+    const adminPass=document.getElementById('rAdminPass').value.trim();
     const data={name,cuisine,area:document.getElementById('rArea').value.trim(),deliveryTime:document.getElementById('rTime').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,phone:document.getElementById('rPhone').value.trim(),image,tags:tagsRaw?tagsRaw.split(',').map(t=>t.trim()).filter(Boolean):[],isOpen:document.getElementById('rOpen').checked,popular:document.getElementById('rPop').checked};
-    if(id){await updateDoc(doc(db,'restaurants',id),data);showToast('✅ Updated!');showAlert('rest','Restaurant updated!','ok');}
-    else{await addDoc(collection(db,'restaurants'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('rest','Restaurant added!','ok');}
+    // Only update password if it was filled in
+    if(adminPass)data.adminPassword=adminPass;
+    if(id){
+      await updateDoc(doc(db,'restaurants',id),data);
+      showToast('✅ Updated!');showAlert('rest','Restaurant updated!','ok');
+    } else {
+      const newDoc=await addDoc(collection(db,'restaurants'),{...data,createdAt:serverTimestamp()});
+      showToast('✅ Added!');showAlert('rest','Restaurant added!','ok');
+      // Show the new ID + password to admin
+      if(adminPass) showPassInfo(newDoc.id, adminPass, name);
+    }
     resetRestForm();await loadRestaurants();
   }catch(e){showAlert('rest','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Restaurant';}
 };
+
+function showPassInfo(restId, pass, name) {
+  const el = document.getElementById('passModalContent');
+  el.innerHTML = `
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-size:2rem;margin-bottom:.4rem">🔑</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:.25rem">${name}</div>
+      <div style="font-size:.78rem;color:var(--mut)">Restaurant admin login details:</div>
+    </div>
+    <div style="background:var(--sur);border:1.5px solid var(--bdr);border-radius:10px;padding:.85rem 1rem;margin-bottom:.75rem">
+      <div style="font-size:.65rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem">Login Credentials</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-size:.8rem;color:var(--mut)">Username (Restaurant ID):</span>
+        <code style="font-size:.78rem;background:#fff;border:1px solid var(--bdr);border-radius:5px;padding:2px 8px;cursor:pointer" onclick="copyText('${restId}')">${restId}</code>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 0">
+        <span style="font-size:.8rem;color:var(--mut)">Password:</span>
+        <code style="font-size:.78rem;background:#fff;border:1px solid var(--bdr);border-radius:5px;padding:2px 8px;cursor:pointer" onclick="copyText('${pass}')">${pass}</code>
+      </div>
+    </div>
+    <div style="font-size:.73rem;color:var(--mut);background:var(--bl);border-radius:8px;padding:.5rem .75rem;line-height:1.5;margin-bottom:.75rem">
+      ℹ️ Yeh details restaurant owner ko share karo. Woh sirf apne foods aur orders manage kar sakta hai.
+    </div>
+    <button class="btn-pr" style="width:100%;justify-content:center" onclick="copyText('ID: ${restId}\\nPassword: ${pass}');showToast('✅ Copied!')">
+      <i class="ti ti-copy"></i> Copy Details
+    </button>`;
+  document.getElementById('passModal').classList.add('open');
+}
+window.closePassModal=()=>document.getElementById('passModal').classList.remove('open');
+document.getElementById('passModal').addEventListener('click',e=>{if(e.target===document.getElementById('passModal'))closePassModal();});
+window.copyText=text=>{navigator.clipboard.writeText(text).then(()=>showToast('✅ Copied!'));};
+
+// View/manage password for existing restaurant
+window.showRestPass=async(id)=>{
+  const r=restaurants.find(x=>x.id===id);if(!r)return;
+  const el=document.getElementById('passModalContent');
+  const hasPass=!!r.adminPassword;
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:.85rem">
+      <div style="font-size:1.5rem;margin-bottom:.3rem">🏪</div>
+      <div style="font-family:'Playfair Display',serif;font-size:.95rem">${r.name}</div>
+    </div>
+    ${hasPass?`
+    <div style="background:var(--sur);border:1.5px solid var(--bdr);border-radius:10px;padding:.85rem 1rem;margin-bottom:.75rem">
+      <div style="font-size:.65rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.35rem">Current Credentials</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 0;border-bottom:1px solid var(--bdr)">
+        <span style="font-size:.8rem;color:var(--mut)">Username:</span>
+        <code style="font-size:.75rem;background:#fff;border:1px solid var(--bdr);border-radius:5px;padding:2px 7px;cursor:pointer" onclick="copyText('${id}')">${id} <i class="ti ti-copy" style="font-size:.65rem"></i></code>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:.35rem 0">
+        <span style="font-size:.8rem;color:var(--mut)">Password:</span>
+        <code style="font-size:.75rem;background:#fff;border:1px solid var(--bdr);border-radius:5px;padding:2px 7px;cursor:pointer" onclick="copyText('${r.adminPassword}')">${r.adminPassword} <i class="ti ti-copy" style="font-size:.65rem"></i></code>
+      </div>
+    </div>`:
+    `<div style="background:#FFF8E1;border:1px solid #FFE082;border-radius:8px;padding:.6rem .85rem;font-size:.78rem;color:#F57F17;margin-bottom:.75rem">⚠️ Is restaurant ke liye koi password set nahi hua. Neeche set karo.</div>`}
+    <div style="margin-bottom:.5rem">
+      <div style="font-size:.7rem;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.3rem">New Password Set Karo</div>
+      <div style="display:flex;gap:.4rem">
+        <input type="text" id="inlinePassInput" placeholder="New password…" style="flex:1;padding:.46rem .75rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.86rem;outline:none"/>
+        <button onclick="quickGenPass()" style="background:var(--sur);border:1.5px solid var(--bdr);border-radius:8px;padding:.46rem .65rem;cursor:pointer;font-size:.8rem;font-family:'DM Sans',sans-serif;color:var(--mut)">🎲 Random</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:.5rem;margin-top:.4rem">
+      <button class="btn-pr" style="flex:1;justify-content:center" onclick="saveInlinePass('${id}')"><i class="ti ti-device-floppy"></i> Save Password</button>
+      ${hasPass?`<button class="btn-sm del" style="padding:.48rem .7rem" onclick="removeRestPass('${id}')"><i class="ti ti-trash"></i> Remove</button>`:''}
+    </div>`;
+  document.getElementById('passModal').classList.add('open');
+};
+
+window.quickGenPass=()=>{
+  const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  let pass='';for(let i=0;i<8;i++)pass+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('inlinePassInput').value=pass;
+};
+window.saveInlinePass=async(id)=>{
+  const pass=document.getElementById('inlinePassInput')?.value.trim();
+  if(!pass){showToast('Password khali hai');return;}
+  try{
+    await updateDoc(doc(db,'restaurants',id),{adminPassword:pass});
+    showToast('✅ Password saved!');
+    await loadRestaurants();
+    closePassModal();
+    const r=restaurants.find(x=>x.id===id);
+    showPassInfo(id,pass,r?.name||'');
+  }catch(e){showToast('❌ '+e.message);}
+};
+window.removeRestPass=async(id)=>{
+  if(!confirm('Password remove karoge? Restaurant admin login nahi kar payega.'))return;
+  try{
+    await updateDoc(doc(db,'restaurants',id),{adminPassword:null});
+    showToast('Password removed');closePassModal();await loadRestaurants();
+  }catch(e){showToast('❌ '+e.message);}
+};
+
 window.resetRestForm=()=>{
   document.getElementById('restEditId').value='';
-  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags'].forEach(id=>document.getElementById(id).value='');
+  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags','rAdminPass'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('rOpen').checked=true;document.getElementById('rPop').checked=false;
   document.getElementById('rPrv').style.display='none';document.getElementById('rImgResults').style.display='none';document.getElementById('rImgQuery').value='';
   document.getElementById('restFormTitle').textContent='Add Restaurant';document.getElementById('restCancelBtn').style.display='none';
+  document.getElementById('rPassCurrent').style.display='none';
 };
 window.editRestaurant=id=>{
   const r=restaurants.find(x=>x.id===id);if(!r)return;
-  document.getElementById('restEditId').value=id;
-  document.getElementById('rName').value=r.name||'';document.getElementById('rCuisine').value=r.cuisine||'';
+  document.getElementById('restEditId').value=id;document.getElementById('rName').value=r.name||'';document.getElementById('rCuisine').value=r.cuisine||'';
   document.getElementById('rArea').value=r.area||'';document.getElementById('rTime').value=r.deliveryTime||'';
   document.getElementById('rRating').value=r.rating!=null?r.rating:'';document.getElementById('rPhone').value=r.phone||'';
   document.getElementById('rImage').value=r.image||'';document.getElementById('rTags').value=(r.tags||[]).join(', ');
   document.getElementById('rOpen').checked=!!r.isOpen;document.getElementById('rPop').checked=!!r.popular;
+  document.getElementById('rAdminPass').value=''; // Clear — leave blank = don't change
+  const passCurrent=document.getElementById('rPassCurrent');
+  if(r.adminPassword){passCurrent.textContent='Current: '+r.adminPassword+' (khali chodo = change nahi hoga)';passCurrent.style.display='block';}
+  else{passCurrent.style.display='none';}
   prvImg('rPrv',r.image);document.getElementById('restFormTitle').textContent='Edit: '+r.name;document.getElementById('restCancelBtn').style.display='block';
   showSec('restaurants',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-window.deleteRestaurant=async id=>{
-  const r=restaurants.find(x=>x.id===id);if(!confirm(`Delete "${r?.name}"?`))return;
-  try{await deleteDoc(doc(db,'restaurants',id));showToast('Deleted');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}
-};
-window.toggleRestOpen=async(id,val)=>{
-  try{await updateDoc(doc(db,'restaurants',id),{isOpen:val});showToast(val?'✅ Opened':'🔒 Closed');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}
-};
+window.deleteRestaurant=async id=>{const r=restaurants.find(x=>x.id===id);if(!confirm(`Delete "${r?.name}"?`))return;try{await deleteDoc(doc(db,'restaurants',id));showToast('Deleted');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}};
+window.toggleRestOpen=async(id,val)=>{try{await updateDoc(doc(db,'restaurants',id),{isOpen:val});showToast(val?'✅ Opened':'🔒 Closed');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}};
+
 function renderRestGrid(){
   const grid=document.getElementById('restGrid');
   if(!restaurants.length){grid.innerHTML='<div class="empty-st"><i class="ti ti-building-store"></i><p>No restaurants yet</p></div>';return;}
   grid.innerHTML=restaurants.map(r=>{
     const fc=foods.filter(f=>f.restaurantId===r.id).length;
+    const hasPass=!!r.adminPassword;
     return `<div class="rest-card">
       <img src="${r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'"/>
       <div class="rest-card-body">
-        <div class="rest-card-name">${r.name}<span class="ob ${r.isOpen?'open':'closed'}">${r.isOpen?'Open':'Closed'}</span>${r.popular?'<span style="font-size:.58rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>':''}</div>
+        <div class="rest-card-name">${r.name}<span class="ob ${r.isOpen?'open':'closed'}">${r.isOpen?'Open':'Closed'}</span>${r.popular?'<span style="font-size:.58rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>':''}
+        ${hasPass?'<span style="font-size:.58rem;background:#E3F2FD;color:#1565C0;border-radius:50px;padding:1px 6px;font-weight:700">🔑 Login Set</span>':'<span style="font-size:.58rem;background:#F5F5F5;color:#9E9E9E;border-radius:50px;padding:1px 6px;font-weight:700">No Login</span>'}</div>
         <div class="rest-card-meta"><span>${r.cuisine||''}</span>${r.area?`<span>📍 ${r.area}</span>`:''}${r.deliveryTime?`<span>⏱ ${r.deliveryTime}</span>`:''}${r.rating!=null?`<span>⭐ ${r.rating}</span>`:''}</div>
         <div class="rest-card-id" onclick="copyId('${r.id}')"><i class="ti ti-copy" style="font-size:.7rem;vertical-align:-1px"></i> ${r.id}</div>
         <div style="font-size:.7rem;color:var(--mut);margin-bottom:.45rem">${fc} food item${fc!==1?'s':''} linked</div>
         <div class="rest-card-actions">
           <button class="btn-sm edit" onclick="editRestaurant('${r.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm manage" onclick="manageRestFoods('${r.id}')"><i class="ti ti-tools-kitchen-2"></i> Foods (${fc})</button>
+          <button class="btn-sm pass" onclick="showRestPass('${r.id}')"><i class="ti ti-shield-lock"></i> ${hasPass?'Login':'Set Login'}</button>
           <button class="btn-sm tog" onclick="toggleRestOpen('${r.id}',${!r.isOpen})">${r.isOpen?'<i class="ti ti-lock"></i> Close':'<i class="ti ti-lock-open"></i> Open'}</button>
           <button class="btn-sm del" onclick="deleteRestaurant('${r.id}')"><i class="ti ti-trash"></i></button>
         </div>
@@ -1017,19 +1224,24 @@ function renderRestGrid(){
 }
 window.copyId=id=>{navigator.clipboard.writeText(id).then(()=>showToast('ID copied!'));};
 
-// MANAGE FOODS MODAL
+// ══ MANAGE FOODS MODAL ══
 window.manageRestFoods=id=>{
   mgRestId=id;const r=restaurants.find(x=>x.id===id);
   document.getElementById('mgTitle').textContent='Foods — '+(r?.name||'');
   const list=foods.filter(f=>f.restaurantId===id);
   document.getElementById('mgList').innerHTML=list.length
-    ?list.map(f=>`<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
+    ?list.map(f=>{
+      const varStr=f.variants&&f.variants.length?f.variants.map(v=>`${v.name}: ₹${v.price}`).join(' · '):'';
+      return `<div style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr)">
         <img src="${f.image||''}" style="width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr)" onerror="this.style.display='none'"/>
-        <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:.82rem">${f.name}</div>
-          <div style="font-size:.7rem;color:var(--mut)">₹${f.price}${f.veg?' · 🥦':''}${f.variants&&f.variants.length?' · <span style="color:#6A1B9A;font-weight:700">'+f.variants.length+' variants</span>':''}</div></div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:.82rem">${f.name}</div>
+          <div style="font-size:.7rem;color:var(--mut)">${f.price?'₹'+f.price:''}${f.veg?' · 🥦':''}${varStr?`<br/><span style="color:#6A1B9A;font-size:.65rem">${varStr}</span>`:''}</div>
+        </div>
         <button class="btn-sm dup" onclick="duplicateFood('${f.id}');closeMg()"><i class="ti ti-copy"></i></button>
         <button class="btn-sm del" onclick="deleteFoodMg('${f.id}')"><i class="ti ti-trash"></i></button>
-      </div>`).join('')
+      </div>`;
+    }).join('')
     :'<div class="empty-st" style="padding:1.5rem"><i class="ti ti-bowl"></i><p>No food items yet</p></div>';
   document.getElementById('mgModal').classList.add('open');
 };
@@ -1039,14 +1251,14 @@ window.goAddFood=()=>{const rid=mgRestId;closeMg();showSec('foods',null);if(rid)
 window.deleteFoodMg=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));await loadFoods();manageRestFoods(mgRestId);showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
 window.duplicateFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
-  document.getElementById('foodEditId').value='';document.getElementById('fRestId').value=f.restaurantId||'';
-  if(f.restaurantId)lastSelectedRestId=f.restaurantId;
+  document.getElementById('foodEditId').value='';
+  const restId = session.role==='restaurant' ? session.restaurantId : (f.restaurantId||'');
+  document.getElementById('fRestId').value=restId;if(restId)lastSelectedRestId=restId;
   document.getElementById('fName').value=(f.name||'')+' (Copy)';document.getElementById('fPrice').value=f.price!=null?f.price:'';
   document.getElementById('fDesc').value=f.description||'';document.getElementById('fImage').value=f.image||'';
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
-  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
-  setVariants(f.variants||[]);
+  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);setVariants(f.variants||[]);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -1055,38 +1267,29 @@ window.duplicateFood=id=>{
   showSec('foods',null);window.scrollTo({top:0,behavior:'smooth'});showToast('📋 Duplicate — naam/price change karo!');
 };
 
-// FOOD SAVE ✅ WITH VARIANTS
+// ══ FOOD CRUD ══
 window.saveFood=async()=>{
   const btn=document.getElementById('foodSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
-    const editId=document.getElementById('foodEditId').value.trim();const restId=document.getElementById('fRestId').value;
+    const editId=document.getElementById('foodEditId').value.trim();
+    // For restaurant mode, always use session's restaurantId
+    const restId=session.role==='restaurant'?session.restaurantId:document.getElementById('fRestId').value;
     const name=document.getElementById('fName').value.trim();const priceRaw=document.getElementById('fPrice').value.trim();
-    const image=document.getElementById('fImage').value.trim();const desc=document.getElementById('fDesc').value.trim();
-    if(!restId){showAlert('food','Please select a restaurant');return;}if(!name){showAlert('food','Food name required');return;}
-    if(!priceRaw||isNaN(parseFloat(priceRaw))){showAlert('food','Valid price required');return;}
-    if(!image||!image.startsWith('http')){showAlert('food','Valid image URL required');return;}if(!desc){showAlert('food','Description required');return;}
-    const resolvedRestName=getRestName(restId);if(!resolvedRestName){showAlert('food','Restaurant not found. Reload.');return;}
+    const image=document.getElementById('fImage').value.trim();
+
+    if(!restId){showAlert('food','Please select a restaurant');return;}
+    if(!name){showAlert('food','Food name required');return;}
+    const variants=getVariants();const hasVariants=variants.length>0;
+    if(!hasVariants&&(!priceRaw||isNaN(parseFloat(priceRaw)))){showAlert('food','Price required (ya variants add karo)');return;}
+    if(!image||!image.startsWith('http')){showAlert('food','Valid image URL required');return;}
+
+    const resolvedRestName=getRestName(restId)||session.restaurantName||'';
     const ratingRaw=document.getElementById('fRating').value.trim();
     syncCategoryField();
-
-    // ✅ Collect variants
-    const variants = getVariants();
-
-    const data={
-      restaurantId:restId,restaurantName:resolvedRestName,name,price:parseFloat(priceRaw),
-      description:desc,image,category:document.getElementById('fCategory').value.trim(),
-      rating:ratingRaw?parseFloat(ratingRaw):null,
-      prepTime:document.getElementById('fPrepTime').value.trim(),
-      calories:document.getElementById('fCal').value.trim(),
-      veg:document.getElementById('fVegVal').value==='true',
-      bestseller:document.getElementById('fBestVal').value==='true',
-      spicy:document.getElementById('fSpicyVal').value==='true',
-      variants: variants   // ✅ Save variants to Firestore
-    };
+    const data={restaurantId:restId,restaurantName:resolvedRestName,name,price:priceRaw&&!isNaN(parseFloat(priceRaw))?parseFloat(priceRaw):(hasVariants?variants[0].price:0),description:document.getElementById('fDesc').value.trim(),image,category:document.getElementById('fCategory').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,prepTime:document.getElementById('fPrepTime').value.trim(),calories:document.getElementById('fCal').value.trim(),veg:document.getElementById('fVegVal').value==='true',bestseller:document.getElementById('fBestVal').value==='true',spicy:document.getElementById('fSpicyVal').value==='true',variants};
     if(editId){await updateDoc(doc(db,'foods',editId),data);showToast('✅ Updated!');showAlert('food','Food item updated!','ok');}
-    else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food',`Added to ${resolvedRestName}!`,'ok');}
-    lastSelectedRestId=restId;
-    resetFoodForm();await loadFoods();
+    else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food','Added to '+resolvedRestName+'!','ok');}
+    lastSelectedRestId=restId;resetFoodForm();await loadFoods();
   }catch(e){showAlert('food','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Food Item';}
 };
@@ -1094,28 +1297,26 @@ window.saveFood=async()=>{
 window.resetFoodForm=()=>{
   document.getElementById('foodEditId').value='';
   ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fCategoryCustom').value='';
-  document.getElementById('fPrv').style.display='none';
-  document.getElementById('fImgResults').style.display='none';document.getElementById('fImgQuery').value='';
+  document.getElementById('fCategoryCustom').value='';document.getElementById('fPrv').style.display='none';
   document.getElementById('foodFormTitle').textContent='Add Food Item';document.getElementById('foodCancelBtn').style.display='none';
   document.getElementById('dupBanner').classList.remove('show');
-  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
-  clearVariants();  // ✅ Clear variants too
-  if(lastSelectedRestId) document.getElementById('fRestId').value=lastSelectedRestId;
-  else document.getElementById('fRestId').value='';
+  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);clearVariants();
+  if(session.role==='restaurant'){document.getElementById('fRestId').value=session.restaurantId;}
+  else if(lastSelectedRestId){document.getElementById('fRestId').value=lastSelectedRestId;}
+  else{document.getElementById('fRestId').value='';}
   setFoodFormDefaults();
 };
-
 window.editFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
+  // Security: restaurant admin can only edit their own foods
+  if(session.role==='restaurant'&&f.restaurantId!==session.restaurantId){showToast('❌ Permission denied');return;}
   document.getElementById('foodEditId').value=id;document.getElementById('fRestId').value=f.restaurantId||'';
   if(f.restaurantId)lastSelectedRestId=f.restaurantId;
   document.getElementById('fName').value=f.name||'';document.getElementById('fPrice').value=f.price!=null?f.price:'';
   document.getElementById('fDesc').value=f.description||'';document.getElementById('fImage').value=f.image||'';
   document.getElementById('fCategory').value=f.category||'';document.getElementById('fRating').value=f.rating!=null?f.rating:'';
   document.getElementById('fPrepTime').value=f.prepTime||'';document.getElementById('fCal').value=f.calories||'';
-  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);
-  setVariants(f.variants||[]);  // ✅ Load variants
+  setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);setVariants(f.variants||[]);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
@@ -1123,10 +1324,16 @@ window.editFood=id=>{
   document.getElementById('foodCancelBtn').style.display='block';document.getElementById('dupBanner').classList.remove('show');
   showSec('foods',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-window.deleteFood=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');await loadFoods();}catch(e){showToast('❌ '+e.message);}};
+window.deleteFood=async id=>{
+  const f=foods.find(x=>x.id===id);
+  if(session.role==='restaurant'&&f?.restaurantId!==session.restaurantId){showToast('❌ Permission denied');return;}
+  if(!confirm('Delete this food item?'))return;
+  try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');await loadFoods();}catch(e){showToast('❌ '+e.message);}
+};
 
 window.renderFoods=()=>{
-  const q=document.getElementById('foodSearch').value.toLowerCase();const rf=document.getElementById('foodRestFilter').value;
+  const q=document.getElementById('foodSearch').value.toLowerCase();
+  const rf=session.role==='restaurant'?session.restaurantId:(document.getElementById('foodRestFilter').value);
   let list=[...foods];
   if(q)list=list.filter(f=>f.name.toLowerCase().includes(q)||(f.description||'').toLowerCase().includes(q)||(f.category||'').toLowerCase().includes(q));
   if(rf)list=list.filter(f=>f.restaurantId===rf);
@@ -1134,8 +1341,10 @@ window.renderFoods=()=>{
   if(!list.length){el.innerHTML='<div class="empty-st"><i class="ti ti-bowl"></i><p>No food items found</p></div>';return;}
   el.innerHTML=list.map(f=>{
     const rName=f.restaurantName||getRestName(f.restaurantId)||'—';
-    const varBadge=f.variants&&f.variants.length
-      ?`<span class="vpill"><i class="ti ti-stack-2" style="font-size:.6rem;vertical-align:-1px"></i> ${f.variants.length} sizes</span>`:'';
+    const hasVariants=f.variants&&f.variants.length;
+    const variantChips=hasVariants?`<div class="variant-price-list">${f.variants.map(v=>`<span class="vp-chip">${v.name} ₹${v.price}</span>`).join('')}</div>`:'';
+    // Check if this food belongs to current restaurant admin (for edit/delete)
+    const canEdit=session.role==='admin'||(session.role==='restaurant'&&f.restaurantId===session.restaurantId);
     return `<div class="food-item-card">
       <img class="food-item-img" src="${f.image||''}" alt="${f.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100'"/>
       <div class="food-item-body">
@@ -1147,28 +1356,37 @@ window.renderFoods=()=>{
           ${f.spicy?'<span class="tpill" style="background:#FFEBEE;color:#C62828">🌶 Spicy</span>':''}
           <span class="rpill">${rName}</span>
           ${f.category?`<span style="font-size:.62rem;color:var(--mut)">${f.category}</span>`:''}
-          ${varBadge}
         </div>
-        <div class="food-item-actions" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.25rem">
-          <button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
+        ${variantChips}
+        <div class="food-item-actions" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.3rem">
+          ${canEdit?`<button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm dup" onclick="duplicateFood('${f.id}')"><i class="ti ti-copy"></i> Dup</button>
-          <button class="btn-sm del" onclick="deleteFood('${f.id}')"><i class="ti ti-trash"></i> Del</button>
+          <button class="btn-sm del" onclick="deleteFood('${f.id}')"><i class="ti ti-trash"></i> Del</button>`
+          :'<span style="font-size:.68rem;color:var(--mut)">Read only</span>'}
         </div>
       </div>
-      <div class="food-price-big">₹${f.price}</div>
+      <div style="font-size:.8rem;font-weight:700;color:var(--brand);white-space:nowrap;flex-shrink:0">
+        ${hasVariants?`<span style="font-size:.65rem;color:var(--mut);font-weight:400">from </span>₹${Math.min(...f.variants.map(v=>v.price))}`:`₹${f.price||0}`}
+      </div>
     </div>`;
   }).join('');
 };
 
-// ORDERS
+// ══ ORDERS ══
 function renderRecentOrders(){
-  const el=document.getElementById('recentOrders');const list=orders.slice(0,5);
+  const el=document.getElementById('recentOrders');
+  let list=orders;
+  if(session.role==='restaurant')list=list.filter(o=>o.restaurantId===session.restaurantId||o.restaurantName===session.restaurantName);
+  list=list.slice(0,5);
   if(!list.length){el.innerHTML='<div class="empty-st"><i class="ti ti-receipt"></i><p>No orders yet</p></div>';return;}
   el.innerHTML=list.map(o=>orderCardHTML(o,false)).join('');
 }
 window.renderOrders=()=>{
-  const q=document.getElementById('orderSearch').value.toLowerCase();const sf=document.getElementById('orderStatusFilter').value;const rf=document.getElementById('orderRestFilter').value;
+  const q=document.getElementById('orderSearch').value.toLowerCase();const sf=document.getElementById('orderStatusFilter').value;
+  const rf=session.role==='restaurant'?null:document.getElementById('orderRestFilter').value;
   let list=[...orders];
+  // Restaurant mode: always filter to own orders
+  if(session.role==='restaurant')list=list.filter(o=>o.restaurantId===session.restaurantId||o.restaurantName===session.restaurantName);
   if(q)list=list.filter(o=>(o.name||'').toLowerCase().includes(q)||(o.email||'').toLowerCase().includes(q)||(o.orderId||'').toLowerCase().includes(q));
   if(sf)list=list.filter(o=>(o.status||'pending')===sf);
   if(rf){const rfName=(restaurants.find(r=>r.id===rf)?.name||'').toLowerCase();list=list.filter(o=>o.restaurantId===rf||(o.restaurantName||'').toLowerCase()===rfName);}
@@ -1178,7 +1396,6 @@ window.renderOrders=()=>{
 };
 function orderCardHTML(o,showUpdate){
   const st=o.status||'pending';
-  // ✅ Show variant in item list
   const items=(o.cart||[]).map(i=>i.name+(i.variantName?' ('+i.variantName+')':``)+(i.qty>1?` ×${i.qty}`:'')).join(', ');
   const t=o.timestamp?new Date(o.timestamp):null;const rName=o.restaurantName||getRestName(o.restaurantId)||'—';
   return `<div class="order-card">
@@ -1202,7 +1419,7 @@ window.updateStatus=async id=>{
   }catch(e){showToast('❌ '+e.message);}
 };
 
-// DELIVERY SETTINGS
+// ══ DELIVERY SETTINGS ══
 async function loadSettingsDisplay(){
   const el=document.getElementById('liveSettingsDisplay');
   try{
@@ -1221,7 +1438,8 @@ window.saveSettings=async()=>{
   const btn=document.getElementById('settingsSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
     const fee=parseFloat(document.getElementById('sDelFee').value);const freeMin=parseFloat(document.getElementById('sFreeMin').value);
-    if(isNaN(fee)||fee<0){showAlert('settings','Delivery fee sahi se likho');return;}if(isNaN(freeMin)||freeMin<0){showAlert('settings','Free minimum sahi se likho');return;}
+    if(isNaN(fee)||fee<0){showAlert('settings','Delivery fee sahi se likho');return;}
+    if(isNaN(freeMin)||freeMin<0){showAlert('settings','Free minimum sahi se likho');return;}
     await setDoc(doc(db,'settings','delivery'),{deliveryFee:fee,freeDeliveryMin:freeMin,updatedAt:serverTimestamp()});
     showToast('✅ Settings saved!');showAlert('settings','Settings update ho gayi!','ok');loadSettingsDisplay();
   }catch(e){showAlert('settings','Error: '+e.message);showToast('❌ '+e.message);}
