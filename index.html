@@ -172,8 +172,10 @@ footer h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.4r
 footer .footer-links{display:flex;justify-content:center;gap:16px;margin:12px 0;flex-wrap:wrap;}
 footer .footer-links a{color:rgba(255,255,255,.55);font-size:13px;font-weight:700;text-decoration:none;}
 footer p{font-size:12px;opacity:.35;margin-top:10px;}
-.whatsapp-fab{position:fixed;bottom:88px;right:16px;width:54px;height:54px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(37,211,102,.45);z-index:998;text-decoration:none;font-size:26px;transition:transform .2s;}
-.whatsapp-fab:active{transform:scale(.9);}
+.download-fab{position:fixed;bottom:88px;right:16px;background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));border-radius:50%;width:50px;height:50px;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(232,101,10,.45);z-index:998;text-decoration:none;color:#fff;transition:transform .2s;}
+.download-fab:active{transform:scale(.9);}
+.download-fab .df-icon{font-size:20px;line-height:1;}
+.download-fab .df-text{display:none;}
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;justify-content:space-around;padding:8px 0 calc(8px + env(safe-area-inset-bottom));box-shadow:0 -2px 20px rgba(232,101,10,.12);z-index:999;border-top:2px solid #F5EDD6;}
 .bottom-nav a,.bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--muted);font-size:10px;font-weight:700;padding:4px 8px;border-radius:12px;min-width:var(--tap);transition:color .2s;background:none;border:none;cursor:pointer;font-family:'Poppins',sans-serif;}
 .bottom-nav a .icon,.bottom-nav button .icon{font-size:22px;line-height:1;}
@@ -311,7 +313,10 @@ footer p{font-size:12px;opacity:.35;margin-top:10px;}
   </div>
 </div>
 
-<a href="https://wa.me/919307320279" class="whatsapp-fab" aria-label="WhatsApp">💬</a>
+<a href="https://drive.google.com/file/d/174UboPvPsPvFjIFtOLhbFubZQkODClOK/view?usp=drivesdk" target="_blank" id="downloadFab" class="download-fab" aria-label="Download App" style="display:none;">
+  <span class="df-icon">⬇️</span>
+  <span class="df-text">App<br>Download</span>
+</a>
 
 <nav class="bottom-nav">
   <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>मुख्य</a>
@@ -639,5 +644,46 @@ window.setLang=function(lang){
   }
 })();
 </script>
+
+<!-- ── APP INSTALL POPUP (sirf website/browser mein dikhega, APK WebView mein nahi) ── -->
+<div id="installPopup" style="display:none;position:fixed;inset:0;background:rgba(26,15,0,.6);z-index:3000;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:18px;padding:24px;max-width:340px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.3);">
+    <div style="font-size:40px;margin-bottom:10px;">📲</div>
+    <h3 style="font-family:'Tiro Devanagari Marathi',sans-serif;font-size:18px;margin-bottom:8px;">App डाउनलोड करा</h3>
+    <p style="font-size:13px;color:#6B5B45;margin-bottom:18px;">जलद आणि सोप्या अनुभवासाठी आमचे App इन्स्टॉल करा.</p>
+    <a href="https://drive.google.com/file/d/174UboPvPsPvFjIFtOLhbFubZQkODClOK/view?usp=drivesdk" target="_blank"
+       style="display:block;padding:13px;background:linear-gradient(135deg,#C4510A,#E8650A);color:#fff;text-decoration:none;border-radius:12px;font-weight:800;margin-bottom:10px;">
+      ⬇️ Download करा
+    </a>
+    <button onclick="document.getElementById('installPopup').style.display='none';localStorage.setItem('installPopupDismissed','1');"
+       style="background:none;border:none;color:#6B5B45;font-size:13px;font-weight:700;cursor:pointer;padding:6px;">
+      नंतर करा
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // APK ki WebView mein User-Agent string ke end mein "SarvaNestApp" add karo
+  // (Android Studio code: webView.getSettings().setUserAgentString(ua + " SarvaNestApp");)
+  // Tab popup aur ye download button APK ke andar kabhi nahi dikhenge.
+  const ua = navigator.userAgent || "";
+  const isOurApk = ua.includes("SarvaNestApp");
+  const alreadyDismissed = localStorage.getItem('installPopupDismissed');
+
+  if(!isOurApk){
+    // Permanent download/update button hamesha dikhega (sirf browser mein)
+    const fab = document.getElementById('downloadFab');
+    if(fab) fab.style.display = 'flex';
+  }
+
+  if(!isOurApk && !alreadyDismissed){
+    setTimeout(function(){
+      document.getElementById('installPopup').style.display='flex';
+    }, 2000); // page load ke 2 sec baad popup dikhega
+  }
+})();
+</script>
+
 </body>
 </html>
