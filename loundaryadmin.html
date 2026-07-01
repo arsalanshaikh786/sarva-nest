@@ -172,6 +172,15 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-7
 .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(108,99,255,.1)}
 .form-group textarea{resize:none;height:80px}
 .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.store-row{display:grid;grid-template-columns:1fr 90px 34px;gap:8px;margin-bottom:8px;align-items:center}
+.store-row input{padding:9px 11px;border:2px solid var(--gray-100);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.85rem;outline:none;transition:var(--transition)}
+.store-row input:focus{border-color:var(--violet)}
+.store-row-remove{width:34px;height:34px;border:none;background:rgba(234,84,85,.1);color:var(--danger);border-radius:8px;cursor:pointer;display:grid;place-items:center;transition:var(--transition)}
+.store-row-remove:hover{background:rgba(234,84,85,.2)}
+.svc-store-badges{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
+.svc-store-badge{font-size:.68rem;background:var(--gray-100);color:var(--gray-700);padding:2px 8px;border-radius:50px}
+.review-msg-cell{max-width:280px;font-size:.82rem;color:var(--gray-700);line-height:1.5}
+.review-stars-admin{color:#ffb400;font-size:.8rem;white-space:nowrap}
 .img-upload-area{border:2px dashed var(--gray-300);border-radius:var(--radius-sm);padding:28px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--gray-50)}
 .img-upload-area:hover{border-color:var(--violet);background:var(--lavender)}
 .img-upload-area i{font-size:2rem;color:var(--gray-300);margin-bottom:8px;display:block}
@@ -260,6 +269,7 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-7
     <button class="nav-item" onclick="showPage('orders',this)"><i class="fas fa-clipboard-list"></i> Orders</button>
     <div class="nav-section">Manage</div>
     <button class="nav-item" onclick="showPage('services',this)"><i class="fas fa-concierge-bell"></i> Services</button>
+    <button class="nav-item" onclick="showPage('reviews',this)"><i class="fas fa-star"></i> Reviews</button>
   </nav>
   <div class="sidebar-footer">
     <a href="index.html" class="logout-btn" style="text-decoration:none;color:rgba(255,255,255,.5)"><i class="fas fa-external-link-alt"></i> View Customer Site</a>
@@ -320,6 +330,21 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-7
       </div>
     </div>
 
+    <!-- REVIEWS -->
+    <div class="page" id="page-reviews">
+      <div class="section-hdr">
+        <h2>Reviews — Verify Genuine Feedback</h2>
+      </div>
+      <div class="search-filter-bar">
+        <select class="sf-select" id="reviewStatusFilter" onchange="renderReviewsAdmin()">
+          <option value="pending">Pending Approval</option>
+          <option value="approved">Approved (Live on site)</option>
+          <option value="all">All Reviews</option>
+        </select>
+      </div>
+      <div class="table-wrap" id="reviewsTable"><div class="empty-state"><i class="fas fa-star"></i><p>No reviews yet</p></div></div>
+    </div>
+
   </div>
 </main>
 
@@ -348,22 +373,24 @@ body{font-family:'Inter',sans-serif;background:var(--gray-50);color:var(--gray-7
     </div>
     <div class="form-row-2">
       <div class="form-group">
-        <label>Price (₹ per item)</label>
+        <label>Base Price (₹ per item)</label>
         <input type="number" id="svcPrice" placeholder="49" min="1"/>
       </div>
       <div class="form-group">
         <label>Category</label>
-        <select id="svcCategory">
-          <option value="washing">Washing</option>
-          <option value="ironing">Ironing</option>
-          <option value="dry-cleaning">Dry Cleaning</option>
-          <option value="specialty">Specialty</option>
-        </select>
+        <input type="text" id="svcCategory" list="categoryList" placeholder="e.g. washing or type a new one"/>
+        <datalist id="categoryList"></datalist>
       </div>
     </div>
     <div class="form-group">
       <label>Description</label>
       <textarea id="svcDesc" placeholder="Describe the service…"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Available At (Optional — add 2-3 laundry stores with their own price)</label>
+      <div id="storeRows"></div>
+      <button type="button" class="btn btn-outline btn-sm" style="margin-top:6px" onclick="addStoreRow()"><i class="fas fa-plus"></i> Add Laundry Store</button>
+      <div style="font-size:.72rem;color:var(--gray-500);margin-top:6px">Leave empty to just use the base price above with no store choice.</div>
     </div>
     <div class="form-group">
       <label>Service Image</label>
@@ -435,7 +462,17 @@ function startListeners(){
     window._services=[];
     snap.forEach(d=>window._services.push({id:d.id,...d.data()}));
     window.renderServicesMgmt();
+    window.refreshCategoryList();
   });
+  // Reviews — admin verifies genuine reviews before they go live
+  try{
+    const rq=query(collection(db,'reviews'),orderBy('createdAt','desc'));
+    onSnapshot(rq,snap=>{
+      window._reviews=[];
+      snap.forEach(d=>window._reviews.push({id:d.id,...d.data()}));
+      window.renderReviewsAdmin();
+    });
+  }catch(e){console.warn(e);}
 }
 </script>
 
@@ -443,6 +480,7 @@ function startListeners(){
 // --- STATE ---
 window._orders=[];
 window._services=[];
+window._reviews=[];
 let _editSvcId=null;
 
 // --- LOGIN ---
@@ -470,7 +508,7 @@ window.showPage=function(name,btn){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(btn)btn.classList.add('active');
   else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.toLowerCase().includes(name.slice(0,4)))n.classList.add('active');});
-  const titles={dashboard:'Dashboard',orders:'Orders',services:'Services Management'};
+  const titles={dashboard:'Dashboard',orders:'Orders',services:'Services Management',reviews:'Reviews'};
   document.getElementById('topbarTitle').textContent=titles[name]||name;
   closeSidebar();
 };
@@ -591,21 +629,54 @@ window.renderServicesMgmt=function(){
   const el=document.getElementById('servicesMgmtGrid');
   const svcs=window._services;
   if(!svcs.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-concierge-bell"></i><p>No services yet. Add your first service!</p></div>';return;}
-  el.innerHTML=svcs.map(s=>`
+  el.innerHTML=svcs.map(s=>{
+    const stores=(s.stores||[]).filter(st=>st&&st.name);
+    return`
     <div class="svc-mgmt-card">
       <img class="svc-mgmt-img" src="${s.image||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'}" alt="${s.name}" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'"/>
       <div class="svc-mgmt-body">
         <div class="svc-mgmt-cat">${s.category||'service'}</div>
         <div class="svc-mgmt-name">${s.name}</div>
-        <div class="svc-mgmt-price">₹${s.price} <span style="font-size:.72rem;font-weight:400;color:var(--gray-500)">/item</span></div>
+        <div class="svc-mgmt-price">₹${s.price} <span style="font-size:.72rem;font-weight:400;color:var(--gray-500)">/item base</span></div>
         <div class="svc-mgmt-desc">${s.description||''}</div>
+        ${stores.length?`<div class="svc-store-badges">${stores.map(st=>`<span class="svc-store-badge"><i class="fas fa-store"></i> ${st.name} · ₹${st.price}</span>`).join('')}</div>`:''}
         <div class="svc-mgmt-actions">
           <button class="btn btn-outline btn-sm" onclick="editService('${s.id}')"><i class="fas fa-edit"></i> Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')"><i class="fas fa-trash"></i></button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;}).join('');
 };
+
+// --- DYNAMIC CATEGORY DATALIST (admin can always type a brand-new category) ---
+window.refreshCategoryList=function(){
+  const dl=document.getElementById('categoryList');
+  if(!dl)return;
+  const cats=[...new Set((window._services||[]).map(s=>s.category).filter(Boolean))];
+  if(!cats.length){cats.push('washing','ironing','dry-cleaning','specialty');}
+  dl.innerHTML=cats.map(c=>`<option value="${c}"></option>`).join('');
+};
+
+// --- STORE OPTION ROWS (2-3 laundries per service, optional) ---
+window.addStoreRow=function(name,price){
+  const wrap=document.getElementById('storeRows');
+  if(wrap.children.length>=3){showToast('You can add up to 3 laundry stores per service','e');return;}
+  const row=document.createElement('div');
+  row.className='store-row';
+  row.innerHTML=`
+    <input type="text" class="store-name-input" placeholder="Laundry / store name" value="${name?name.replace(/"/g,'&quot;'):''}"/>
+    <input type="number" class="store-price-input" placeholder="₹ price" min="1" value="${price!=null?price:''}"/>
+    <button type="button" class="store-row-remove" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
+  wrap.appendChild(row);
+};
+
+function collectStoreRows(){
+  return Array.from(document.querySelectorAll('#storeRows .store-row')).map(row=>{
+    const name=row.querySelector('.store-name-input').value.trim();
+    const price=parseFloat(row.querySelector('.store-price-input').value);
+    return{name,price};
+  }).filter(st=>st.name&&st.price>0);
+}
 
 // --- SERVICE MODAL ---
 window.openServiceModal=function(){
@@ -614,10 +685,12 @@ window.openServiceModal=function(){
   document.getElementById('svcName').value='';
   document.getElementById('svcPrice').value='';
   document.getElementById('svcDesc').value='';
-  document.getElementById('svcCategory').value='washing';
+  document.getElementById('svcCategory').value='';
   document.getElementById('svcImageUrl').value='';
   document.getElementById('imgPreview').style.display='none';
+  document.getElementById('storeRows').innerHTML='';
   document.getElementById('saveServiceBtn').innerHTML='<i class="fas fa-save"></i> Save Service';
+  window.refreshCategoryList();
   openModal('serviceModal');
 };
 
@@ -629,11 +702,14 @@ window.editService=function(id){
   document.getElementById('svcName').value=s.name||'';
   document.getElementById('svcPrice').value=s.price||'';
   document.getElementById('svcDesc').value=s.description||'';
-  document.getElementById('svcCategory').value=s.category||'washing';
+  document.getElementById('svcCategory').value=s.category||'';
   document.getElementById('svcImageUrl').value=s.image||'';
   const prev=document.getElementById('imgPreview');
   if(s.image){prev.src=s.image;prev.style.display='block';}
   else prev.style.display='none';
+  document.getElementById('storeRows').innerHTML='';
+  (s.stores||[]).filter(st=>st&&st.name).forEach(st=>window.addStoreRow(st.name,st.price));
+  window.refreshCategoryList();
   openModal('serviceModal');
 };
 
@@ -641,12 +717,13 @@ window.saveService=async function(){
   const name=document.getElementById('svcName').value.trim();
   const price=parseFloat(document.getElementById('svcPrice').value);
   const desc=document.getElementById('svcDesc').value.trim();
-  const category=document.getElementById('svcCategory').value;
+  const category=document.getElementById('svcCategory').value.trim().toLowerCase()||'general';
   const image=document.getElementById('svcImageUrl').value||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80';
-  if(!name||!price){showToast('Please fill name and price','e');return;}
+  const stores=collectStoreRows();
+  if(!name||!price){showToast('Please fill name and base price','e');return;}
   const btn=document.getElementById('saveServiceBtn');
   btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
-  const data={name,price,description:desc,category,image};
+  const data={name,price,description:desc,category,image,stores};
   try{
     if(_editSvcId){
       await window._fb.updateDoc(window._fb.doc(window._fb.db,'services',_editSvcId),data);
@@ -666,6 +743,53 @@ window.deleteService=async function(id){
     await window._fb.deleteDoc(window._fb.doc(window._fb.db,'services',id));
     showToast('Service deleted','s');
   } catch(e){showToast('Error deleting service','e');}
+};
+
+// --- REVIEWS MODERATION (approve genuine, remove fake) ---
+window.renderReviewsAdmin=function(){
+  const el=document.getElementById('reviewsTable');
+  if(!el)return;
+  const filterEl=document.getElementById('reviewStatusFilter');
+  const filter=filterEl?filterEl.value:'pending';
+  let list=window._reviews||[];
+  if(filter==='pending')list=list.filter(r=>!r.approved);
+  else if(filter==='approved')list=list.filter(r=>r.approved);
+  if(!list.length){el.innerHTML=`<div class="empty-state"><i class="fas fa-star"></i><p>No reviews here</p></div>`;return;}
+  el.innerHTML=`<table><thead><tr>
+    <th>Customer</th><th>Rating</th><th>Review</th><th>Status</th><th>Actions</th>
+  </tr></thead><tbody>${list.map(r=>{
+    const stars=Math.max(1,Math.min(5,r.rating||5));
+    return`<tr>
+    <td><span class="customer-name">${r.name||'Anonymous'}</span></td>
+    <td><span class="review-stars-admin">${'★'.repeat(stars)}${'☆'.repeat(5-stars)}</span></td>
+    <td class="review-msg-cell">${(r.text||'').replace(/</g,'&lt;')}</td>
+    <td><span class="status-badge ${r.approved?'status-Delivered':'status-Pending'}">${r.approved?'Approved · Live':'Pending'}</span></td>
+    <td><div style="display:flex;gap:6px">
+      ${r.approved?`<button class="btn btn-outline btn-sm" onclick="unapproveReview('${r.id}')"><i class="fas fa-eye-slash"></i> Hide</button>`
+        :`<button class="btn btn-success btn-sm" onclick="approveReview('${r.id}')"><i class="fas fa-check"></i> Approve</button>`}
+      <button class="btn btn-danger btn-sm" onclick="deleteReview('${r.id}')"><i class="fas fa-trash"></i></button>
+    </div></td>
+  </tr>`;}).join('')}</tbody></table>`;
+};
+
+window.approveReview=async function(id){
+  try{
+    await window._fb.updateDoc(window._fb.doc(window._fb.db,'reviews',id),{approved:true});
+    showToast('Review approved — now live on the site!','s');
+  }catch(e){showToast('Error approving review','e');}
+};
+window.unapproveReview=async function(id){
+  try{
+    await window._fb.updateDoc(window._fb.doc(window._fb.db,'reviews',id),{approved:false});
+    showToast('Review hidden from site','s');
+  }catch(e){showToast('Error updating review','e');}
+};
+window.deleteReview=async function(id){
+  if(!confirm('Delete this review permanently? Use this for fake or spam reviews.'))return;
+  try{
+    await window._fb.deleteDoc(window._fb.doc(window._fb.db,'reviews',id));
+    showToast('Review deleted','s');
+  }catch(e){showToast('Error deleting review','e');}
 };
 
 // --- CLOUDINARY IMAGE UPLOAD ---
