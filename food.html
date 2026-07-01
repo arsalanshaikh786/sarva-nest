@@ -221,6 +221,9 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%) translateY(60px);background:#1A1208;color:#fff;padding:.52rem 1rem;border-radius:50px;font-size:.74rem;font-weight:500;z-index:999;opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;pointer-events:none;max-width:88vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
+.live-dot{width:6px;height:6px;border-radius:50%;background:#2E7D32;display:inline-block;margin-right:4px;animation:pulseDot 1.6s infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
+
 footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;padding:1rem;font-size:.72rem}
 </style>
 </head>
@@ -255,7 +258,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
   </div>
   <div class="cat-bar" id="cuisineBar"></div>
   <div class="page-wrap">
-    <div class="sec-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants near you</div>
+    <div class="sec-lbl"><i class="ti ti-building-store" style="color:var(--brand)"></i> Restaurants near you <span class="live-dot" title="Live"></span></div>
     <div class="rest-grid" id="restGrid">
       ${Array(4).fill(`<div class="skel-card"><div class="skel si"></div><div class="sb"><div class="skel sl"></div><div class="skel sl s"></div><div class="skel sbtn"></div></div></div>`).join('')}
     </div>
@@ -387,7 +390,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, query, where, addDoc, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg = {
   apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
@@ -404,19 +407,21 @@ const COUPONS={FIRST50:50,SAVE30:30,ZESTORA20:20};
 let DEL_FEE = 40;
 let FREE_MIN = 299;
 
-async function loadDeliverySettings() {
-  try {
-    const snap = await getDoc(doc(db, 'settings', 'delivery'));
-    if (snap.exists()) {
-      const d = snap.data();
-      DEL_FEE  = typeof d.deliveryFee     === 'number' ? d.deliveryFee     : DEL_FEE;
-      FREE_MIN = typeof d.freeDeliveryMin === 'number' ? d.freeDeliveryMin : FREE_MIN;
-    }
-  } catch(e) {
-    console.warn('Delivery settings load failed:', e);
-  }
-  const chip = document.getElementById('heroFreeChip');
-  if (chip) chip.innerHTML = `<i class="ti ti-truck"></i> Free above ₹${FREE_MIN}`;
+function loadDeliverySettings() {
+  return new Promise((resolve) => {
+    let first = true;
+    onSnapshot(doc(db, 'settings', 'delivery'), (snap) => {
+      if (snap.exists()) {
+        const d = snap.data();
+        DEL_FEE  = typeof d.deliveryFee     === 'number' ? d.deliveryFee     : DEL_FEE;
+        FREE_MIN = typeof d.freeDeliveryMin === 'number' ? d.freeDeliveryMin : FREE_MIN;
+      }
+      const chip = document.getElementById('heroFreeChip');
+      if (chip) chip.innerHTML = `<i class="ti ti-truck"></i> Free above ₹${FREE_MIN}`;
+      renderCartUI();
+      if (first) { first = false; resolve(); }
+    }, (err) => { console.warn('Delivery settings live sync failed:', err); if (first) { first = false; resolve(); } });
+  });
 }
 
 let allRests=[], menuFoods=[], curRest=null;
@@ -424,6 +429,7 @@ let cart=JSON.parse(localStorage.getItem('z_cart')||'{}');
 let cartRestId=localStorage.getItem('z_cart_rest')||null;
 let discount=0;
 let rFilter='all', rCuisine='All', mFilter='all', mCat='All';
+let unsubMenu=null, unsubTrack=null;
 
 // ══════════════════════════════════════════════
 // ✅ VARIANT PICKER STATE
@@ -489,18 +495,23 @@ window.closeVarPickerIfOutside = (e) => {
   if (e.target === document.getElementById('varOverlay')) closeVarPicker();
 };
 
-async function loadRestaurants(){
-  try{
-    const snap=await getDocs(collection(db,'restaurants'));
-    allRests=snap.docs.map(d=>({id:d.id,...d.data()}));
-  }catch(e){ allRests=[]; }
-  buildCuisineBar(); renderRests();
+// ══ RESTAURANTS — REAL-TIME ══
+function loadRestaurants(){
+  return new Promise((resolve)=>{
+    let first=true;
+    onSnapshot(collection(db,'restaurants'), (snap)=>{
+      allRests=snap.docs.map(d=>({id:d.id,...d.data()}));
+      buildCuisineBar(); renderRests();
+      if(first){ first=false; resolve(); }
+    }, (err)=>{ console.warn('Restaurants live sync failed:',err); allRests=[]; renderRests(); if(first){first=false;resolve();} });
+  });
 }
 
 function buildCuisineBar(){
+  const active=rCuisine;
   const cs=['All',...new Set(allRests.map(r=>r.cuisine).filter(Boolean))];
   document.getElementById('cuisineBar').innerHTML=cs.map(c=>
-    `<button class="cpill${c==='All'?' active':''}" onclick="setRC('${c}',this)">${c}</button>`
+    `<button class="cpill${c===active?' active':''}" onclick="setRC('${c}',this)">${c}</button>`
   ).join('');
 }
 
@@ -536,6 +547,14 @@ function renderRests(){
         </div>
       </div>
     </div>`).join('');
+
+  // If a restaurant currently open in menu view got closed/removed, reflect it live
+  if(curRest){
+    const fresh=allRests.find(x=>x.id===curRest.id);
+    if(!fresh){ /* restaurant deleted while viewing */ }
+    else if(fresh.isOpen===false && curRest.isOpen!==false){ showToast('This restaurant just went offline'); }
+    curRest=fresh||curRest;
+  }
 }
 
 window.setRF=function(el){ rFilter=el.dataset.f; document.querySelectorAll('#restView .fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderRests(); };
@@ -566,7 +585,7 @@ window.openRest=async function(id){
   document.getElementById('backBtn').style.display='flex';
   document.getElementById('fabCart').classList.toggle('show', Object.values(cart).reduce((s,i)=>s+i.qty,0)>0);
   window.scrollTo({top:0,behavior:'instant'});
-  await loadMenu(id);
+  loadMenu(id);
   renderCartUI();
 };
 
@@ -576,24 +595,28 @@ window.goBack=function(){
   document.getElementById('backBtn').style.display='none';
   document.getElementById('fabCart').classList.remove('show');
   curRest=null;
+  if(unsubMenu){ unsubMenu(); unsubMenu=null; }
   window.scrollTo({top:0,behavior:'instant'});
 };
 
-async function loadMenu(id){
+// ══ MENU — REAL-TIME (scoped to restaurant) ══
+function loadMenu(id){
   document.getElementById('foodsGrid').innerHTML=Array(4).fill(`<div class="skel-card"><div class="skel si"></div><div class="sb"><div class="skel sl"></div><div class="skel sl s"></div><div class="skel sbtn"></div></div></div>`).join('');
-  try{
-    const snap=await getDocs(collection(db,'foods'));
-    menuFoods=snap.docs.map(d=>({id:d.id,...d.data()})).filter(f=>f.restaurantId===id);
-  }catch(e){ menuFoods=[]; }
+  if(unsubMenu){ unsubMenu(); unsubMenu=null; }
   mFilter='all'; mCat='All';
   document.querySelectorAll('.menu-ctrl .fbtn').forEach((b,i)=>b.classList.toggle('active',i===0));
-  buildMenuCats(); renderFoods();
+  const q=query(collection(db,'foods'), where('restaurantId','==',id));
+  unsubMenu=onSnapshot(q, (snap)=>{
+    menuFoods=snap.docs.map(d=>({id:d.id,...d.data()}));
+    buildMenuCats(); renderFoods();
+  }, (err)=>{ console.warn('Menu live sync failed:',err); menuFoods=[]; buildMenuCats(); renderFoods(); });
 }
 
 function buildMenuCats(){
+  const active=mCat;
   const cs=['All',...new Set(menuFoods.map(f=>f.category).filter(Boolean))];
   document.getElementById('menuCatBar').innerHTML=cs.map(c=>
-    `<button class="cpill${c==='All'?' active':''}" onclick="setMC('${c}',this)">${c}</button>`
+    `<button class="cpill${c===active?' active':''}" onclick="setMC('${c}',this)">${c}</button>`
   ).join('');
 }
 
@@ -799,38 +822,53 @@ window.placeOrder=async function(){
     document.getElementById('cartOverlay').classList.remove('open');
     showToast('✅ Order '+order.orderId+' placed!');
     document.getElementById('trackEmail').value=email;
+    startTrackListener(email);
   }catch(err){ showToast('Failed to place order. Try again.'); }
   btn.disabled=false; btn.innerHTML='<i class="ti ti-check"></i> Place Order';
 };
 
 const S_ORDER=['pending','confirmed','preparing','out_for_delivery','delivered'];
-window.trackOrder=async function(){
-  const email=document.getElementById('trackEmail').value.trim();
-  if(!email) return showToast('Enter your email');
+
+function renderTrackOrders(list){
   const res=document.getElementById('trackResult');
-  res.innerHTML='<p style="color:var(--mut);font-size:.76rem;margin-top:.4rem">Searching…</p>';
-  const snap=await getDocs(collection(db,'food_orders'));
+  if(!list.length){ res.innerHTML='<p style="color:var(--mut);font-size:.76rem;margin-top:.6rem">No orders found for this email.</p>'; return; }
+  list.sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
   let html='';
-  snap.forEach(d=>{
-    const o=d.data(); if(o.email!==email) return;
+  list.forEach(o=>{
     const t=new Date(o.timestamp);
     const mins=(Date.now()-o.timestamp)/60000;
     const si=S_ORDER.indexOf(o.status||'pending');
     const steps=[['ti-clipboard-check','Placed'],['ti-badge-check','Confirmed'],['ti-tools-kitchen-2','Prep'],['ti-motorbike','On way'],['ti-circle-check','Done']];
     const prog=`<div class="progress-bar">${steps.map(([ic,lb],i)=>`<div class="p-step"><div class="p-dot ${i<si?'done':i===si?'active':''}"><i class="ti ${ic}" style="font-size:.58rem"></i></div><span>${lb}</span></div>`).join('')}</div>`;
-    const cancel=mins<=5&&o.status==='pending'?`<button class="cancel-btn" onclick="cancelOrder('${d.id}','${email}')">✕ Cancel (${Math.max(0,(5-mins)).toFixed(0)}m left)</button>`:
+    const cancel=mins<=5&&o.status==='pending'?`<button class="cancel-btn" onclick="cancelOrder('${o._id}')">✕ Cancel (${Math.max(0,(5-mins)).toFixed(0)}m left)</button>`:
       (o.status==='pending'?'<p style="font-size:.66rem;color:var(--mut);margin-top:.3rem">Cancellation window expired.</p>':'');
-    // ✅ Show variant in tracking
     const itemsStr=(o.cart||[]).map(i=>i.name+(i.variantName?` (${i.variantName})`:'')+' ×'+(i.qty||1)).join(' · ');
     html+=`<div class="o-card">
-      <div class="o-head"><div><div class="o-id">${o.orderId||'Order'} — ${o.name}</div><div class="o-sub">${o.restaurantName||''} · ${t.toLocaleString('en-IN')} · ₹${o.total||0}</div></div><span class="st-badge st-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>
+      <div class="o-head"><div><div class="o-id">${o.orderId||'Order'} — ${o.name} <span class="live-dot" title="Live"></span></div><div class="o-sub">${o.restaurantName||''} · ${t.toLocaleString('en-IN')} · ₹${o.total||0}</div></div><span class="st-badge st-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span></div>
       ${prog}
       <div style="font-size:.68rem;color:var(--mut)">${itemsStr}</div>${cancel}
     </div>`;
   });
-  res.innerHTML=html||'<p style="color:var(--mut);font-size:.76rem;margin-top:.6rem">No orders found for this email.</p>';
+  res.innerHTML=html;
+}
+
+function startTrackListener(email){
+  if(unsubTrack){ unsubTrack(); unsubTrack=null; }
+  const res=document.getElementById('trackResult');
+  res.innerHTML='<p style="color:var(--mut);font-size:.76rem;margin-top:.4rem">Searching…</p>';
+  const q=query(collection(db,'food_orders'), where('email','==',email));
+  unsubTrack=onSnapshot(q, (snap)=>{
+    const list=snap.docs.map(d=>({_id:d.id,...d.data()}));
+    renderTrackOrders(list);
+  }, (err)=>{ console.warn('Track live sync failed:',err); res.innerHTML='<p style="color:var(--mut);font-size:.76rem;margin-top:.6rem">Could not load orders.</p>'; });
+}
+
+window.trackOrder=function(){
+  const email=document.getElementById('trackEmail').value.trim();
+  if(!email) return showToast('Enter your email');
+  startTrackListener(email);
 };
-window.cancelOrder=async function(id,email){ if(!confirm('Cancel this order?'))return; await deleteDoc(doc(db,'food_orders',id)); showToast('Order cancelled'); trackOrder(); };
+window.cancelOrder=async function(id){ if(!confirm('Cancel this order?'))return; await deleteDoc(doc(db,'food_orders',id)); showToast('Order cancelled'); };
 
 window.openModal=function(food){
   document.getElementById('mImg').src=food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600';
@@ -879,6 +917,8 @@ async function init(){
   await loadDeliverySettings();
   await loadRestaurants();
   renderCartUI();
+  const savedEmail=document.getElementById('trackEmail').value.trim();
+  if(savedEmail) startTrackListener(savedEmail);
 }
 init();
 </script>
