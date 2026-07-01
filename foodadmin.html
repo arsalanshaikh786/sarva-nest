@@ -38,6 +38,9 @@ body.rest-mode .main{padding-top:86px}
 .topbar-logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--brand);flex:1}
 .tb-btn{background:none;border:1.5px solid var(--bdr);border-radius:8px;padding:.38rem .75rem;font-family:'DM Sans',sans-serif;font-size:.78rem;color:var(--mut);cursor:pointer;display:flex;align-items:center;gap:4px}
 .tb-role-badge{background:var(--bl);color:var(--brand);border:1px solid rgba(232,82,26,.3);border-radius:50px;padding:.2rem .65rem;font-size:.68rem;font-weight:700;white-space:nowrap}
+.live-pill{display:inline-flex;align-items:center;gap:4px;font-size:.66rem;font-weight:700;color:var(--ok);background:#E8F5E9;border:1px solid rgba(46,125,50,.25);border-radius:50px;padding:.2rem .55rem;white-space:nowrap}
+.live-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--ok);animation:pulseDot 1.6s infinite}
+@keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.3}}
 
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:60px;background:var(--card);border-top:1px solid var(--bdr);display:flex;z-index:100}
 .bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;font-size:.58rem;color:var(--mut);transition:color .2s;padding:4px 0;border:none;background:none;font-family:'DM Sans',sans-serif}
@@ -321,6 +324,7 @@ body.rest-mode .main{padding-top:86px}
   <button class="menu-toggle" onclick="openSidebar()"><i class="ti ti-menu-2"></i></button>
   <div class="topbar-logo" id="topbarLogo">Zestora</div>
   <div style="display:flex;gap:.5rem;align-items:center">
+    <span class="live-pill"><span class="dot"></span> Live</span>
     <span class="tb-role-badge" id="topbarRoleBadge" style="display:none"></span>
     <button class="tb-btn" onclick="refreshAll()"><i class="ti ti-refresh"></i></button>
   </div>
@@ -658,7 +662,7 @@ body.rest-mode .main{padding-top:86px}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const cfg={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(cfg);
@@ -672,6 +676,8 @@ let session = { role: null, restaurantId: null, restaurantName: null };
 
 let restaurants=[],foods=[],orders=[],banners=[],mgRestId=null;
 let lastSelectedRestId='';
+let unsubRest=null, unsubFoods=null, unsubOrders=null, unsubBanners=null;
+let prevPendingCount=null; // for order-arrival sound/toast
 
 // ══════════════════════════════════════════════
 // LOGIN / LOGOUT
@@ -710,6 +716,12 @@ window.doLogin = async () => {
 };
 
 window.doLogout = () => {
+  // Detach all live listeners
+  if(unsubRest){unsubRest();unsubRest=null;}
+  if(unsubFoods){unsubFoods();unsubFoods=null;}
+  if(unsubOrders){unsubOrders();unsubOrders=null;}
+  if(unsubBanners){unsubBanners();unsubBanners=null;}
+  restaurants=[];foods=[];orders=[];banners=[];prevPendingCount=null;
   session = { role: null, restaurantId: null, restaurantName: null };
   document.getElementById('loginScreen').style.display = 'flex';
   // Reset UI to default admin state for next login
@@ -782,17 +794,16 @@ function applySession() {
     if (orderRestFilterEl) orderRestFilterEl.style.display = '';
   }
 
-  loadAll().then(() => {
-    if (isRest) {
-      // Start on foods section
-      showSec('foods', null);
-      // Pre-select restaurant in food form
-      lastSelectedRestId = session.restaurantId;
-      document.getElementById('fRestId').value = session.restaurantId;
-    } else {
-      showSec('dashboard', null);
-    }
-  });
+  attachLiveListeners();
+  if (isRest) {
+    // Start on foods section
+    showSec('foods', null);
+    // Pre-select restaurant in food form
+    lastSelectedRestId = session.restaurantId;
+    document.getElementById('fRestId').value = session.restaurantId;
+  } else {
+    showSec('dashboard', null);
+  }
 }
 
 // ══ VARIANTS ══
@@ -872,58 +883,76 @@ window.showSec=(id,el)=>{
   if(id==='banners')updateBannerPreview();
 };
 
-// ══ DATA LOADING ══
-async function loadAll(){await Promise.all([loadRestaurants(),loadFoods(),loadOrders(),loadBanners()]);}
-window.refreshAll=()=>{showToast('Refreshing…');loadAll().then(()=>showToast('✅ Done'));};
+// ══════════════════════════════════════════════
+// REAL-TIME LISTENERS — attached once per session
+// ══════════════════════════════════════════════
+function attachLiveListeners(){
+  if(unsubRest){unsubRest();}
+  if(unsubFoods){unsubFoods();}
+  if(unsubOrders){unsubOrders();}
+  if(unsubBanners){unsubBanners();}
 
-async function loadRestaurants(){
-  try{const snap=await getDocs(collection(db,'restaurants'));restaurants=snap.docs.map(d=>({id:d.id,...d.data()}));}
-  catch(e){restaurants=[];}
-  const n=restaurants.length;
-  ['restCount','rBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  const dRests=document.getElementById('d-rests');if(dRests)dRests.textContent=n;
-  populateRestDropdowns();renderRestGrid();
+  unsubRest = onSnapshot(collection(db,'restaurants'), (snap)=>{
+    restaurants=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const n=restaurants.length;
+    ['restCount','rBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+    const dRests=document.getElementById('d-rests');if(dRests)dRests.textContent=n;
+    populateRestDropdowns();renderRestGrid();renderFoods();
+  }, (err)=>{ console.warn('Restaurants live sync failed:',err); });
+
+  unsubFoods = onSnapshot(collection(db,'foods'), (snap)=>{
+    foods=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const myFoods=session.role==='restaurant'?foods.filter(f=>f.restaurantId===session.restaurantId):foods;
+    const n=myFoods.length;
+    ['foodCount','fBadge','foodCount2','fBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+    const dFoods=document.getElementById('d-foods');if(dFoods)dFoods.textContent=session.role==='restaurant'?n:foods.length;
+    renderFoods();renderRestGrid();
+    // Keep manage-foods modal in sync if open
+    if(document.getElementById('mgModal').classList.contains('open') && mgRestId) manageRestFoods(mgRestId);
+  }, (err)=>{ console.warn('Foods live sync failed:',err); });
+
+  unsubOrders = onSnapshot(collection(db,'food_orders'), (snap)=>{
+    const newOrders=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));
+    const myOrders=session.role==='restaurant'?newOrders.filter(o=>o.restaurantId===session.restaurantId||o.restaurantName===session.restaurantName):newOrders;
+    const pending=myOrders.filter(o=>!o.status||o.status==='pending').length;
+    if(prevPendingCount!==null && pending>prevPendingCount){ showToast('🔔 New order received!'); }
+    prevPendingCount=pending;
+    orders=newOrders;
+    const rev=myOrders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
+    ['orderCount','oBadge','orderCount2','oBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=myOrders.length;});
+    const dPend=document.getElementById('d-pending');if(dPend)dPend.textContent=pending;
+    const dRev=document.getElementById('d-rev');if(dRev)dRev.textContent='₹'+rev.toLocaleString('en-IN');
+    renderRecentOrders();renderOrders();
+  }, (err)=>{ console.warn('Orders live sync failed:',err); });
+
+  unsubBanners = onSnapshot(collection(db,'banners'), (snap)=>{
+    banners=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||99)-(b.order||99));
+    const n=banners.length;
+    ['bannerCount','bBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
+    renderBannerList();
+  }, (err)=>{ console.warn('Banners live sync failed:',err); });
 }
-async function loadFoods(){
-  try{const snap=await getDocs(collection(db,'foods'));foods=snap.docs.map(d=>({id:d.id,...d.data()}));}
-  catch(e){foods=[];}
-  // Count filtered for restaurant mode
-  const myFoods=session.role==='restaurant'?foods.filter(f=>f.restaurantId===session.restaurantId):foods;
-  const n=session.role==='restaurant'?myFoods.length:foods.length;
-  ['foodCount','fBadge','foodCount2','fBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  const dFoods=document.getElementById('d-foods');if(dFoods)dFoods.textContent=n;
-  renderFoods();
-}
-async function loadOrders(){
-  try{const snap=await getDocs(collection(db,'food_orders'));orders=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.timestamp||0)-(a.timestamp||0));}
-  catch(e){orders=[];}
-  const myOrders=session.role==='restaurant'?orders.filter(o=>o.restaurantId===session.restaurantId||o.restaurantName===session.restaurantName):orders;
-  const pending=myOrders.filter(o=>!o.status||o.status==='pending').length;
-  const rev=myOrders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(parseFloat(o.total)||0),0);
-  ['orderCount','oBadge','orderCount2','oBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=myOrders.length;});
-  const dPend=document.getElementById('d-pending');if(dPend)dPend.textContent=pending;
-  const dRev=document.getElementById('d-rev');if(dRev)dRev.textContent='₹'+rev.toLocaleString('en-IN');
-  renderRecentOrders();renderOrders();
-}
-async function loadBanners(){
-  try{const snap=await getDocs(collection(db,'banners'));banners=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||99)-(b.order||99));}
-  catch(e){banners=[];}
-  const n=banners.length;
-  ['bannerCount','bBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
-  renderBannerList();
-}
+
+window.refreshAll=()=>{ showToast('🔄 Live sync active — data updates automatically'); };
 
 function populateRestDropdowns(){
   const opts='<option value="">— Select Restaurant —</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+  const curSel=document.getElementById('fRestId').value;
   document.getElementById('fRestId').innerHTML=opts;
   if(session.role==='restaurant'){
     document.getElementById('fRestId').value=session.restaurantId;
+  } else if(curSel && restaurants.some(r=>r.id===curSel)){
+    document.getElementById('fRestId').value=curSel;
   } else if(lastSelectedRestId){
     document.getElementById('fRestId').value=lastSelectedRestId;
   }
   const rOpt='<option value="">All Restaurants</option>'+restaurants.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+  const curFoodFilter=document.getElementById('foodRestFilter').value;
+  const curOrderFilter=document.getElementById('orderRestFilter').value;
   document.getElementById('foodRestFilter').innerHTML=rOpt;
   document.getElementById('orderRestFilter').innerHTML=rOpt;
+  if(curFoodFilter) document.getElementById('foodRestFilter').value=curFoodFilter;
+  if(curOrderFilter) document.getElementById('orderRestFilter').value=curOrderFilter;
 }
 const getRestName=id=>restaurants.find(r=>r.id===id)?.name||'';
 
@@ -975,7 +1004,7 @@ window.saveBanner=async()=>{
     const data={title,subtitle:document.getElementById('bSub').value.trim(),badge:document.getElementById('bBadge').value.trim(),badgeColor:document.getElementById('bBadgeColor').value,bgColor:document.getElementById('bBgColor').value,image:document.getElementById('bImage').value.trim(),order:parseInt(document.getElementById('bOrder').value)||1,showOnRestaurant:document.getElementById('bPageRest').checked,showOnMenu:document.getElementById('bPageMenu').checked,active:document.getElementById('bActive').checked};
     if(editId){await updateDoc(doc(db,'banners',editId),data);showToast('✅ Banner updated!');showAlert('banner','Banner update ho gaya!','ok');}
     else{await addDoc(collection(db,'banners'),{...data,createdAt:serverTimestamp()});showToast('✅ Banner added!');showAlert('banner','Naya banner add ho gaya!','ok');}
-    resetBannerForm();await loadBanners();
+    resetBannerForm();
   }catch(e){showAlert('banner','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Banner';}
 };
@@ -989,8 +1018,8 @@ window.editBanner=id=>{
   prvImg('bPrv',b.image);document.getElementById('bannerFormTitle').textContent='Edit: '+b.title;document.getElementById('bannerCancelBtn').style.display='block';
   updateBannerPreview();showSec('banners',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-window.deleteBanner=async id=>{const b=banners.find(x=>x.id===id);if(!confirm(`Delete banner "${b?.title}"?`))return;try{await deleteDoc(doc(db,'banners',id));showToast('Deleted');await loadBanners();}catch(e){showToast('❌ '+e.message);}};
-window.toggleBannerActive=async(id,val)=>{try{await updateDoc(doc(db,'banners',id),{active:val});showToast(val?'✅ Banner Active':'🔴 Banner Inactive');await loadBanners();}catch(e){showToast('❌ '+e.message);}};
+window.deleteBanner=async id=>{const b=banners.find(x=>x.id===id);if(!confirm(`Delete banner "${b?.title}"?`))return;try{await deleteDoc(doc(db,'banners',id));showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
+window.toggleBannerActive=async(id,val)=>{try{await updateDoc(doc(db,'banners',id),{active:val});showToast(val?'✅ Banner Active':'🔴 Banner Inactive');}catch(e){showToast('❌ '+e.message);}};
 window.resetBannerForm=()=>{
   document.getElementById('bannerEditId').value='';
   ['bTitle','bSub','bBadge','bImage','bImgQuery'].forEach(id=>document.getElementById(id).value='');
@@ -1074,7 +1103,7 @@ window.saveRestaurant=async()=>{
       // Show the new ID + password to admin
       if(adminPass) showPassInfo(newDoc.id, adminPass, name);
     }
-    resetRestForm();await loadRestaurants();
+    resetRestForm();
   }catch(e){showAlert('rest','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Restaurant';}
 };
@@ -1158,7 +1187,6 @@ window.saveInlinePass=async(id)=>{
   try{
     await updateDoc(doc(db,'restaurants',id),{adminPassword:pass});
     showToast('✅ Password saved!');
-    await loadRestaurants();
     closePassModal();
     const r=restaurants.find(x=>x.id===id);
     showPassInfo(id,pass,r?.name||'');
@@ -1168,7 +1196,7 @@ window.removeRestPass=async(id)=>{
   if(!confirm('Password remove karoge? Restaurant admin login nahi kar payega.'))return;
   try{
     await updateDoc(doc(db,'restaurants',id),{adminPassword:null});
-    showToast('Password removed');closePassModal();await loadRestaurants();
+    showToast('Password removed');closePassModal();
   }catch(e){showToast('❌ '+e.message);}
 };
 
@@ -1194,8 +1222,8 @@ window.editRestaurant=id=>{
   prvImg('rPrv',r.image);document.getElementById('restFormTitle').textContent='Edit: '+r.name;document.getElementById('restCancelBtn').style.display='block';
   showSec('restaurants',null);window.scrollTo({top:0,behavior:'smooth'});
 };
-window.deleteRestaurant=async id=>{const r=restaurants.find(x=>x.id===id);if(!confirm(`Delete "${r?.name}"?`))return;try{await deleteDoc(doc(db,'restaurants',id));showToast('Deleted');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}};
-window.toggleRestOpen=async(id,val)=>{try{await updateDoc(doc(db,'restaurants',id),{isOpen:val});showToast(val?'✅ Opened':'🔒 Closed');await loadRestaurants();}catch(e){showToast('❌ '+e.message);}};
+window.deleteRestaurant=async id=>{const r=restaurants.find(x=>x.id===id);if(!confirm(`Delete "${r?.name}"?`))return;try{await deleteDoc(doc(db,'restaurants',id));showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
+window.toggleRestOpen=async(id,val)=>{try{await updateDoc(doc(db,'restaurants',id),{isOpen:val});showToast(val?'✅ Opened':'🔒 Closed');}catch(e){showToast('❌ '+e.message);}};
 
 function renderRestGrid(){
   const grid=document.getElementById('restGrid');
@@ -1248,7 +1276,7 @@ window.manageRestFoods=id=>{
 window.closeMg=()=>{document.getElementById('mgModal').classList.remove('open');};
 document.getElementById('mgModal').addEventListener('click',e=>{if(e.target===document.getElementById('mgModal'))closeMg();});
 window.goAddFood=()=>{const rid=mgRestId;closeMg();showSec('foods',null);if(rid){document.getElementById('fRestId').value=rid;lastSelectedRestId=rid;}window.scrollTo({top:0,behavior:'smooth'});};
-window.deleteFoodMg=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));await loadFoods();manageRestFoods(mgRestId);showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
+window.deleteFoodMg=async id=>{if(!confirm('Delete this food item?'))return;try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');}catch(e){showToast('❌ '+e.message);}};
 window.duplicateFood=id=>{
   const f=foods.find(x=>x.id===id);if(!f)return;
   document.getElementById('foodEditId').value='';
@@ -1289,7 +1317,7 @@ window.saveFood=async()=>{
     const data={restaurantId:restId,restaurantName:resolvedRestName,name,price:priceRaw&&!isNaN(parseFloat(priceRaw))?parseFloat(priceRaw):(hasVariants?variants[0].price:0),description:document.getElementById('fDesc').value.trim(),image,category:document.getElementById('fCategory').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,prepTime:document.getElementById('fPrepTime').value.trim(),calories:document.getElementById('fCal').value.trim(),veg:document.getElementById('fVegVal').value==='true',bestseller:document.getElementById('fBestVal').value==='true',spicy:document.getElementById('fSpicyVal').value==='true',variants};
     if(editId){await updateDoc(doc(db,'foods',editId),data);showToast('✅ Updated!');showAlert('food','Food item updated!','ok');}
     else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food','Added to '+resolvedRestName+'!','ok');}
-    lastSelectedRestId=restId;resetFoodForm();await loadFoods();
+    lastSelectedRestId=restId;resetFoodForm();
   }catch(e){showAlert('food','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Food Item';}
 };
@@ -1328,7 +1356,7 @@ window.deleteFood=async id=>{
   const f=foods.find(x=>x.id===id);
   if(session.role==='restaurant'&&f?.restaurantId!==session.restaurantId){showToast('❌ Permission denied');return;}
   if(!confirm('Delete this food item?'))return;
-  try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');await loadFoods();}catch(e){showToast('❌ '+e.message);}
+  try{await deleteDoc(doc(db,'foods',id));showToast('Deleted');}catch(e){showToast('❌ '+e.message);}
 };
 
 window.renderFoods=()=>{
@@ -1412,10 +1440,9 @@ function orderCardHTML(o,showUpdate){
 window.updateStatus=async id=>{
   const sel=document.getElementById('osel-'+id);if(!sel)return;const status=sel.value;
   try{
-    await updateDoc(doc(db,'food_orders',id),{status});const o=orders.find(x=>x.id===id);if(o)o.status=status;
+    await updateDoc(doc(db,'food_orders',id),{status});
     showToast('✅ Order → '+status.replace(/_/g,' '));
     fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:`🔔 Order status: *${status.replace(/_/g,' ').toUpperCase()}*`,parse_mode:'Markdown'})}).catch(()=>{});
-    renderOrders();renderRecentOrders();loadOrders();
   }catch(e){showToast('❌ '+e.message);}
 };
 
