@@ -253,6 +253,16 @@ body.rest-mode .main{padding-top:86px}
 .spicy-toggle-btn{display:inline-flex;align-items:center;gap:5px;padding:.32rem .75rem;border-radius:50px;border:2px solid var(--bdr);background:var(--sur);font-family:'DM Sans',sans-serif;font-size:.8rem;font-weight:600;color:var(--mut);cursor:pointer;transition:all .18s;user-select:none}
 .spicy-toggle-btn.active{background:#FFEBEE;border-color:#EF5350;color:#C62828}
 
+/* ══ SPECIAL CATEGORY (cross-restaurant) ══ */
+.special-pill-box{max-height:110px;overflow-y:auto;border:1.5px solid #CE93D8;border-radius:8px;padding:.4rem .5rem;background:#faf5ff;display:flex;flex-wrap:wrap;gap:.35rem}
+.sppill{display:none}
+.sppill+label{display:inline-flex;align-items:center;background:#fff;border:1.5px solid #E1BEE7;border-radius:50px;padding:.18rem .6rem;font-size:.72rem;color:#6A1B9A;cursor:pointer;transition:all .15s;white-space:nowrap;user-select:none}
+.sppill:checked+label{background:#6A1B9A;border-color:#6A1B9A;color:#fff;font-weight:700}
+.special-wrapper{border:1.5px solid rgba(106,27,154,.25);border-radius:10px;padding:.75rem;background:linear-gradient(135deg,#faf5ff,#fff);grid-column:1/-1}
+.special-wrapper .variants-section-label{color:#6A1B9A}
+.special-wrapper .variants-section-label i{color:#6A1B9A}
+.spec-tag-pill{font-size:.6rem;background:#F3E5F5;color:#6A1B9A;border:1px solid rgba(106,27,154,.2);border-radius:50px;padding:1px 7px;font-weight:600}
+
 @media(min-width:768px){
   .bottom-nav{display:none}
   .main{padding-top:58px;padding-bottom:0}
@@ -388,6 +398,15 @@ body.rest-mode .main{padding-top:86px}
       <div class="fg"><label>Rating</label><input type="number" id="rRating" placeholder="4.5 (optional)" min="1" max="5" step="0.1" data-next="rPhone"/></div>
       <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric" data-next="rTags"/></div>
       <div class="fg full">
+        <label>Store Location <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0">— for customer distance & delivery fee</span></label>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <button type="button" onclick="captureRestLocation()" id="rLocBtn" style="background:var(--bl);color:var(--brand);border:1.5px solid var(--brand);border-radius:8px;padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><i class="ti ti-current-location"></i> Use my current location</button>
+          <span id="rLocStatus" style="font-size:.72rem;color:var(--mut)"></span>
+        </div>
+        <input type="hidden" id="rLat"/>
+        <input type="hidden" id="rLng"/>
+      </div>
+      <div class="fg full">
         <label>Cover Image</label>
         <div class="img-search-row"><input type="text" id="rImgQuery" placeholder="Search: e.g. Spice Garden restaurant"/><button onclick="searchImages('r','rImgQuery','rImgResults','rImgSearchBtn')" id="rImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
         <div class="img-search-note">Image search karo ya neeche URL paste karo</div>
@@ -480,6 +499,22 @@ body.rest-mode .main{padding-top:86px}
         </div>
         <div class="custom-add-row"><input type="text" id="fCategoryCustom" placeholder="Custom category…"/><button type="button" onclick="addCustomCategory()">+ Add</button></div>
         <input type="hidden" id="fCategory"/>
+      </div>
+      <div class="fg full">
+        <div class="special-wrapper">
+          <div class="variants-section-label"><i class="ti ti-sparkles"></i> Special Category <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — sabhi restaurants pe common dikhta hai (Home page)</span></div>
+          <div class="special-pill-box" id="specialPillBox">
+            <input type="checkbox" class="sppill" id="sp1" value="Under ₹99"><label for="sp1">🌟 Under ₹99</label>
+            <input type="checkbox" class="sppill" id="sp2" value="Under ₹149"><label for="sp2">💸 Under ₹149</label>
+            <input type="checkbox" class="sppill" id="sp3" value="Burger"><label for="sp3">🍔 Burger</label>
+            <input type="checkbox" class="sppill" id="sp4" value="Pizza"><label for="sp4">🍕 Pizza</label>
+            <input type="checkbox" class="sppill" id="sp5" value="Combo"><label for="sp5">🍱 Combo</label>
+            <input type="checkbox" class="sppill" id="sp6" value="Today's Special"><label for="sp6">✨ Today's Special</label>
+            <input type="checkbox" class="sppill" id="sp7" value="Trending"><label for="sp7">📈 Trending</label>
+          </div>
+          <div class="custom-add-row"><input type="text" id="fSpecialCustom" placeholder="Custom special category…"/><button type="button" onclick="addCustomSpecial()">+ Add</button></div>
+          <input type="hidden" id="fSpecialCategory"/>
+        </div>
       </div>
       <div class="fg"><label>Rating (optional)</label><input type="number" id="fRating" placeholder="4.5 (optional)" min="1" max="5" step="0.1" inputmode="decimal" data-next="fDesc"/></div>
       <div class="fg full"><label>Description</label><textarea id="fDesc" placeholder="Describe the dish… (optional)" data-next="fImage"></textarea></div>
@@ -620,8 +655,13 @@ body.rest-mode .main{padding-top:86px}
       </div>
       <div class="fg">
         <label>Free Delivery Minimum (₹) *</label>
-        <input type="number" id="sFreeMin" placeholder="e.g. 299" min="0" step="1" inputmode="numeric"/>
+        <input type="number" id="sFreeMin" placeholder="e.g. 299" min="0" step="1" inputmode="numeric" data-next="sPerKm"/>
         <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Isse zyada order pe delivery free</span>
+      </div>
+      <div class="fg">
+        <label>Rate per KM (₹) *</label>
+        <input type="number" id="sPerKm" placeholder="e.g. 8" min="0" step="0.5" inputmode="decimal"/>
+        <span style="font-size:.67rem;color:var(--mut);margin-top:2px">Fee = Base fee + (₹/km × distance). Store aur customer dono ka GPS location chahiye.</span>
       </div>
     </div>
     <div class="form-actions"><button class="btn-pr" id="settingsSaveBtn" onclick="saveSettings()"><i class="ti ti-device-floppy"></i> Save Settings</button></div>
@@ -834,7 +874,24 @@ function getVariants() {
 function setVariants(arr) { document.getElementById('variantList').innerHTML='';variantCount=0;if(arr&&arr.length)arr.forEach(v=>addVariantRow(v.name,v.price)); }
 function clearVariants() { document.getElementById('variantList').innerHTML='';variantCount=0; }
 
-// ══ GENERATE RANDOM PASSWORD ══
+// ══ STORE LOCATION CAPTURE (GPS) ══
+window.captureRestLocation = () => {
+  if(!navigator.geolocation){ showToast('❌ Geolocation is browser mein supported nahi hai'); return; }
+  const btn=document.getElementById('rLocBtn'); const status=document.getElementById('rLocStatus');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2"></i> Fetching…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    document.getElementById('rLat').value=pos.coords.latitude;
+    document.getElementById('rLng').value=pos.coords.longitude;
+    status.innerHTML=`✅ Captured: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+    btn.disabled=false; btn.innerHTML='<i class="ti ti-current-location"></i> Update location';
+    showToast('📍 Store location captured!');
+  }, err=>{
+    btn.disabled=false; btn.innerHTML='<i class="ti ti-current-location"></i> Use my current location';
+    showToast('❌ Location access denied/failed. Browser permission check karo.');
+  }, {enableHighAccuracy:true,timeout:10000});
+};
+
+
 window.generatePass = () => {
   const chars='ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   let pass='';for(let i=0;i<8;i++)pass+=chars[Math.floor(Math.random()*chars.length)];
@@ -1073,6 +1130,19 @@ window.addCustomCategory=()=>{
   box.appendChild(cb);box.appendChild(lbl);cb.checked=true;inp.value='';syncCategoryField();box.scrollTop=box.scrollHeight;
   showToast('✅ "'+val+'" category add hui!');
 };
+
+// ══ SPECIAL CATEGORY PILLS (cross-restaurant, home page) ══
+document.addEventListener('change',e=>{if(e.target.classList.contains('sppill'))syncSpecialField();});
+function syncSpecialField(){const tags=[...document.querySelectorAll('.sppill:checked')].map(c=>c.value).filter(Boolean);document.getElementById('fSpecialCategory').value=tags.join(', ');}
+window.addCustomSpecial=()=>{
+  const inp=document.getElementById('fSpecialCustom');const val=inp.value.trim();if(!val){showToast('Special category naam likho');return;}
+  const id='spC'+Date.now();const box=document.getElementById('specialPillBox');
+  const cb=document.createElement('input');cb.type='checkbox';cb.className='sppill';cb.id=id;cb.value=val;
+  const lbl=document.createElement('label');lbl.setAttribute('for',id);lbl.textContent=val;
+  box.appendChild(cb);box.appendChild(lbl);cb.checked=true;inp.value='';syncSpecialField();box.scrollTop=box.scrollHeight;
+  showToast('✅ "'+val+'" special category add hui!');
+};
+
 document.addEventListener('change',e=>{if(e.target.classList.contains('tpchip'))document.getElementById('fPrepTime').value=e.target.value;});
 document.getElementById('fPrepTime')?.addEventListener('input',function(){if(this.value.trim())document.querySelectorAll('.tpchip').forEach(r=>r.checked=false);});
 
@@ -1092,6 +1162,8 @@ window.saveRestaurant=async()=>{
     const tagsRaw=document.getElementById('rTags').value.trim();const ratingRaw=document.getElementById('rRating').value.trim();
     const adminPass=document.getElementById('rAdminPass').value.trim();
     const data={name,cuisine,area:document.getElementById('rArea').value.trim(),deliveryTime:document.getElementById('rTime').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,phone:document.getElementById('rPhone').value.trim(),image,tags:tagsRaw?tagsRaw.split(',').map(t=>t.trim()).filter(Boolean):[],isOpen:document.getElementById('rOpen').checked,popular:document.getElementById('rPop').checked};
+    const latVal=document.getElementById('rLat').value.trim();const lngVal=document.getElementById('rLng').value.trim();
+    if(latVal&&lngVal){ data.lat=parseFloat(latVal); data.lng=parseFloat(lngVal); }
     // Only update password if it was filled in
     if(adminPass)data.adminPassword=adminPass;
     if(id){
@@ -1202,11 +1274,13 @@ window.removeRestPass=async(id)=>{
 
 window.resetRestForm=()=>{
   document.getElementById('restEditId').value='';
-  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags','rAdminPass'].forEach(id=>document.getElementById(id).value='');
+  ['rName','rCuisine','rArea','rTime','rRating','rPhone','rImage','rTags','rAdminPass','rLat','rLng'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('rOpen').checked=true;document.getElementById('rPop').checked=false;
   document.getElementById('rPrv').style.display='none';document.getElementById('rImgResults').style.display='none';document.getElementById('rImgQuery').value='';
   document.getElementById('restFormTitle').textContent='Add Restaurant';document.getElementById('restCancelBtn').style.display='none';
   document.getElementById('rPassCurrent').style.display='none';
+  document.getElementById('rLocStatus').textContent='';
+  document.getElementById('rLocBtn').innerHTML='<i class="ti ti-current-location"></i> Use my current location';
 };
 window.editRestaurant=id=>{
   const r=restaurants.find(x=>x.id===id);if(!r)return;
@@ -1216,6 +1290,10 @@ window.editRestaurant=id=>{
   document.getElementById('rImage').value=r.image||'';document.getElementById('rTags').value=(r.tags||[]).join(', ');
   document.getElementById('rOpen').checked=!!r.isOpen;document.getElementById('rPop').checked=!!r.popular;
   document.getElementById('rAdminPass').value=''; // Clear — leave blank = don't change
+  document.getElementById('rLat').value=r.lat!=null?r.lat:'';document.getElementById('rLng').value=r.lng!=null?r.lng:'';
+  const locStatus=document.getElementById('rLocStatus');
+  if(r.lat!=null&&r.lng!=null){locStatus.innerHTML=`✅ Set: ${(+r.lat).toFixed(5)}, ${(+r.lng).toFixed(5)}`;document.getElementById('rLocBtn').innerHTML='<i class="ti ti-current-location"></i> Update location';}
+  else{locStatus.textContent='⚠️ Location set nahi hai — distance/delivery fee kaam nahi karega is restaurant ke liye';document.getElementById('rLocBtn').innerHTML='<i class="ti ti-current-location"></i> Use my current location';}
   const passCurrent=document.getElementById('rPassCurrent');
   if(r.adminPassword){passCurrent.textContent='Current: '+r.adminPassword+' (khali chodo = change nahi hoga)';passCurrent.style.display='block';}
   else{passCurrent.style.display='none';}
@@ -1235,7 +1313,8 @@ function renderRestGrid(){
       <img src="${r.image||'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'}" alt="${r.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600'"/>
       <div class="rest-card-body">
         <div class="rest-card-name">${r.name}<span class="ob ${r.isOpen?'open':'closed'}">${r.isOpen?'Open':'Closed'}</span>${r.popular?'<span style="font-size:.58rem;background:#FFF3E0;color:#E65100;border-radius:50px;padding:1px 5px;font-weight:700">🔥</span>':''}
-        ${hasPass?'<span style="font-size:.58rem;background:#E3F2FD;color:#1565C0;border-radius:50px;padding:1px 6px;font-weight:700">🔑 Login Set</span>':'<span style="font-size:.58rem;background:#F5F5F5;color:#9E9E9E;border-radius:50px;padding:1px 6px;font-weight:700">No Login</span>'}</div>
+        ${hasPass?'<span style="font-size:.58rem;background:#E3F2FD;color:#1565C0;border-radius:50px;padding:1px 6px;font-weight:700">🔑 Login Set</span>':'<span style="font-size:.58rem;background:#F5F5F5;color:#9E9E9E;border-radius:50px;padding:1px 6px;font-weight:700">No Login</span>'}
+        ${r.lat!=null&&r.lng!=null?'<span style="font-size:.58rem;background:#E8F5E9;color:#2E7D32;border-radius:50px;padding:1px 6px;font-weight:700">📍 GPS Set</span>':'<span style="font-size:.58rem;background:#FFF8E1;color:#F57F17;border-radius:50px;padding:1px 6px;font-weight:700">📍 No GPS</span>'}</div>
         <div class="rest-card-meta"><span>${r.cuisine||''}</span>${r.area?`<span>📍 ${r.area}</span>`:''}${r.deliveryTime?`<span>⏱ ${r.deliveryTime}</span>`:''}${r.rating!=null?`<span>⭐ ${r.rating}</span>`:''}</div>
         <div class="rest-card-id" onclick="copyId('${r.id}')"><i class="ti ti-copy" style="font-size:.7rem;vertical-align:-1px"></i> ${r.id}</div>
         <div style="font-size:.7rem;color:var(--mut);margin-bottom:.45rem">${fc} food item${fc!==1?'s':''} linked</div>
@@ -1289,6 +1368,9 @@ window.duplicateFood=id=>{
   setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);setVariants(f.variants||[]);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
+  const savedSpecials=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll('.sppill').forEach(c=>{c.checked=savedSpecials.includes(c.value);});
+  document.getElementById('fSpecialCategory').value=f.specialCategory||'';
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
   prvImg('fPrv',f.image);document.getElementById('foodFormTitle').textContent='Duplicate: '+f.name;
   document.getElementById('foodCancelBtn').style.display='block';document.getElementById('dupBanner').classList.add('show');
@@ -1313,8 +1395,8 @@ window.saveFood=async()=>{
 
     const resolvedRestName=getRestName(restId)||session.restaurantName||'';
     const ratingRaw=document.getElementById('fRating').value.trim();
-    syncCategoryField();
-    const data={restaurantId:restId,restaurantName:resolvedRestName,name,price:priceRaw&&!isNaN(parseFloat(priceRaw))?parseFloat(priceRaw):(hasVariants?variants[0].price:0),description:document.getElementById('fDesc').value.trim(),image,category:document.getElementById('fCategory').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,prepTime:document.getElementById('fPrepTime').value.trim(),calories:document.getElementById('fCal').value.trim(),veg:document.getElementById('fVegVal').value==='true',bestseller:document.getElementById('fBestVal').value==='true',spicy:document.getElementById('fSpicyVal').value==='true',variants};
+    syncCategoryField();syncSpecialField();
+    const data={restaurantId:restId,restaurantName:resolvedRestName,name,price:priceRaw&&!isNaN(parseFloat(priceRaw))?parseFloat(priceRaw):(hasVariants?variants[0].price:0),description:document.getElementById('fDesc').value.trim(),image,category:document.getElementById('fCategory').value.trim(),specialCategory:document.getElementById('fSpecialCategory').value.trim(),rating:ratingRaw?parseFloat(ratingRaw):null,prepTime:document.getElementById('fPrepTime').value.trim(),calories:document.getElementById('fCal').value.trim(),veg:document.getElementById('fVegVal').value==='true',bestseller:document.getElementById('fBestVal').value==='true',spicy:document.getElementById('fSpicyVal').value==='true',variants};
     if(editId){await updateDoc(doc(db,'foods',editId),data);showToast('✅ Updated!');showAlert('food','Food item updated!','ok');}
     else{await addDoc(collection(db,'foods'),{...data,createdAt:serverTimestamp()});showToast('✅ Added!');showAlert('food','Added to '+resolvedRestName+'!','ok');}
     lastSelectedRestId=restId;resetFoodForm();
@@ -1324,11 +1406,13 @@ window.saveFood=async()=>{
 
 window.resetFoodForm=()=>{
   document.getElementById('foodEditId').value='';
-  ['fName','fPrice','fDesc','fImage','fCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('fCategoryCustom').value='';document.getElementById('fPrv').style.display='none';
+  ['fName','fPrice','fDesc','fImage','fCategory','fSpecialCategory','fRating','fPrepTime','fCal'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCategoryCustom').value='';document.getElementById('fSpecialCustom').value='';document.getElementById('fPrv').style.display='none';
   document.getElementById('foodFormTitle').textContent='Add Food Item';document.getElementById('foodCancelBtn').style.display='none';
   document.getElementById('dupBanner').classList.remove('show');
-  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);clearVariants();
+  document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
+  document.querySelectorAll('.sppill').forEach(c=>c.checked=false);
+  clearVariants();
   if(session.role==='restaurant'){document.getElementById('fRestId').value=session.restaurantId;}
   else if(lastSelectedRestId){document.getElementById('fRestId').value=lastSelectedRestId;}
   else{document.getElementById('fRestId').value='';}
@@ -1347,6 +1431,9 @@ window.editFood=id=>{
   setVegToggle(!!f.veg);setBestToggle(!!f.bestseller);setSpicyToggle(!!f.spicy);setVariants(f.variants||[]);
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
+  const savedSpecials=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
+  document.querySelectorAll('.sppill').forEach(c=>{c.checked=savedSpecials.includes(c.value);});
+  document.getElementById('fSpecialCategory').value=f.specialCategory||'';
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
   prvImg('fPrv',f.image);document.getElementById('foodFormTitle').textContent='Edit: '+f.name;
   document.getElementById('foodCancelBtn').style.display='block';document.getElementById('dupBanner').classList.remove('show');
@@ -1371,6 +1458,7 @@ window.renderFoods=()=>{
     const rName=f.restaurantName||getRestName(f.restaurantId)||'—';
     const hasVariants=f.variants&&f.variants.length;
     const variantChips=hasVariants?`<div class="variant-price-list">${f.variants.map(v=>`<span class="vp-chip">${v.name} ₹${v.price}</span>`).join('')}</div>`:'';
+    const specialChips=f.specialCategory?`<div class="variant-price-list">${f.specialCategory.split(',').map(s=>s.trim()).filter(Boolean).map(s=>`<span class="spec-tag-pill">✨ ${s}</span>`).join('')}</div>`:'';
     // Check if this food belongs to current restaurant admin (for edit/delete)
     const canEdit=session.role==='admin'||(session.role==='restaurant'&&f.restaurantId===session.restaurantId);
     return `<div class="food-item-card">
@@ -1386,6 +1474,7 @@ window.renderFoods=()=>{
           ${f.category?`<span style="font-size:.62rem;color:var(--mut)">${f.category}</span>`:''}
         </div>
         ${variantChips}
+        ${specialChips}
         <div class="food-item-actions" style="display:flex;gap:.4rem;flex-wrap:wrap;margin-top:.3rem">
           ${canEdit?`<button class="btn-sm edit" onclick="editFood('${f.id}')"><i class="ti ti-edit"></i> Edit</button>
           <button class="btn-sm dup" onclick="duplicateFood('${f.id}')"><i class="ti ti-copy"></i> Dup</button>
@@ -1452,22 +1541,24 @@ async function loadSettingsDisplay(){
   try{
     const snap=await getDoc(doc(db,'settings','delivery'));
     if(snap.exists()){
-      const d=snap.data();const fee=d.deliveryFee??40;const freeMin=d.freeDeliveryMin??299;
+      const d=snap.data();const fee=d.deliveryFee??40;const freeMin=d.freeDeliveryMin??299;const perKm=d.perKmRate??8;
       el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
-        <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem"><div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:.2rem">Delivery Fee</div><div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brand)">₹${fee}</div></div>
+        <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem"><div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:.2rem">Base Delivery Fee</div><div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brand)">₹${fee}</div></div>
         <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem"><div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:.2rem">Free Delivery Above</div><div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--ok)">₹${freeMin}</div></div>
+        <div style="background:var(--sur);border-radius:8px;padding:.65rem .85rem;grid-column:1/-1"><div style="font-size:.6rem;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:.2rem">Rate per KM</div><div style="font-family:'Playfair Display',serif;font-size:1.3rem;color:#6A1B9A">₹${perKm} / km</div></div>
       </div>`;
-      document.getElementById('sDelFee').value=fee;document.getElementById('sFreeMin').value=freeMin;
-    }else{el.innerHTML='<span style="color:var(--mut);font-size:.8rem">Koi setting save nahi hui. Default: Fee ₹40, Free above ₹299</span>';}
+      document.getElementById('sDelFee').value=fee;document.getElementById('sFreeMin').value=freeMin;document.getElementById('sPerKm').value=perKm;
+    }else{el.innerHTML='<span style="color:var(--mut);font-size:.8rem">Koi setting save nahi hui. Default: Base ₹40, Free above ₹299, ₹8/km</span>';}
   }catch(e){el.innerHTML='<span style="color:var(--err);font-size:.8rem">Load error.</span>';}
 }
 window.saveSettings=async()=>{
   const btn=document.getElementById('settingsSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
   try{
-    const fee=parseFloat(document.getElementById('sDelFee').value);const freeMin=parseFloat(document.getElementById('sFreeMin').value);
+    const fee=parseFloat(document.getElementById('sDelFee').value);const freeMin=parseFloat(document.getElementById('sFreeMin').value);const perKm=parseFloat(document.getElementById('sPerKm').value);
     if(isNaN(fee)||fee<0){showAlert('settings','Delivery fee sahi se likho');return;}
     if(isNaN(freeMin)||freeMin<0){showAlert('settings','Free minimum sahi se likho');return;}
-    await setDoc(doc(db,'settings','delivery'),{deliveryFee:fee,freeDeliveryMin:freeMin,updatedAt:serverTimestamp()});
+    if(isNaN(perKm)||perKm<0){showAlert('settings','Per km rate sahi se likho');return;}
+    await setDoc(doc(db,'settings','delivery'),{deliveryFee:fee,freeDeliveryMin:freeMin,perKmRate:perKm,updatedAt:serverTimestamp()});
     showToast('✅ Settings saved!');showAlert('settings','Settings update ho gayi!','ok');loadSettingsDisplay();
   }catch(e){showAlert('settings','Error: '+e.message);showToast('❌ '+e.message);}
   finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-device-floppy"></i> Save Settings';}
