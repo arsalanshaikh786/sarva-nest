@@ -294,6 +294,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
       <span class="chip"><i class="ti ti-clock"></i> 30–45 min</span>
       <span class="chip" id="heroFreeChip"><i class="ti ti-truck"></i> Free above ₹299</span>
       <span class="chip"><i class="ti ti-shield-check"></i> Hygienic</span>
+      <span class="chip" id="locChip" onclick="requestLocation()" style="cursor:pointer;border-color:var(--brand);color:var(--brand)"><i class="ti ti-map-pin"></i> <span id="locChipText">Enable location</span></span>
     </div>
   </div>
 
@@ -320,7 +321,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
       <button class="fbtn active" data-f="all" onclick="setRF(this)">All</button>
       <button class="fbtn" data-f="open" onclick="setRF(this)">🟢 Open</button>
       <button class="fbtn" data-f="top" onclick="setRF(this)">⭐ Top Rated</button>
-      <select class="sort-sel" id="restSort"><option value="">Sort</option><option value="rating">Rating</option><option value="name">A–Z</option><option value="time">Fastest</option></select>
+      <select class="sort-sel" id="restSort"><option value="">Sort</option><option value="distance">📍 Nearest</option><option value="rating">Rating</option><option value="name">A–Z</option><option value="time">Fastest</option></select>
     </div>
   </div>
   <div class="cat-bar" id="cuisineBar"></div>
@@ -343,6 +344,7 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
         <span class="rh-chip"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.72rem"></i> <span id="heroRating"></span></span>
         <span class="rh-chip"><i class="ti ti-clock"></i> <span id="heroTime"></span></span>
         <span class="rh-chip"><i class="ti ti-map-pin"></i> <span id="heroArea"></span></span>
+        <span class="rh-chip" id="heroDistanceChip" style="display:none"><i class="ti ti-route"></i> <span id="heroDistanceText"></span></span>
         <span id="heroCTag"></span>
       </div>
     </div>
@@ -479,6 +481,7 @@ const COUPONS={FIRST50:50,SAVE30:30,ZESTORA20:20};
 
 let DEL_FEE = 40;
 let FREE_MIN = 299;
+let PER_KM_RATE = 8;
 
 function loadDeliverySettings() {
   return new Promise((resolve) => {
@@ -488,6 +491,7 @@ function loadDeliverySettings() {
         const d = snap.data();
         DEL_FEE  = typeof d.deliveryFee     === 'number' ? d.deliveryFee     : DEL_FEE;
         FREE_MIN = typeof d.freeDeliveryMin === 'number' ? d.freeDeliveryMin : FREE_MIN;
+        PER_KM_RATE = typeof d.perKmRate    === 'number' ? d.perKmRate      : PER_KM_RATE;
       }
       const chip = document.getElementById('heroFreeChip');
       if (chip) chip.innerHTML = `<i class="ti ti-truck"></i> Free above ₹${FREE_MIN}`;
@@ -495,6 +499,85 @@ function loadDeliverySettings() {
       if (first) { first = false; resolve(); }
     }, (err) => { console.warn('Delivery settings live sync failed:', err); if (first) { first = false; resolve(); } });
   });
+}
+
+// ══════════════════════════════════════════════
+// ✅ GPS DISTANCE — customer location + Haversine
+// ══════════════════════════════════════════════
+let customerLoc = null; // {lat, lng}
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function distanceKmFor(rest) {
+  if (!customerLoc || !rest || typeof rest.lat !== 'number' || typeof rest.lng !== 'number') return null;
+  return haversineKm(customerLoc.lat, customerLoc.lng, rest.lat, rest.lng);
+}
+
+function formatKm(km) {
+  return km < 1 ? Math.round(km*1000)+' m' : km.toFixed(1)+' km';
+}
+
+window.requestLocation = function() {
+  if (!navigator.geolocation) { showToast('❌ Location is browser mein supported nahi hai'); return; }
+  const chipText = document.getElementById('locChipText');
+  if (chipText) chipText.textContent = 'Locating…';
+  navigator.geolocation.getCurrentPosition(pos => {
+    customerLoc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+    updateLocChip();
+    renderRests(); renderCartUI();
+    if (curRest) updateMenuHeroDistance();
+    showToast('📍 Location enabled — distance & delivery fee updated!');
+  }, err => {
+    updateLocChip();
+    showToast('❌ Location access nahi mila. Browser settings check karo.');
+  }, { enableHighAccuracy: true, timeout: 10000 });
+};
+
+function updateLocChip() {
+  const chip = document.getElementById('locChip');
+  const chipText = document.getElementById('locChipText');
+  if (!chip || !chipText) return;
+  if (customerLoc) {
+    chip.style.borderColor = 'var(--ok)'; chip.style.color = 'var(--ok)';
+    chip.querySelector('i').className = 'ti ti-map-pin-check';
+    chipText.textContent = 'Location on';
+  } else {
+    chip.style.borderColor = 'var(--brand)'; chip.style.color = 'var(--brand)';
+    chip.querySelector('i').className = 'ti ti-map-pin';
+    chipText.textContent = 'Enable location';
+  }
+}
+
+function updateMenuHeroDistance(){
+  const chip = document.getElementById('heroDistanceChip');
+  const text = document.getElementById('heroDistanceText');
+  if (!chip || !text) return;
+  const km = curRest ? distanceKmFor(curRest) : null;
+  if (km != null) { chip.style.display='inline-flex'; text.textContent = formatKm(km) + ' away'; }
+  else { chip.style.display='none'; }
+}
+
+// Restaurant used for cart/delivery-fee purposes (works even when items were
+// added from the Special Deals strip without formally opening that restaurant)
+function getCartRestaurant(){
+  const id = cartRestId || curRest?.id;
+  if (curRest && curRest.id === id) return curRest;
+  return allRests.find(r=>r.id===id) || curRest || null;
+}
+
+// Returns {fee, km} — km is null when distance can't be determined (falls back to flat base fee)
+function computeDeliveryFee(sub){
+  if (sub >= FREE_MIN) return { fee: 0, km: null };
+  const rest = getCartRestaurant();
+  const km = (customerLoc && rest) ? distanceKmFor(rest) : null;
+  if (km != null) return { fee: Math.round(DEL_FEE + PER_KM_RATE*km), km };
+  return { fee: DEL_FEE, km: null };
 }
 
 let allRests=[], menuFoods=[], curRest=null;
@@ -707,6 +790,13 @@ function filteredRests(){
   if(s==='rating') l.sort((a,b)=>+b.rating- +a.rating);
   if(s==='name') l.sort((a,b)=>a.name.localeCompare(b.name));
   if(s==='time') l.sort((a,b)=>parseInt(a.deliveryTime||99)-parseInt(b.deliveryTime||99));
+  if(s==='distance') l.sort((a,b)=>{
+    const da=distanceKmFor(a), db=distanceKmFor(b);
+    if(da==null&&db==null) return 0;
+    if(da==null) return 1;
+    if(db==null) return -1;
+    return da-db;
+  });
   return l;
 }
 
@@ -724,6 +814,7 @@ function renderRests(){
         <div class="rest-meta">
           <span class="rest-rating"><i class="ti ti-star-filled" style="color:#FFAB00;font-size:.7rem"></i> ${r.rating||'—'}</span>
           <span class="rest-time"><i class="ti ti-clock" style="font-size:.7rem"></i> ${r.deliveryTime||'—'}</span>
+          ${distanceKmFor(r)!=null?`<span class="rest-time" style="color:var(--brand);font-weight:700"><i class="ti ti-route" style="font-size:.7rem"></i> ${formatKm(distanceKmFor(r))}</span>`:''}
           ${r.isOpen===false?'<span class="closed-badge">Closed</span>':''}
         </div>
       </div>
