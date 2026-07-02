@@ -173,6 +173,34 @@ select.form-input option{background:var(--card);}
 /* SKELETON */
 .skeleton{background:linear-gradient(90deg,#1A1C24 25%,#21242E 50%,#1A1C24 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:8px;}
 @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* ==== CATEGORY MANAGEMENT (new) ==== */
+.catmgr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1rem;}
+@media(min-width:480px){.catmgr-grid{grid-template-columns:repeat(4,1fr);}}
+.catmgr-item{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;position:relative;}
+.catmgr-imgwrap{width:100%;height:70px;background:var(--surface);display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:1.7rem;}
+.catmgr-imgwrap img{width:100%;height:100%;object-fit:cover;}
+.catmgr-body{padding:.5rem .55rem .6rem;}
+.catmgr-name{font-weight:700;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.catmgr-count{font-size:.62rem;color:var(--muted);margin-bottom:.35rem;}
+.catmgr-actions{display:flex;gap:.3rem;}
+.catmgr-del{background:var(--red-dim);color:var(--red);border:none;border-radius:6px;padding:.26rem;font-size:.65rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;}
+.catmgr-assign{background:var(--blue-dim);color:var(--blue);border:none;border-radius:6px;padding:.26rem;font-size:.65rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:2px;}
+.catmgr-drag{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.4);color:#fff;border-radius:5px;padding:2px 5px;font-size:.6rem;cursor:grab;}
+
+/* ASSIGN PRODUCTS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;padding:1.1rem;}
+.modal-sheet-title{font-family:'Fraunces',serif;font-size:1rem;font-weight:700;margin-bottom:.2rem;}
+.modal-sheet-sub{font-size:.72rem;color:var(--muted);margin-bottom:.8rem;}
+.assign-search{width:100%;padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:50px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.8rem;outline:none;background:var(--card);color:var(--text);margin-bottom:.7rem;}
+.assign-row{display:flex;align-items:center;gap:.6rem;padding:.5rem .3rem;border-bottom:1px solid var(--border);}
+.assign-row img{width:34px;height:34px;border-radius:8px;object-fit:cover;background:var(--card);flex-shrink:0;}
+.assign-row .ar-name{flex:1;font-size:.8rem;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.assign-row .ar-cat{font-size:.62rem;color:var(--muted);}
+.assign-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange);flex-shrink:0;}
+.modal-close-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:.8rem;}
 </style>
 </head>
 <body>
@@ -285,16 +313,6 @@ select.form-input option{background:var(--card);}
           <label>Category *</label>
           <select class="form-input" id="fCategory">
             <option value="">Select</option>
-            <option value="Vegetables">🥦 Vegetables</option>
-            <option value="Fruits">🍎 Fruits</option>
-            <option value="Dairy">🥛 Dairy</option>
-            <option value="Oil">🫒 Oil</option>
-            <option value="Dal & Pulses">🫘 Dal & Pulses</option>
-            <option value="Grains">🌾 Grains / Rashan</option>
-            <option value="Snacks">🍿 Snacks</option>
-            <option value="Beverages">🧃 Beverages</option>
-            <option value="Personal Care">🧴 Personal Care</option>
-            <option value="Household">🏠 Household</option>
           </select>
         </div>
         <div class="form-group">
@@ -351,6 +369,37 @@ select.form-input option{background:var(--card);}
       </div>
     </div>
 
+    <!-- QUICKCOMMERCE API IMPORT -->
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-cloud-download" style="color:var(--blue)"></i> <span>Import from QuickCommerce API</span></div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Search Term *</label>
+          <input type="text" class="form-input" id="qcQuery" placeholder="e.g. milk, atta, maggi" onkeydown="if(event.key==='Enter')searchQC()"/>
+        </div>
+        <div class="form-group">
+          <label>Platform</label>
+          <select class="form-input" id="qcPlatform">
+            <option value="BlinkIt">BlinkIt</option>
+            <option value="Zepto">Zepto</option>
+            <option value="Instamart">Instamart</option>
+            <option value="BigBasket">BigBasket</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location (lat, lon)</label>
+          <div style="display:flex;gap:.4rem">
+            <input type="text" class="form-input" id="qcLat" placeholder="lat e.g. 19.58"/>
+            <input type="text" class="form-input" id="qcLon" placeholder="lon e.g. 74.03"/>
+          </div>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="searchQC()"><i class="ti ti-search"></i> Search API</button>
+      </div>
+      <div id="qcResults" style="margin-top:.8rem"></div>
+    </div>
+
     <div class="sec-hdr">
       <div class="sec-title">All Products (<span id="prodCount">0</span>)</div>
       <button class="refresh-btn" onclick="loadProducts()"><i class="ti ti-refresh"></i></button>
@@ -399,10 +448,63 @@ select.form-input option{background:var(--card);}
   </main>
 </div>
 
+<!-- CATEGORIES PAGE (new) -->
+<div class="page" id="pageCategories">
+  <main>
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-category-plus" style="color:var(--orange)"></i> <span id="catFormTitle">Add New Category</span></div>
+      <input type="hidden" id="editCatId"/>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Category Name *</label>
+          <input type="text" class="form-input" id="cName" placeholder="e.g. Bakery"/>
+        </div>
+        <div class="form-group">
+          <label>Emoji Icon</label>
+          <input type="text" class="form-input" id="cIcon" placeholder="e.g. 🍞" maxlength="4"/>
+        </div>
+        <div class="form-group">
+          <label>Short Label (for pill)</label>
+          <input type="text" class="form-input" id="cLabel" placeholder="e.g. Bakery"/>
+        </div>
+        <div class="form-group full">
+          <label>Tile Image URL</label>
+          <input type="url" class="form-input" id="cImage" placeholder="https://images.unsplash.com/…" oninput="previewCatImg(this.value)"/>
+          <img id="catImgPreview" class="img-preview"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveCategory()"><i class="ti ti-check"></i> Save Category</button>
+        <button class="btn-secondary" onclick="resetCatForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title">All Categories (<span id="catCount">0</span>)</div>
+      <button class="refresh-btn" onclick="loadCategories()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div class="catmgr-grid" id="catmgrGrid">
+      <div style="grid-column:1/-1;color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
+<!-- ASSIGN PRODUCTS MODAL (new) -->
+<div class="modal-overlay" id="assignModal" onclick="handleAssignModalClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-sheet-title">Assign products to <span id="assignCatName"></span></div>
+    <div class="modal-sheet-sub">Tick the products that belong in this category — unticking removes them from it.</div>
+    <input type="text" class="assign-search" id="assignSearch" placeholder="Search products…" oninput="renderAssignList()"/>
+    <div id="assignList"></div>
+    <button class="modal-close-btn" onclick="closeAssignModal()">Done</button>
+  </div>
+</div>
+
 <!-- BOTTOM NAV -->
 <nav class="bnav-bar">
   <div class="bnav active" id="bnav-dashboard" onclick="switchPage('dashboard')"><i class="ti ti-dashboard"></i>Dash</div>
   <div class="bnav" id="bnav-products" onclick="switchPage('products')"><i class="ti ti-basket"></i>Products</div>
+  <div class="bnav" id="bnav-categories" onclick="switchPage('categories')"><i class="ti ti-category"></i>Categories</div>
   <div class="bnav" id="bnav-orders" onclick="switchPage('orders')"><i class="ti ti-receipt"></i>Orders</div>
 </nav>
 
@@ -421,7 +523,22 @@ const CHAT="5547663296";
 window._db=db;
 const ADMIN_USER="admin",ADMIN_PASS="basketcart2025";
 
-let allOrders=[],allProds=[];
+let allOrders=[],allProds=[],allCats=[];
+let assignCatId='',assignCatName_='';
+
+// DEFAULT CATEGORIES (seeded into Firestore the first time the panel loads, if grocery_categories is empty)
+const DEFAULT_CATS=[
+  {name:'Vegetables',label:'Vegetables',icon:'🥦',image:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200',order:0},
+  {name:'Fruits',label:'Fruits',icon:'🍎',image:'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200',order:1},
+  {name:'Dairy',label:'Dairy',icon:'🥛',image:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200',order:2},
+  {name:'Oil',label:'Oil',icon:'🫒',image:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200',order:3},
+  {name:'Dal & Pulses',label:'Dal',icon:'🫘',image:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200',order:4},
+  {name:'Grains',label:'Rashan',icon:'🌾',image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200',order:5},
+  {name:'Snacks',label:'Snacks',icon:'🍿',image:'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200',order:6},
+  {name:'Beverages',label:'Beverages',icon:'🧃',image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200',order:7},
+  {name:'Personal Care',label:'Care',icon:'🧴',image:'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=200',order:8},
+  {name:'Household',label:'Household',icon:'🏠',image:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=200',order:9},
+];
 
 // AUTH
 window.doLogin=function(){
@@ -429,7 +546,7 @@ window.doLogin=function(){
   const p=document.getElementById('loginPass').value;
   if(u===ADMIN_USER&&p===ADMIN_PASS){
     document.getElementById('loginScreen').style.display='none';
-    loadDashboard();loadProducts();loadOrders();
+    loadDashboard();loadProducts();loadOrders();loadCategories();
   }else{document.getElementById('loginError').style.display='block';}
 };
 window.doLogout=function(){document.getElementById('loginScreen').style.display='flex';};
@@ -476,12 +593,155 @@ window.loadDashboard=async function(){
     </div>`).join(''):'<p style="color:var(--muted);font-size:.82rem">No orders yet.</p>';
 };
 
+// CATEGORIES
+window.loadCategories=async function(){
+  let snap=await getDocs(collection(db,'grocery_categories'));
+  if(snap.empty){
+    // seed defaults once
+    for(const c of DEFAULT_CATS){ await addDoc(collection(db,'grocery_categories'),{...c,createdAt:serverTimestamp()}); }
+    snap=await getDocs(collection(db,'grocery_categories'));
+  }
+  allCats=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+  document.getElementById('catCount').textContent=allCats.length;
+  populateCategorySelect();
+  renderCatMgrGrid();
+};
+
+function populateCategorySelect(){
+  const sel=document.getElementById('fCategory');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Select</option>'+allCats.map(c=>`<option value="${c.name}">${c.icon||''} ${c.name}</option>`).join('');
+  if(cur) sel.value=cur;
+}
+
+function catProductCount(catName){
+  return allProds.filter(p=>p.category===catName).length;
+}
+
+function renderCatMgrGrid(){
+  const el=document.getElementById('catmgrGrid');
+  if(!allCats.length){el.innerHTML='<div style="grid-column:1/-1;color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem">No categories yet. Add one above.</div>';return;}
+  el.innerHTML=allCats.map(c=>`<div class="catmgr-item">
+    <div class="catmgr-imgwrap">${c.image?`<img src="${c.image}" alt="${c.name}" onerror="this.parentElement.innerHTML='${(c.icon||'🛒')}'"/>`:(c.icon||'🛒')}</div>
+    <div class="catmgr-body">
+      <div class="catmgr-name">${c.icon||''} ${c.name}</div>
+      <div class="catmgr-count">${catProductCount(c.name)} product(s)</div>
+      <div class="catmgr-actions">
+        <button class="catmgr-assign" onclick="openAssignModal('${c.id}')"><i class="ti ti-list-check"></i> Products</button>
+        <button class="catmgr-del" onclick="deleteCategory('${c.id}','${c.name.replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+window.previewCatImg=function(url){
+  const img=document.getElementById('catImgPreview');
+  if(url){img.src=url;img.style.display='block';}else img.style.display='none';
+};
+
+window.saveCategory=async function(){
+  const id=document.getElementById('editCatId').value;
+  const name=document.getElementById('cName').value.trim();
+  const icon=document.getElementById('cIcon').value.trim();
+  const label=document.getElementById('cLabel').value.trim()||name;
+  const image=document.getElementById('cImage').value.trim();
+  if(!name){showToast('Category name required','error');return;}
+  if(!id && allCats.some(c=>c.name.toLowerCase()===name.toLowerCase())){showToast('Category already exists','error');return;}
+  try{
+    if(id){
+      const oldCat=allCats.find(c=>c.id===id);
+      await updateDoc(doc(db,'grocery_categories',id),{name,icon,label,image});
+      // keep products in sync if the category name changed
+      if(oldCat && oldCat.name!==name){
+        const affected=allProds.filter(p=>p.category===oldCat.name);
+        for(const p of affected){ await updateDoc(doc(db,'grocery_products',p.id),{category:name}); }
+      }
+      showToast('Category updated ✅','success');
+    }else{
+      const order=allCats.length;
+      await addDoc(collection(db,'grocery_categories'),{name,icon,label,image,order,createdAt:serverTimestamp()});
+      showToast('Category added! 🗂️','success');
+    }
+    resetCatForm();loadCategories();loadProducts();
+  }catch(e){showToast('Error saving category','error');}
+};
+
+window.editCategory=function(id){
+  const c=allCats.find(x=>x.id===id);if(!c)return;
+  document.getElementById('editCatId').value=id;
+  document.getElementById('cName').value=c.name||'';
+  document.getElementById('cIcon').value=c.icon||'';
+  document.getElementById('cLabel').value=c.label||'';
+  document.getElementById('cImage').value=c.image||'';
+  previewCatImg(c.image);
+  document.getElementById('catFormTitle').textContent='Edit: '+c.name;
+  document.querySelector('#pageCategories .form-card').scrollIntoView({behavior:'smooth'});
+};
+
+window.resetCatForm=function(){
+  ['editCatId','cName','cIcon','cLabel','cImage'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('catImgPreview').style.display='none';
+  document.getElementById('catFormTitle').textContent='Add New Category';
+};
+
+window.deleteCategory=async function(id,name){
+  const count=catProductCount(name);
+  const msg=count>0?`Delete "${name}"? ${count} product(s) will become "Uncategorized".`:`Delete "${name}"?`;
+  if(!confirm(msg))return;
+  await deleteDoc(doc(db,'grocery_categories',id));
+  if(count>0){
+    const affected=allProds.filter(p=>p.category===name);
+    for(const p of affected){ await updateDoc(doc(db,'grocery_products',p.id),{category:'Uncategorized'}); }
+  }
+  showToast('Category deleted 🗑️','warn');loadCategories();loadProducts();
+};
+
+// ASSIGN PRODUCTS MODAL
+window.openAssignModal=function(catId){
+  const c=allCats.find(x=>x.id===catId);if(!c)return;
+  assignCatId=catId;assignCatName_=c.name;
+  document.getElementById('assignCatName').textContent=c.name;
+  document.getElementById('assignSearch').value='';
+  renderAssignList();
+  document.getElementById('assignModal').classList.add('show');
+};
+window.closeAssignModal=function(){
+  document.getElementById('assignModal').classList.remove('show');
+  loadProducts();loadCategories();
+};
+window.handleAssignModalClick=function(e){
+  if(e.target===document.getElementById('assignModal')) closeAssignModal();
+};
+
+function renderAssignList(){
+  const q=document.getElementById('assignSearch').value.toLowerCase();
+  const list=allProds.filter(p=>(p.name||'').toLowerCase().includes(q));
+  const el=document.getElementById('assignList');
+  if(!list.length){el.innerHTML='<p style="color:var(--muted);font-size:.8rem;text-align:center;padding:1rem">No products found.</p>';return;}
+  el.innerHTML=list.map(p=>`<div class="assign-row">
+    <img src="${p.image||''}" onerror="this.style.visibility='hidden'"/>
+    <div class="ar-name">${p.name}<div class="ar-cat">${p.category||'Uncategorized'}</div></div>
+    <input type="checkbox" ${p.category===assignCatName_?'checked':''} onchange="toggleAssign('${p.id}',this.checked)"/>
+  </div>`).join('');
+}
+
+window.toggleAssign=async function(prodId,checked){
+  try{
+    await updateDoc(doc(db,'grocery_products',prodId),{category:checked?assignCatName_:'Uncategorized'});
+    const p=allProds.find(x=>x.id===prodId);if(p)p.category=checked?assignCatName_:'Uncategorized';
+    document.getElementById('assignCatName').textContent=assignCatName_+` `; // no-op refresh
+    renderCatMgrGrid();
+    renderAssignList();
+  }catch(e){showToast('Could not update product','error');}
+};
+
 // PRODUCTS
 window.loadProducts=async function(){
   const snap=await getDocs(collection(db,'grocery_products'));
   allProds=snap.docs.map(d=>({id:d.id,...d.data()}));
   document.getElementById('prodCount').textContent=allProds.length;
   renderProdGrid(allProds);
+  if(allCats.length) renderCatMgrGrid();
 };
 
 window.filterProdGrid=function(){
@@ -564,7 +824,7 @@ window.editProduct=async function(id){
   previewImg(p.image);
   document.getElementById('formTitle').textContent='Edit: '+p.name;
   switchPage('products');
-  setTimeout(()=>document.querySelector('.form-card').scrollIntoView({behavior:'smooth'}),100);
+  setTimeout(()=>document.querySelector('#pageProducts .form-card').scrollIntoView({behavior:'smooth'}),100);
 };
 
 window.resetForm=function(){
@@ -579,6 +839,133 @@ window.deleteProduct=async function(id){
   if(!confirm('Delete this product?'))return;
   await deleteDoc(doc(db,'grocery_products',id));
   showToast('Product deleted 🗑️','warn');loadProducts();loadDashboard();
+};
+
+// QUICKCOMMERCE API IMPORT
+// ⚠️ Ye API key client-side JS mein visible rehti hai (Firebase config ki tarah).
+// Agar key sensitive hai to isse apne server/cloud function ke peeche daalna better hoga.
+const QC_API_KEY="3928d4ab-41cd-42b3-ab06-d42b0bedeb32";
+const QC_BASE="https://api.quickcommerceapi.com/v1/search";
+// ⚠️ TEMPORARY testing proxy — ye request ko server-side fetch karke return karta hai.
+// Custom headers forward nahi karta, isliye API key query param mein bhej rahe hain.
+// PROPER FIX: neeche diye gaye Cloud Function proxy ko deploy karke QC_FUNCTION_URL set karo.
+const QC_FUNCTION_URL="http://localhost:5000/qcSearch"; // deploy ke baad yahan apna Cloud Function URL daalo, e.g. "https://us-central1-multi-service-app-77dd8.cloudfunctions.net/qcSearch"
+const CORS_PROXY="https://api.allorigins.win/raw?url=";
+let qcCache=[];
+
+function qcPick(obj,...keys){
+  for(const k of keys){
+    if(obj && obj[k]!==undefined && obj[k]!==null && obj[k]!=='') return obj[k];
+  }
+  return '';
+}
+function qcImg(item){
+  if(Array.isArray(item.images)&&item.images.length) return item.images[0];
+  return qcPick(item,'image','image_url','thumbnail','img');
+}
+function qcPlatformName(item){
+  if(item.platform&&typeof item.platform==='object') return item.platform.name||'';
+  return qcPick(item,'platform');
+}
+
+window.searchQC=async function(){
+  const q=document.getElementById('qcQuery').value.trim();
+  const platform=document.getElementById('qcPlatform').value;
+  const lat=document.getElementById('qcLat').value.trim()||'19.58';
+  const lon=document.getElementById('qcLon').value.trim()||'74.03';
+  const resultsEl=document.getElementById('qcResults');
+  if(!q){showToast('Search term daalo','error');return;}
+  resultsEl.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem"><span class="spin"></span> Searching '+platform+'…</div>';
+  try{
+    let res;
+    if(QC_FUNCTION_URL){
+      // PROPER path: apna deployed Cloud Function proxy use ho raha hai
+      res=await fetch(`${QC_FUNCTION_URL}?q=${encodeURIComponent(q)}&platform=${encodeURIComponent(platform)}&lat=${lat}&lon=${lon}`);
+    }else{
+      // TESTING path: public proxy, key query param mein (header forward nahi hota isse)
+      const targetUrl=`${QC_BASE}?q=${encodeURIComponent(q)}&platform=${encodeURIComponent(platform)}&lat=${lat}&lon=${lon}&api_key=${QC_API_KEY}&apikey=${QC_API_KEY}&key=${QC_API_KEY}`;
+      res=await fetch(CORS_PROXY+encodeURIComponent(targetUrl));
+    }
+    if(!res.ok) throw new Error('HTTP '+res.status+' — proxy ya API dono down ho sakte hain, thodi der baad try karo');
+    const data=await res.json();
+    // API ka response ka exact shape pata nahi, isliye common patterns try kar rahe hain
+    let list;
+    if(Array.isArray(data)) list=data;
+    else if(Array.isArray(data.products)) list=data.products;
+    else if(Array.isArray(data.results)) list=data.results;
+    else if(data.data&&Array.isArray(data.data.products)) list=data.data.products;
+    else if(Array.isArray(data.data)) list=data.data;
+    else if(Array.isArray(data.items)) list=data.items;
+    else list=[];
+    if(!list.length){
+      resultsEl.innerHTML=`<div style="color:var(--muted);font-size:.8rem;padding:1rem">Koi result nahi mila. Raw response:<br><pre style="white-space:pre-wrap;font-size:.65rem;color:var(--muted2);margin-top:.4rem">${JSON.stringify(data,null,2).slice(0,800)}</pre></div>`;
+      return;
+    }
+    qcCache=list;
+    renderQCResults(list);
+  }catch(e){
+    resultsEl.innerHTML=`<div style="color:var(--red);font-size:.78rem;padding:1rem">Error: ${e.message}. Agar ye CORS ki wajah se fail ho raha hai to browser console (F12) check karo — client-side se cross-origin API calls kabhi kabhi block ho jaati hain, us case mein ye call ek backend/cloud function se karni padegi.</div>`;
+  }
+};
+
+function renderQCResults(list){
+  const el=document.getElementById('qcResults');
+  el.innerHTML=`<div style="font-size:.72rem;color:var(--muted);margin-bottom:.5rem">${list.length} results mile — jo product add karna hai uspe "Add to Firebase" click karo</div>
+  <div class="prod-grid">
+  ${list.map((item,i)=>{
+    const name=qcPick(item,'name','title','product_name')||'—';
+    const price=qcPick(item,'offer_price','price','selling_price','discounted_price');
+    const mrp=qcPick(item,'mrp','original_price','list_price');
+    const img=qcImg(item);
+    const brand=qcPick(item,'brand','brand_name');
+    const unit=qcPick(item,'quantity','unit','weight','pack_size','variant');
+    return `<div class="pg-item">
+      <img class="pg-img" src="${img}" alt="${name}" onerror="this.style.display='none'" loading="lazy"/>
+      <div class="pg-body">
+        <span class="pg-cat">${qcPlatformName(item)||document.getElementById('qcPlatform').value}</span>
+        <div class="pg-name">${name}</div>
+        <div class="pg-meta">${price?'₹'+price:'price N/A'}${mrp&&mrp!==price?` <span style="text-decoration:line-through;font-size:.62rem;color:var(--muted)">₹${mrp}</span>`:''} · ${unit}<br/>${brand}</div>
+        <div class="pg-actions">
+          <button class="btn-edit" onclick="addQCProduct(${i})"><i class="ti ti-plus"></i> Add</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}
+  </div>
+  <details style="margin-top:.6rem">
+    <summary style="font-size:.7rem;color:var(--muted);cursor:pointer">Raw JSON dekho (field names verify karne ke liye)</summary>
+    <pre style="white-space:pre-wrap;font-size:.62rem;color:var(--muted2);margin-top:.4rem;max-height:200px;overflow:auto">${JSON.stringify(list,null,2).slice(0,3000)}</pre>
+  </details>`;
+}
+
+window.addQCProduct=async function(idx){
+  const item=qcCache[idx];
+  if(!item){showToast('Item nahi mila','error');return;}
+  const data={
+    name:String(qcPick(item,'name','title','product_name')),
+    category:String(qcPick(item,'category','category_name'))||'Imported',
+    price:String(qcPick(item,'offer_price','price','selling_price','discounted_price')),
+    mrp:String(qcPick(item,'mrp','original_price','list_price')),
+    unit:String(qcPick(item,'quantity','unit','weight','pack_size','variant')),
+    brand:String(qcPick(item,'brand','brand_name')),
+    rating:String(qcPick(item,'rating')),
+    shelfLife:'',
+    freshness:'',
+    stock:String(qcPick(item,'inventory','stock','quantity_available')),
+    desc:String(qcPick(item,'description','desc'))||`Imported from ${qcPlatformName(item)||document.getElementById('qcPlatform').value} via QuickCommerce API`,
+    image:qcImg(item),
+    organic:false,fresh:false,local:false,featured:false,
+    source:'quickcommerce_api',
+  };
+  if(!data.name||!data.price||!data.image){
+    showToast('Name/price/image API response mein nahi mila — raw JSON check karo','error');
+    return;
+  }
+  try{
+    await addDoc(collection(db,'grocery_products'),{...data,createdAt:serverTimestamp()});
+    showToast(data.name+' add ho gaya ✅','success');
+    loadProducts();loadDashboard();
+  }catch(e){showToast('Firebase mein add karte waqt error: '+e.message,'error');}
 };
 
 // ORDERS
