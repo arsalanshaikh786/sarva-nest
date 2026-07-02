@@ -61,19 +61,20 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .search-box input:focus{border-color:var(--orange);}
 #clearSearch{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--muted2);display:none;font-size:.9rem;}
  
-/* SHOP BY CATEGORY (image grid, Amazon/Blinkit style) */
-.catg-wrap{padding:.7rem 0 .3rem;}
-.catg-scroll{display:flex;gap:.85rem;overflow-x:auto;scrollbar-width:none;padding:.3rem 1rem 4px;}
-.catg-scroll::-webkit-scrollbar{display:none;}
-.catg-item{flex-shrink:0;width:68px;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;}
-.catg-imgwrap{width:64px;height:64px;border-radius:18px;overflow:hidden;background:var(--surface);border:1.5px solid var(--border);transition:.18s;}
+/* SHOP BY CATEGORY (image grid, wraps to new rows — no side-scrolling) */
+.catg-wrap{padding:.7rem 1rem .3rem;}
+.catg-scroll{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem 0.6rem;}
+@media(min-width:420px){.catg-scroll{grid-template-columns:repeat(5,1fr);}}
+@media(min-width:600px){.catg-scroll{grid-template-columns:repeat(6,1fr);}}
+.catg-item{display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;}
+.catg-imgwrap{width:100%;aspect-ratio:1/1;max-width:64px;border-radius:18px;overflow:hidden;background:var(--surface);border:1.5px solid var(--border);transition:.18s;display:flex;align-items:center;justify-content:center;font-size:1.6rem;}
 .catg-item.active .catg-imgwrap{border-color:var(--orange);box-shadow:0 0 0 2px var(--orange-light);}
 .catg-item:active .catg-imgwrap{transform:scale(.94);}
 .catg-imgwrap img{width:100%;height:100%;object-fit:cover;display:block;}
-.catg-label{font-size:.66rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2;}
+.catg-label{font-size:.64rem;font-weight:700;color:var(--muted);text-align:center;line-height:1.2;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .catg-item.active .catg-label{color:var(--orange);}
  
-/* CATEGORY BAR (secondary quick pills) */
+/* CATEGORY BAR (secondary quick pills, still horizontally scrollable — compact) */
 .cat-bar{display:flex;gap:.5rem;overflow-x:auto;scrollbar-width:none;padding:.5rem 1rem .4rem;}
 .cat-bar::-webkit-scrollbar{display:none;}
 .cat-pill{flex-shrink:0;display:flex;align-items:center;gap:5px;background:var(--card);border:1.5px solid var(--border);border-radius:50px;padding:.38rem .9rem;font-size:.75rem;font-weight:700;cursor:pointer;transition:all .18s;color:var(--muted);}
@@ -321,7 +322,7 @@ select.finput{cursor:pointer;}
     </div>
   </div>
 
-  <!-- SHOP BY CATEGORY (Amazon/Blinkit style image tiles) -->
+  <!-- SHOP BY CATEGORY (wraps to multiple rows, no side-scroll) -->
   <div class="sec-hdr" style="padding-top:.2rem"><div class="sec-title">Shop by Category</div></div>
   <div class="catg-wrap">
     <div class="catg-scroll" id="catgScroll"></div>
@@ -350,20 +351,8 @@ select.finput{cursor:pointer;}
     </div>
   </div>
  
-  <!-- CATEGORIES -->
-  <div class="cat-bar" id="catBar">
-    <div class="cat-pill active" data-cat="All" onclick="setCategory('All',this)">🛒 All</div>
-    <div class="cat-pill" data-cat="Vegetables" onclick="setCategory('Vegetables',this)">🥦 Vegetables</div>
-    <div class="cat-pill" data-cat="Fruits" onclick="setCategory('Fruits',this)">🍎 Fruits</div>
-    <div class="cat-pill" data-cat="Dairy" onclick="setCategory('Dairy',this)">🥛 Dairy</div>
-    <div class="cat-pill" data-cat="Oil" onclick="setCategory('Oil',this)">🫒 Oil</div>
-    <div class="cat-pill" data-cat="Dal & Pulses" onclick="setCategory('Dal & Pulses',this)">🫘 Dal</div>
-    <div class="cat-pill" data-cat="Grains" onclick="setCategory('Grains',this)">🌾 Rashan</div>
-    <div class="cat-pill" data-cat="Snacks" onclick="setCategory('Snacks',this)">🍿 Snacks</div>
-    <div class="cat-pill" data-cat="Beverages" onclick="setCategory('Beverages',this)">🧃 Beverages</div>
-    <div class="cat-pill" data-cat="Personal Care" onclick="setCategory('Personal Care',this)">🧴 Care</div>
-    <div class="cat-pill" data-cat="Household" onclick="setCategory('Household',this)">🏠 Household</div>
-  </div>
+  <!-- CATEGORIES (secondary pill bar, built dynamically) -->
+  <div class="cat-bar" id="catBar"></div>
  
   <div class="sec-label" id="resultsLabel">Loading fresh items…</div>
   <div class="products-list" id="productsList">
@@ -560,28 +549,53 @@ const db  = getFirestore(app);
 const BOT  = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT = "5547663296";
 
-// ── Shop-by-Category image tiles (Amazon/Blinkit style) ────────────────────
-const CATEGORY_TILES = [
-  { cat:'Vegetables',    label:'Vegetables', img:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200' },
-  { cat:'Fruits',        label:'Fruits',     img:'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200' },
-  { cat:'Dairy',         label:'Dairy',      img:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200' },
-  { cat:'Oil',           label:'Oil',        img:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200' },
-  { cat:'Dal & Pulses',  label:'Dal',        img:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200' },
-  { cat:'Grains',        label:'Rashan',     img:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200' },
-  { cat:'Snacks',        label:'Snacks',     img:'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200' },
-  { cat:'Beverages',     label:'Beverages',  img:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200' },
-  { cat:'Personal Care', label:'Care',       img:'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=200' },
-  { cat:'Household',     label:'Household',  img:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=200' },
+// ── Demo fallback categories (used only if grocery_categories is empty in Firestore) ──
+const DEMO_CATEGORY_TILES = [
+  { cat:'Vegetables',    label:'Vegetables', icon:'🥦', image:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200' },
+  { cat:'Fruits',        label:'Fruits',     icon:'🍎', image:'https://images.unsplash.com/photo-1610832958506-aa56368176cf?w=200' },
+  { cat:'Dairy',         label:'Dairy',      icon:'🥛', image:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=200' },
+  { cat:'Oil',           label:'Oil',        icon:'🫒', image:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200' },
+  { cat:'Dal & Pulses',  label:'Dal',        icon:'🫘', image:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=200' },
+  { cat:'Grains',        label:'Rashan',     icon:'🌾', image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=200' },
+  { cat:'Snacks',        label:'Snacks',     icon:'🍿', image:'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=200' },
+  { cat:'Beverages',     label:'Beverages',  icon:'🧃', image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=200' },
+  { cat:'Personal Care', label:'Care',       icon:'🧴', image:'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=200' },
+  { cat:'Household',     label:'Household',  icon:'🏠', image:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=200' },
 ];
+
+// Live category list — either loaded from Firestore (grocery_categories, managed in Admin)
+// or falling back to the demo tiles above if the admin hasn't added any yet.
+let CATEGORY_TILES = [];
+
+async function loadCategoriesFromDB() {
+  try {
+    const snap = await getDocs(collection(db, 'grocery_categories'));
+    if (snap.empty) return [];
+    return snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => (a.order || 0) - (b.order || 0))
+      .map(c => ({ cat: c.name, label: c.label || c.name, icon: c.icon || '🛒', image: c.image || '' }));
+  } catch(e) {
+    console.warn('Firestore categories fetch failed, using demo tiles:', e);
+    return [];
+  }
+}
 
 function renderCategoryTiles() {
   const wrap = document.getElementById('catgScroll');
   wrap.innerHTML = CATEGORY_TILES.map(c => `
     <div class="catg-item ${activeCategory === c.cat ? 'active' : ''}" data-tile-cat="${c.cat}" onclick="selectCatFromTile('${c.cat.replace(/'/g,"\\'")}')">
-      <div class="catg-imgwrap"><img src="${c.img}" alt="${c.label}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1542838132-92c53300491e?w=200'"/></div>
+      <div class="catg-imgwrap">${c.image ? `<img src="${c.image}" alt="${c.label}" loading="lazy" onerror="this.parentElement.textContent='${c.icon||'🛒'}'"/>` : (c.icon || '🛒')}</div>
       <div class="catg-label">${c.label}</div>
     </div>
   `).join('');
+}
+
+function renderCatBar() {
+  const bar = document.getElementById('catBar');
+  const all = `<div class="cat-pill ${activeCategory === 'All' ? 'active' : ''}" data-cat="All" onclick="setCategory('All',this)">🛒 All</div>`;
+  const rest = CATEGORY_TILES.map(c => `<div class="cat-pill ${activeCategory === c.cat ? 'active' : ''}" data-cat="${c.cat}" onclick="setCategory('${c.cat.replace(/'/g,"\\'")}',this)">${c.icon || ''} ${c.label}</div>`).join('');
+  bar.innerHTML = all + rest;
 }
 
 window.selectCatFromTile = function(cat) {
@@ -672,11 +686,13 @@ async function sendTelegram(msg) {
 async function init() {
   // Show skeletons while loading
   document.getElementById('resultsLabel').textContent = 'Loading fresh items…';
-  renderCategoryTiles();
- 
-  const dbProds = await loadProductsFromDB();
+
+  const [dbCats, dbProds] = await Promise.all([loadCategoriesFromDB(), loadProductsFromDB()]);
+  CATEGORY_TILES = dbCats.length > 0 ? dbCats : DEMO_CATEGORY_TILES;
   allProducts = dbProds.length > 0 ? dbProds : DEMO_PRODUCTS;
- 
+
+  renderCategoryTiles();
+  renderCatBar();
   renderProducts(getFiltered());
   updateBarUI();
 }
