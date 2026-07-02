@@ -310,6 +310,7 @@ body.rest-mode .main{padding-top:86px}
     <div class="sb-item" onclick="showSec('orders',this);closeSidebar()"><i class="ti ti-receipt"></i> Orders <span class="sb-badge" id="orderCount">0</span></div>
     <div class="sb-sec">Content</div>
     <div class="sb-item" onclick="showSec('banners',this);closeSidebar()"><i class="ti ti-photo-scan"></i> Banners / Offers <span class="sb-badge" id="bannerCount">0</span></div>
+    <div class="sb-item" onclick="showSec('categories',this);closeSidebar()"><i class="ti ti-category-2"></i> Special Categories <span class="sb-badge" id="specialCatCount">0</span></div>
     <div class="sb-sec">Config</div>
     <div class="sb-item" onclick="showSec('settings',this);closeSidebar()"><i class="ti ti-settings"></i> Delivery Settings</div>
   </div>
@@ -399,12 +400,21 @@ body.rest-mode .main{padding-top:86px}
       <div class="fg"><label>Phone</label><input type="tel" id="rPhone" placeholder="Contact number" inputmode="numeric" data-next="rTags"/></div>
       <div class="fg full">
         <label>Store Location <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0">— for customer distance & delivery fee</span></label>
-        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">
           <button type="button" onclick="captureRestLocation()" id="rLocBtn" style="background:var(--bl);color:var(--brand);border:1.5px solid var(--brand);border-radius:8px;padding:.5rem .9rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px"><i class="ti ti-current-location"></i> Use my current location</button>
           <span id="rLocStatus" style="font-size:.72rem;color:var(--mut)"></span>
         </div>
-        <input type="hidden" id="rLat"/>
-        <input type="hidden" id="rLng"/>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+          <div class="fg" style="gap:2px">
+            <label style="font-size:.62rem">Latitude (manual)</label>
+            <input type="number" id="rLat" placeholder="e.g. 19.58432" step="0.000001" min="-90" max="90" inputmode="decimal" oninput="onManualLatLng()"/>
+          </div>
+          <div class="fg" style="gap:2px">
+            <label style="font-size:.62rem">Longitude (manual)</label>
+            <input type="number" id="rLng" placeholder="e.g. 74.03889" step="0.000001" min="-180" max="180" inputmode="decimal" oninput="onManualLatLng()"/>
+          </div>
+        </div>
+        <div style="font-size:.65rem;color:var(--mut);margin-top:.35rem">💡 GPS button se auto-fill karo, ya Google Maps pe apni location dhoondh ke lat/lng yahan manually paste karo.</div>
       </div>
       <div class="fg full">
         <label>Cover Image</label>
@@ -502,17 +512,10 @@ body.rest-mode .main{padding-top:86px}
       </div>
       <div class="fg full">
         <div class="special-wrapper">
-          <div class="variants-section-label"><i class="ti ti-sparkles"></i> Special Category <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — sabhi restaurants pe common dikhta hai (Home page)</span></div>
-          <div class="special-pill-box" id="specialPillBox">
-            <input type="checkbox" class="sppill" id="sp1" value="Under ₹99"><label for="sp1">🌟 Under ₹99</label>
-            <input type="checkbox" class="sppill" id="sp2" value="Under ₹149"><label for="sp2">💸 Under ₹149</label>
-            <input type="checkbox" class="sppill" id="sp3" value="Burger"><label for="sp3">🍔 Burger</label>
-            <input type="checkbox" class="sppill" id="sp4" value="Pizza"><label for="sp4">🍕 Pizza</label>
-            <input type="checkbox" class="sppill" id="sp5" value="Combo"><label for="sp5">🍱 Combo</label>
-            <input type="checkbox" class="sppill" id="sp6" value="Today's Special"><label for="sp6">✨ Today's Special</label>
-            <input type="checkbox" class="sppill" id="sp7" value="Trending"><label for="sp7">📈 Trending</label>
-          </div>
+          <div class="variants-section-label"><i class="ti ti-sparkles"></i> Special Category <span style="font-size:.6rem;font-weight:400;color:var(--mut);text-transform:none;letter-spacing:0"> — sabhi restaurants pe common dikhta hai (Home page grid)</span></div>
+          <div class="special-pill-box" id="specialPillBox"></div>
           <div class="custom-add-row"><input type="text" id="fSpecialCustom" placeholder="Custom special category…"/><button type="button" onclick="addCustomSpecial()">+ Add</button></div>
+          <div style="font-size:.65rem;color:#6A1B9A;margin-top:.35rem;opacity:.85"><i class="ti ti-info-circle" style="font-size:.7rem"></i> Naya category yahan se add karoge toh "Special Categories" page pe jaake usko image lagana mat bhoolna, warna home page pe tile blank dikhegi.</div>
           <input type="hidden" id="fSpecialCategory"/>
         </div>
       </div>
@@ -641,6 +644,37 @@ body.rest-mode .main{padding-top:86px}
   <div class="banner-list" id="bannerList"><div class="empty-st"><i class="ti ti-photo-scan"></i><p>No banners yet. Upar se add karo!</p></div></div>
 </div>
 
+<!-- SPECIAL CATEGORIES -->
+<div class="sec" id="sec-categories">
+  <div id="catAlert" class="alert"></div>
+  <div class="settings-info"><i class="ti ti-info-circle" style="font-size:1rem;flex-shrink:0;margin-top:1px"></i><span>Yahan "Special Category" tiles banao (image ke saath) — customer home page pe grid mein dikhengi. Har tile pe "Manage Products" se products select karo (kisi bhi restaurant se).</span></div>
+  <div class="form-card">
+    <div class="form-card-title">
+      <span id="catFormTitle">✨ New Special Category</span>
+      <button class="btn-sec" id="catCancelBtn" onclick="resetCatForm()" style="display:none;font-size:.76rem;padding:.3rem .65rem">✕ Cancel</button>
+    </div>
+    <input type="hidden" id="catEditId"/>
+    <div class="form-grid">
+      <div class="fg"><label>Category Name *</label><input id="catName" placeholder="e.g. Burger" autocapitalize="words" data-next="catOrder"/></div>
+      <div class="fg"><label>Display Order</label><input type="number" id="catOrder" placeholder="1" min="1" value="1" inputmode="numeric"/></div>
+      <div class="fg full">
+        <label>Category Image *</label>
+        <div class="img-search-row"><input type="text" id="catImgQuery" placeholder="Search: e.g. burger food"/><button onclick="searchImages('cat','catImgQuery','catImgResults','catImgSearchBtn')" id="catImgSearchBtn"><i class="ti ti-brand-google"></i> Search</button></div>
+        <div class="img-search-note">Image search karo ya neeche URL paste karo</div>
+        <div id="catImgResults" class="img-results" style="display:none"></div>
+        <div class="img-url-row"><span class="img-url-label">URL:</span><input type="url" id="catImage" placeholder="https://…" oninput="prvImg('catPrv',this.value)"/></div>
+        <img id="catPrv" class="img-preview"/>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn-pr" id="catSaveBtn" onclick="saveCategory()"><i class="ti ti-check"></i> Save Category</button>
+      <button class="btn-sec" onclick="resetCatForm()">Reset</button>
+    </div>
+  </div>
+  <div class="sec-head"><div class="sec-title"><i class="ti ti-category-2" style="color:var(--brand)"></i> All Special Categories</div></div>
+  <div class="rest-grid" id="catGrid"><div class="empty-st"><i class="ti ti-category-2"></i><p>Koi special category nahi bani abhi</p></div></div>
+</div>
+
 <!-- DELIVERY SETTINGS -->
 <div class="sec" id="sec-settings">
   <div id="settingsAlert" class="alert"></div>
@@ -698,6 +732,18 @@ body.rest-mode .main{padding-top:86px}
   </div>
 </div>
 
+<!-- MANAGE CATEGORY PRODUCTS MODAL -->
+<div class="modal-ov" id="catProdModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="catProdTitle">Manage Products</h3><button class="modal-close" onclick="closeCatProdModal()"><i class="ti ti-x"></i></button></div>
+    <div class="modal-body" style="padding:1rem">
+      <input id="catProdSearch" placeholder="Search food items ya restaurant…" oninput="renderCatProdList()" style="width:100%;padding:.55rem .8rem;border:1.5px solid var(--bdr);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:.86rem;outline:none;margin-bottom:.6rem;background:#fff;color:var(--txt)"/>
+      <div style="font-size:.68rem;color:var(--mut);margin-bottom:.5rem"><i class="ti ti-info-circle"></i> Check karo jo products is category mein dikhne chahiye — kisi bhi restaurant se select kar sakte ho.</div>
+      <div id="catProdList"></div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -714,9 +760,11 @@ const CHAT="5547663296";
 let session = { role: null, restaurantId: null, restaurantName: null };
 // role: 'admin' | 'restaurant'
 
-let restaurants=[],foods=[],orders=[],banners=[],mgRestId=null;
+let restaurants=[],foods=[],orders=[],banners=[],specialCategories=[],mgRestId=null;
+let catProdCategoryId=null, catProdCategoryName=null;
+let seededDefaultCategories=false;
 let lastSelectedRestId='';
-let unsubRest=null, unsubFoods=null, unsubOrders=null, unsubBanners=null;
+let unsubRest=null, unsubFoods=null, unsubOrders=null, unsubBanners=null, unsubSpecialCats=null;
 let prevPendingCount=null; // for order-arrival sound/toast
 
 // ══════════════════════════════════════════════
@@ -761,7 +809,8 @@ window.doLogout = () => {
   if(unsubFoods){unsubFoods();unsubFoods=null;}
   if(unsubOrders){unsubOrders();unsubOrders=null;}
   if(unsubBanners){unsubBanners();unsubBanners=null;}
-  restaurants=[];foods=[];orders=[];banners=[];prevPendingCount=null;
+  if(unsubSpecialCats){unsubSpecialCats();unsubSpecialCats=null;}
+  restaurants=[];foods=[];orders=[];banners=[];specialCategories=[];prevPendingCount=null;seededDefaultCategories=false;
   session = { role: null, restaurantId: null, restaurantName: null };
   document.getElementById('loginScreen').style.display = 'flex';
   // Reset UI to default admin state for next login
@@ -948,6 +997,7 @@ function attachLiveListeners(){
   if(unsubFoods){unsubFoods();}
   if(unsubOrders){unsubOrders();}
   if(unsubBanners){unsubBanners();}
+  if(unsubSpecialCats){unsubSpecialCats();}
 
   unsubRest = onSnapshot(collection(db,'restaurants'), (snap)=>{
     restaurants=snap.docs.map(d=>({id:d.id,...d.data()}));
@@ -963,9 +1013,11 @@ function attachLiveListeners(){
     const n=myFoods.length;
     ['foodCount','fBadge','foodCount2','fBadge2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
     const dFoods=document.getElementById('d-foods');if(dFoods)dFoods.textContent=session.role==='restaurant'?n:foods.length;
-    renderFoods();renderRestGrid();
+    renderFoods();renderRestGrid();renderCategoryGrid();
     // Keep manage-foods modal in sync if open
     if(document.getElementById('mgModal').classList.contains('open') && mgRestId) manageRestFoods(mgRestId);
+    // Keep manage-products modal in sync if open
+    if(document.getElementById('catProdModal').classList.contains('open') && catProdCategoryName) renderCatProdList();
   }, (err)=>{ console.warn('Foods live sync failed:',err); });
 
   unsubOrders = onSnapshot(collection(db,'food_orders'), (snap)=>{
@@ -988,6 +1040,32 @@ function attachLiveListeners(){
     ['bannerCount','bBadge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=n;});
     renderBannerList();
   }, (err)=>{ console.warn('Banners live sync failed:',err); });
+
+  unsubSpecialCats = onSnapshot(collection(db,'special_categories'), (snap)=>{
+    specialCategories=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||99)-(b.order||99));
+    const n=specialCategories.length;
+    const el=document.getElementById('specialCatCount');if(el)el.textContent=n;
+    renderCategoryGrid();
+    buildSpecialPillBox();
+    // One-time seed of the old preset categories (with images) so existing food tags keep working
+    if(!specialCategories.length && !seededDefaultCategories){
+      seededDefaultCategories=true;
+      seedDefaultCategories();
+    }
+  }, (err)=>{ console.warn('Special categories live sync failed:',err); });
+}
+
+async function seedDefaultCategories(){
+  const defaults=[
+    {name:'Under ₹99', image:'https://images.unsplash.com/photo-1550547660-d9450f859349?w=400', order:1},
+    {name:'Under ₹149', image:'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=400', order:2},
+    {name:'Burger', image:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400', order:3},
+    {name:'Pizza', image:'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400', order:4},
+    {name:'Combo', image:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400', order:5},
+    {name:"Today's Special", image:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400', order:6},
+    {name:'Trending', image:'https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=400', order:7}
+  ];
+  for(const d of defaults){ try{ await addDoc(collection(db,'special_categories'), d); }catch(e){ /* ignore */ } }
 }
 
 window.refreshAll=()=>{ showToast('🔄 Live sync active — data updates automatically'); };
@@ -1026,7 +1104,8 @@ window.searchImages=async(prefix,queryId,resultsId,btnId)=>{
     const res=await fetch(url);const data=await res.json();
     const imgs=data.results||[];
     if(!imgs.length){resultsEl.innerHTML='<div class="img-loading" style="grid-column:1/-1">Koi result nahi mila.</div>';return;}
-    const urlInputId=prefix==='r'?'rImage':'bImage';const prvId=prefix==='r'?'rPrv':'bPrv';
+    const idMap={r:{url:'rImage',prv:'rPrv'},b:{url:'bImage',prv:'bPrv'},cat:{url:'catImage',prv:'catPrv'}};
+    const {url:urlInputId,prv:prvId}=idMap[prefix]||idMap.b;
     resultsEl.innerHTML=imgs.map(img=>`<img class="img-thumb" src="${img.urls.small}" loading="lazy"
       onclick="selImg('${urlInputId}','${prvId}','${resultsId}','${img.urls.regular}',this)${prefix==='b'?';updateBannerPreview()':''}"
       onerror="this.style.display='none'"/>`).join('');
@@ -1119,6 +1198,127 @@ function renderBannerList(){
   }).join('');
 }
 
+// ══════════════════════════════════════════════
+// ✅ SPECIAL CATEGORIES — CRUD + product assignment
+// ══════════════════════════════════════════════
+window.saveCategory=async()=>{
+  const btn=document.getElementById('catSaveBtn');btn.disabled=true;btn.innerHTML='<i class="ti ti-loader ti-spin"></i> Saving…';
+  try{
+    const editId=document.getElementById('catEditId').value.trim();
+    const name=document.getElementById('catName').value.trim();
+    const image=document.getElementById('catImage').value.trim();
+    const order=parseInt(document.getElementById('catOrder').value)||1;
+    if(!name){showAlert('cat','Category name required');return;}
+    if(!image||!image.startsWith('http')){showAlert('cat','Valid image URL required');return;}
+    const dup=specialCategories.find(c=>c.name.toLowerCase()===name.toLowerCase()&&c.id!==editId);
+    if(dup){showAlert('cat','Yeh naam already exist karta hai');return;}
+    if(editId){
+      const old=specialCategories.find(c=>c.id===editId);
+      await updateDoc(doc(db,'special_categories',editId),{name,image,order});
+      // If the name changed, migrate the tag on every food that used the old name
+      if(old&&old.name!==name){
+        const affected=foods.filter(f=>(f.specialCategory||'').split(',').map(s=>s.trim()).includes(old.name));
+        for(const f of affected){
+          const tags=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean).map(t=>t===old.name?name:t);
+          try{ await updateDoc(doc(db,'foods',f.id),{specialCategory:tags.join(', ')}); }catch(e){}
+        }
+      }
+      showToast('✅ Category updated!');showAlert('cat','Category updated!','ok');
+    } else {
+      await addDoc(collection(db,'special_categories'),{name,image,order,createdAt:serverTimestamp()});
+      showToast('✅ Category added!');showAlert('cat','Naya category ban gaya!','ok');
+    }
+    resetCatForm();
+  }catch(e){showAlert('cat','Error: '+e.message);showToast('❌ '+e.message);}
+  finally{btn.disabled=false;btn.innerHTML='<i class="ti ti-check"></i> Save Category';}
+};
+
+window.resetCatForm=()=>{
+  document.getElementById('catEditId').value='';
+  ['catName','catImage','catImgQuery'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('catOrder').value='1';
+  document.getElementById('catPrv').style.display='none';document.getElementById('catImgResults').style.display='none';
+  document.getElementById('catFormTitle').textContent='✨ New Special Category';document.getElementById('catCancelBtn').style.display='none';
+};
+
+window.editCategory=id=>{
+  const c=specialCategories.find(x=>x.id===id);if(!c)return;
+  document.getElementById('catEditId').value=id;document.getElementById('catName').value=c.name||'';
+  document.getElementById('catImage').value=c.image||'';document.getElementById('catOrder').value=c.order||1;
+  prvImg('catPrv',c.image);document.getElementById('catFormTitle').textContent='Edit: '+c.name;document.getElementById('catCancelBtn').style.display='block';
+  showSec('categories',null);window.scrollTo({top:0,behavior:'smooth'});
+};
+
+window.deleteCategory=async id=>{
+  const c=specialCategories.find(x=>x.id===id);
+  if(!confirm(`Delete category "${c?.name}"? Products se tag apne aap nahi hatega, sirf tile customer home page se hat jaayegi.`))return;
+  try{await deleteDoc(doc(db,'special_categories',id));showToast('Deleted');}catch(e){showToast('❌ '+e.message);}
+};
+
+function renderCategoryGrid(){
+  const grid=document.getElementById('catGrid');
+  if(!grid)return;
+  if(!specialCategories.length){grid.innerHTML='<div class="empty-st"><i class="ti ti-category-2"></i><p>Koi special category nahi bani abhi</p></div>';return;}
+  grid.innerHTML=specialCategories.map(c=>{
+    const count=foods.filter(f=>(f.specialCategory||'').split(',').map(s=>s.trim()).includes(c.name)).length;
+    return `<div class="rest-card">
+      <img src="${c.image||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'}" alt="${c.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'"/>
+      <div class="rest-card-body">
+        <div class="rest-card-name">${c.name} <span style="font-size:.58rem;background:var(--bl);color:var(--brand);border-radius:50px;padding:1px 6px;font-weight:700">#${c.order||1}</span></div>
+        <div style="font-size:.7rem;color:var(--mut);margin-bottom:.5rem">${count} product${count!==1?'s':''} linked</div>
+        <div class="rest-card-actions">
+          <button class="btn-sm edit" onclick="editCategory('${c.id}')"><i class="ti ti-edit"></i> Edit</button>
+          <button class="btn-sm manage" onclick="openCatProductManager('${c.id}')"><i class="ti ti-apps"></i> Manage Products (${count})</button>
+          <button class="btn-sm del" onclick="deleteCategory('${c.id}')"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.openCatProductManager=catId=>{
+  const c=specialCategories.find(x=>x.id===catId);if(!c)return;
+  catProdCategoryId=catId;catProdCategoryName=c.name;
+  document.getElementById('catProdTitle').textContent='Manage Products — '+c.name;
+  document.getElementById('catProdSearch').value='';
+  renderCatProdList();
+  document.getElementById('catProdModal').classList.add('open');
+};
+window.closeCatProdModal=()=>{document.getElementById('catProdModal').classList.remove('open');catProdCategoryId=null;catProdCategoryName=null;};
+document.getElementById('catProdModal').addEventListener('click',e=>{if(e.target===document.getElementById('catProdModal'))closeCatProdModal();});
+
+window.renderCatProdList=()=>{
+  if(!catProdCategoryName)return;
+  const q=(document.getElementById('catProdSearch').value||'').toLowerCase();
+  let list=[...foods];
+  if(q)list=list.filter(f=>f.name.toLowerCase().includes(q)||(f.restaurantName||'').toLowerCase().includes(q));
+  const el=document.getElementById('catProdList');
+  if(!list.length){el.innerHTML='<div class="empty-st" style="padding:1.5rem"><i class="ti ti-bowl"></i><p>Koi food item nahi mila</p></div>';return;}
+  el.innerHTML=list.map(f=>{
+    const tags=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
+    const checked=tags.includes(catProdCategoryName);
+    return `<label style="display:flex;align-items:center;gap:.6rem;padding:.5rem 0;border-bottom:1px solid var(--bdr);cursor:pointer">
+      <input type="checkbox" ${checked?'checked':''} onchange="toggleFoodInCategory('${f.id}',this.checked)" style="width:18px;height:18px;accent-color:var(--brand);flex-shrink:0"/>
+      <img src="${f.image||''}" style="width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--bdr);flex-shrink:0" onerror="this.style.display='none'"/>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:.82rem">${f.name}</div>
+        <div style="font-size:.68rem;color:var(--mut)">${f.restaurantName||getRestName(f.restaurantId)||''}${f.price?' · ₹'+f.price:''}</div>
+      </div>
+    </label>`;
+  }).join('');
+};
+
+window.toggleFoodInCategory=async(foodId,checked)=>{
+  const f=foods.find(x=>x.id===foodId);if(!f||!catProdCategoryName)return;
+  let tags=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
+  if(checked&&!tags.includes(catProdCategoryName))tags.push(catProdCategoryName);
+  if(!checked)tags=tags.filter(t=>t!==catProdCategoryName);
+  try{
+    await updateDoc(doc(db,'foods',foodId),{specialCategory:tags.join(', ')});
+    showToast(checked?'✅ Added to '+catProdCategoryName:'Removed from '+catProdCategoryName);
+  }catch(e){showToast('❌ '+e.message);}
+};
+
 // ══ CATEGORY PILLS ══
 document.addEventListener('change',e=>{if(e.target.classList.contains('cpill'))syncCategoryField();});
 function syncCategoryField(){const cats=[...document.querySelectorAll('.cpill:checked')].map(c=>c.value).filter(Boolean);document.getElementById('fCategory').value=cats.join(', ');}
@@ -1131,16 +1331,42 @@ window.addCustomCategory=()=>{
   showToast('✅ "'+val+'" category add hui!');
 };
 
-// ══ SPECIAL CATEGORY PILLS (cross-restaurant, home page) ══
+// ══ SPECIAL CATEGORY PILLS (cross-restaurant, home page — dynamic from Special Categories manager) ══
 document.addEventListener('change',e=>{if(e.target.classList.contains('sppill'))syncSpecialField();});
 function syncSpecialField(){const tags=[...document.querySelectorAll('.sppill:checked')].map(c=>c.value).filter(Boolean);document.getElementById('fSpecialCategory').value=tags.join(', ');}
-window.addCustomSpecial=()=>{
+
+function buildSpecialPillBox(checkedNames){
+  checkedNames = checkedNames || (document.getElementById('fSpecialCategory').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  const box=document.getElementById('specialPillBox');
+  if(!box) return;
+  const known=specialCategories.map(c=>c.name);
+  const pending=checkedNames.filter(n=>!known.includes(n));
+  let html=specialCategories.map(c=>{
+    const id='sp_'+c.id;
+    const checked=checkedNames.includes(c.name)?' checked':'';
+    return `<input type="checkbox" class="sppill" id="${id}" value="${c.name}"${checked}><label for="${id}">${c.name}</label>`;
+  }).join('');
+  html+=pending.map((n,i)=>{
+    const id='sp_pending_'+i;
+    return `<input type="checkbox" class="sppill" id="${id}" value="${n}" checked><label for="${id}">${n} ⏳</label>`;
+  }).join('');
+  box.innerHTML=html||'<span style="font-size:.72rem;color:var(--mut)">Koi category nahi bani — neeche custom likh ke banao, ya "Special Categories" page se banao.</span>';
+  syncSpecialField();
+}
+
+window.addCustomSpecial=async()=>{
   const inp=document.getElementById('fSpecialCustom');const val=inp.value.trim();if(!val){showToast('Special category naam likho');return;}
-  const id='spC'+Date.now();const box=document.getElementById('specialPillBox');
-  const cb=document.createElement('input');cb.type='checkbox';cb.className='sppill';cb.id=id;cb.value=val;
-  const lbl=document.createElement('label');lbl.setAttribute('for',id);lbl.textContent=val;
-  box.appendChild(cb);box.appendChild(lbl);cb.checked=true;inp.value='';syncSpecialField();box.scrollTop=box.scrollHeight;
-  showToast('✅ "'+val+'" special category add hui!');
+  const exists=specialCategories.some(c=>c.name.toLowerCase()===val.toLowerCase());
+  const current=(document.getElementById('fSpecialCategory').value||'').split(',').map(s=>s.trim()).filter(Boolean);
+  if(!current.includes(val))current.push(val);
+  inp.value='';
+  buildSpecialPillBox(current);
+  if(!exists){
+    try{ await addDoc(collection(db,'special_categories'),{name:val,image:'',order:99}); showToast('✅ "'+val+'" naya category bana — ab "Special Categories" page se ispe image lagao'); }
+    catch(e){ showToast('❌ '+e.message); }
+  } else {
+    showToast('✅ "'+val+'" select hui!');
+  }
 };
 
 document.addEventListener('change',e=>{if(e.target.classList.contains('tpchip'))document.getElementById('fPrepTime').value=e.target.value;});
@@ -1369,8 +1595,7 @@ window.duplicateFood=id=>{
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   const savedSpecials=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
-  document.querySelectorAll('.sppill').forEach(c=>{c.checked=savedSpecials.includes(c.value);});
-  document.getElementById('fSpecialCategory').value=f.specialCategory||'';
+  buildSpecialPillBox(savedSpecials);
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
   prvImg('fPrv',f.image);document.getElementById('foodFormTitle').textContent='Duplicate: '+f.name;
   document.getElementById('foodCancelBtn').style.display='block';document.getElementById('dupBanner').classList.add('show');
@@ -1411,7 +1636,7 @@ window.resetFoodForm=()=>{
   document.getElementById('foodFormTitle').textContent='Add Food Item';document.getElementById('foodCancelBtn').style.display='none';
   document.getElementById('dupBanner').classList.remove('show');
   document.querySelectorAll('.cpill').forEach(c=>c.checked=false);
-  document.querySelectorAll('.sppill').forEach(c=>c.checked=false);
+  buildSpecialPillBox([]);
   clearVariants();
   if(session.role==='restaurant'){document.getElementById('fRestId').value=session.restaurantId;}
   else if(lastSelectedRestId){document.getElementById('fRestId').value=lastSelectedRestId;}
@@ -1432,8 +1657,7 @@ window.editFood=id=>{
   const savedCats=(f.category||'').split(',').map(s=>s.trim()).filter(Boolean);
   document.querySelectorAll('.cpill').forEach(c=>{c.checked=savedCats.includes(c.value);});
   const savedSpecials=(f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean);
-  document.querySelectorAll('.sppill').forEach(c=>{c.checked=savedSpecials.includes(c.value);});
-  document.getElementById('fSpecialCategory').value=f.specialCategory||'';
+  buildSpecialPillBox(savedSpecials);
   document.querySelectorAll('.tpchip').forEach(r=>{r.checked=r.value===(f.prepTime||'');});
   prvImg('fPrv',f.image);document.getElementById('foodFormTitle').textContent='Edit: '+f.name;
   document.getElementById('foodCancelBtn').style.display='block';document.getElementById('dupBanner').classList.remove('show');
