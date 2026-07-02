@@ -39,6 +39,55 @@ nav{position:fixed;top:0;width:100%;background:var(--card);border-bottom:1px sol
 .chip{background:#fff;border:1px solid var(--bdr);border-radius:50px;padding:.2rem .65rem;font-size:.7rem;color:var(--mut);display:flex;align-items:center;gap:3px}
 .chip i{color:var(--brand);font-size:.75rem}
 
+/* ══ BANNER CAROUSEL (auto-sliding, cross-page) ══ */
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.banner-carousel-wrap{margin:.85rem 1rem 0;border-radius:16px;overflow:hidden;position:relative;box-shadow:0 8px 24px rgba(232,82,26,.14);animation:fadeSlideIn .35s ease}
+.banner-carousel-wrap.hide{display:none}
+.banner-carousel-track{display:flex;transition:transform .5s cubic-bezier(.65,0,.35,1)}
+.banner-slide{min-width:100%;height:120px;position:relative;display:flex;align-items:center;cursor:pointer;overflow:hidden}
+@media(min-width:600px){.banner-slide{height:160px}}
+.banner-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.02)}
+.banner-slide-overlay{position:absolute;inset:0}
+.banner-slide-content{position:relative;padding:1rem 1.15rem;z-index:1;color:#fff;max-width:78%}
+.banner-slide-badge{display:inline-flex;align-items:center;gap:3px;font-size:.6rem;font-weight:800;padding:3px 10px;border-radius:50px;margin-bottom:6px;letter-spacing:.4px;text-transform:uppercase;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.banner-slide-title{font-family:'Playfair Display',serif;font-size:1.18rem;font-weight:700;line-height:1.18;text-shadow:0 2px 10px rgba(0,0,0,.45);margin-bottom:2px}
+.banner-slide-sub{font-size:.76rem;opacity:.94;text-shadow:0 1px 5px rgba(0,0,0,.35)}
+.banner-dots{position:absolute;bottom:9px;left:0;right:0;display:flex;justify-content:center;gap:5px;z-index:2}
+.banner-dot{width:6px;height:6px;border-radius:50px;background:rgba(255,255,255,.5);transition:all .3s cubic-bezier(.4,0,.2,1);cursor:pointer}
+.banner-dot.active{width:20px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.banner-arrow{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.85);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:3;color:var(--txt);font-size:.8rem;opacity:0;transition:opacity .2s}
+.banner-carousel-wrap:hover .banner-arrow{opacity:1}
+.banner-arrow.prev{left:8px}.banner-arrow.next{right:8px}
+@media(hover:none){.banner-arrow{display:none}}
+
+/* ══ SPECIAL DEALS SECTION (cross-restaurant) ══ */
+.special-section{padding:1.1rem 0 .3rem}
+.special-section.hide{display:none}
+.special-head{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;margin-bottom:.65rem}
+.special-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:.4rem;color:var(--txt)}
+.special-title i{color:var(--brand);animation:sparklePulse 1.8s ease-in-out infinite}
+@keyframes sparklePulse{0%,100%{transform:scale(1) rotate(0deg);opacity:1}50%{transform:scale(1.15) rotate(8deg);opacity:.75}}
+.special-tabbar{display:flex;gap:.45rem;overflow-x:auto;scrollbar-width:none;padding:0 1rem .7rem}
+.special-tabbar::-webkit-scrollbar{display:none}
+.sp-tab{white-space:nowrap;border:1.5px solid rgba(232,82,26,.25);background:#fff;border-radius:50px;padding:.36rem .9rem;font-size:.76rem;font-weight:600;cursor:pointer;transition:all .22s cubic-bezier(.34,1.56,.64,1);color:var(--brand);flex-shrink:0}
+.sp-tab.active{background:linear-gradient(135deg,var(--brand),var(--bd));border-color:var(--brand);color:#fff;transform:scale(1.05);box-shadow:0 4px 12px rgba(232,82,26,.35)}
+.special-scroll{display:flex;gap:.7rem;overflow-x:auto;scrollbar-width:none;padding:0 1rem .35rem;scroll-snap-type:x proximity}
+.special-scroll::-webkit-scrollbar{display:none}
+.sp-card{flex:0 0 152px;background:var(--card);border-radius:16px;border:1px solid var(--bdr);overflow:hidden;cursor:pointer;scroll-snap-align:start;transition:transform .22s ease,box-shadow .22s ease;animation:fadeSlideIn .3s ease backwards}
+.sp-card:active{transform:scale(.97)}
+@media(hover:hover){.sp-card:hover{transform:translateY(-3px);box-shadow:0 10px 22px rgba(0,0,0,.12)}}
+.sp-card-img-wrap{position:relative}
+.sp-card img{width:100%;height:98px;object-fit:cover;display:block;background:#f0ede8}
+.sp-card-ribbon{position:absolute;top:6px;left:6px;background:rgba(26,18,8,.72);color:#fff;font-size:.56rem;font-weight:700;padding:2px 7px;border-radius:50px;backdrop-filter:blur(2px)}
+.sp-card-body{padding:.6rem .65rem}
+.sp-card-name{font-weight:700;font-size:.77rem;line-height:1.25;margin-bottom:.16rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sp-card-rest{font-size:.62rem;color:var(--mut);margin-bottom:.32rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:2px}
+.sp-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:.3rem}
+.sp-card-price{font-family:'Playfair Display',serif;font-size:.84rem;font-weight:700;color:var(--brand)}
+.sp-add-btn{background:linear-gradient(135deg,var(--brand),var(--bd));color:#fff;border:none;border-radius:8px;width:26px;height:26px;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 8px rgba(232,82,26,.35);transition:transform .15s}
+.sp-add-btn:active{transform:scale(.88)}
+.sp-empty{padding:1.2rem 1rem;color:var(--mut);font-size:.78rem;text-align:center}
+
 .ctrl-bar{padding:.7rem 1rem .25rem;display:flex;flex-direction:column;gap:.4rem}
 .ctrl-search{position:relative}
 .ctrl-search i{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--mut);font-size:.85rem}
@@ -247,6 +296,24 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
       <span class="chip"><i class="ti ti-shield-check"></i> Hygienic</span>
     </div>
   </div>
+
+  <!-- ══ BANNER CAROUSEL ══ -->
+  <div class="banner-carousel-wrap hide" id="bannerCarouselRest">
+    <div class="banner-carousel-track" id="bannerTrackRest"></div>
+    <div class="banner-dots" id="bannerDotsRest"></div>
+    <button class="banner-arrow prev" onclick="bannerNav('rest',-1)"><i class="ti ti-chevron-left"></i></button>
+    <button class="banner-arrow next" onclick="bannerNav('rest',1)"><i class="ti ti-chevron-right"></i></button>
+  </div>
+
+  <!-- ══ SPECIAL DEALS (cross-restaurant) ══ -->
+  <div class="special-section hide" id="specialSection">
+    <div class="special-head">
+      <div class="special-title"><i class="ti ti-sparkles"></i> Special Picks</div>
+    </div>
+    <div class="special-tabbar" id="specialTabbar"></div>
+    <div class="special-scroll" id="specialScroll"></div>
+  </div>
+
   <div class="ctrl-bar">
     <div class="ctrl-search"><i class="ti ti-search"></i><input id="restSearch" placeholder="Search restaurants…" autocomplete="off"/></div>
     <div class="ctrl-row">
@@ -279,6 +346,12 @@ footer{background:var(--bd);color:rgba(255,255,255,.75);text-align:center;paddin
         <span id="heroCTag"></span>
       </div>
     </div>
+  </div>
+  <div class="banner-carousel-wrap hide" id="bannerCarouselMenu">
+    <div class="banner-carousel-track" id="bannerTrackMenu"></div>
+    <div class="banner-dots" id="bannerDotsMenu"></div>
+    <button class="banner-arrow prev" onclick="bannerNav('menu',-1)"><i class="ti ti-chevron-left"></i></button>
+    <button class="banner-arrow next" onclick="bannerNav('menu',1)"><i class="ti ti-chevron-right"></i></button>
   </div>
   <div class="menu-ctrl">
     <div class="ctrl-search"><i class="ti ti-search"></i><input id="menuSearch" placeholder="Search dishes…"/></div>
@@ -432,70 +505,178 @@ let rFilter='all', rCuisine='All', mFilter='all', mCat='All';
 let unsubMenu=null, unsubTrack=null;
 
 // ══════════════════════════════════════════════
-// ✅ VARIANT PICKER STATE
+// ✅ SPECIAL DEALS — cross-restaurant food listener
 // ══════════════════════════════════════════════
-let varPickerFood = null;
-let varPickerSelected = null; // {name, price}
+let allFoods = [];
+let unsubAllFoods = null;
+let curSpecialTag = null;
 
-function openVariantPicker(food) {
-  varPickerFood = food;
-  varPickerSelected = null;
-  document.getElementById('varFoodImg').src = food.image || '';
-  document.getElementById('varFoodName').textContent = food.name;
-  document.getElementById('varFoodSub').textContent = food.description ? food.description.slice(0,55)+(food.description.length>55?'…':'') : '';
-  const opts = document.getElementById('varOptions');
-  opts.innerHTML = food.variants.map((v,i) => `
-    <div class="var-option" id="vo_${i}" onclick="selectVariant(${i},'${v.name.replace(/'/g,"\\'")}',${v.price})">
-      <div class="var-option-left">
-        <div class="var-radio"><div class="var-radio-dot"></div></div>
-        <span class="var-option-name">${v.name}</span>
-      </div>
-      <span class="var-option-price">₹${v.price}</span>
-    </div>`).join('');
-  document.getElementById('varAddBtn').disabled = true;
-  document.getElementById('varAddBtn').textContent = 'Select a size first';
-  document.getElementById('varAddBtn').innerHTML = '<i class="ti ti-shopping-cart"></i> Select a size first';
-  document.getElementById('varOverlay').classList.add('open');
+function loadAllFoodsForSpecials(){
+  if(unsubAllFoods){ unsubAllFoods(); unsubAllFoods=null; }
+  unsubAllFoods = onSnapshot(collection(db,'foods'), (snap)=>{
+    allFoods = snap.docs.map(d=>({id:d.id,...d.data()}));
+    buildSpecialSection();
+  }, (err)=>{ console.warn('Special deals live sync failed:', err); });
 }
 
-window.selectVariant = (idx, name, price) => {
-  varPickerSelected = { name, price };
-  document.querySelectorAll('.var-option').forEach((el,i) => el.classList.toggle('sel', i===idx));
-  const btn = document.getElementById('varAddBtn');
-  btn.disabled = false;
-  btn.innerHTML = `<i class="ti ti-shopping-cart"></i> Add ${name} — ₹${price}`;
+function getAllSpecialTags(){
+  const set = new Set();
+  allFoods.forEach(f=>{
+    (f.specialCategory||'').split(',').map(s=>s.trim()).filter(Boolean).forEach(t=>set.add(t));
+  });
+  return [...set];
+}
+
+function buildSpecialSection(){
+  const section = document.getElementById('specialSection');
+  const tags = getAllSpecialTags();
+  if(!tags.length){ section.classList.add('hide'); return; }
+  section.classList.remove('hide');
+  if(!curSpecialTag || !tags.includes(curSpecialTag)) curSpecialTag = tags[0];
+  document.getElementById('specialTabbar').innerHTML = tags.map(t=>
+    `<button class="sp-tab${t===curSpecialTag?' active':''}" onclick="setSpecialTab('${t.replace(/'/g,"\\'")}',this)">${t}</button>`
+  ).join('');
+  renderSpecialCards();
+}
+
+window.setSpecialTab = function(tag, el){
+  curSpecialTag = tag;
+  document.querySelectorAll('#specialTabbar .sp-tab').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderSpecialCards();
 };
 
-window.confirmVariantAdd = () => {
-  if (!varPickerFood || !varPickerSelected) return;
-  // Create a cart key that includes variant: foodId__variantName
-  const cartKey = varPickerFood.id + '__' + varPickerSelected.name;
-  if (!cart[cartKey]) {
-    cart[cartKey] = {
-      ...varPickerFood,
-      cartKey,
-      price: varPickerSelected.price,    // override price with variant price
-      variantName: varPickerSelected.name, // store variant name for display
-      qty: 0
-    };
-  }
-  cart[cartKey].qty++;
-  saveCart(); renderCartUI(); renderFoods();
+function renderSpecialCards(){
+  const wrap = document.getElementById('specialScroll');
+  if(!curSpecialTag){ wrap.innerHTML=''; return; }
+  const items = allFoods.filter(f=>(f.specialCategory||'').split(',').map(s=>s.trim()).includes(curSpecialTag));
+  if(!items.length){ wrap.innerHTML = `<div class="sp-empty">Is category mein abhi koi item nahi hai.</div>`; return; }
+  wrap.innerHTML = items.map((food,idx)=>{
+    const restName = food.restaurantName || (allRests.find(r=>r.id===food.restaurantId)?.name) || '';
+    const priceDisplay = (food.variants && food.variants.length)
+      ? 'From ₹'+Math.min(...food.variants.map(v=>v.price))
+      : '₹'+food.price;
+    return `<div class="sp-card" style="animation-delay:${Math.min(idx*0.05,0.4)}s" onclick="openModal(${JSON.stringify(food).replace(/"/g,'&quot;')})">
+      <div class="sp-card-img-wrap">
+        <img src="${food.image||'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300'}" alt="${food.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=300'"/>
+        <span class="sp-card-ribbon">${food.veg?'🥦':'🍗'} ${food.bestseller?'🔥':''}</span>
+      </div>
+      <div class="sp-card-body">
+        <div class="sp-card-name">${food.name}</div>
+        <div class="sp-card-rest"><i class="ti ti-building-store" style="font-size:.6rem"></i> ${restName}</div>
+        <div class="sp-card-bottom">
+          <span class="sp-card-price">${priceDisplay}</span>
+          <button class="sp-add-btn" onclick="event.stopPropagation();addCartGlobal(${JSON.stringify(food).replace(/"/g,'&quot;')})"><i class="ti ti-plus" style="font-size:.8rem"></i></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Add-to-cart entry point for items picked from the Special Deals strip
+// (food may belong to a different restaurant than what's currently in the cart)
+window.addCartGlobal = function(food){
+  if(hasVariants(food)){ openVariantPicker(food); return; }
+  if(!switchCartRestaurantIfNeeded(food)) return;
+  if(!cart[food.id]) cart[food.id]={...food,cartKey:food.id,qty:0};
+  cart[food.id].qty++;
+  saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
   document.getElementById('fabCart').classList.add('show');
-  showToast(`${varPickerFood.name} (${varPickerSelected.name}) added 🛒`);
-  closeVarPicker();
-  closeModal();
+  showToast(food.name+' added 🛒');
 };
 
-window.closeVarPicker = () => {
-  document.getElementById('varOverlay').classList.remove('open');
-  varPickerFood = null; varPickerSelected = null;
-};
-window.closeVarPickerIfOutside = (e) => {
-  if (e.target === document.getElementById('varOverlay')) closeVarPicker();
+// If the food being added belongs to a different restaurant than what's
+// already in the cart, confirm with the user before clearing the old cart.
+function switchCartRestaurantIfNeeded(food){
+  const targetRestId = food.restaurantId;
+  if(!targetRestId) return true;
+  if(Object.keys(cart).length && cartRestId && cartRestId!==targetRestId){
+    const prevName = allRests.find(x=>x.id===cartRestId)?.name || 'previous restaurant';
+    const nextName = food.restaurantName || allRests.find(x=>x.id===targetRestId)?.name || 'this restaurant';
+    if(!confirm(`Aapke cart mein "${prevName}" ke items hain. Clear karke "${nextName}" se add karein?`)) return false;
+    cart={}; discount=0; saveCart();
+  }
+  cartRestId = targetRestId;
+  localStorage.setItem('z_cart_rest', cartRestId);
+  const restName = food.restaurantName || allRests.find(x=>x.id===targetRestId)?.name || '';
+  document.getElementById('cartRestName').textContent = restName;
+  document.getElementById('cartRestRow').style.display = 'flex';
+  return true;
+}
+
+// ══════════════════════════════════════════════
+// ✅ BANNER CAROUSEL — auto-sliding, cross-page
+// ══════════════════════════════════════════════
+let allBanners = [];
+const bannerState = {
+  rest: { list: [], idx: 0, timer: null },
+  menu: { list: [], idx: 0, timer: null }
 };
 
-// ══ RESTAURANTS — REAL-TIME ══
+function loadBanners(){
+  onSnapshot(collection(db,'banners'), (snap)=>{
+    allBanners = snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||99)-(b.order||99));
+    bannerState.rest.list = allBanners.filter(b=>b.active!==false && b.showOnRestaurant!==false);
+    bannerState.menu.list = allBanners.filter(b=>b.active!==false && b.showOnMenu!==false);
+    renderBannerCarousel('rest');
+    renderBannerCarousel('menu');
+  }, (err)=>{ console.warn('Banner live sync failed:', err); });
+}
+
+function renderBannerCarousel(key){
+  const st = bannerState[key];
+  const wrap = document.getElementById(key==='rest'?'bannerCarouselRest':'bannerCarouselMenu');
+  const track = document.getElementById(key==='rest'?'bannerTrackRest':'bannerTrackMenu');
+  const dots = document.getElementById(key==='rest'?'bannerDotsRest':'bannerDotsMenu');
+  if(clearTimeout && st.timer){ clearInterval(st.timer); st.timer=null; }
+  if(!st.list.length){ wrap.classList.add('hide'); return; }
+  wrap.classList.remove('hide');
+  if(st.idx>=st.list.length) st.idx=0;
+  track.innerHTML = st.list.map(b=>{
+    const bg = b.bgColor||'#1A1208';
+    return `<div class="banner-slide" style="background:${bg}" onclick="bannerClicked('${key}')">
+      ${b.image?`<img src="${b.image}" alt="" onerror="this.style.display='none'"/>`:''}
+      <div class="banner-slide-overlay" style="background:${b.image?`linear-gradient(to right,${bg}ee,${bg}66)`:''}"></div>
+      <div class="banner-slide-content">
+        ${b.badge?`<span class="banner-slide-badge" style="background:${b.badgeColor||'#E8521A'}">${b.badge}</span>`:''}
+        <div class="banner-slide-title">${b.title||''}</div>
+        ${b.subtitle?`<div class="banner-slide-sub">${b.subtitle}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  dots.innerHTML = st.list.length>1 ? st.list.map((_,i)=>`<span class="banner-dot${i===st.idx?' active':''}" onclick="event.stopPropagation();bannerGoTo('${key}',${i})"></span>`).join('') : '';
+  updateBannerTrack(key);
+  if(st.list.length>1){
+    st.timer = setInterval(()=>bannerNav(key,1), 4200);
+  }
+}
+
+function updateBannerTrack(key){
+  const st = bannerState[key];
+  const track = document.getElementById(key==='rest'?'bannerTrackRest':'bannerTrackMenu');
+  if(track) track.style.transform = `translateX(-${st.idx*100}%)`;
+  document.querySelectorAll(`#${key==='rest'?'bannerDotsRest':'bannerDotsMenu'} .banner-dot`).forEach((d,i)=>d.classList.toggle('active', i===st.idx));
+}
+
+window.bannerNav = function(key, dir){
+  const st = bannerState[key];
+  if(!st.list.length) return;
+  st.idx = (st.idx + dir + st.list.length) % st.list.length;
+  updateBannerTrack(key);
+};
+window.bannerGoTo = function(key, i){
+  bannerState[key].idx = i;
+  updateBannerTrack(key);
+};
+window.bannerClicked = function(key){
+  // Nice little touch — tapping a restaurant-page banner jumps to Special Picks if present
+  if(key==='rest'){
+    const sec = document.getElementById('specialSection');
+    if(sec && !sec.classList.contains('hide')) sec.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+};
+
+
 function loadRestaurants(){
   return new Promise((resolve)=>{
     let first=true;
@@ -555,6 +736,7 @@ function renderRests(){
     else if(fresh.isOpen===false && curRest.isOpen!==false){ showToast('This restaurant just went offline'); }
     curRest=fresh||curRest;
   }
+  renderSpecialCards();
 }
 
 window.setRF=function(el){ rFilter=el.dataset.f; document.querySelectorAll('#restView .fbtn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderRests(); };
@@ -712,9 +894,10 @@ window.addCart=function(food,e){
   if(e) e.stopPropagation();
   // If variants exist, open picker instead
   if(hasVariants(food)){ openVariantPicker(food); return; }
+  if(!switchCartRestaurantIfNeeded(food)) return;
   if(!cart[food.id]) cart[food.id]={...food,cartKey:food.id,qty:0};
   cart[food.id].qty++;
-  saveCart(); renderCartUI(); renderFoods();
+  saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
   document.getElementById('fabCart').classList.add('show');
   showToast(food.name+' added 🛒');
 };
@@ -724,14 +907,14 @@ window.chgQty=function(id,delta,e){
   if(!cart[id]) return;
   cart[id].qty+=delta;
   if(cart[id].qty<=0) delete cart[id];
-  saveCart(); renderCartUI(); renderFoods();
+  saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
   const total=Object.values(cart).reduce((s,i)=>s+i.qty,0);
   if(total===0) document.getElementById('fabCart').classList.remove('show');
 };
 
 window.rmCartItem=function(key){
   delete cart[key];
-  saveCart(); renderCartUI(); renderFoods();
+  saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
   if(!Object.keys(cart).length) document.getElementById('fabCart').classList.remove('show');
 };
 
@@ -797,6 +980,8 @@ window.placeOrder=async function(){
   const sub=items.reduce((s,i)=>s+(+i.price*i.qty),0);
   const fee=sub>=FREE_MIN?0:DEL_FEE;
   const total=sub+fee-discount;
+  const restIdForOrder = cartRestId || curRest?.id || items[0]?.restaurantId || '';
+  const restNameForOrder = (allRests.find(r=>r.id===restIdForOrder)?.name) || curRest?.name || items[0]?.restaurantName || '';
   const order={name,email,mobile,address,payment,notes,
     cart:items.map(i=>({
       id:i.id, name:i.name,
@@ -804,7 +989,7 @@ window.placeOrder=async function(){
       price:i.price, qty:i.qty
     })),
     subtotal:sub,deliveryFee:fee,discount,total,
-    restaurantId:curRest?.id||'',restaurantName:curRest?.name||'',
+    restaurantId:restIdForOrder,restaurantName:restNameForOrder,
     status:'pending',timestamp:Date.now(),orderId:'ZST'+Date.now().toString().slice(-6)};
   try{
     await addDoc(collection(db,'food_orders'),order);
@@ -817,7 +1002,7 @@ window.placeOrder=async function(){
       body: new URLSearchParams({token:"nnrwv6lvl11p1nlv",to:"919307320279",body:msg})
     });
     localStorage.setItem('zN',name); localStorage.setItem('zE',email); localStorage.setItem('zM',mobile); localStorage.setItem('zA',address);
-    cart={}; discount=0; saveCart(); renderCartUI(); renderFoods();
+    cart={}; discount=0; saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
     document.getElementById('fabCart').classList.remove('show');
     document.getElementById('cartOverlay').classList.remove('open');
     showToast('✅ Order '+order.orderId+' placed!');
@@ -895,12 +1080,81 @@ window.openModal=function(food){
     addBtn.onclick = () => { openVariantPicker(food); };
   } else {
     addBtn.innerHTML = '<i class="ti ti-shopping-cart"></i> Add to cart';
-    addBtn.onclick = () => { addCart(food,null); closeModal(); };
+    addBtn.onclick = () => {
+      // If this item is from restView (special deals) rather than an open menu, use global add
+      if(!curRest || curRest.id!==food.restaurantId){ addCartGlobal(food); }
+      else { addCart(food,null); }
+      closeModal();
+    };
   }
   document.getElementById('foodModal').classList.add('open');
 };
 window.closeModal=function(){ document.getElementById('foodModal').classList.remove('open'); };
 document.getElementById('foodModal').addEventListener('click',e=>{ if(e.target===document.getElementById('foodModal')) closeModal(); });
+
+// ══════════════════════════════════════════════
+// ✅ VARIANT PICKER STATE
+// ══════════════════════════════════════════════
+let varPickerFood = null;
+let varPickerSelected = null; // {name, price}
+
+function openVariantPicker(food) {
+  varPickerFood = food;
+  varPickerSelected = null;
+  document.getElementById('varFoodImg').src = food.image || '';
+  document.getElementById('varFoodName').textContent = food.name;
+  document.getElementById('varFoodSub').textContent = food.description ? food.description.slice(0,55)+(food.description.length>55?'…':'') : '';
+  const opts = document.getElementById('varOptions');
+  opts.innerHTML = food.variants.map((v,i) => `
+    <div class="var-option" id="vo_${i}" onclick="selectVariant(${i},'${v.name.replace(/'/g,"\\'")}',${v.price})">
+      <div class="var-option-left">
+        <div class="var-radio"><div class="var-radio-dot"></div></div>
+        <span class="var-option-name">${v.name}</span>
+      </div>
+      <span class="var-option-price">₹${v.price}</span>
+    </div>`).join('');
+  document.getElementById('varAddBtn').disabled = true;
+  document.getElementById('varAddBtn').innerHTML = '<i class="ti ti-shopping-cart"></i> Select a size first';
+  document.getElementById('varOverlay').classList.add('open');
+}
+
+window.selectVariant = (idx, name, price) => {
+  varPickerSelected = { name, price };
+  document.querySelectorAll('.var-option').forEach((el,i) => el.classList.toggle('sel', i===idx));
+  const btn = document.getElementById('varAddBtn');
+  btn.disabled = false;
+  btn.innerHTML = `<i class="ti ti-shopping-cart"></i> Add ${name} — ₹${price}`;
+};
+
+window.confirmVariantAdd = () => {
+  if (!varPickerFood || !varPickerSelected) return;
+  if(!switchCartRestaurantIfNeeded(varPickerFood)) return;
+  // Create a cart key that includes variant: foodId__variantName
+  const cartKey = varPickerFood.id + '__' + varPickerSelected.name;
+  if (!cart[cartKey]) {
+    cart[cartKey] = {
+      ...varPickerFood,
+      cartKey,
+      price: varPickerSelected.price,    // override price with variant price
+      variantName: varPickerSelected.name, // store variant name for display
+      qty: 0
+    };
+  }
+  cart[cartKey].qty++;
+  saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
+  document.getElementById('fabCart').classList.add('show');
+  showToast(`${varPickerFood.name} (${varPickerSelected.name}) added 🛒`);
+  closeVarPicker();
+  closeModal();
+};
+
+window.closeVarPicker = () => {
+  document.getElementById('varOverlay').classList.remove('open');
+  varPickerFood = null; varPickerSelected = null;
+};
+window.closeVarPickerIfOutside = (e) => {
+  if (e.target === document.getElementById('varOverlay')) closeVarPicker();
+};
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2700); }
 window.showToast=showToast;
@@ -916,6 +1170,8 @@ window.scrollToTrack=function(){
 async function init(){
   await loadDeliverySettings();
   await loadRestaurants();
+  loadAllFoodsForSpecials();
+  loadBanners();
   renderCartUI();
   const savedEmail=document.getElementById('trackEmail').value.trim();
   if(savedEmail) startTrackListener(savedEmail);
