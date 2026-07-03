@@ -122,13 +122,18 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .skel-body{flex:1;padding:.7rem;display:flex;flex-direction:column;gap:7px;}
 .skel-line{height:11px;}
  
-/* STICKY CART BAR */
-.cart-bar{position:fixed;bottom:0;left:0;right:0;z-index:300;background:var(--orange);color:#fff;padding:.85rem 1.25rem;padding-bottom:calc(.85rem + var(--sb));display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 -4px 20px rgba(232,88,10,.3);transition:transform .3s cubic-bezier(.34,1.56,.64,1);}
-.cart-bar.hidden{transform:translateY(120%);}
-.cart-bar-left{display:flex;align-items:center;gap:.75rem;}
-.cart-bar-count{background:rgba(255,255,255,.2);border-radius:8px;padding:.2rem .65rem;font-size:.8rem;font-weight:700;}
-.cart-bar-right{display:flex;align-items:center;gap:.5rem;font-weight:700;}
-.cart-bar-price{font-family:'Fraunces',serif;font-size:1.1rem;}
+/* STICKY CART BAR — floating rounded card, not an edge-to-edge strip */
+.cart-bar{position:fixed;left:12px;right:12px;z-index:300;background:linear-gradient(135deg,var(--orange) 0%,var(--orange-dark) 100%);border-radius:18px;padding:.6rem .7rem;display:flex;align-items:center;gap:.7rem;cursor:pointer;box-shadow:0 14px 32px -8px rgba(196,72,7,.45),0 2px 8px rgba(0,0,0,.08);transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s;}
+.cart-bar.hidden{transform:translateY(140%);opacity:0;pointer-events:none;}
+.cart-bar-icon-wrap{position:relative;width:42px;height:42px;border-radius:13px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cart-bar-icon-wrap i{font-size:1.25rem;color:#fff;}
+.cart-bar-badge{position:absolute;top:-7px;right:-7px;background:#fff;color:var(--orange-dark);font-size:.65rem;font-weight:800;min-width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;padding:0 4px;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.cart-bar.bump .cart-bar-badge{animation:cbBump .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cbBump{0%{transform:scale(1);}45%{transform:scale(1.35);}100%{transform:scale(1);}}
+.cart-bar-mid{flex:1;min-width:0;color:#fff;line-height:1.25;}
+.cart-bar-items-txt{font-size:.66rem;font-weight:700;opacity:.82;text-transform:uppercase;letter-spacing:.4px;}
+.cart-bar-price{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:800;}
+.cart-bar-arrow{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.22);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:1.05rem;}
  
 /* BOTTOM NAV */
 .bnav-bar{position:fixed;bottom:0;left:0;right:0;z-index:250;background:var(--card);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);}
@@ -154,20 +159,24 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .cart-view.hidden{display:none;}
 .checkout-view{display:none;flex-direction:column;}
 .checkout-view.active{display:flex;}
- 
-.cart-item{display:flex;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);gap:.75rem;}
-.ci-img{width:44px;height:44px;border-radius:10px;object-fit:cover;flex-shrink:0;background:var(--surface);}
+
+.cart-item{display:flex;align-items:center;padding:.6rem;border:1px solid var(--border);background:var(--surface);border-radius:14px;gap:.7rem;margin-bottom:.55rem;transition:opacity .2s;}
+.cart-item:last-child{margin-bottom:0;}
+.ci-img{width:52px;height:52px;border-radius:11px;object-fit:cover;flex-shrink:0;background:var(--card);border:1px solid var(--border);}
 .ci-info{flex:1;min-width:0;}
-.ci-name{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ci-unit{font-size:.68rem;color:var(--muted2);}
-.ci-qty-ctrl{display:flex;align-items:center;background:var(--surface);border-radius:8px;overflow:hidden;border:1.5px solid var(--border);}
-.ciqbtn{background:none;border:none;color:var(--orange);font-weight:800;font-size:.95rem;padding:.28rem .52rem;cursor:pointer;min-width:30px;min-height:30px;display:flex;align-items:center;justify-content:center;}
-.ciqnum{font-size:.82rem;font-weight:700;padding:0 .15rem;min-width:18px;text-align:center;}
-.ci-price{font-family:'Fraunces',serif;font-weight:700;font-size:.88rem;min-width:44px;text-align:right;flex-shrink:0;}
- 
-.cart-summary{padding:.75rem 0 .4rem;}
+.ci-name{font-size:.85rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-unit{font-size:.68rem;color:var(--muted2);margin-top:1px;}
+.ci-right{display:flex;flex-direction:column;align-items:flex-end;gap:.35rem;flex-shrink:0;}
+.ci-qty-ctrl{display:flex;align-items:center;background:var(--card);border-radius:9px;overflow:hidden;border:1.5px solid var(--border);}
+.ciqbtn{background:none;border:none;color:var(--orange);font-weight:800;font-size:.95rem;padding:.28rem .5rem;cursor:pointer;min-width:28px;min-height:28px;display:flex;align-items:center;justify-content:center;}
+.ciqbtn:active{background:var(--orange-light);}
+.ciqnum{font-size:.8rem;font-weight:700;padding:0 .15rem;min-width:16px;text-align:center;}
+.ci-price{font-family:'Fraunces',serif;font-weight:700;font-size:.86rem;}
+
+.cart-summary{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.9rem 1rem;margin:.15rem 0 .8rem;}
 .cs-row{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:.28rem;}
-.cs-total{display:flex;justify-content:space-between;font-family:'Fraunces',serif;font-size:1rem;font-weight:700;color:var(--text);border-top:1px solid var(--border);padding-top:.45rem;margin-top:.2rem;}
+.cs-total{display:flex;justify-content:space-between;font-family:'Fraunces',serif;font-size:1.05rem;font-weight:700;color:var(--text);border-top:1.5px dashed var(--border);padding-top:.5rem;margin-top:.3rem;}
+.free-delivery-badge{display:inline-flex;align-items:center;gap:4px;background:var(--green-light);color:var(--green);font-size:.66rem;font-weight:700;padding:.28rem .6rem;border-radius:50px;margin-bottom:.65rem;}
  
 .coup-row{display:flex;gap:.45rem;margin-bottom:.7rem;}
 .coup-in{flex:1;padding:.58rem .8rem;border:1.5px solid var(--border);border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;outline:none;}
@@ -279,7 +288,8 @@ select.finput{cursor:pointer;}
  
 /* EMPTY */
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted2);}
-.empty-state i{font-size:2.5rem;display:block;margin-bottom:.5rem;opacity:.3;}
+.empty-state i{font-size:1.9rem;display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:var(--orange-light);color:var(--orange);opacity:.7;margin:0 auto .7rem;}
+.empty-state p{font-size:.85rem;font-weight:600;color:var(--muted);}
 </style>
 </head>
 <body>
@@ -307,7 +317,7 @@ select.finput{cursor:pointer;}
     <p>Everything your kitchen needs — quality groceries at your door.</p>
     <div class="hero-chips">
       <span class="hchip"><i class="ti ti-leaf"></i> Fresh daily</span>
-      <span class="hchip"><i class="ti ti-truck"></i> Free above ₹499</span>
+      <span class="hchip"><i class="ti ti-truck"></i> Fast delivery</span>
       <span class="hchip"><i class="ti ti-star-filled"></i> 4.8 rated</span>
       <span class="hchip"><i class="ti ti-shield-check"></i> Quality assured</span>
     </div>
@@ -328,28 +338,9 @@ select.finput{cursor:pointer;}
     <div class="catg-scroll" id="catgScroll"></div>
   </div>
  
-  <!-- OFFERS -->
-  <div class="sec-hdr"><div class="sec-title">Today's Deals</div><span class="sec-link" onclick="showToast('All deals coming soon','warn')">See all</span></div>
-  <div class="offers-scroll">
-    <div class="offer-card o1" onclick="applyOffer('FRESH20')">
-      <div class="offer-title">₹20 off veggies</div>
-      <div class="offer-sub">Fresh produce discount</div>
-      <div class="offer-code">FRESH20</div>
-      <div class="offer-emoji">🥦</div>
-    </div>
-    <div class="offer-card o2" onclick="applyOffer('GROCERY50')">
-      <div class="offer-title">₹50 off ₹500+</div>
-      <div class="offer-sub">Use on full cart</div>
-      <div class="offer-code">GROCERY50</div>
-      <div class="offer-emoji">🛒</div>
-    </div>
-    <div class="offer-card o3" onclick="applyOffer('FIRST30')">
-      <div class="offer-title">First order ₹30 off</div>
-      <div class="offer-sub">New users only</div>
-      <div class="offer-code">FIRST30</div>
-      <div class="offer-emoji">🎉</div>
-    </div>
-  </div>
+  <!-- OFFERS (built dynamically from admin-managed coupons) -->
+  <div class="sec-hdr" id="offersHdr" style="display:none"><div class="sec-title">Today's Deals</div><span class="sec-link" onclick="showToast('All deals coming soon','warn')">See all</span></div>
+  <div class="offers-scroll" id="offersScroll"></div>
  
   <!-- CATEGORIES (secondary pill bar, built dynamically) -->
   <div class="cat-bar" id="catBar"></div>
@@ -383,15 +374,16 @@ select.finput{cursor:pointer;}
 </nav>
  
 <!-- STICKY CART BAR -->
-<div class="cart-bar hidden" id="cartBar" onclick="openCart()" style="bottom:calc(52px + var(--sb))">
-  <div class="cart-bar-left">
-    <span class="cart-bar-count" id="cartBarCount">0 items</span>
-    <span style="font-size:.85rem;opacity:.85">View cart</span>
+<div class="cart-bar hidden" id="cartBar" onclick="openCart()" style="bottom:calc(52px + var(--sb) + 8px)">
+  <div class="cart-bar-icon-wrap">
+    <i class="ti ti-shopping-basket"></i>
+    <span class="cart-bar-badge" id="cartBarBadge">0</span>
   </div>
-  <div class="cart-bar-right">
-    <span class="cart-bar-price" id="cartBarPrice">₹0</span>
-    <i class="ti ti-chevron-up"></i>
+  <div class="cart-bar-mid">
+    <div class="cart-bar-items-txt" id="cartBarCount">0 items</div>
+    <div class="cart-bar-price" id="cartBarPrice">₹0</div>
   </div>
+  <div class="cart-bar-arrow"><i class="ti ti-chevron-up"></i></div>
 </div>
  
 <!-- CART/CHECKOUT DRAWER -->
@@ -401,9 +393,9 @@ select.finput{cursor:pointer;}
  
     <!-- CART VIEW -->
     <div class="cart-view" id="cartView">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <div class="sheet-title">🧺 Your Cart</div>
-        <button style="background:none;border:none;cursor:pointer;color:var(--muted2);font-size:1rem" onclick="closeCart()"><i class="ti ti-x"></i></button>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem">
+        <div class="sheet-title">🧺 Your Cart <span id="cartHeaderCount" style="color:var(--muted2);font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:.8rem"></span></div>
+        <button style="background:var(--surface);border:1px solid var(--border);border-radius:50%;width:32px;height:32px;cursor:pointer;color:var(--muted);font-size:1rem;display:flex;align-items:center;justify-content:center" onclick="closeCart()"><i class="ti ti-x"></i></button>
       </div>
       <div id="cartItemsEl">
         <div class="empty-state"><i class="ti ti-basket"></i><p>Cart is empty. Start adding items!</p></div>
@@ -415,6 +407,7 @@ select.finput{cursor:pointer;}
           <div class="cs-row" id="csDiscountRow" style="display:none;color:var(--green)"><span>Discount</span><span id="csDiscount">-₹0</span></div>
           <div class="cs-total"><span>Total</span><span id="csTotal">₹0</span></div>
         </div>
+        <div id="freeDeliveryBadgeWrap"></div>
         <div class="coup-row">
           <input type="text" class="coup-in" id="couponIn" placeholder="Promo code"/>
           <button class="coup-apply" onclick="applyCoupon()">Apply</button>
@@ -533,7 +526,7 @@ select.finput{cursor:pointer;}
 <!-- ✅ SINGLE UNIFIED MODULE SCRIPT — fixes the split-script bug -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
  
 // ── Firebase init ──────────────────────────────────────────────────────────
 const FC = {
@@ -567,18 +560,19 @@ const DEMO_CATEGORY_TILES = [
 // or falling back to the demo tiles above if the admin hasn't added any yet.
 let CATEGORY_TILES = [];
 
-async function loadCategoriesFromDB() {
-  try {
-    const snap = await getDocs(collection(db, 'grocery_categories'));
-    if (snap.empty) return [];
-    return snap.docs
-      .map(d => ({ id: d.id, ...d.data() }))
-      .sort((a, b) => (a.order || 0) - (b.order || 0))
-      .map(c => ({ cat: c.name, label: c.label || c.name, icon: c.icon || '🛒', image: c.image || '' }));
-  } catch(e) {
-    console.warn('Firestore categories fetch failed, using demo tiles:', e);
-    return [];
-  }
+let catsFirstLoadDone = false;
+function listenCategories() {
+  return new Promise((resolve) => {
+    onSnapshot(collection(db, 'grocery_categories'), (snap) => {
+      const live = snap.empty ? [] : snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .map(c => ({ cat: c.name, label: c.label || c.name, icon: c.icon || '🛒', image: c.image || '' }));
+      CATEGORY_TILES = live.length > 0 ? live : DEMO_CATEGORY_TILES;
+      if (!catsFirstLoadDone) { catsFirstLoadDone = true; resolve(); }
+      else { renderCategoryTiles(); renderCatBar(); } // admin edited categories live — refresh instantly
+    }, (e) => { console.warn('categories listener failed, using demo tiles:', e); CATEGORY_TILES = DEMO_CATEGORY_TILES; if (!catsFirstLoadDone) { catsFirstLoadDone = true; resolve(); } });
+  });
 }
 
 function renderCategoryTiles() {
@@ -631,25 +625,83 @@ const DEMO_PRODUCTS = [
 ];
  
 // ── Constants ──────────────────────────────────────────────────────────────
-const COUPONS = { FRESH20:20, GROCERY50:50, FIRST30:30, SAVE25:25 };
-const FREE_DELIVERY_THRESHOLD = 499;
-const DELIVERY_FEE = 40;
+const DEMO_COUPONS = [
+  { code:'FRESH20',   discount:20, minOrder:0,   desc:'Fresh produce discount', featured:true, active:true },
+  { code:'GROCERY50', discount:50, minOrder:500, desc:'Use on full cart',       featured:true, active:true },
+  { code:'FIRST30',   discount:30, minOrder:0,   desc:'New users only',         featured:true, active:true },
+  { code:'SAVE25',    discount:25, minOrder:0,   desc:'₹25 off your order',     featured:false,active:true },
+];
+const FREE_DELIVERY_THRESHOLD_DEFAULT = 499;
+const DELIVERY_FEE_DEFAULT = 40;
+let FREE_DELIVERY_THRESHOLD = FREE_DELIVERY_THRESHOLD_DEFAULT;
+let DELIVERY_FEE = DELIVERY_FEE_DEFAULT;
+
+let settingsFirstLoadDone = false;
+function listenDeliverySettings() {
+  return new Promise((resolve) => {
+    onSnapshot(doc(db, 'grocery_settings', 'delivery'), (snap) => {
+      if (snap.exists()) {
+        const d = snap.data();
+        FREE_DELIVERY_THRESHOLD = +d.freeDeliveryThreshold || FREE_DELIVERY_THRESHOLD_DEFAULT;
+        DELIVERY_FEE = +d.deliveryFee || DELIVERY_FEE_DEFAULT;
+      } else {
+        FREE_DELIVERY_THRESHOLD = FREE_DELIVERY_THRESHOLD_DEFAULT;
+        DELIVERY_FEE = DELIVERY_FEE_DEFAULT;
+      }
+      if (!settingsFirstLoadDone) { settingsFirstLoadDone = true; resolve(); }
+      else { updateBarUI(); if (drawerOpen) renderCartItems(); } // admin changed delivery fee live — refresh instantly
+    }, (e) => { console.warn('delivery settings listener failed, using defaults:', e); if (!settingsFirstLoadDone) { settingsFirstLoadDone = true; resolve(); } });
+  });
+}
+const OFFER_EMOJIS = ['🥦','🛒','🎉','🏷️','💸','🎁'];
+const OFFER_STYLES = ['o1','o2','o3'];
  
 // ── State ──────────────────────────────────────────────────────────────────
 let allProducts = [];
+let COUPONS = {};       // { CODE: {discount, minOrder} } — active coupons keyed by code, from Firestore
+let allCouponsRaw = []; // full coupon docs, used to build the deal cards
 let cart = JSON.parse(localStorage.getItem('basket_cart') || '{}');
 let activeCategory = 'All', discount = 0, couponCode = '', selectedSlot = '', drawerOpen = false;
+
+// ── Coupons (admin-controlled via grocery_coupons in Firestore) ────────────
+let coupsFirstLoadDone = false;
+function listenCoupons() {
+  return new Promise((resolve) => {
+    onSnapshot(collection(db, 'grocery_coupons'), (snap) => {
+      allCouponsRaw = snap.empty ? DEMO_COUPONS : snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      COUPONS = {};
+      allCouponsRaw.filter(c => c.active !== false).forEach(c => { COUPONS[c.code] = { discount: +c.discount, minOrder: +c.minOrder || 0 }; });
+      if (!coupsFirstLoadDone) { coupsFirstLoadDone = true; resolve(); }
+      else { renderOffers(); } // admin toggled/edited a coupon live — refresh deal cards instantly
+    }, (e) => { console.warn('coupons listener failed, using demo coupons:', e); allCouponsRaw = DEMO_COUPONS; if (!coupsFirstLoadDone) { coupsFirstLoadDone = true; resolve(); } });
+  });
+}
+
+function renderOffers() {
+  const featured = allCouponsRaw.filter(c => c.active !== false && c.featured !== false);
+  const hdr = document.getElementById('offersHdr');
+  const wrap = document.getElementById('offersScroll');
+  if (!featured.length) { hdr.style.display = 'none'; wrap.innerHTML = ''; return; }
+  hdr.style.display = 'flex';
+  wrap.innerHTML = featured.map((c, i) => `
+    <div class="offer-card ${OFFER_STYLES[i % OFFER_STYLES.length]}" onclick="applyOffer('${c.code}')">
+      <div class="offer-title">₹${c.discount} off${c.minOrder > 0 ? ` ₹${c.minOrder}+` : ''}</div>
+      <div class="offer-sub">${c.desc || ''}</div>
+      <div class="offer-code">${c.code}</div>
+      <div class="offer-emoji">${OFFER_EMOJIS[i % OFFER_EMOJIS.length]}</div>
+    </div>`).join('');
+}
  
 // ── Firebase helpers ───────────────────────────────────────────────────────
-async function loadProductsFromDB() {
-  try {
-    const snap = await getDocs(collection(db, 'grocery_products'));
-    if (snap.empty) return [];
-    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  } catch(e) {
-    console.warn('Firestore products fetch failed, using demo data:', e);
-    return [];
-  }
+let prodsFirstLoadDone = false;
+function listenProducts() {
+  return new Promise((resolve) => {
+    onSnapshot(collection(db, 'grocery_products'), (snap) => {
+      allProducts = snap.empty ? DEMO_PRODUCTS : snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      if (!prodsFirstLoadDone) { prodsFirstLoadDone = true; resolve(); }
+      else { renderProducts(getFiltered()); updateBarUI(); } // admin added/edited a product live — refresh instantly
+    }, (e) => { console.warn('products listener failed, using demo data:', e); allProducts = DEMO_PRODUCTS; if (!prodsFirstLoadDone) { prodsFirstLoadDone = true; resolve(); } });
+  });
 }
  
 async function saveOrderToDB(data) {
@@ -682,17 +734,19 @@ async function sendTelegram(msg) {
   } catch(e) {}
 }
  
-// ── Init ───────────────────────────────────────────────────────────────────
+// ── Init (realtime) ─────────────────────────────────────────────────────────
 async function init() {
   // Show skeletons while loading
   document.getElementById('resultsLabel').textContent = 'Loading fresh items…';
 
-  const [dbCats, dbProds] = await Promise.all([loadCategoriesFromDB(), loadProductsFromDB()]);
-  CATEGORY_TILES = dbCats.length > 0 ? dbCats : DEMO_CATEGORY_TILES;
-  allProducts = dbProds.length > 0 ? dbProds : DEMO_PRODUCTS;
+  // Kick off all three realtime listeners together — each resolves once its first
+  // snapshot arrives (usually from Firestore's local cache, so this is near-instant),
+  // then keeps listening in the background so admin changes show up live with no reload.
+  await Promise.all([listenCategories(), listenProducts(), listenCoupons(), listenDeliverySettings()]);
 
   renderCategoryTiles();
   renderCatBar();
+  renderOffers();
   renderProducts(getFiltered());
   updateBarUI();
 }
@@ -840,19 +894,25 @@ function cartTotals() {
   return { items, count, sub, fee, total };
 }
  
+let lastCartCount = 0;
 function updateBarUI() {
-  const { count, total } = cartTotals();
+  const { count, sub } = cartTotals();
   const dot = document.getElementById('cartDot');
   if (count > 0) { dot.textContent = count; dot.classList.remove('hidden'); }
   else dot.classList.add('hidden');
   const bar = document.getElementById('cartBar');
   if (count > 0) {
     bar.classList.remove('hidden');
-    document.getElementById('cartBarCount').textContent = `${count} item${count > 1 ? 's' : ''}`;
-    document.getElementById('cartBarPrice').textContent = `₹${total}`;
+    document.getElementById('cartBarBadge').textContent = count;
+    document.getElementById('cartBarCount').textContent = `${count} item${count > 1 ? 's' : ''} · View cart`;
+    document.getElementById('cartBarPrice').textContent = `₹${sub}`; // product cost only — delivery fee shows inside the cart
+    if (count > lastCartCount) {
+      bar.classList.remove('bump'); void bar.offsetWidth; bar.classList.add('bump');
+    }
   } else {
     bar.classList.add('hidden');
   }
+  lastCartCount = count;
 }
  
 // ── Cart drawer ────────────────────────────────────────────────────────────
@@ -872,32 +932,48 @@ window.handleOverlayClick = function(e) {
 };
  
 function renderCartItems() {
-  const { items, sub, fee, total } = cartTotals();
+  const { items, count, sub, fee, total } = cartTotals();
   const el  = document.getElementById('cartItemsEl');
   const sum = document.getElementById('cartSummaryEl');
+  const hdrCount = document.getElementById('cartHeaderCount');
   if (!items.length) {
-    el.innerHTML = `<div class="empty-state"><i class="ti ti-basket"></i><p>Cart is empty</p></div>`;
+    el.innerHTML = `<div class="empty-state"><i class="ti ti-basket"></i><p>Cart is empty. Start adding items!</p></div>`;
     sum.style.display = 'none';
+    if (hdrCount) hdrCount.textContent = '';
     return;
   }
+  if (hdrCount) hdrCount.textContent = `(${count} item${count > 1 ? 's' : ''})`;
   el.innerHTML = items.map(i => `<div class="cart-item">
     <img class="ci-img" src="${i.image || ''}" alt="${i.name}" onerror="this.style.display='none'"/>
     <div class="ci-info">
       <div class="ci-name">${i.name}</div>
       <div class="ci-unit">${i.unit || ''} · ₹${i.price} each</div>
     </div>
-    <div class="ci-qty-ctrl">
-      <button class="ciqbtn" onclick="chQty('${i.id}',-1)">−</button>
-      <span class="ciqnum">${i.qty}</span>
-      <button class="ciqbtn" onclick="chQty('${i.id}',1)">+</button>
+    <div class="ci-right">
+      <div class="ci-price">₹${(+i.price * i.qty).toFixed(0)}</div>
+      <div class="ci-qty-ctrl">
+        <button class="ciqbtn" onclick="chQty('${i.id}',-1)">−</button>
+        <span class="ciqnum">${i.qty}</span>
+        <button class="ciqbtn" onclick="chQty('${i.id}',1)">+</button>
+      </div>
     </div>
-    <div class="ci-price">₹${(+i.price * i.qty).toFixed(0)}</div>
   </div>`).join('');
   sum.style.display = 'block';
   document.getElementById('csSubtotal').textContent = `₹${sub}`;
   document.getElementById('csDelivery').textContent = fee === 0 ? (sub > 0 ? 'FREE' : '₹0') : `₹${fee}`;
   document.getElementById('csTotal').textContent = `₹${total}`;
   document.getElementById('checkoutTotal').textContent = `₹${total}`;
+  const badgeWrap = document.getElementById('freeDeliveryBadgeWrap');
+  if (badgeWrap) {
+    if (fee === 0 && sub > 0) {
+      badgeWrap.innerHTML = `<div class="free-delivery-badge"><i class="ti ti-truck"></i> Free delivery unlocked!</div>`;
+    } else if (sub > 0) {
+      const remaining = FREE_DELIVERY_THRESHOLD - sub;
+      badgeWrap.innerHTML = `<div class="free-delivery-badge" style="background:var(--yellow-light);color:#92400E"><i class="ti ti-truck"></i> Add ₹${remaining} more for free delivery</div>`;
+    } else {
+      badgeWrap.innerHTML = '';
+    }
+  }
   if (discount > 0) {
     document.getElementById('csDiscountRow').style.display = 'flex';
     document.getElementById('csDiscount').textContent = `-₹${discount}`;
@@ -929,9 +1005,15 @@ window.selSlot = function(btn) {
 window.applyCoupon = function() {
   const code = document.getElementById('couponIn').value.trim().toUpperCase();
   if (!code) { showToast('Enter a coupon code', 'warn'); return; }
-  if (COUPONS[code]) {
+  const coup = COUPONS[code];
+  if (coup) {
     if (couponCode === code) { showToast('Coupon already applied', 'warn'); return; }
-    discount = COUPONS[code]; couponCode = code;
+    const { sub } = cartTotals();
+    if (coup.minOrder > 0 && sub < coup.minOrder) {
+      showToast(`Add ₹${(coup.minOrder - sub).toFixed(0)} more to use ${code}`, 'warn');
+      return;
+    }
+    discount = coup.discount; couponCode = code;
     document.getElementById('couponIn').style.borderColor = 'var(--green)';
     showToast(`✅ Coupon applied! ₹${discount} off`, 'success');
     renderCartItems(); updateBarUI();
