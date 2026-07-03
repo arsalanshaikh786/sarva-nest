@@ -201,6 +201,17 @@ select.form-input option{background:var(--card);}
 .assign-row .ar-cat{font-size:.62rem;color:var(--muted);}
 .assign-row input[type=checkbox]{width:18px;height:18px;accent-color:var(--orange);flex-shrink:0;}
 .modal-close-btn{width:100%;background:var(--orange);color:#fff;border:none;border-radius:10px;padding:.7rem;font-family:'Plus Jakarta Sans',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;margin-top:.8rem;}
+
+/* ==== COUPON MANAGEMENT (new) ==== */
+.coupon-row{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.8rem .9rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.7rem;}
+.coupon-code-badge{font-family:'Fraunces',serif;font-weight:800;font-size:.95rem;color:var(--orange);background:var(--orange-dim);border:1px solid var(--orange-border);border-radius:8px;padding:.3rem .6rem;flex-shrink:0;letter-spacing:.5px;}
+.coupon-info{flex:1;min-width:0;}
+.coupon-desc{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.coupon-status{font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:50px;white-space:nowrap;}
+.coupon-status.active{background:var(--green-dim);color:var(--green);}
+.coupon-status.inactive{background:var(--red-dim);color:var(--red);}
+.coupon-actions{display:flex;gap:.35rem;flex-shrink:0;}
+.coupon-toggle-btn{background:var(--blue-dim);color:var(--blue);border:none;border-radius:6px;padding:.32rem .5rem;font-size:.65rem;font-weight:700;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -268,6 +279,25 @@ select.form-input option{background:var(--card);}
         <div class="ac-val" id="deliveredToday" style="color:var(--green)">—</div>
         <div class="ac-sub" style="color:var(--green)">✅ Completed</div>
       </div>
+    </div>
+
+    <!-- DELIVERY SETTINGS (new) -->
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-truck-delivery" style="color:var(--orange)"></i> <span>Delivery Settings</span></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Delivery Fee (₹)</label>
+          <input type="number" class="form-input" id="setDeliveryFee" placeholder="e.g. 40"/>
+        </div>
+        <div class="form-group">
+          <label>Free Delivery Above (₹)</label>
+          <input type="number" class="form-input" id="setFreeThreshold" placeholder="e.g. 499"/>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveDeliverySettings()"><i class="ti ti-check"></i> Save Settings</button>
+      </div>
+      <div style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Ye charge customer ko sirf cart/checkout mein dikhega — front page pe sirf product cost hi dikhta hai.</div>
     </div>
 
     <!-- LOW STOCK ALERTS -->
@@ -489,6 +519,56 @@ select.form-input option{background:var(--card);}
   </main>
 </div>
 
+<!-- COUPONS PAGE (new) -->
+<div class="page" id="pageCoupons">
+  <main>
+    <div class="form-card">
+      <div class="form-card-title"><i class="ti ti-ticket" style="color:var(--orange)"></i> <span id="coupFormTitle">Add New Coupon</span></div>
+      <input type="hidden" id="editCoupId"/>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Coupon Code *</label>
+          <input type="text" class="form-input" id="coupCode" placeholder="e.g. FRESH20" style="text-transform:uppercase"/>
+        </div>
+        <div class="form-group">
+          <label>Discount (₹) *</label>
+          <input type="number" class="form-input" id="coupDiscount" placeholder="e.g. 20"/>
+        </div>
+        <div class="form-group">
+          <label>Min Order Value (₹)</label>
+          <input type="number" class="form-input" id="coupMinOrder" placeholder="0 = no minimum"/>
+        </div>
+        <div class="form-group">
+          <label>Show on homepage?</label>
+          <select class="form-input" id="coupFeatured">
+            <option value="true">Yes, show as deal card</option>
+            <option value="false">No, code-only</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>Description (for deal card)</label>
+          <input type="text" class="form-input" id="coupDesc" placeholder="e.g. ₹20 off veggies"/>
+        </div>
+      </div>
+      <div class="checkbox-row" style="margin-top:.5rem">
+        <input type="checkbox" id="coupActive" checked/><label for="coupActive">Active (customers can use this code)</label>
+      </div>
+      <div class="form-actions">
+        <button class="btn-primary" onclick="saveCoupon()"><i class="ti ti-check"></i> Save Coupon</button>
+        <button class="btn-secondary" onclick="resetCoupForm()">Cancel</button>
+      </div>
+    </div>
+
+    <div class="sec-hdr">
+      <div class="sec-title">All Coupons (<span id="coupCount">0</span>)</div>
+      <button class="refresh-btn" onclick="loadCoupons()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div id="couponsList">
+      <div style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Loading…</div>
+    </div>
+  </main>
+</div>
+
 <!-- ASSIGN PRODUCTS MODAL (new) -->
 <div class="modal-overlay" id="assignModal" onclick="handleAssignModalClick(event)">
   <div class="modal-sheet">
@@ -505,6 +585,7 @@ select.form-input option{background:var(--card);}
   <div class="bnav active" id="bnav-dashboard" onclick="switchPage('dashboard')"><i class="ti ti-dashboard"></i>Dash</div>
   <div class="bnav" id="bnav-products" onclick="switchPage('products')"><i class="ti ti-basket"></i>Products</div>
   <div class="bnav" id="bnav-categories" onclick="switchPage('categories')"><i class="ti ti-category"></i>Categories</div>
+  <div class="bnav" id="bnav-coupons" onclick="switchPage('coupons')"><i class="ti ti-ticket"></i>Coupons</div>
   <div class="bnav" id="bnav-orders" onclick="switchPage('orders')"><i class="ti ti-receipt"></i>Orders</div>
 </nav>
 
@@ -512,7 +593,7 @@ select.form-input option{background:var(--card);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, updateDoc, doc, serverTimestamp, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
@@ -523,8 +604,55 @@ const CHAT="5547663296";
 window._db=db;
 const ADMIN_USER="admin",ADMIN_PASS="basketcart2025";
 
-let allOrders=[],allProds=[],allCats=[];
+let allOrders=[],allProds=[],allCats=[],allCoupons=[];
 let assignCatId='',assignCatName_='';
+let unsubOrders=null,unsubProds=null,unsubCats=null,unsubCoups=null;
+let knownOrderIds=null; // null = first snapshot not processed yet
+let notifPermissionAsked=false;
+
+// ── NEW ORDER NOTIFICATION (beep + toast + browser notification + tab badge) ──
+let audioCtx=null;
+function playNotifSound(){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const now=audioCtx.currentTime;
+    [0,0.16].forEach((t,i)=>{
+      const osc=audioCtx.createOscillator();
+      const gain=audioCtx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(i===0?880:1174,now+t);
+      gain.gain.setValueAtTime(0,now+t);
+      gain.gain.linearRampToValueAtTime(0.35,now+t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001,now+t+0.28);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(now+t);osc.stop(now+t+0.3);
+    });
+  }catch(e){}
+}
+const ORIGINAL_TITLE=document.title;
+let unseenOrderCount=0;
+function flashTabTitle(){
+  unseenOrderCount++;
+  document.title=`(${unseenOrderCount}) New Order! · ${ORIGINAL_TITLE}`;
+}
+function clearTabTitle(){ unseenOrderCount=0; document.title=ORIGINAL_TITLE; }
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) clearTabTitle(); });
+function notifyNewOrder(o){
+  playNotifSound();
+  flashTabTitle();
+  showToast(`🔔 New order ${o.orderId||''} from ${o.name||'customer'}! ₹${o.total||0}`,'success');
+  if(window.Notification && Notification.permission==='granted'){
+    try{ new Notification('🛒 New BasketCart Order',{body:`${o.name} · ₹${o.total} · ${o.slot||''}`,tag:o.docId}); }catch(e){}
+  }
+}
+
+// DEFAULT COUPONS (seeded into Firestore the first time the panel loads, if grocery_coupons is empty)
+const DEFAULT_COUPONS=[
+  {code:'FRESH20',discount:20,minOrder:0,desc:'₹20 off veggies',featured:true,active:true},
+  {code:'GROCERY50',discount:50,minOrder:500,desc:'₹50 off ₹500+',featured:true,active:true},
+  {code:'FIRST30',discount:30,minOrder:0,desc:'First order ₹30 off',featured:true,active:true},
+  {code:'SAVE25',discount:25,minOrder:0,desc:'₹25 off your order',featured:false,active:true},
+];
 
 // DEFAULT CATEGORIES (seeded into Firestore the first time the panel loads, if grocery_categories is empty)
 const DEFAULT_CATS=[
@@ -546,10 +674,42 @@ window.doLogin=function(){
   const p=document.getElementById('loginPass').value;
   if(u===ADMIN_USER&&p===ADMIN_PASS){
     document.getElementById('loginScreen').style.display='none';
-    loadDashboard();loadProducts();loadOrders();loadCategories();
+    if(window.Notification && Notification.permission==='default' && !notifPermissionAsked){
+      notifPermissionAsked=true;
+      Notification.requestPermission().catch(()=>{});
+    }
+    startRealtimeListeners();
   }else{document.getElementById('loginError').style.display='block';}
 };
 window.doLogout=function(){document.getElementById('loginScreen').style.display='flex';};
+
+function startRealtimeListeners(){
+  loadCategories();  // sets up onSnapshot, also seeds defaults if empty
+  loadProducts();    // sets up onSnapshot
+  loadCoupons();     // sets up onSnapshot, also seeds defaults if empty
+  loadOrders();      // sets up onSnapshot — this is the one that fires new-order notifications
+  loadDeliverySettings(); // sets up onSnapshot on the single delivery-settings doc
+}
+
+// DELIVERY SETTINGS (realtime, admin-controlled — customer site reads this live)
+let unsubSettings=null;
+window.loadDeliverySettings=function(){
+  if(unsubSettings) return;
+  unsubSettings=onSnapshot(doc(db,'grocery_settings','delivery'),(snap)=>{
+    const d=snap.exists()?snap.data():{deliveryFee:40,freeDeliveryThreshold:499};
+    document.getElementById('setDeliveryFee').value=d.deliveryFee??40;
+    document.getElementById('setFreeThreshold').value=d.freeDeliveryThreshold??499;
+  },(err)=>{console.error('delivery settings listener error',err);});
+};
+
+window.saveDeliverySettings=async function(){
+  const deliveryFee=+document.getElementById('setDeliveryFee').value||0;
+  const freeDeliveryThreshold=+document.getElementById('setFreeThreshold').value||0;
+  try{
+    await setDoc(doc(db,'grocery_settings','delivery'),{deliveryFee,freeDeliveryThreshold,updatedAt:serverTimestamp()});
+    showToast('Delivery settings saved ✅','success');
+  }catch(e){showToast('Error saving delivery settings','error');}
+};
 
 // PAGE SWITCH
 window.switchPage=function(page){
@@ -559,10 +719,10 @@ window.switchPage=function(page){
   document.getElementById('bnav-'+page).classList.add('active');
 };
 
-// DASHBOARD
-window.loadDashboard=async function(){
-  const[pSnap,oSnap]=await Promise.all([getDocs(collection(db,'grocery_products')),getDocs(collection(db,'grocery_orders'))]);
-  const orders=oSnap.docs.map(d=>({id:d.id,...d.data()}));
+// DASHBOARD (pure render — driven by allOrders/allProds kept in sync via realtime listeners)
+window.loadDashboard=function(){ renderDashboard(); };
+function renderDashboard(){
+  const orders=allOrders;
   const pending=orders.filter(o=>!o.status||o.status==='pending').length;
   const revenue=orders.filter(o=>o.status!=='cancelled').reduce((s,o)=>s+(+o.total||0),0);
   const delivered=orders.filter(o=>o.status==='delivered').length;
@@ -574,11 +734,11 @@ window.loadDashboard=async function(){
   document.getElementById('sTodayOrders').textContent=todayOrders+' today';
   document.getElementById('sPending').textContent=pending;
   document.getElementById('sRevenue').textContent='₹'+revenue.toLocaleString('en-IN');
-  document.getElementById('sProducts').textContent=pSnap.size||0;
+  document.getElementById('sProducts').textContent=allProds.length||0;
   document.getElementById('avgOrderVal').textContent='₹'+avg;
   document.getElementById('deliveredToday').textContent=delivered;
 
-  const recent=orders.sort((a,b)=>b.timestamp-a.timestamp).slice(0,6);
+  const recent=[...orders].sort((a,b)=>b.timestamp-a.timestamp).slice(0,6);
   document.getElementById('recentOrdersList').innerHTML=recent.length?recent.map(o=>`
     <div class="recent-mini">
       <div class="rm-dot" style="background:${o.status==='pending'?'var(--yellow)':o.status==='delivered'?'var(--green)':o.status==='cancelled'?'var(--red)':'var(--orange)'}"></div>
@@ -591,20 +751,23 @@ window.loadDashboard=async function(){
         <span class="sbadge s-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span>
       </div>
     </div>`).join(''):'<p style="color:var(--muted);font-size:.82rem">No orders yet.</p>';
-};
+}
 
-// CATEGORIES
-window.loadCategories=async function(){
-  let snap=await getDocs(collection(db,'grocery_categories'));
-  if(snap.empty){
-    // seed defaults once
-    for(const c of DEFAULT_CATS){ await addDoc(collection(db,'grocery_categories'),{...c,createdAt:serverTimestamp()}); }
-    snap=await getDocs(collection(db,'grocery_categories'));
-  }
-  allCats=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
-  document.getElementById('catCount').textContent=allCats.length;
-  populateCategorySelect();
-  renderCatMgrGrid();
+// CATEGORIES (realtime)
+let catsSeeded=false;
+window.loadCategories=function(){
+  if(unsubCats) return; // listener already running
+  unsubCats=onSnapshot(collection(db,'grocery_categories'),async(snap)=>{
+    if(snap.empty && !catsSeeded){
+      catsSeeded=true;
+      for(const c of DEFAULT_CATS){ await addDoc(collection(db,'grocery_categories'),{...c,createdAt:serverTimestamp()}); }
+      return; // the addDocs will retrigger this listener
+    }
+    allCats=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+    document.getElementById('catCount').textContent=allCats.length;
+    populateCategorySelect();
+    renderCatMgrGrid();
+  },(err)=>{console.error('categories listener error',err);});
 };
 
 function populateCategorySelect(){
@@ -735,13 +898,17 @@ window.toggleAssign=async function(prodId,checked){
   }catch(e){showToast('Could not update product','error');}
 };
 
-// PRODUCTS
-window.loadProducts=async function(){
-  const snap=await getDocs(collection(db,'grocery_products'));
-  allProds=snap.docs.map(d=>({id:d.id,...d.data()}));
-  document.getElementById('prodCount').textContent=allProds.length;
-  renderProdGrid(allProds);
-  if(allCats.length) renderCatMgrGrid();
+// PRODUCTS (realtime)
+window.loadProducts=function(){
+  if(unsubProds) return;
+  unsubProds=onSnapshot(collection(db,'grocery_products'),(snap)=>{
+    allProds=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('prodCount').textContent=allProds.length;
+    const q=document.getElementById('prodSearch')?document.getElementById('prodSearch').value:'';
+    if(q) filterProdGrid(); else renderProdGrid(allProds);
+    if(allCats.length) renderCatMgrGrid();
+    renderDashboard();
+  },(err)=>{console.error('products listener error',err);});
 };
 
 window.filterProdGrid=function(){
@@ -800,10 +967,8 @@ window.saveProduct=async function(){
   }catch(e){showToast('Error saving product','error');}
 };
 
-window.editProduct=async function(id){
-  const snap=await getDocs(collection(db,'grocery_products'));
-  const d=snap.docs.find(x=>x.id===id);if(!d)return;
-  const p=d.data();
+window.editProduct=function(id){
+  const p=allProds.find(x=>x.id===id);if(!p)return;
   document.getElementById('editId').value=id;
   document.getElementById('fName').value=p.name||'';
   document.getElementById('fCategory').value=p.category||'';
@@ -968,11 +1133,111 @@ window.addQCProduct=async function(idx){
   }catch(e){showToast('Firebase mein add karte waqt error: '+e.message,'error');}
 };
 
-// ORDERS
-window.loadOrders=async function(){
-  const snap=await getDocs(collection(db,'grocery_orders'));
-  allOrders=snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
-  renderOrders(allOrders);
+// COUPONS (realtime)
+let coupsSeeded=false;
+window.loadCoupons=function(){
+  if(unsubCoups) return;
+  unsubCoups=onSnapshot(collection(db,'grocery_coupons'),async(snap)=>{
+    if(snap.empty && !coupsSeeded){
+      coupsSeeded=true;
+      for(const c of DEFAULT_COUPONS){ await addDoc(collection(db,'grocery_coupons'),{...c,createdAt:serverTimestamp()}); }
+      return;
+    }
+    allCoupons=snap.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById('coupCount').textContent=allCoupons.length;
+    renderCouponsList();
+  },(err)=>{console.error('coupons listener error',err);});
+};
+
+function renderCouponsList(){
+  const el=document.getElementById('couponsList');
+  if(!allCoupons.length){el.innerHTML='<p style="color:var(--muted);font-size:.82rem;text-align:center;padding:1.5rem">No coupons yet. Add one above.</p>';return;}
+  el.innerHTML=allCoupons.map(c=>`<div class="coupon-row">
+    <span class="coupon-code-badge">${c.code}</span>
+    <div class="coupon-info">
+      <div style="font-size:.8rem;font-weight:700">₹${c.discount} off${c.minOrder>0?` on ₹${c.minOrder}+`:''}</div>
+      <div class="coupon-desc">${c.desc||''}${c.featured?' · shown as deal card':''}</div>
+    </div>
+    <span class="coupon-status ${c.active?'active':'inactive'}">${c.active?'Active':'Inactive'}</span>
+    <div class="coupon-actions">
+      <button class="coupon-toggle-btn" onclick="toggleCoupon('${c.id}',${!c.active})">${c.active?'Pause':'Activate'}</button>
+      <button class="btn-edit" onclick="editCoupon('${c.id}')" style="flex:none"><i class="ti ti-edit"></i></button>
+      <button class="btn-del" onclick="deleteCoupon('${c.id}')"><i class="ti ti-trash"></i></button>
+    </div>
+  </div>`).join('');
+}
+
+window.saveCoupon=async function(){
+  const id=document.getElementById('editCoupId').value;
+  const code=document.getElementById('coupCode').value.trim().toUpperCase();
+  const discount=+document.getElementById('coupDiscount').value;
+  const minOrder=+document.getElementById('coupMinOrder').value||0;
+  const featured=document.getElementById('coupFeatured').value==='true';
+  const desc=document.getElementById('coupDesc').value.trim();
+  const active=document.getElementById('coupActive').checked;
+  if(!code||!discount){showToast('Coupon code & discount required','error');return;}
+  if(!id && allCoupons.some(c=>c.code===code)){showToast('Coupon code already exists','error');return;}
+  try{
+    if(id){await updateDoc(doc(db,'grocery_coupons',id),{code,discount,minOrder,featured,desc,active});showToast('Coupon updated ✅','success');}
+    else{await addDoc(collection(db,'grocery_coupons'),{code,discount,minOrder,featured,desc,active,createdAt:serverTimestamp()});showToast('Coupon added! 🎟️','success');}
+    resetCoupForm();loadCoupons();
+  }catch(e){showToast('Error saving coupon','error');}
+};
+
+window.editCoupon=function(id){
+  const c=allCoupons.find(x=>x.id===id);if(!c)return;
+  document.getElementById('editCoupId').value=id;
+  document.getElementById('coupCode').value=c.code||'';
+  document.getElementById('coupDiscount').value=c.discount||'';
+  document.getElementById('coupMinOrder').value=c.minOrder||0;
+  document.getElementById('coupFeatured').value=c.featured?'true':'false';
+  document.getElementById('coupDesc').value=c.desc||'';
+  document.getElementById('coupActive').checked=c.active!==false;
+  document.getElementById('coupFormTitle').textContent='Edit: '+c.code;
+  document.querySelector('#pageCoupons .form-card').scrollIntoView({behavior:'smooth'});
+};
+
+window.resetCoupForm=function(){
+  ['editCoupId','coupCode','coupDiscount','coupMinOrder','coupDesc'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('coupFeatured').value='true';
+  document.getElementById('coupActive').checked=true;
+  document.getElementById('coupFormTitle').textContent='Add New Coupon';
+};
+
+window.toggleCoupon=async function(id,newActive){
+  await updateDoc(doc(db,'grocery_coupons',id),{active:newActive});
+  showToast(newActive?'Coupon activated ✅':'Coupon paused ⏸️','success');
+  loadCoupons();
+};
+
+window.deleteCoupon=async function(id){
+  if(!confirm('Delete this coupon?'))return;
+  await deleteDoc(doc(db,'grocery_coupons',id));
+  showToast('Coupon deleted 🗑️','warn');loadCoupons();
+};
+
+// ORDERS (realtime — this is what powers the fast "new order" notification)
+window.loadOrders=function(){
+  if(unsubOrders) return;
+  unsubOrders=onSnapshot(collection(db,'grocery_orders'),(snap)=>{
+    allOrders=snap.docs.map(d=>({docId:d.id,...d.data()})).sort((a,b)=>b.timestamp-a.timestamp);
+
+    if(knownOrderIds===null){
+      // first snapshot after login — just record what's already there, don't notify
+      knownOrderIds=new Set(allOrders.map(o=>o.docId));
+    }else{
+      const fresh=allOrders.filter(o=>!knownOrderIds.has(o.docId));
+      if(fresh.length){
+        fresh.forEach(o=>notifyNewOrder(o));
+        knownOrderIds=new Set(allOrders.map(o=>o.docId));
+      }
+    }
+
+    const q=document.getElementById('orderSearch')?document.getElementById('orderSearch').value:'';
+    if(q||document.getElementById('statusFilter')?.value||document.getElementById('slotFilter')?.value) filterOrders();
+    else renderOrders(allOrders);
+    renderDashboard();
+  },(err)=>{console.error('orders listener error',err);});
 };
 
 window.filterOrders=function(){
