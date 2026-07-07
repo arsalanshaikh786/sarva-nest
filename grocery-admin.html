@@ -150,6 +150,8 @@ select.form-input option{background:var(--card);}
 .ls-info{flex:1;}
 .ls-name{font-size:.82rem;font-weight:600;}
 .ls-stock{font-size:.68rem;color:var(--yellow);font-weight:700;margin-top:1px;}
+.ls-stock.out{color:var(--red);}
+.low-stock-item.out{border-left-color:var(--red);}
 .restock-btn{background:var(--yellow-dim);color:var(--yellow);border:1px solid rgba(245,166,35,.25);border-radius:7px;padding:.28rem .6rem;font-size:.65rem;font-weight:700;cursor:pointer;flex-shrink:0;}
 
 /* ANALYTICS CARDS */
@@ -184,6 +186,7 @@ select.form-input option{background:var(--card);}
 .catmgr-name{font-weight:700;font-size:.76rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .catmgr-count{font-size:.62rem;color:var(--muted);margin-bottom:.35rem;}
 .catmgr-actions{display:flex;gap:.3rem;}
+.catmgr-edit{background:var(--yellow-dim);color:var(--yellow);border:none;border-radius:6px;padding:.26rem .4rem;font-size:.65rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .catmgr-del{background:var(--red-dim);color:var(--red);border:none;border-radius:6px;padding:.26rem;font-size:.65rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;}
 .catmgr-assign{background:var(--blue-dim);color:var(--blue);border:none;border-radius:6px;padding:.26rem;font-size:.65rem;font-weight:700;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:2px;}
 .catmgr-drag{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.4);color:#fff;border-radius:5px;padding:2px 5px;font-size:.6rem;cursor:grab;}
@@ -212,6 +215,32 @@ select.form-input option{background:var(--card);}
 .coupon-status.inactive{background:var(--red-dim);color:var(--red);}
 .coupon-actions{display:flex;gap:.35rem;flex-shrink:0;}
 .coupon-toggle-btn{background:var(--blue-dim);color:var(--blue);border:none;border-radius:6px;padding:.32rem .5rem;font-size:.65rem;font-weight:700;cursor:pointer;}
+
+/* ==== GLOBAL UX POLISH — buttons, cards, inputs feel snappier & more alive ==== */
+button{transition:transform .15s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease,opacity .15s ease,background-color .15s ease,border-color .15s ease,filter .15s ease;}
+button:active{transform:scale(.95);}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none !important;}
+button:focus-visible,.form-input:focus-visible,select.form-input:focus-visible{outline:2px solid var(--orange);outline-offset:2px;}
+
+.btn-primary:hover{filter:brightness(1.08);box-shadow:0 6px 18px rgba(255,107,43,.35);}
+.btn-secondary:hover{border-color:var(--orange);color:var(--orange);}
+.refresh-btn:hover{filter:brightness(1.15);}
+.btn-edit:hover,.btn-del:hover,.catmgr-edit:hover,.catmgr-assign:hover,.catmgr-del:hover,.coupon-toggle-btn:hover,.restock-btn:hover,.notify-btn:hover,.update-btn:hover,.del-btn:hover{filter:brightness(1.12);}
+.login-btn:hover{filter:brightness(1.08);box-shadow:0 6px 18px rgba(255,107,43,.3);}
+.logout-btn:hover{color:var(--red);}
+.bnav:hover{color:var(--muted2);}
+.bnav.active:hover{color:var(--orange);}
+
+.form-input,select.form-input,.login-input{transition:border-color .15s ease,box-shadow .15s ease;}
+.form-input:focus,select.form-input:focus,.login-input:focus{box-shadow:0 0 0 3px var(--orange-dim);}
+
+.form-card,.stat-card,.analytics-card,.pg-item,.catmgr-item,.coupon-row,.order-card,.recent-mini,.low-stock-item{transition:box-shadow .2s ease,transform .2s ease,border-color .2s ease;}
+.form-card:hover,.stat-card:hover,.analytics-card:hover{box-shadow:0 8px 24px rgba(0,0,0,.28);}
+.pg-item:hover,.catmgr-item:hover{box-shadow:0 8px 20px rgba(0,0,0,.3);border-color:var(--border2);}
+.order-card:hover{border-color:var(--border2);}
+
+.checkbox-row label,.status-select,select.form-input{cursor:pointer;}
+.spin{flex-shrink:0;}
 </style>
 </head>
 <body>
@@ -281,9 +310,9 @@ select.form-input option{background:var(--card);}
       </div>
     </div>
 
-    <!-- DELIVERY SETTINGS (new) -->
+    <!-- STORE SETTINGS (delivery + inventory alerts) -->
     <div class="form-card">
-      <div class="form-card-title"><i class="ti ti-truck-delivery" style="color:var(--orange)"></i> <span>Delivery Settings</span></div>
+      <div class="form-card-title"><i class="ti ti-settings" style="color:var(--orange)"></i> <span>Store Settings</span></div>
       <div class="form-grid">
         <div class="form-group">
           <label>Delivery Fee (₹)</label>
@@ -293,29 +322,24 @@ select.form-input option{background:var(--card);}
           <label>Free Delivery Above (₹)</label>
           <input type="number" class="form-input" id="setFreeThreshold" placeholder="e.g. 499"/>
         </div>
+        <div class="form-group full">
+          <label>Low Stock Alert Threshold (units)</label>
+          <input type="number" class="form-input" id="setLowStockThreshold" placeholder="e.g. 10"/>
+        </div>
       </div>
       <div class="form-actions">
         <button class="btn-primary" onclick="saveDeliverySettings()"><i class="ti ti-check"></i> Save Settings</button>
       </div>
-      <div style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Ye charge customer ko sirf cart/checkout mein dikhega — front page pe sirf product cost hi dikhta hai.</div>
+      <div style="font-size:.68rem;color:var(--muted);margin-top:.5rem">Delivery charge customer ko sirf cart/checkout mein dikhega. Low stock threshold — jis product ka stock isse kam/barabar ho jaye, wo neeche alert list mein aa jayega (product ka Stock Count field set hona chahiye).</div>
     </div>
 
-    <!-- LOW STOCK ALERTS -->
+    <!-- LOW STOCK ALERTS (live, driven by product stock counts) -->
     <div class="sec-hdr">
       <div class="sec-title">⚠️ Low Stock Alerts</div>
       <button class="refresh-btn" onclick="loadDashboard()"><i class="ti ti-refresh"></i></button>
     </div>
     <div id="lowStockList">
-      <div class="low-stock-item">
-        <div class="ls-icon">🥛</div>
-        <div class="ls-info"><div class="ls-name">Full Cream Milk</div><div class="ls-stock">Only 3 units left!</div></div>
-        <button class="restock-btn" onclick="showToast('Restock request sent!','success')">Restock</button>
-      </div>
-      <div class="low-stock-item">
-        <div class="ls-icon">🍅</div>
-        <div class="ls-info"><div class="ls-name">Tomato 500g</div><div class="ls-stock">Only 5 units left!</div></div>
-        <button class="restock-btn" onclick="showToast('Restock request sent!','success')">Restock</button>
-      </div>
+      <div style="color:var(--muted);font-size:.82rem;text-align:center;padding:1rem">Loading…</div>
     </div>
 
     <!-- RECENT ORDERS -->
@@ -355,11 +379,13 @@ select.form-input option{background:var(--card);}
         </div>
         <div class="form-group">
           <label>Unit / Weight</label>
-          <input type="text" class="form-input" id="fUnit" placeholder="e.g. 500g, 1 kg, 1 litre"/>
+          <input type="text" class="form-input" id="fUnit" list="weightDatalist" placeholder="Type or pick e.g. 500g, 1 kg" autocomplete="off"/>
+          <datalist id="weightDatalist"></datalist>
         </div>
         <div class="form-group">
           <label>Brand</label>
-          <input type="text" class="form-input" id="fBrand" placeholder="e.g. Amul, Local Farm"/>
+          <input type="text" class="form-input" id="fBrand" list="brandDatalist" placeholder="Type or pick a brand" autocomplete="off"/>
+          <datalist id="brandDatalist"></datalist>
         </div>
         <div class="form-group">
           <label>Rating (1–5)</label>
@@ -419,8 +445,8 @@ select.form-input option{background:var(--card);}
         <div class="form-group">
           <label>Location (lat, lon)</label>
           <div style="display:flex;gap:.4rem">
-            <input type="text" class="form-input" id="qcLat" placeholder="lat e.g. 19.58"/>
-            <input type="text" class="form-input" id="qcLon" placeholder="lon e.g. 74.03"/>
+            <input type="text" class="form-input" id="qcLat" placeholder="lat e.g. 18.5204" value="18.5204"/>
+            <input type="text" class="form-input" id="qcLon" placeholder="lon e.g. 73.8567" value="73.8567"/>
           </div>
         </div>
       </div>
@@ -609,6 +635,21 @@ let assignCatId='',assignCatName_='';
 let unsubOrders=null,unsubProds=null,unsubCats=null,unsubCoups=null;
 let knownOrderIds=null; // null = first snapshot not processed yet
 let notifPermissionAsked=false;
+let lowStockThreshold=10;
+
+// Common weight/unit options shown in the Unit/Weight combobox (plus any units already used in the catalogue)
+const COMMON_WEIGHTS=['100 g','200 g','250 g','500 g','750 g','1 kg','2 kg','5 kg','10 kg','100 ml','250 ml','500 ml','1 litre','2 litre','5 litre','1 pc','2 pcs','6 pcs','12 pcs','1 dozen','1 packet','1 bunch'];
+
+function populateBrandAndWeightDatalists(){
+  const brandDL=document.getElementById('brandDatalist');
+  const weightDL=document.getElementById('weightDatalist');
+  if(!brandDL||!weightDL) return;
+  const brands=[...new Set(allProds.map(p=>p.brand).filter(Boolean))].sort();
+  brandDL.innerHTML=brands.map(b=>`<option value="${b}"></option>`).join('');
+  const usedUnits=[...new Set(allProds.map(p=>p.unit).filter(Boolean))];
+  const weights=[...new Set([...COMMON_WEIGHTS,...usedUnits])];
+  weightDL.innerHTML=weights.map(w=>`<option value="${w}"></option>`).join('');
+}
 
 // ── NEW ORDER NOTIFICATION (beep + toast + browser notification + tab badge) ──
 let audioCtx=null;
@@ -691,24 +732,28 @@ function startRealtimeListeners(){
   loadDeliverySettings(); // sets up onSnapshot on the single delivery-settings doc
 }
 
-// DELIVERY SETTINGS (realtime, admin-controlled — customer site reads this live)
+// STORE SETTINGS (realtime, admin-controlled — delivery fee/threshold + low-stock alert threshold)
 let unsubSettings=null;
 window.loadDeliverySettings=function(){
   if(unsubSettings) return;
   unsubSettings=onSnapshot(doc(db,'grocery_settings','delivery'),(snap)=>{
-    const d=snap.exists()?snap.data():{deliveryFee:40,freeDeliveryThreshold:499};
+    const d=snap.exists()?snap.data():{deliveryFee:40,freeDeliveryThreshold:499,lowStockThreshold:10};
     document.getElementById('setDeliveryFee').value=d.deliveryFee??40;
     document.getElementById('setFreeThreshold').value=d.freeDeliveryThreshold??499;
-  },(err)=>{console.error('delivery settings listener error',err);});
+    document.getElementById('setLowStockThreshold').value=d.lowStockThreshold??10;
+    lowStockThreshold=+d.lowStockThreshold||10;
+    renderLowStockList();
+  },(err)=>{console.error('store settings listener error',err);});
 };
 
 window.saveDeliverySettings=async function(){
   const deliveryFee=+document.getElementById('setDeliveryFee').value||0;
   const freeDeliveryThreshold=+document.getElementById('setFreeThreshold').value||0;
+  const newLowStockThreshold=+document.getElementById('setLowStockThreshold').value||0;
   try{
-    await setDoc(doc(db,'grocery_settings','delivery'),{deliveryFee,freeDeliveryThreshold,updatedAt:serverTimestamp()});
-    showToast('Delivery settings saved ✅','success');
-  }catch(e){showToast('Error saving delivery settings','error');}
+    await setDoc(doc(db,'grocery_settings','delivery'),{deliveryFee,freeDeliveryThreshold,lowStockThreshold:newLowStockThreshold,updatedAt:serverTimestamp()});
+    showToast('Store settings saved ✅','success');
+  }catch(e){showToast('Error saving store settings','error');}
 };
 
 // PAGE SWITCH
@@ -751,6 +796,27 @@ function renderDashboard(){
         <span class="sbadge s-${o.status||'pending'}">${(o.status||'pending').replace('_',' ')}</span>
       </div>
     </div>`).join(''):'<p style="color:var(--muted);font-size:.82rem">No orders yet.</p>';
+
+  renderLowStockList();
+}
+
+function renderLowStockList(){
+  const el=document.getElementById('lowStockList');
+  if(!el) return;
+  const withStock=allProds.filter(p=>p.stock!==undefined && p.stock!==null && p.stock!=='' && !isNaN(+p.stock));
+  const low=withStock.filter(p=>+p.stock<=lowStockThreshold).sort((a,b)=>(+a.stock)-(+b.stock)).slice(0,10);
+  if(!low.length){
+    el.innerHTML=`<p style="color:var(--muted);font-size:.82rem;text-align:center;padding:.8rem">✅ Sab products stock mein hain — koi low-stock alert nahi.</p>`;
+    return;
+  }
+  el.innerHTML=low.map(p=>{
+    const out=+p.stock<=0;
+    return `<div class="low-stock-item ${out?'out':''}">
+      <div class="ls-icon">${out?'⛔':'⚠️'}</div>
+      <div class="ls-info"><div class="ls-name">${p.name}</div><div class="ls-stock ${out?'out':''}">${out?'Out of stock!':`Only ${p.stock} unit${p.stock==1?'':'s'} left!`}</div></div>
+      <button class="restock-btn" onclick="editProduct('${p.id}');switchPage('products')">Restock</button>
+    </div>`;
+  }).join('');
 }
 
 // CATEGORIES (realtime)
@@ -790,6 +856,7 @@ function renderCatMgrGrid(){
       <div class="catmgr-name">${c.icon||''} ${c.name}</div>
       <div class="catmgr-count">${catProductCount(c.name)} product(s)</div>
       <div class="catmgr-actions">
+        <button class="catmgr-edit" onclick="editCategory('${c.id}')"><i class="ti ti-edit"></i></button>
         <button class="catmgr-assign" onclick="openAssignModal('${c.id}')"><i class="ti ti-list-check"></i> Products</button>
         <button class="catmgr-del" onclick="deleteCategory('${c.id}','${c.name.replace(/'/g,"\\'")}')"><i class="ti ti-trash"></i></button>
       </div>
@@ -908,6 +975,7 @@ window.loadProducts=function(){
     if(q) filterProdGrid(); else renderProdGrid(allProds);
     if(allCats.length) renderCatMgrGrid();
     renderDashboard();
+    populateBrandAndWeightDatalists();
   },(err)=>{console.error('products listener error',err);});
 };
 
@@ -1036,8 +1104,8 @@ function qcPlatformName(item){
 window.searchQC=async function(){
   const q=document.getElementById('qcQuery').value.trim();
   const platform=document.getElementById('qcPlatform').value;
-  const lat=document.getElementById('qcLat').value.trim()||'19.58';
-  const lon=document.getElementById('qcLon').value.trim()||'74.03';
+  const lat=document.getElementById('qcLat').value.trim()||'18.5204';
+  const lon=document.getElementById('qcLon').value.trim()||'73.8567';
   const resultsEl=document.getElementById('qcResults');
   if(!q){showToast('Search term daalo','error');return;}
   resultsEl.innerHTML='<div style="text-align:center;padding:1rem;color:var(--muted);font-size:.8rem"><span class="spin"></span> Searching '+platform+'…</div>';
