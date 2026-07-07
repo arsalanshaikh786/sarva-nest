@@ -290,6 +290,26 @@ select.finput{cursor:pointer;}
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted2);}
 .empty-state i{font-size:1.9rem;display:flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:var(--orange-light);color:var(--orange);opacity:.7;margin:0 auto .7rem;}
 .empty-state p{font-size:.85rem;font-weight:600;color:var(--muted);}
+
+/* ==== GLOBAL UX POLISH — snappier buttons & cards for a smoother feel ==== */
+button{transition:transform .15s cubic-bezier(.34,1.56,.64,1),box-shadow .2s ease,filter .15s ease,background-color .15s ease,opacity .15s ease;}
+button:active{transform:scale(.95);}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none !important;}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--orange);outline-offset:2px;}
+
+.add-btn:hover,.qty-btn:hover,.checkout-btn:hover,.proceed-btn:hover,.modal-add-btn:hover,.rate-submit-btn:hover{filter:brightness(1.06);}
+.cart-btn:hover,.track-nav-btn:hover{filter:brightness(1.08);}
+.coup-apply:hover{background:var(--orange);color:#fff;}
+.slot-btn:hover{border-color:var(--orange);}
+.bnav:hover{color:var(--muted);}
+.bnav.active:hover{color:var(--orange);}
+
+.finput,.coup-in,.track-input-row input{transition:border-color .15s ease,box-shadow .15s ease;}
+.finput:focus,.coup-in:focus,.track-input-row input:focus{box-shadow:0 0 0 3px var(--orange-light);}
+
+.prod-card,.offer-card,.cart-item,.order-card,.catg-item .catg-imgwrap{transition:box-shadow .2s ease,transform .15s ease;}
+.prod-card:active{transform:scale(.98);}
+.offer-card:active{transform:scale(.97);}
 </style>
 </head>
 <body>
@@ -605,25 +625,6 @@ window.selectCatFromTile = function(cat) {
   document.getElementById('productsList').scrollIntoView({behavior:'smooth', block:'start'});
 };
  
-// ── Demo fallback products ─────────────────────────────────────────────────
-const DEMO_PRODUCTS = [
-  {id:'g1', name:'Tomato',          price:'28', mrp:'40',  unit:'500g',           category:'Vegetables',    organic:true,  fresh:true,  brand:"Local Farm",    shelfLife:'4–5 days',  rating:'4.8', freshness:92,  image:'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?w=300', desc:'Fresh plump tomatoes sourced directly from Nashik farms. Rich in lycopene & vitamins.'},
-  {id:'g2', name:'Spinach',         price:'20', mrp:'20',  unit:'250g bunch',     category:'Vegetables',    organic:true,  fresh:true,  brand:"Nature's Best", shelfLife:'2–3 days',  rating:'4.9', freshness:97,  image:'https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=300', desc:'Tender baby spinach for salads, curries, and smoothies. Harvested this morning.'},
-  {id:'g3', name:'Basmati Rice',    price:'89', mrp:'110', unit:'1 kg',           category:'Grains',        organic:false, fresh:false, brand:'Daawat',        shelfLife:'1 year',    rating:'4.7', freshness:100, image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=300', desc:'Premium aged basmati rice with extra-long grains and aromatic flavor.'},
-  {id:'g4', name:'Full Cream Milk', price:'64', mrp:'68',  unit:'1 litre',        category:'Dairy',         organic:false, fresh:true,  brand:'Amul',          shelfLife:'3 days',    rating:'4.9', freshness:99,  image:'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=300', desc:'Fresh pasteurized full cream milk. Rich in calcium and protein.'},
-  {id:'g5', name:'Alphonso Mango',  price:'120',mrp:'160', unit:'4 pcs (~500g)',  category:'Fruits',        organic:false, fresh:true,  brand:'Ratnagiri',     shelfLife:'5–7 days',  rating:'5.0', freshness:90,  image:'https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=300', desc:'Authentic Ratnagiri Alphonso mangoes, known as the king of fruits. Perfectly ripe.'},
-  {id:'g6', name:'Atta (Whole Wheat)',price:'48',mrp:'58', unit:'1 kg',           category:'Grains',        organic:false, fresh:false, brand:'Aashirvaad',    shelfLife:'6 months',  rating:'4.6', freshness:100, image:'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=300', desc:'Stone-ground whole wheat flour for soft, nutritious rotis every day.'},
-  {id:'g7', name:'Paneer',          price:'80', mrp:'95',  unit:'200g',           category:'Dairy',         organic:false, fresh:true,  brand:'Mother Dairy',  shelfLife:'5 days',    rating:'4.8', freshness:95,  image:'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=300', desc:'Fresh cottage cheese made from pure cow milk. Soft, creamy texture.'},
-  {id:'g8', name:'Banana',          price:'35', mrp:'40',  unit:'1 dozen',        category:'Fruits',        organic:true,  fresh:true,  brand:'Local Farm',    shelfLife:'4–5 days',  rating:'4.7', freshness:88,  image:'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=300', desc:'Ripe yellow Robusta bananas — great for snacking, smoothies, or banana bread.'},
-  {id:'g9', name:'Bisleri Water',   price:'20', mrp:'20',  unit:'1 litre',        category:'Beverages',     organic:false, fresh:false, brand:'Bisleri',       shelfLife:'1 year',    rating:'4.5', freshness:100, image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=300', desc:'Purified mineral water with essential minerals. Safe and clean drinking water.'},
-  {id:'g10',name:'Poha',            price:'35', mrp:'42',  unit:'500g',           category:'Grains',        organic:false, fresh:false, brand:'Patanjali',     shelfLife:'1 year',    rating:'4.5', freshness:100, image:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=300', desc:'Thick flattened rice for quick breakfast preparations like poha, chivda.'},
-  {id:'g11',name:'Lays Chips',      price:'20', mrp:'20',  unit:'26g pack',       category:'Snacks',        organic:false, fresh:false, brand:'Lays',          shelfLife:'6 months',  rating:'4.3', freshness:100, image:'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=300', desc:'Classic salted potato chips, thin and crispy. Perfect snack for any time.'},
-  {id:'g12',name:'Dove Soap',       price:'55', mrp:'65',  unit:'3 bar pack',     category:'Personal Care', organic:false, fresh:false, brand:'Dove',          shelfLife:'2 years',   rating:'4.8', freshness:100, image:'https://images.unsplash.com/photo-1607006344380-b6775a0824a7?w=300', desc:'Moisturizing beauty bar with ¼ moisturizing cream. Gentle on all skin types.'},
-  {id:'g13',name:'Sunflower Oil',   price:'135',mrp:'155', unit:'1 litre',        category:'Oil',           organic:false, fresh:false, brand:'Fortune',       shelfLife:'9 months',  rating:'4.6', freshness:100, image:'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=300', desc:'Refined sunflower oil, light and healthy for everyday cooking.'},
-  {id:'g14',name:'Toor Dal',        price:'145',mrp:'165', unit:'1 kg',           category:'Dal & Pulses',  organic:false, fresh:false, brand:'Local Mill',    shelfLife:'8 months',  rating:'4.7', freshness:100, image:'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=300', desc:'Premium quality toor/arhar dal, cleaned and polished. Great for daily dal.'},
-  {id:'g15',name:'Chana Dal',       price:'95', mrp:'110', unit:'1 kg',           category:'Dal & Pulses',  organic:false, fresh:false, brand:'Local Mill',    shelfLife:'8 months',  rating:'4.6', freshness:100, image:'https://images.unsplash.com/photo-1615485500704-8e990f9900f7?w=300', desc:'Split chickpea lentils, rich in protein and fibre.'},
-];
- 
 // ── Constants ──────────────────────────────────────────────────────────────
 const DEMO_COUPONS = [
   { code:'FRESH20',   discount:20, minOrder:0,   desc:'Fresh produce discount', featured:true, active:true },
@@ -697,10 +698,10 @@ let prodsFirstLoadDone = false;
 function listenProducts() {
   return new Promise((resolve) => {
     onSnapshot(collection(db, 'grocery_products'), (snap) => {
-      allProducts = snap.empty ? DEMO_PRODUCTS : snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allProducts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       if (!prodsFirstLoadDone) { prodsFirstLoadDone = true; resolve(); }
       else { renderProducts(getFiltered()); updateBarUI(); } // admin added/edited a product live — refresh instantly
-    }, (e) => { console.warn('products listener failed, using demo data:', e); allProducts = DEMO_PRODUCTS; if (!prodsFirstLoadDone) { prodsFirstLoadDone = true; resolve(); } });
+    }, (e) => { console.warn('products listener failed:', e); allProducts = []; if (!prodsFirstLoadDone) { prodsFirstLoadDone = true; resolve(); } });
   });
 }
  
@@ -812,7 +813,11 @@ function renderProducts(list) {
   document.getElementById('resultsLabel').textContent = `${list.length} item${list.length !== 1 ? 's' : ''} available`;
   const el = document.getElementById('productsList');
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><i class="ti ti-search-off"></i><p>No items found. Try a different search.</p></div>`;
+    if (allProducts.length === 0) {
+      el.innerHTML = `<div class="empty-state"><i class="ti ti-basket"></i><p>Store is being stocked — check back soon!</p></div>`;
+    } else {
+      el.innerHTML = `<div class="empty-state"><i class="ti ti-search-off"></i><p>No items found. Try a different search.</p></div>`;
+    }
     return;
   }
   el.innerHTML = list.map(p => {
