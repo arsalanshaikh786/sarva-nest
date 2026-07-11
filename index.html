@@ -25,14 +25,12 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Poppins:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── ROOT ── */
 :root {
   --saffron: #E8650A;
   --saffron-deep: #C4510A;
   --saffron-light: #F9A84C;
   --green: #1B6B35;
   --green-light: #2A9050;
-  --green-lime: #7BC67E;
   --cream: #FDF8F0;
   --cream-light: #FFFCF7;
   --maroon: #7A1E1E;
@@ -47,10 +45,6 @@
   --tap: 48px;
   --shadow-sm: 0 2px 12px rgba(232, 101, 10, 0.08);
   --shadow-md: 0 8px 32px rgba(232, 101, 10, 0.12);
-  --shadow-lg: 0 16px 56px rgba(232, 101, 10, 0.18);
-  --shadow-xl: 0 24px 80px rgba(232, 101, 10, 0.25);
-  --transition: 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  --transition-smooth: 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 * {
@@ -73,7 +67,6 @@ body {
   min-height: 100vh;
 }
 
-/* ── SCROLLBAR ── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -86,7 +79,6 @@ body {
   border-radius: 10px;
 }
 
-/* ── TOAST ── */
 #toast {
   position: fixed;
   top: 20px;
@@ -106,7 +98,6 @@ body {
   white-space: nowrap;
   max-width: 90vw;
   text-align: center;
-  letter-spacing: 0.3px;
   opacity: 0;
   pointer-events: none;
 }
@@ -125,7 +116,6 @@ body {
   background: linear-gradient(135deg, #92400e, #d97706);
 }
 
-/* ── SPINNER ── */
 .btn-spinner {
   display: none;
   width: 20px;
@@ -149,7 +139,6 @@ body {
   opacity: 0.7;
 }
 
-/* ── TOP BAR ── */
 .top-location {
   position: fixed;
   top: 14px;
@@ -164,7 +153,6 @@ body {
   font-weight: 700;
   z-index: 1001;
   box-shadow: 0 4px 20px rgba(27, 107, 53, 0.35);
-  letter-spacing: 0.3px;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
@@ -261,25 +249,21 @@ body {
   flex-shrink: 0;
 }
 
-/* ── HEADER ── */
+/* ── HEADER (OLD DESIGN) ── */
 header {
-  background: linear-gradient(160deg, #5A1515 0%, var(--maroon-light) 25%, var(--saffron-deep) 55%, var(--saffron) 80%, #F9A84C 100%);
+  background: linear-gradient(160deg, #7A1E1E 0%, var(--saffron-deep) 40%, var(--saffron) 70%, #F0A500 100%);
   padding: 100px 24px 64px;
   text-align: center;
   color: #fff;
   position: relative;
   overflow: hidden;
-  isolation: isolate;
 }
 header::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 60%),
-    radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.04) 0%, transparent 50%);
-  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='1'%3E%3Ccircle cx='40' cy='40' r='30'/%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3Cline x1='10' y1='40' x2='70' y2='40'/%3E%3Cline x1='40' y1='10' x2='40' y2='70'/%3E%3Cline x1='18' y1='18' x2='62' y2='62'/%3E%3Cline x1='62' y1='18' x2='18' y2='62'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 1;
 }
 header::after {
   content: '';
@@ -287,13 +271,9 @@ header::after {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 12px;
-  background: repeating-linear-gradient(90deg,
-      #F9A84C 0, #F9A84C 10px,
-      var(--green) 10px, var(--green) 20px,
-      #fff 20px, #fff 30px);
-  opacity: 0.3;
-  z-index: 1;
+  height: 8px;
+  background: repeating-linear-gradient(90deg, #F0A500 0, #F0A500 8px, var(--green) 8px, var(--green) 16px, #fff 16px, #fff 24px);
+  opacity: 0.7;
 }
 header>* {
   position: relative;
@@ -311,10 +291,10 @@ header>* {
 header h1 {
   font-family: 'Tiro Devanagari Marathi', 'Syne', sans-serif;
   font-size: clamp(2.6rem, 10vw, 4rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.08;
   position: relative;
-  text-shadow: 0 4px 32px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   letter-spacing: -1px;
 }
 header h1 span {
@@ -326,14 +306,13 @@ header h1 span {
 }
 .header-tagline {
   font-size: clamp(0.9rem, 3vw, 1.05rem);
-  opacity: 0.92;
+  opacity: 0.9;
   margin-top: 10px;
   font-family: 'Tiro Devanagari Marathi', 'Poppins', sans-serif;
   letter-spacing: 0.5px;
   font-weight: 500;
 }
 
-/* ── SLIDER ── */
 .slider {
   position: relative;
   width: 100%;
@@ -457,7 +436,6 @@ header h1 span {
   right: 12px;
 }
 
-/* ── SEARCH ── */
 .search-wrap {
   padding: 20px 16px 0;
   max-width: 640px;
@@ -517,7 +495,6 @@ header h1 span {
   color: var(--text);
 }
 
-/* ── SECTION DIVIDER ── */
 .rangoli-divider {
   display: flex;
   align-items: center;
@@ -561,7 +538,6 @@ header h1 span {
   transform: scale(0.95);
 }
 
-/* ── SERVICE GRID ── */
 .container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -571,7 +547,6 @@ header h1 span {
   margin: 0 auto;
 }
 
-/* ── CARD FIX: सारी डिटेल दिखे, और पूरा कार्ड क्लिक करने पर खुले ── */
 .card {
   background: var(--card);
   border-radius: var(--radius);
@@ -681,56 +656,6 @@ header h1 span {
   border-radius: var(--radius);
 }
 
-/* ── STEPS ── */
-.steps {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 0 16px 4px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-.step {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: #fff;
-  border-radius: var(--radius);
-  padding: 18px 20px;
-  box-shadow: var(--shadow-sm);
-  border: 2px solid rgba(245, 237, 214, 0.6);
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.step:hover {
-  transform: translateX(6px);
-  box-shadow: var(--shadow-md);
-}
-.step-num {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, var(--saffron-deep), var(--saffron));
-  color: #fff;
-  font-weight: 900;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(232, 101, 10, 0.3);
-}
-.step-text h4 {
-  font-size: 16px;
-  font-weight: 700;
-  font-family: 'Tiro Devanagari Marathi', 'Poppins', sans-serif;
-}
-.step-text p {
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-/* ── FESTIVE STRIP ── */
 .festive-strip {
   background: linear-gradient(135deg, var(--green) 0%, var(--green-light) 50%, var(--green) 100%);
   margin: 24px 16px;
@@ -761,7 +686,6 @@ header h1 span {
   margin-top: 2px;
 }
 
-/* ── CONTACT STRIP ── */
 .contact-strip {
   margin: 24px 16px;
   border-radius: var(--radius);
@@ -817,7 +741,6 @@ header h1 span {
   border: 2px solid rgba(232, 101, 10, 0.15);
 }
 
-/* ── DOWNLOAD FAB ── */
 .download-fab {
   position: fixed;
   bottom: 92px;
@@ -843,7 +766,6 @@ header h1 span {
   line-height: 1;
 }
 
-/* ── BOTTOM NAV ── */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -892,7 +814,6 @@ header h1 span {
   transform: scale(0.92);
 }
 
-/* ── MODAL ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -981,7 +902,6 @@ header h1 span {
   font-weight: 700;
 }
 
-/* ── AUTH ── */
 .auth-container {
   padding: 0 4px;
   display: flex;
@@ -1045,7 +965,6 @@ header h1 span {
   color: var(--text);
 }
 
-/* ── PHOTO UPLOAD ── */
 .photo-upload-wrap {
   display: flex;
   flex-direction: column;
@@ -1128,7 +1047,6 @@ header h1 span {
   margin-top: 10px;
 }
 
-/* ── INPUTS ── */
 .input-group {
   position: relative;
   margin-bottom: 14px;
@@ -1208,7 +1126,6 @@ header h1 span {
   transition: width 0.3s, background 0.3s;
 }
 
-/* ── BUTTONS ── */
 .auth-card button.submit-btn {
   width: 100%;
   padding: 16px;
@@ -1244,7 +1161,6 @@ header h1 span {
   margin: -4px 0 16px;
 }
 
-/* ── PROFILE ── */
 .profile-card {
   padding: 0 4px;
   background: transparent;
@@ -1398,7 +1314,6 @@ header h1 span {
   font-size: 1.4rem;
 }
 
-/* ── INSTALL POPUP ── */
 #installPopup {
   display: none;
   position: fixed;
@@ -1458,7 +1373,6 @@ header h1 span {
   padding: 6px;
 }
 
-/* ── RESPONSIVE ── */
 @media (min-width: 600px) {
   .container {
     grid-template-columns: repeat(3, 1fr);
@@ -1467,10 +1381,6 @@ header h1 span {
 @media (min-width: 900px) {
   .container {
     grid-template-columns: repeat(4, 1fr);
-  }
-  .steps {
-    flex-direction: row;
-    max-width: 1200px;
   }
 }
 @media (max-width: 420px) {
@@ -1496,7 +1406,6 @@ header h1 span {
 </head>
 <body>
 
-<!-- ── TOP BAR ── -->
 <div class="top-location">📍 अकोले, महाराष्ट्र</div>
 <button type="button" class="top-profile" id="topProfile" onclick="openAccountModal()">
   <span class="tp-avatar" id="tpAvatar">👤</span>
@@ -1508,17 +1417,14 @@ header h1 span {
   <button id="btnEn" onclick="setLang('en')">EN</button>
 </div>
 
-<!-- ── TOAST ── -->
 <div id="toast"></div>
 
-<!-- ── HEADER ── -->
 <header>
   <p class="header-eyebrow">🪔 अकोले, महाराष्ट्र 🪔</p>
   <h1 id="appLogoTap" style="cursor:pointer;">सर्व <span>नेस्ट</span></h1>
   <p class="header-tagline">जलद · विश्वासू · व्यावसायिक</p>
 </header>
 
-<!-- ── SLIDER ── -->
 <section class="slider" id="sliderEl">
   <div class="slide active">
     <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=900&auto=format&fit=crop" loading="lazy" alt="Food Delivery">
@@ -1549,7 +1455,6 @@ header h1 span {
   <div class="slider-dots" id="sliderDots"></div>
 </section>
 
-<!-- ── SEARCH ── -->
 <div class="search-wrap">
   <div class="search-box">
     <span class="search-icon">🔍</span>
@@ -1558,7 +1463,6 @@ header h1 span {
   </div>
 </div>
 
-<!-- ── SERVICES ── -->
 <div class="rangoli-divider" id="services">
   <div class="rdivider-motif">🌸</div>
   <h2>लोकप्रिय सेवा</h2>
@@ -1567,49 +1471,42 @@ header h1 span {
 </div>
 
 <div class="container" id="serviceGrid">
-  <!-- कार्ड 1: जेवण -->
   <div class="card" data-name="food delivery जेवण" onclick="window.location.href='food.html'">
     <img src="https://cdn-icons-png.flaticon.com/128/1037/1037855.png" alt="Food">
     <h3>जेवण डिलिव्हरी</h3>
     <p>ताजे जेवण जलद डिलिव्हरी.</p>
     <a href="food.html" onclick="event.stopPropagation();">ऑर्डर करा</a>
   </div>
-  <!-- कार्ड 2: भाजीपाला -->
   <div class="card" data-name="vegetable delivery भाजीपाला" onclick="window.location.href='veggie-delivery.html'">
     <img src="https://cdn-icons-png.flaticon.com/128/2805/2805947.png" alt="Vegetable">
     <h3>भाजीपाला डिलिव्हरी</h3>
     <p>ताजा भाजीपाला घरपोच.</p>
     <a href="veggie-delivery.html" onclick="event.stopPropagation();">ऑर्डर करा</a>
   </div>
-  <!-- कार्ड 3: किराणा -->
   <div class="card" data-name="groceries किराणा" onclick="window.location.href='grocery-store.html'">
     <img src="https://img.icons8.com/?size=80&id=v1ZowcUYJcqz&format=png" alt="Grocery">
     <h3>किराणा डिलिव्हरी</h3>
     <p>किराणा सामान घरपोच.</p>
     <a href="grocery-store.html" onclick="event.stopPropagation();">ऑर्डर करा</a>
   </div>
-  <!-- कार्ड 4: बुकबझार -->
   <div class="card" data-name="book bazaar पुस्तक" onclick="window.location.href='bookbazaar.html'">
     <img src="https://cdn-icons-png.flaticon.com/128/2232/2232688.png" alt="Books">
     <h3>बुकबझार</h3>
     <p>जुनी पुस्तके विका व खरेदी करा.</p>
     <a href="bookbazaar.html" onclick="event.stopPropagation();">पहा</a>
   </div>
-  <!-- कार्ड 5: लाँड्री -->
   <div class="card" data-name="laundry washing कपडे" onclick="window.location.href='loundary.html'">
     <img src="https://img.icons8.com/color/96/washing-machine.png" alt="Laundry">
     <h3>लाँड्री सेवा</h3>
     <p>कपडे घेणे व परत देणे.</p>
     <a href="loundary.html" onclick="event.stopPropagation();">बुक करा</a>
   </div>
-  <!-- कार्ड 6: आइसक्रीम -->
   <div class="card" data-name="ice cream parlour आइसक्रीम पार्लर icecream" onclick="window.location.href='icecream-customer.html'">
     <img src="https://cdn-icons-png.flaticon.com/128/938/938063.png" alt="Ice Cream">
     <h3>आइसक्रीम पार्लर</h3>
     <p>थंडगार आइसक्रीम घरपोच मागवा.</p>
     <a href="icecream-customer.html" onclick="event.stopPropagation();">ऑर्डर करा</a>
   </div>
-  <!-- कार्ड 7: रिक्षा (नवीन) -->
   <div class="card" data-name="rickshaw riksha रिक्षा" onclick="window.location.href='rickshaw.html'">
     <img src="https://cdn-icons-png.flaticon.com/128/3124/3124737.png" alt="Rickshaw">
     <h3>रिक्षा सेवा</h3>
@@ -1619,38 +1516,6 @@ header h1 span {
   <div class="no-results" id="noResults">😕 सेवा सापडली नाही</div>
 </div>
 
-<!-- ── HOW IT WORKS ── -->
-<div class="rangoli-divider" style="margin-top:28px;">
-  <div class="rdivider-motif">🪔</div>
-  <h2>कसे काम करते?</h2>
-  <div class="rdivider-line"></div>
-</div>
-
-<div class="steps">
-  <div class="step">
-    <div class="step-num">१</div>
-    <div class="step-text">
-      <h4>सेवा निवडा</h4>
-      <p>आमच्या विविध सेवांमधून निवड करा.</p>
-    </div>
-  </div>
-  <div class="step">
-    <div class="step-num">२</div>
-    <div class="step-text">
-      <h4>बुक करा</h4>
-      <p>तुमच्या वेळेनुसार बुकिंग करा. तात्काळ पुष्टी.</p>
-    </div>
-  </div>
-  <div class="step">
-    <div class="step-num">३</div>
-    <div class="step-text">
-      <h4>तज्ञ येतो</h4>
-      <p>आमचा तज्ञ तुमच्या दारात येतो.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ── FESTIVE STRIP ── -->
 <div class="festive-strip">
   <span class="fs-icon">🌿</span>
   <div>
@@ -1659,7 +1524,6 @@ header h1 span {
   </div>
 </div>
 
-<!-- ── CONTACT ── -->
 <div class="contact-strip" id="contact">
   <h3>📞 संपर्क साधा</h3>
   <div class="contact-btns">
@@ -1669,12 +1533,10 @@ header h1 span {
   </div>
 </div>
 
-<!-- ── DOWNLOAD FAB ── -->
 <a href="https://drive.google.com/file/d/174UboPvPsPvFjIFtOLhbFubZQkODClOK/view?usp=drivesdk" target="_blank" id="downloadFab" class="download-fab" aria-label="Download App" style="display:none;">
   <span class="df-icon">⬇️</span>
 </a>
 
-<!-- ── BOTTOM NAV ── -->
 <nav class="bottom-nav">
   <a href="#" class="active" id="nav-home"><span class="icon">🏠</span>मुख्य</a>
   <a href="order-tracking (1).html" id="nav-services"><span class="icon">⚡</span>ट्रॅक</a>
@@ -1682,7 +1544,6 @@ header h1 span {
   <a href="#contact" id="nav-contact"><span class="icon">📞</span>संपर्क</a>
 </nav>
 
-<!-- ── ACCOUNT MODAL ── -->
 <div class="modal-overlay" id="accountModalOverlay" onclick="if(event.target===this) closeAccountModal()">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -1765,7 +1626,6 @@ header h1 span {
   </div>
 </div>
 
-<!-- ── INSTALL POPUP ── -->
 <div id="installPopup">
   <div class="popup-box">
     <div class="popup-icon">📲</div>
@@ -1775,10 +1635,6 @@ header h1 span {
     <button class="popup-dismiss" onclick="document.getElementById('installPopup').style.display='none';localStorage.setItem('installPopupDismissed','1');">नंतर करा</button>
   </div>
 </div>
-
-<!-- ════════════════════════════════════════════════════════════════ -->
-<!-- SCRIPTS -->
-<!-- ════════════════════════════════════════════════════════════════ -->
 
 <script>
   (function() {
@@ -1800,7 +1656,6 @@ header h1 span {
   })();
 </script>
 
-<!-- FIREBASE -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -1812,13 +1667,11 @@ header h1 span {
   let currentUserData = null,
     currentUid = null;
 
-  // ── FAST LOAD: localStorage से तुरंत UI अपडेट करें ──
   function applyCachedUserData() {
     const cached = localStorage.getItem('sn_user');
     if (cached) {
       try {
         const data = JSON.parse(cached);
-        // profile card
         document.getElementById("authContainer").style.display = "none";
         document.getElementById("profileCard").style.display = "block";
         document.getElementById("authSectionTitle").textContent = "माझे प्रोफाइल";
@@ -1840,25 +1693,20 @@ header h1 span {
           tpAvatarEl.innerText = initial;
         }
         document.getElementById("tpText").textContent = (data.name || "माझे खाते").split(" ")[0];
-        currentUserData = data; // temporary
+        currentUserData = data;
         return true;
-      } catch (e) {
-        // ignore
-      }
+      } catch (e) {}
     }
     return false;
   }
 
-  // ── FIREBASE AUTH STATE ──
   onAuthStateChanged(auth, async (user) => {
     if (user) {
-      // Firebase says user is logged in, fetch fresh data and update UI
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists()) {
         const d = snap.data();
         currentUserData = d;
         currentUid = user.uid;
-        // Update all UI elements
         document.getElementById("authContainer").style.display = "none";
         document.getElementById("profileCard").style.display = "block";
         document.getElementById("authSectionTitle").textContent = "माझे प्रोफाइल";
@@ -1880,13 +1728,11 @@ header h1 span {
           tpAvatarEl.innerText = initial;
         }
         document.getElementById("tpText").textContent = (d.name || "माझे खाते").split(" ")[0];
-        // update localStorage
         localStorage.setItem("sn_user", JSON.stringify({ name: d.name || "", email: d.email || "", mobile: d.mobile || "", whatsapp: d.whatsapp || "", address: d.address || "", photoUrl: d.photoUrl || "", age: d.age || "" }));
         currentUserData = d;
         currentUid = user.uid;
       }
     } else {
-      // User not logged in — clear UI and localStorage
       document.getElementById("authContainer").style.display = "flex";
       document.getElementById("profileCard").style.display = "none";
       document.getElementById("authSectionTitle").textContent = "माझे खाते";
@@ -1899,10 +1745,8 @@ header h1 span {
     }
   });
 
-  // ── पेज लोड पर तुरंत cached data दिखाएँ ──
-  const hasCached = applyCachedUserData();
+  applyCachedUserData();
 
-  // ── REGISTER ──
   window.registerUser = async () => {
     if (!window.validateRegister()) return;
     const name = document.getElementById("reg_name").value.trim(),
@@ -1919,7 +1763,6 @@ header h1 span {
     try {
       const uc = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", uc.user.uid), { name, age, mobile, whatsapp, address, email, photoUrl, uid: uc.user.uid, createdAt: new Date().toISOString() });
-      // Store in localStorage immediately so that UI updates instantly on next load
       localStorage.setItem("sn_user", JSON.stringify({ name, email, mobile, whatsapp, address, photoUrl, age }));
       showToast("✅ खाते तयार झाले! स्वागत, " + name.split(" ")[0] + "!", "success");
       closeAccountModal();
@@ -1931,7 +1774,6 @@ header h1 span {
     }
   };
 
-  // ── LOGIN ──
   window.loginUser = async () => {
     if (!window.validateLogin()) return;
     const email = document.getElementById("log_email").value.trim(),
@@ -1963,7 +1805,6 @@ header h1 span {
     }
   };
 
-  // ── EDIT PROFILE ──
   window.openEditProfile = function() {
     if (!currentUserData) return;
     document.getElementById("edit_name").value = currentUserData.name || "";
@@ -2046,7 +1887,6 @@ header h1 span {
     try {
       await updateDoc(doc(db, "users", currentUid), { name, age, mobile, whatsapp, address, photoUrl });
       currentUserData = { ...currentUserData, name, age, mobile, whatsapp, address, photoUrl };
-      // Update UI
       document.getElementById("profileName").innerText = name || "–";
       document.getElementById("profileMobile").innerText = mobile || "–";
       document.getElementById("profileWhatsapp").innerText = whatsapp || "–";
@@ -2100,7 +1940,6 @@ header h1 span {
 </script>
 
 <script>
-  // ── MODAL ──
   window.openAccountModal = function() {
     document.getElementById("accountModalOverlay").classList.add("open");
     document.body.style.overflow = "hidden";
@@ -2117,7 +1956,6 @@ header h1 span {
   };
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAccountModal(); });
 
-  // ── CLOUDINARY UPLOAD ──
   window.uploadToCloudinary = async function() {
     const file = document.getElementById("imageFile").files[0];
     if (!file) return;
@@ -2149,7 +1987,6 @@ header h1 span {
     }
   };
 
-  // ── TOAST ──
   function showToast(msg, type = "") {
     const t = document.getElementById("toast");
     t.textContent = msg;
@@ -2159,7 +1996,6 @@ header h1 span {
   }
   window.showToast = showToast;
 
-  // ── TOGGLE PASSWORD ──
   window.togglePass = function(id, btn) {
     const el = document.getElementById(id);
     if (el.type === "password") { el.type = "text";
@@ -2167,7 +2003,6 @@ header h1 span {
       btn.textContent = "👁️"; }
   };
 
-  // ── PASSWORD STRENGTH ──
   document.getElementById("reg_password").addEventListener("input", function() {
     const val = this.value,
       bar = document.getElementById("pwBar");
@@ -2181,7 +2016,6 @@ header h1 span {
     bar.style.background = s <= 1 ? "#dc2626" : s <= 2 ? "#d97706" : s <= 3 ? "#16a34a" : "#059669";
   });
 
-  // ── VALIDATION HELPERS ──
   function setValid(id, viId, feId, ok) {
     const el = document.getElementById(id),
       vi = document.getElementById(viId),
@@ -2195,10 +2029,8 @@ header h1 span {
   }
 
   function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
-
   function isPhone(v) { return /^[6-9]\d{9}$/.test(v); }
 
-  // ── REGISTER VALIDATION ──
   ["reg_name", "reg_age", "reg_mobile", "reg_whatsapp", "reg_address", "reg_email", "reg_password", "reg_confirm"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2246,7 +2078,6 @@ header h1 span {
     return allOk;
   };
 
-  // ── EDIT PROFILE VALIDATION ──
   ["edit_name", "edit_age", "edit_mobile", "edit_whatsapp", "edit_address"].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
@@ -2284,7 +2115,6 @@ header h1 span {
     return allOk;
   };
 
-  // ── LOGIN VALIDATION ──
   window.validateLogin = function() {
     const email = document.getElementById("log_email").value.trim(),
       pass = document.getElementById("log_password").value;
@@ -2310,7 +2140,6 @@ header h1 span {
   };
   ["log_email", "log_password"].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener("input", () => el.classList.remove("invalid")); });
 
-  // ── SWITCH AUTH TAB ──
   window.switchTab = function(tab) {
     document.getElementById("registerCard").classList.toggle("visible", tab === "register");
     document.getElementById("loginCard").classList.toggle("visible", tab === "login");
@@ -2319,7 +2148,6 @@ header h1 span {
     });
   };
 
-  // ── SLIDER ──
   const slides = document.querySelectorAll("#sliderEl .slide"),
     dotsWrap = document.getElementById("sliderDots");
   let idx = 0,
@@ -2353,7 +2181,6 @@ header h1 span {
   sl.addEventListener("touchstart", e => { tx = e.touches[0].clientX; }, { passive: true });
   sl.addEventListener("touchend", e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) goTo(dx < 0 ? idx + 1 : idx - 1); }, { passive: true });
 
-  // ── SEARCH ──
   const searchInput = document.getElementById("searchInput"),
     clearBtn = document.getElementById("clearSearch"),
     serviceCards = document.querySelectorAll("#serviceGrid .card"),
@@ -2377,7 +2204,6 @@ header h1 span {
     searchInput.focus();
   });
 
-  // ── BOTTOM NAV ──
   document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(a => {
     a.addEventListener("click", function() {
       document.querySelectorAll(".bottom-nav a, .bottom-nav button").forEach(x => x.classList.remove("active"));
@@ -2385,7 +2211,6 @@ header h1 span {
     });
   });
 
-  // ── LANGUAGE TOGGLE ──
   const T = {
     mr: {
       pageTitle: "सर्व नेस्ट - अकोले सेवा केंद्र",
@@ -2428,16 +2253,6 @@ header h1 span {
       card7p: "सुरक्षित व विश्वासू रिक्षा.",
       card7a: "बुक करा",
       noResults: "😕 सेवा सापडली नाही",
-      howHead: "कसे काम करते?",
-      step1h: "सेवा निवडा",
-      step1p: "आमच्या विविध सेवांमधून निवड करा.",
-      step2h: "बुक करा",
-      step2p: "तुमच्या वेळेनुसार बुकिंग करा. तात्काळ पुष्टी.",
-      step3h: "तज्ञ येतो",
-      step3p: "आमचा तज्ञ तुमच्या दारात येतो.",
-      step1num: "१",
-      step2num: "२",
-      step3num: "३",
       festiveH: "अकोलेच्या लोकांसाठी, अकोलेच्या लोकांकडून",
       festiveP: "स्थानिक सेवा — विश्वासार्ह व जलद",
       contactH: "📞 संपर्क साधा",
@@ -2520,16 +2335,6 @@ header h1 span {
       card7p: "Safe and reliable rickshaw.",
       card7a: "Book Now",
       noResults: "😕 No services found",
-      howHead: "How It Works",
-      step1h: "Choose a Service",
-      step1p: "Browse and pick from our wide range.",
-      step2h: "Book & Confirm",
-      step2p: "Schedule at your preferred time. Instant confirmation.",
-      step3h: "Expert Arrives",
-      step3p: "Our verified professional comes to your door.",
-      step1num: "1",
-      step2num: "2",
-      step3num: "3",
       festiveH: "By Akole, For Akole",
       festiveP: "Local services — trusted & fast",
       contactH: "📞 Get In Touch",
@@ -2605,12 +2410,6 @@ header h1 span {
       cards[i].querySelector('p').textContent = t['card' + n + 'p'];
       cards[i].querySelector('a').textContent = t['card' + n + 'a']; });
     document.getElementById('noResults').textContent = t.noResults;
-    if (dividers[1]) dividers[1].querySelector('h2').textContent = t.howHead;
-    const steps = document.querySelectorAll('.step');
-    [1, 2, 3].forEach((n, i) => { if (!steps[i]) return;
-      steps[i].querySelector('.step-num').textContent = t['step' + n + 'num'];
-      steps[i].querySelector('h4').textContent = t['step' + n + 'h'];
-      steps[i].querySelector('p').textContent = t['step' + n + 'p']; });
     document.querySelector('.festive-strip h4').textContent = t.festiveH;
     document.querySelector('.festive-strip p').textContent = t.festiveP;
     document.querySelector('.contact-strip h3').textContent = t.contactH;
@@ -2666,7 +2465,6 @@ header h1 span {
     if (saved && saved !== 'mr') { setLang(saved); }
   })();
 
-  // ── INSTALL POPUP ──
   (function() {
     const ua = navigator.userAgent || "";
     const isOurApk = ua.includes("SarvaNestApp");
