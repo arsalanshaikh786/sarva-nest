@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
 :root{
   --bg:#121212;--surface:#191919;--card:#212121;--card2:#282828;
@@ -198,52 +199,39 @@ button:active{transform:scale(.95);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, updateDoc, onSnapshot, runTransaction, arrayUnion, serverTimestamp, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getMessaging, getToken, onMessage, isSupported } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
 const db=getFirestore(app);
 
-// ── Push notifications (Firebase Cloud Messaging) ─────────────────────────
-// VAPID public key — safe to keep in client code, it only identifies your
-// Firebase project for Web Push, it can't be used to send messages.
-const VAPID_KEY="BAC7OUCf5zcKpBy1tQCRSHs5X4_dDPqSbx-kg3kkMxWfZsiZJcfIdy1NE56cXGn-PhDBEIIDQ9RQh0An3pjc1Xo";
-let messaging=null;
+// ── Push notifications (OneSignal — free, no Firebase billing needed) ─────
+// Sign up free at onesignal.com → create a "Web Push" app → paste your
+// App ID and REST API Key below (Settings → Keys & IDs).
+const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
+const ONESIGNAL_REST_API_KEY="os_v2_app_w3x4nnuadfh6pczzzxfxeogzmtia56jw7xreyc5acqosvjpfgjzdv5km7iaeqfhn34owagm3nmcbejk34frghl6rbtwdoohmvqy76ta";
+
+window.OneSignalDeferred=window.OneSignalDeferred||[];
+OneSignalDeferred.push(async function(OneSignal){
+  await OneSignal.init({appId:ONESIGNAL_APP_ID, allowLocalhostAsSecureOrigin:true});
+});
 
 window.enablePushNotifications=async function(){
   try{
-    if(!('Notification' in window) || !('serviceWorker' in navigator)){
-      showToast('Is browser mein push notification support nahi hai','error');return;
-    }
-    const supported=await isSupported().catch(()=>false);
-    if(!supported){showToast('Is browser/device mein push notification support nahi hai','error');return;}
-
-    const permission=await Notification.requestPermission();
-    if(permission!=='granted'){
-      showToast('Notification permission allow nahi ki gayi','warn');return;
-    }
-    if(!messaging) messaging=getMessaging(app);
-
-    // firebase-messaging-sw.js must be uploaded at the ROOT of your domain
-    // (e.g. https://yourdomain.com/firebase-messaging-sw.js), not in a subfolder.
-    const registration=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-    const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:registration});
-    if(token && driver){
-      await updateDoc(doc(db,'rickshaw_drivers',driver.id),{fcmToken:token,fcmUpdatedAt:Date.now()});
-      document.getElementById('pushBanner').classList.remove('show');
-      localStorage.setItem('autosaathi_push_dismissed','1');
-      showToast('Push notifications ON ho gaye ✅','success');
-    }else{
-      showToast('Token nahi mila, phir try karo','error');
-    }
-
-    onMessage(messaging,(payload)=>{
-      // foreground message — app already open, so just toast + refresh list
-      const body=payload.notification?.body||'Naya ride request aaya hai';
-      showToast('🔔 '+body,'success');
+    OneSignalDeferred.push(async function(OneSignal){
+      await OneSignal.Notifications.requestPermission();
+      const subId=OneSignal.User.PushSubscription.id;
+      if(subId && driver){
+        await OneSignal.User.addTags({role:'driver', driverId:driver.id, available: (driver.status==='available'||driver.status==='busy')?'true':'false'});
+        await updateDoc(doc(db,'rickshaw_drivers',driver.id),{onesignalId:subId,pushUpdatedAt:Date.now()});
+        document.getElementById('pushBanner').classList.remove('show');
+        localStorage.setItem('autosaathi_push_dismissed','1');
+        showToast('Push notifications ON ho gaye ✅','success');
+      }else{
+        showToast('Subscription id nahi mila, phir try karo','error');
+      }
     });
   }catch(e){
-    console.error('FCM setup failed',e);
+    console.error('OneSignal setup failed',e);
     showToast('Push notification setup mein error aayi','error');
   }
 };
@@ -252,12 +240,42 @@ function maybeShowPushBanner(){
   if(localStorage.getItem('autosaathi_push_dismissed')==='1')return;
   if(!('Notification' in window))return;
   if(Notification.permission==='granted'){
-    // already granted earlier (maybe different device/session) — just (re)register silently
     window.enablePushNotifications();
     return;
   }
   if(Notification.permission==='denied')return;
   document.getElementById('pushBanner').classList.add('show');
+}
+
+// Sends a push via OneSignal REST API directly from the browser — same
+// exposure pattern as your existing Telegram bot token / UltraMsg instance.
+// Anyone with this REST key could send pushes to your subscribers, so don't
+// share this file publicly with the real key filled in.
+async function sendPush(subscriptionIds, title, body, data){
+  const ids=(subscriptionIds||[]).filter(Boolean);
+  if(!ids.length)return;
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({app_id:ONESIGNAL_APP_ID, target_channel:'push', include_subscription_ids:ids, headings:{en:title}, contents:{en:body}, data:data||{}})
+    });
+  }catch(e){console.warn('push send failed',e);}
+}
+
+// Notify all available drivers about a fresh ride request (broadcast by tag).
+async function sendPushToAvailableDrivers(title, body, data){
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({
+        app_id:ONESIGNAL_APP_ID, target_channel:'push',
+        filters:[{field:'tag',key:'role',relation:'=',value:'driver'},{operator:'AND'},{field:'tag',key:'available',relation:'=',value:'true'}],
+        headings:{en:title}, contents:{en:body}, data:data||{}
+      })
+    });
+  }catch(e){console.warn('driver broadcast push failed',e);}
 }
 
 let driver=null; // logged-in driver doc {id, ...}
@@ -372,6 +390,9 @@ window.toggleAvailability=async function(checked){
   updateAvailUI(checked);
   if(checked && (driver.locationMode||'auto')==='auto') startAutoTracking();
   if(!checked) stopAutoTracking();
+  OneSignalDeferred.push(async function(OneSignal){
+    if(OneSignal.User?.PushSubscription?.id) await OneSignal.User.addTags({available: checked?'true':'false'});
+  });
 };
 
 function updateAvailUI(on){
@@ -525,12 +546,14 @@ window.sendCounter=async function(rideId){
       const data=snap.data();
       if(data.driverId && data.driverId!==driver.id) throw new Error('Ye ride kisi aur driver ne le liya');
       tx.update(ref,{
-        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber,
+        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber, driverOneSignalId:driver.onesignalId||null,
         status:'negotiating', currentFare:val, lastOfferBy:'driver',
         negotiationLog:arrayUnion({by:'driver',amount:val,ts:Date.now()})
       });
     });
     showToast('Counter offer bheja ✅','success');
+    const r=allRides.find(x=>x.id===rideId);
+    if(r?.riderOneSignalId) sendPush([r.riderOneSignalId],'🛺 Driver ne counter offer diya',`₹${val} — AutoSaathi app kholo dekhne ke liye`,{rideId,type:'counter'});
   }catch(e){showToast(e.message||'Kuch galat hua','error');}
 };
 
@@ -546,13 +569,15 @@ window.acceptRide=async function(rideId){
       if(data.driverId && data.driverId!==driver.id) throw new Error('Ye ride kisi aur driver ne le liya');
       if(!['requested','negotiating'].includes(data.status)) throw new Error('Ye ride ab available nahi hai');
       tx.update(ref,{
-        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber,
+        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber, driverOneSignalId:driver.onesignalId||null,
         status:'accepted', finalFare:data.currentFare||data.estimatedFare, acceptedAt:Date.now(),
         driverLat:driver.lat||null, driverLng:driver.lng||null
       });
     });
     await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'busy'});
     showToast('Ride accept ho gayi! 🛺','success');
+    const r=allRides.find(x=>x.id===rideId);
+    if(r?.riderOneSignalId) sendPush([r.riderOneSignalId],'🛺 Ride confirm ho gayi!',`${driver.name} aa raha hai (${driver.vehicleNumber||''})`,{rideId,type:'accepted'});
   }catch(e){showToast(e.message||'Kuch galat hua','error');}
 };
 
@@ -614,6 +639,11 @@ function initActiveRideMap(ride){
 window.updateRideStatus=async function(rideId,status){
   await updateDoc(doc(db,'rickshaw_rides',rideId),{status});
   showToast('Status update ho gaya','success');
+  const r=allRides.find(x=>x.id===rideId);
+  if(r?.riderOneSignalId){
+    if(status==='driver_arrived') sendPush([r.riderOneSignalId],'📍 Driver pahunch gaya!','Bahar aa jao, driver wait kar raha hai',{rideId,type:'arrived'});
+    if(status==='in_progress') sendPush([r.riderOneSignalId],'🚀 Ride shuru ho gayi',`${r.drop?.address||'Drop'} ki taraf nikal pade`,{rideId,type:'started'});
+  }
 };
 
 window.completeRide=async function(rideId){
@@ -623,6 +653,7 @@ window.completeRide=async function(rideId){
   delete activeRideMapInstances[rideId];
   delete activeRideLayers[rideId];
   showToast('Ride complete! 🎉','success');
+  if(ride?.riderOneSignalId) sendPush([ride.riderOneSignalId],'✅ Ride complete!',`Fare: ₹${ride.finalFare||ride.currentFare||0} — thanks for riding!`,{rideId,type:'completed'});
 };
 
 function timeAgo(ts){
