@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>AutoSaathi Driver</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --bg:#121212;--surface:#191919;--card:#212121;--card2:#282828;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --yellow:#FFC107;--yellow-dim:rgba(255,193,7,0.12);--yellow-border:rgba(255,193,7,0.3);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.12);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.12);
+  --blue:#4F8EF7;--blue-dim:rgba(79,142,247,0.12);
+  --purple:#9B59F5;--purple-dim:rgba(155,89,245,0.12);
+  --text:#F5F5F0;--muted:#9A9A9A;--muted2:#6B6B6B;
+  --radius:16px;--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+h1,h2,.brand,.sec-title{font-family:'Space Grotesk',sans-serif;}
+
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
+.login-box{background:var(--surface);border-radius:20px;border:1px solid var(--border2);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
+.login-logo{font-family:'Space Grotesk',sans-serif;font-size:1.7rem;font-weight:800;color:var(--yellow);margin-bottom:.2rem;}
+.login-logo span{color:var(--text);}
+.login-sub{color:var(--muted);font-size:.8rem;margin-bottom:1.5rem;}
+.login-input{width:100%;padding:.68rem .9rem;border:1.5px solid var(--border2);border-radius:10px;font-size:.92rem;outline:none;background:var(--card);color:var(--text);margin-bottom:.6rem;}
+.login-input:focus{border-color:var(--yellow);}
+.login-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:10px;padding:.8rem;font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;}
+.login-error{color:var(--red);font-size:.78rem;margin-top:.5rem;display:none;}
+
+.topbar{position:sticky;top:0;z-index:200;background:rgba(18,18,18,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;}
+.driver-id{display:flex;align-items:center;gap:.6rem;}
+.avatar-sm{width:38px;height:38px;border-radius:11px;background:var(--yellow-dim);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:800;}
+.driver-name-top{font-weight:700;font-size:.9rem;}
+.driver-mob-top{font-size:.68rem;color:var(--muted);}
+.logout-mini{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;}
+
+.avail-toggle-wrap{padding:1rem;}
+.avail-toggle{background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:1rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
+.avail-toggle.on{border-color:var(--green);background:var(--green-dim);}
+.avail-label{font-weight:800;font-size:1rem;font-family:'Space Grotesk',sans-serif;}
+.avail-sub{font-size:.72rem;color:var(--muted);margin-top:2px;}
+.switch{position:relative;width:52px;height:30px;flex-shrink:0;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;inset:0;background:var(--card2);border-radius:50px;cursor:pointer;transition:.25s;border:1.5px solid var(--border2);}
+.slider::before{content:'';position:absolute;width:22px;height:22px;left:3px;top:3px;background:var(--muted);border-radius:50%;transition:.25s;}
+input:checked+.slider{background:var(--green-dim);border-color:var(--green);}
+input:checked+.slider::before{transform:translateX(22px);background:var(--green);}
+
+.loc-mode-row{display:flex;gap:.5rem;padding:0 1rem 1rem;}
+.loc-chip{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:.6rem;text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;}
+.loc-chip.active{border-color:var(--yellow);background:var(--yellow-dim);color:var(--yellow);}
+.manual-loc-panel{padding:0 1rem 1rem;display:none;}
+.manual-loc-panel.show{display:block;}
+.manual-search-row{position:relative;margin-bottom:.6rem;}
+.manual-search-row input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:.6rem .8rem;color:var(--text);font-size:.85rem;outline:none;}
+.manual-search-row input:focus{border-color:var(--yellow);}
+.manual-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--card2);border:1px solid var(--border2);border-radius:10px;margin-top:4px;z-index:50;max-height:180px;overflow-y:auto;display:none;}
+.manual-suggestions.show{display:block;}
+.manual-sugg-item{padding:.55rem .75rem;font-size:.78rem;cursor:pointer;border-bottom:1px solid var(--border);}
+.manual-sugg-item:last-child{border-bottom:none;}
+.manual-sugg-item:hover{background:var(--card);}
+#driverPickMap{width:100%;height:200px;border-radius:14px;border:1px solid var(--border);margin-bottom:.6rem;}
+.manual-hint{font-size:.68rem;color:var(--muted);margin-bottom:.5rem;}
+.save-loc-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:10px;padding:.6rem;font-weight:800;font-size:.82rem;cursor:pointer;}
+.map-wrap{position:relative;}
+.map-layer-toggle{position:absolute;top:10px;right:10px;z-index:400;background:rgba(18,18,18,.92);backdrop-filter:blur(6px);border:1.5px solid var(--yellow-border);border-radius:10px;padding:.35rem .65rem;font-size:.68rem;font-weight:700;color:var(--yellow);cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.map-layer-toggle:active{transform:scale(.95);}
+
+main{padding:0 1rem 1rem;}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 .6rem;}
+.sec-title{font-size:.92rem;font-weight:700;}
+
+.req-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;margin-bottom:.7rem;border-left:3px solid var(--blue);}
+.req-card.negotiating{border-left-color:var(--purple);}
+.req-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;}
+.req-cust{font-weight:700;font-size:.88rem;}
+.req-time{font-size:.68rem;color:var(--muted);}
+.req-route{font-size:.75rem;color:var(--muted);line-height:1.6;margin-bottom:.5rem;}
+.req-fare-row{display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-radius:10px;padding:.55rem .75rem;margin-bottom:.6rem;}
+.req-fare-label{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;}
+.req-fare-val{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:800;color:var(--yellow);}
+.req-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-accept{flex:1;background:var(--green);color:#062b13;border:none;border-radius:10px;padding:.6rem;font-weight:800;font-size:.82rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;}
+.btn-counter{flex:1;background:var(--purple-dim);color:var(--purple);border:1.5px solid var(--purple);border-radius:10px;padding:.6rem;font-weight:700;font-size:.82rem;cursor:pointer;}
+.btn-reject{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:10px;padding:.6rem .8rem;font-weight:700;font-size:.82rem;cursor:pointer;}
+.counter-row{display:flex;gap:.4rem;margin-top:.5rem;display:none;}
+.counter-row.show{display:flex;}
+.counter-row input{flex:1;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text);font-size:.85rem;outline:none;}
+.counter-row button{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:.55rem .9rem;font-weight:700;font-size:.8rem;cursor:pointer;}
+
+.active-ride-card{background:linear-gradient(135deg,var(--card),var(--card2));border-radius:var(--radius);border:1.5px solid var(--yellow-border);padding:1rem;margin-bottom:1rem;}
+.active-ride-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem;}
+.active-ride-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1rem;}
+#activeRideMap{width:100%;height:200px;border-radius:12px;margin-bottom:.7rem;border:1px solid var(--border);}
+.ride-detail-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
+.ride-detail-row:last-of-type{border-bottom:none;}
+.ride-detail-row span:first-child{color:var(--muted);}
+.call-btn{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);border-radius:9px;padding:.4rem .7rem;font-size:.75rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:none;margin-top:.5rem;}
+.progress-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:10px;padding:.75rem;font-weight:800;font-size:.9rem;cursor:pointer;margin-top:.8rem;display:flex;align-items:center;justify-content:center;gap:6px;}
+.progress-btn.complete{background:var(--green);color:#062b13;}
+
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted2);}
+.empty-state i{font-size:2rem;display:block;margin-bottom:.6rem;opacity:.3;}
+.empty-state p{font-size:.85rem;color:var(--muted);}
+
+.toast{position:fixed;bottom:1.2rem;left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.7rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+.toast.warn{background:var(--yellow);color:#1a1400;}
+
+button{transition:transform .15s cubic-bezier(.34,1.56,.64,1),filter .15s ease;}
+button:active{transform:scale(.95);}
+</style>
+</head>
+<body>
+
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">Auto<span>Saathi</span></div>
+    <div class="login-sub">Driver Login</div>
+    <input class="login-input" type="tel" id="loginMobile" placeholder="Mobile number" maxlength="10"/>
+    <input class="login-input" type="password" id="loginPin" placeholder="4-digit PIN" maxlength="4" inputmode="numeric"/>
+    <button class="login-btn" onclick="doLogin()">Login</button>
+    <div class="login-error" id="loginError">Mobile ya PIN galat hai, ya driver register nahi hai.</div>
+  </div>
+</div>
+
+<div class="topbar">
+  <div class="driver-id">
+    <div class="avatar-sm" id="topAvatar">D</div>
+    <div>
+      <div class="driver-name-top" id="topName">—</div>
+      <div class="driver-mob-top" id="topMobile">—</div>
+    </div>
+  </div>
+  <button class="logout-mini" onclick="doLogout()"><i class="ti ti-logout"></i></button>
+</div>
+
+<div class="avail-toggle-wrap">
+  <div class="avail-toggle" id="availToggleBox">
+    <div>
+      <div class="avail-label" id="availLabel">Offline</div>
+      <div class="avail-sub">Ride requests dekhne ke liye online ho jao</div>
+    </div>
+    <label class="switch">
+      <input type="checkbox" id="availCheckbox" onchange="toggleAvailability(this.checked)"/>
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<div class="loc-mode-row">
+  <div class="loc-chip active" id="chipAuto" onclick="setLocationMode('auto')"><i class="ti ti-satellite"></i> Auto (GPS)</div>
+  <div class="loc-chip" id="chipManual" onclick="setLocationMode('manual')"><i class="ti ti-map-pin"></i> Manual</div>
+</div>
+<div class="manual-loc-panel" id="manualPanel">
+  <div class="manual-search-row">
+    <input type="text" id="manualSearchInput" placeholder="Nearby jagah search karo (5-10 km ke andar)…" oninput="searchNearbyManual(this.value)"/>
+    <div class="manual-suggestions" id="manualSuggestions"></div>
+  </div>
+  <div class="manual-hint">Ya map pe tap karo apni location set karne ke liye</div>
+  <div class="map-wrap">
+    <div id="driverPickMap"></div>
+    <button type="button" class="map-layer-toggle" id="pickMapToggle" onclick="toggleMapLayer('pick')"><i class="ti ti-satellite"></i> <span id="pickMapToggleLabel">Satellite</span></button>
+  </div>
+  <button class="save-loc-btn" onclick="saveManualLocation()">Save My Location</button>
+</div>
+
+<main>
+  <!-- ACTIVE RIDE (shown when a ride is accepted/in progress) -->
+  <div id="activeRideSection"></div>
+
+  <div class="sec-hdr"><div class="sec-title">🔔 Ride Requests</div></div>
+  <div id="requestsList">
+    <div class="empty-state"><i class="ti ti-bell-off"></i><p>Online ho jao naye requests dekhne ke liye</p></div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, updateDoc, onSnapshot, runTransaction, arrayUnion, serverTimestamp, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(FC);
+const db=getFirestore(app);
+
+let driver=null; // logged-in driver doc {id, ...}
+let allDriversCache=[];
+let watchId=null;
+let unsubDriverDoc=null, unsubRides=null;
+let allRides=[];
+let pickMap=null, pickMarker=null, pendingManualLatLng=null;
+let activeRideMapInstances={};
+
+// ── MAP TILE LAYERS (Street / Satellite) ────────────────────────────────
+// Esri World Imagery is free and needs no API key — gives the "real photo" satellite look.
+function streetLayer(){
+  return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
+}
+function satelliteLayer(){
+  return L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri'}),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{attribution:''})
+  ]);
+}
+let pickActiveLayer, pickIsSat=false;
+let activeRideLayers={}; // rideId -> {map, activeLayer, isSat}
+
+window.toggleMapLayer=function(which,rideId){
+  if(which==='pick'){
+    pickIsSat=!pickIsSat;
+    if(pickActiveLayer) pickMap.removeLayer(pickActiveLayer);
+    pickActiveLayer=pickIsSat?satelliteLayer():streetLayer();
+    pickActiveLayer.addTo(pickMap);
+    document.getElementById('pickMapToggleLabel').textContent=pickIsSat?'Street':'Satellite';
+  }else if(which==='activeRide'&&rideId){
+    const state=activeRideLayers[rideId];
+    if(!state)return;
+    state.isSat=!state.isSat;
+    state.map.removeLayer(state.activeLayer);
+    state.activeLayer=state.isSat?satelliteLayer():streetLayer();
+    state.activeLayer.addTo(state.map);
+    const lbl=document.getElementById('activeRideMapToggleLabel');
+    if(lbl) lbl.textContent=state.isSat?'Street':'Satellite';
+  }
+};
+
+// ── LOGIN ────────────────────────────────────────────────────────────────
+window.doLogin=async function(){
+  const mobile=document.getElementById('loginMobile').value.trim();
+  const pin=document.getElementById('loginPin').value.trim();
+  if(!mobile||!pin){document.getElementById('loginError').style.display='block';return;}
+  try{
+    const q=query(collection(db,'rickshaw_drivers'),where('mobile','==',mobile),where('pin','==',pin));
+    const snap=await getDocs(q);
+    if(snap.empty){document.getElementById('loginError').style.display='block';return;}
+    const d=snap.docs[0];
+    driver={id:d.id,...d.data()};
+    localStorage.setItem('autosaathi_driver_id',driver.id);
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('loginError').style.display='none';
+    initDriverSession();
+  }catch(e){console.error(e);document.getElementById('loginError').style.display='block';}
+};
+
+window.doLogout=function(){
+  stopAutoTracking();
+  if(unsubDriverDoc)unsubDriverDoc();
+  if(unsubRides)unsubRides();
+  localStorage.removeItem('autosaathi_driver_id');
+  if(driver) updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'offline'}).catch(()=>{});
+  driver=null;
+  document.getElementById('loginScreen').style.display='flex';
+};
+
+async function tryAutoLogin(){
+  const savedId=localStorage.getItem('autosaathi_driver_id');
+  if(!savedId) return;
+  const snap=await getDoc(doc(db,'rickshaw_drivers',savedId));
+  if(snap.exists()){
+    driver={id:snap.id,...snap.data()};
+    document.getElementById('loginScreen').style.display='none';
+    initDriverSession();
+  }
+}
+
+function initDriverSession(){
+  document.getElementById('topName').textContent=driver.name;
+  document.getElementById('topMobile').textContent=driver.mobile;
+  document.getElementById('topAvatar').textContent=(driver.name||'D')[0];
+  document.getElementById('availCheckbox').checked=driver.status==='available'||driver.status==='busy';
+  updateAvailUI(driver.status==='available'||driver.status==='busy');
+  setLocationMode(driver.locationMode||'auto',true);
+
+  unsubDriverDoc=onSnapshot(doc(db,'rickshaw_drivers',driver.id),(snap)=>{
+    if(!snap.exists())return;
+    driver={id:snap.id,...snap.data()};
+    document.getElementById('availCheckbox').checked=driver.status==='available'||driver.status==='busy';
+    updateAvailUI(driver.status==='available'||driver.status==='busy');
+  });
+
+  unsubRides=onSnapshot(collection(db,'rickshaw_rides'),(snap)=>{
+    allRides=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    renderRequests();
+    renderActiveRide();
+  },(e)=>console.error('rides listener',e));
+
+  if((driver.locationMode||'auto')==='auto' && (driver.status==='available'||driver.status==='busy')) startAutoTracking();
+}
+
+// ── AVAILABILITY ─────────────────────────────────────────────────────────
+window.toggleAvailability=async function(checked){
+  const newStatus=checked?'available':'offline';
+  await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:newStatus});
+  updateAvailUI(checked);
+  if(checked && (driver.locationMode||'auto')==='auto') startAutoTracking();
+  if(!checked) stopAutoTracking();
+};
+
+function updateAvailUI(on){
+  document.getElementById('availToggleBox').classList.toggle('on',on);
+  document.getElementById('availLabel').textContent=on?'Online':'Offline';
+}
+
+// ── LOCATION MODE ────────────────────────────────────────────────────────
+window.setLocationMode=async function(mode,skipSave){
+  document.getElementById('chipAuto').classList.toggle('active',mode==='auto');
+  document.getElementById('chipManual').classList.toggle('active',mode==='manual');
+  document.getElementById('manualPanel').classList.toggle('show',mode==='manual');
+  if(mode==='manual'){ stopAutoTracking(); setTimeout(initPickMap,80); }
+  else { startAutoTracking(); }
+  if(!skipSave && driver) await updateDoc(doc(db,'rickshaw_drivers',driver.id),{locationMode:mode});
+};
+
+// GPS auto-tracking — ignores wildly inaccurate fixes so the driver's dot
+// doesn't jump to a completely different city (e.g. Pune) on a bad cell-tower
+// reading. Only fixes accurate to ~300m or better are pushed to Firestore.
+const MAX_ACCEPTABLE_ACCURACY=300; // meters
+function startAutoTracking(){
+  if(!navigator.geolocation){showToast('GPS is browser support nahi karta','error');return;}
+  if(watchId) return;
+  watchId=navigator.geolocation.watchPosition((pos)=>{
+    const lat=pos.coords.latitude, lng=pos.coords.longitude, acc=pos.coords.accuracy;
+    if(acc>MAX_ACCEPTABLE_ACCURACY){
+      console.warn('Skipping low-accuracy GPS fix (±'+Math.round(acc)+'m)');
+      return;
+    }
+    if(driver) updateDoc(doc(db,'rickshaw_drivers',driver.id),{lat,lng,locationAccuracy:Math.round(acc)}).catch(()=>{});
+    const activeRide=allRides.find(r=>r.driverId===driver?.id && ['accepted','driver_arrived','in_progress'].includes(r.status));
+    if(activeRide) updateDoc(doc(db,'rickshaw_rides',activeRide.id),{driverLat:lat,driverLng:lng}).catch(()=>{});
+  },(err)=>{console.warn('geo error',err);},{enableHighAccuracy:true,maximumAge:5000,timeout:15000});
+}
+function stopAutoTracking(){
+  if(watchId){navigator.geolocation.clearWatch(watchId);watchId=null;}
+}
+
+function initPickMap(){
+  const el=document.getElementById('driverPickMap');
+  if(!el)return;
+  if(pickMap){pickMap.invalidateSize();return;}
+  const startLat=driver?.lat||19.58, startLng=driver?.lng||74.03;
+  pickMap=L.map('driverPickMap').setView([startLat,startLng],14);
+  pickIsSat=false;
+  pickActiveLayer=streetLayer().addTo(pickMap);
+  document.getElementById('pickMapToggleLabel').textContent='Satellite';
+  pickMarker=L.marker([startLat,startLng],{draggable:true}).addTo(pickMap);
+  pendingManualLatLng={lat:startLat,lng:startLng};
+  pickMap.on('click',(e)=>{ pickMarker.setLatLng(e.latlng); pendingManualLatLng={lat:e.latlng.lat,lng:e.latlng.lng}; });
+  pickMarker.on('dragend',()=>{ const p=pickMarker.getLatLng(); pendingManualLatLng={lat:p.lat,lng:p.lng}; });
+}
+
+window.saveManualLocation=async function(){
+  if(!pendingManualLatLng){showToast('Pehle map pe location select karo','warn');return;}
+  await updateDoc(doc(db,'rickshaw_drivers',driver.id),{lat:pendingManualLatLng.lat,lng:pendingManualLatLng.lng});
+  const activeRide=allRides.find(r=>r.driverId===driver?.id && ['accepted','driver_arrived','in_progress'].includes(r.status));
+  if(activeRide) await updateDoc(doc(db,'rickshaw_rides',activeRide.id),{driverLat:pendingManualLatLng.lat,driverLng:pendingManualLatLng.lng});
+  showToast('Location updated ✅','success');
+};
+
+// ── Nearby search for manual location (biased to ~5-10km around current pick-map center) ──
+let manualSearchDebounce;
+window.searchNearbyManual=function(q){
+  clearTimeout(manualSearchDebounce);
+  const suggEl=document.getElementById('manualSuggestions');
+  if(!q||q.length<3){suggEl.classList.remove('show');return;}
+  manualSearchDebounce=setTimeout(async()=>{
+    try{
+      const center=pickMap?pickMap.getCenter():{lat:driver?.lat||19.58,lng:driver?.lng||74.03};
+      const d=0.07; // ~7km box — keeps results within the requested 5-10km range
+      const viewbox=`${center.lng-d},${center.lat+d},${center.lng+d},${center.lat-d}`;
+      const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=8&addressdetails=1&countrycodes=in&viewbox=${viewbox}&bounded=1`;
+      const res=await fetch(url);
+      const results=await res.json();
+      if(!results.length){suggEl.classList.remove('show');return;}
+      suggEl.innerHTML=results.map(r=>`<div class="manual-sugg-item" data-lat="${r.lat}" data-lon="${r.lon}">${r.display_name}</div>`).join('');
+      suggEl.classList.add('show');
+      suggEl.querySelectorAll('.manual-sugg-item').forEach(item=>{
+        item.onclick=()=>{
+          const lat=+item.dataset.lat, lng=+item.dataset.lon;
+          pickMap.setView([lat,lng],15);
+          pickMarker.setLatLng([lat,lng]);
+          pendingManualLatLng={lat,lng};
+          suggEl.classList.remove('show');
+          document.getElementById('manualSearchInput').value=item.textContent;
+        };
+      });
+    }catch(e){}
+  },400);
+};
+
+// ── RIDE REQUESTS (open pool + this driver's negotiation) ─────────────────
+function renderRequests(){
+  if(!driver) return;
+  const isOnline=driver.status==='available'||driver.status==='busy';
+  const el=document.getElementById('requestsList');
+  if(!isOnline){
+    el.innerHTML=`<div class="empty-state"><i class="ti ti-bell-off"></i><p>Online ho jao naye requests dekhne ke liye</p></div>`;
+    return;
+  }
+  const openPool=allRides.filter(r=>r.status==='requested'&&!r.driverId);
+  const myNegotiations=allRides.filter(r=>r.driverId===driver.id&&r.status==='negotiating');
+  const combined=[...myNegotiations,...openPool];
+  if(!combined.length){
+    el.innerHTML=`<div class="empty-state"><i class="ti ti-clock"></i><p>Koi naya request nahi — wait karo…</p></div>`;
+    return;
+  }
+  el.innerHTML=combined.map(r=>{
+    const negotiating=r.status==='negotiating';
+    const lastByCustomer=r.lastOfferBy==='customer';
+    return `<div class="req-card ${negotiating?'negotiating':''}">
+      <div class="req-top">
+        <div>
+          <div class="req-cust">${r.riderName||'Customer'}</div>
+          <div class="req-time">${timeAgo(r.createdAt)}</div>
+        </div>
+        ${negotiating?'<span class="sbadge s-negotiating">Negotiating</span>':'<span class="sbadge s-requested">New</span>'}
+      </div>
+      <div class="req-route"><i class="ti ti-map-pin"></i> ${r.pickup?.address||'—'}<br><i class="ti ti-flag"></i> ${r.drop?.address||'—'}<br><i class="ti ti-road"></i> ${(r.distanceKm||0).toFixed(1)} km</div>
+      <div class="req-fare-row">
+        <span class="req-fare-label">${negotiating?(lastByCustomer?"Customer's offer":"Your offer"):"Offered fare"}</span>
+        <span class="req-fare-val">₹${r.currentFare||r.estimatedFare||0}</span>
+      </div>
+      <div class="req-actions">
+        <button class="btn-accept" onclick="acceptRide('${r.id}')"><i class="ti ti-check"></i> Accept ₹${r.currentFare||r.estimatedFare||0}</button>
+        <button class="btn-counter" onclick="toggleCounterRow('${r.id}')"><i class="ti ti-message-2"></i> Counter</button>
+        ${negotiating?`<button class="btn-reject" onclick="rejectNegotiation('${r.id}')"><i class="ti ti-x"></i></button>`:''}
+      </div>
+      <div class="counter-row" id="counterRow-${r.id}">
+        <input type="number" id="counterInput-${r.id}" placeholder="Apna price"/>
+        <button onclick="sendCounter('${r.id}')">Bhejo</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+window.toggleCounterRow=function(rideId){
+  document.getElementById('counterRow-'+rideId).classList.toggle('show');
+};
+
+window.sendCounter=async function(rideId){
+  const val=+document.getElementById('counterInput-'+rideId).value;
+  if(!val||val<=0){showToast('Valid amount daalo','error');return;}
+  try{
+    await runTransaction(db,async(tx)=>{
+      const ref=doc(db,'rickshaw_rides',rideId);
+      const snap=await tx.get(ref);
+      if(!snap.exists())throw new Error('Ride no longer exists');
+      const data=snap.data();
+      if(data.driverId && data.driverId!==driver.id) throw new Error('Ye ride kisi aur driver ne le liya');
+      tx.update(ref,{
+        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber,
+        status:'negotiating', currentFare:val, lastOfferBy:'driver',
+        negotiationLog:arrayUnion({by:'driver',amount:val,ts:Date.now()})
+      });
+    });
+    showToast('Counter offer bheja ✅','success');
+  }catch(e){showToast(e.message||'Kuch galat hua','error');}
+};
+
+window.acceptRide=async function(rideId){
+  const alreadyBusy=allRides.some(r=>r.driverId===driver.id&&['accepted','driver_arrived','in_progress'].includes(r.status));
+  if(alreadyBusy){showToast('Pehle apni current ride complete karo','warn');return;}
+  try{
+    await runTransaction(db,async(tx)=>{
+      const ref=doc(db,'rickshaw_rides',rideId);
+      const snap=await tx.get(ref);
+      if(!snap.exists())throw new Error('Ride no longer exists');
+      const data=snap.data();
+      if(data.driverId && data.driverId!==driver.id) throw new Error('Ye ride kisi aur driver ne le liya');
+      if(!['requested','negotiating'].includes(data.status)) throw new Error('Ye ride ab available nahi hai');
+      tx.update(ref,{
+        driverId:driver.id, driverName:driver.name, driverMobile:driver.mobile, driverVehicle:driver.vehicleNumber,
+        status:'accepted', finalFare:data.currentFare||data.estimatedFare, acceptedAt:Date.now(),
+        driverLat:driver.lat||null, driverLng:driver.lng||null
+      });
+    });
+    await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'busy'});
+    showToast('Ride accept ho gayi! 🛺','success');
+  }catch(e){showToast(e.message||'Kuch galat hua','error');}
+};
+
+window.rejectNegotiation=async function(rideId){
+  await updateDoc(doc(db,'rickshaw_rides',rideId),{driverId:null,driverName:null,status:'requested'});
+  showToast('Negotiation chhod di','warn');
+};
+
+// ── ACTIVE RIDE ──────────────────────────────────────────────────────────
+function renderActiveRide(){
+  if(!driver)return;
+  const el=document.getElementById('activeRideSection');
+  const ride=allRides.find(r=>r.driverId===driver.id&&['accepted','driver_arrived','in_progress'].includes(r.status));
+  if(!ride){el.innerHTML='';return;}
+
+  const nextAction=ride.status==='accepted'
+    ? {label:'Mark Arrived',icon:'ti-map-pin-check',fn:`updateRideStatus('${ride.id}','driver_arrived')`}
+    : ride.status==='driver_arrived'
+    ? {label:'Start Ride',icon:'ti-steering-wheel',fn:`updateRideStatus('${ride.id}','in_progress')`}
+    : {label:'Complete Ride',icon:'ti-flag-check',fn:`completeRide('${ride.id}')`,complete:true};
+
+  el.innerHTML=`<div class="active-ride-card">
+    <div class="active-ride-hdr">
+      <div class="active-ride-title">🛺 Active Ride</div>
+      <span class="sbadge s-${ride.status}">${ride.status.replace('_',' ')}</span>
+    </div>
+    <div class="map-wrap">
+      <div id="activeRideMap"></div>
+      <button type="button" class="map-layer-toggle" onclick="toggleMapLayer('activeRide','${ride.id}')"><i class="ti ti-satellite"></i> <span id="activeRideMapToggleLabel">Satellite</span></button>
+    </div>
+    <div class="ride-detail-row"><span>Customer</span><span>${ride.riderName||'—'}</span></div>
+    <div class="ride-detail-row"><span>Pickup</span><span style="text-align:right;max-width:60%">${ride.pickup?.address||'—'}</span></div>
+    <div class="ride-detail-row"><span>Drop</span><span style="text-align:right;max-width:60%">${ride.drop?.address||'—'}</span></div>
+    <div class="ride-detail-row"><span>Distance</span><span>${(ride.distanceKm||0).toFixed(1)} km</span></div>
+    <div class="ride-detail-row"><span>Fare</span><span style="color:var(--yellow);font-weight:800">₹${ride.finalFare||ride.currentFare||0}</span></div>
+    ${ride.riderMobile?`<a class="call-btn" href="tel:${ride.riderMobile}"><i class="ti ti-phone"></i> Call Customer</a>`:''}
+    <button class="progress-btn ${nextAction.complete?'complete':''}" onclick="${nextAction.fn}"><i class="ti ${nextAction.icon}"></i> ${nextAction.label}</button>
+  </div>`;
+
+  setTimeout(()=>initActiveRideMap(ride),80);
+}
+
+function initActiveRideMap(ride){
+  const el=document.getElementById('activeRideMap');
+  if(!el)return;
+  if(activeRideMapInstances[ride.id]){ activeRideMapInstances[ride.id].invalidateSize(); return; }
+  const map=L.map('activeRideMap').setView([ride.pickup.lat,ride.pickup.lng],13);
+  const activeLayer=streetLayer().addTo(map);
+  activeRideLayers[ride.id]={map,activeLayer,isSat:false};
+  const pickupIcon=L.divIcon({className:'',html:'<div style="background:#22C55E;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[14,14]});
+  const dropIcon=L.divIcon({className:'',html:'<div style="background:#EF4444;width:14px;height:14px;border-radius:50%;border:2px solid #fff"></div>',iconSize:[14,14]});
+  L.marker([ride.pickup.lat,ride.pickup.lng],{icon:pickupIcon}).addTo(map).bindPopup('Pickup');
+  L.marker([ride.drop.lat,ride.drop.lng],{icon:dropIcon}).addTo(map).bindPopup('Drop');
+  const bounds=L.latLngBounds([[ride.pickup.lat,ride.pickup.lng],[ride.drop.lat,ride.drop.lng]]);
+  map.fitBounds(bounds,{padding:[30,30]});
+  activeRideMapInstances[ride.id]=map;
+}
+
+window.updateRideStatus=async function(rideId,status){
+  await updateDoc(doc(db,'rickshaw_rides',rideId),{status});
+  showToast('Status update ho gaya','success');
+};
+
+window.completeRide=async function(rideId){
+  const ride=allRides.find(r=>r.id===rideId);
+  await updateDoc(doc(db,'rickshaw_rides',rideId),{status:'completed',completedAt:Date.now()});
+  await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'available',totalRides:(driver.totalRides||0)+1});
+  delete activeRideMapInstances[rideId];
+  delete activeRideLayers[rideId];
+  showToast('Ride complete! 🎉','success');
+};
+
+function timeAgo(ts){
+  if(!ts)return'';
+  const diff=Math.floor((Date.now()-ts)/60000);
+  if(diff<1)return'abhi';
+  if(diff<60)return diff+' min pehle';
+  return Math.floor(diff/60)+' hr pehle';
+}
+
+let toastTimer;
+window.showToast=function(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+};
+
+tryAutoLogin();
+</script>
+</body>
+</html>
