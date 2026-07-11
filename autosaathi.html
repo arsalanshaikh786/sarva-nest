@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
 :root{
   --bg:#121212;--surface:#191919;--card:#212121;--card2:#282828;
@@ -31,6 +32,10 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 
 .page{display:none;padding:1rem 1rem calc(1rem + var(--sb));}
 .page.active{display:block;}
+
+.push-banner{background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:12px;padding:.7rem .9rem;font-size:.75rem;color:var(--blue);display:none;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:1rem;}
+.push-banner.show{display:flex;}
+.push-banner button{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
 
 .booking-map{width:100%;height:230px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;position:relative;}
 .map-wrap{position:relative;}
@@ -154,6 +159,11 @@ button:active{transform:scale(.95);}
 <!-- BOOKING PAGE -->
 <div class="page active" id="pageBooking">
 
+  <div class="push-banner" id="pushBanner">
+    <span><i class="ti ti-bell-ringing"></i> Ride updates ka notification on karo — app band ho tab bhi milega</span>
+    <button onclick="enablePushNotifications()">Enable</button>
+  </div>
+
   <div class="city-card">
     <div class="city-card-label"><i class="ti ti-building-community"></i> Pehle apna shahar/gaon select karo</div>
     <div class="city-search-row" id="citySearchRow">
@@ -273,6 +283,79 @@ import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
 const db=getFirestore(app);
+
+// ── Push notifications (OneSignal — free, no Firebase billing needed) ─────
+// Same App ID and REST API Key as the driver app (from onesignal.com → your
+// Web Push app → Settings → Keys & IDs).
+const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
+const ONESIGNAL_REST_API_KEY="os_v2_app_w3x4nnuadfh6pczzzxfxeogzmtia56jw7xreyc5acqosvjpfgjzdv5km7iaeqfhn34owagm3nmcbejk34frghl6rbtwdoohmvqy76ta";
+let myOneSignalId=null;
+
+window.OneSignalDeferred=window.OneSignalDeferred||[];
+OneSignalDeferred.push(async function(OneSignal){
+  await OneSignal.init({appId:ONESIGNAL_APP_ID, allowLocalhostAsSecureOrigin:true});
+  await OneSignal.User.addTags({role:'customer'});
+  if(Notification.permission==='granted'){
+    myOneSignalId=OneSignal.User.PushSubscription.id;
+  }
+});
+
+window.enablePushNotifications=async function(){
+  try{
+    OneSignalDeferred.push(async function(OneSignal){
+      await OneSignal.Notifications.requestPermission();
+      myOneSignalId=OneSignal.User.PushSubscription.id;
+      if(myOneSignalId){
+        document.getElementById('pushBanner').classList.remove('show');
+        localStorage.setItem('as_push_dismissed','1');
+        showToast('Push notifications ON ho gaye ✅','success');
+      }else{
+        showToast('Subscription id nahi mila, phir try karo','error');
+      }
+    });
+  }catch(e){
+    console.error('OneSignal setup failed',e);
+    showToast('Push notification setup mein error aayi','error');
+  }
+};
+
+function maybeShowPushBanner(){
+  if(localStorage.getItem('as_push_dismissed')==='1')return;
+  if(!('Notification' in window))return;
+  if(Notification.permission==='granted')return; // already on, myOneSignalId picked up on init
+  if(Notification.permission==='denied')return;
+  document.getElementById('pushBanner').classList.add('show');
+}
+maybeShowPushBanner();
+
+// Sends a push directly via OneSignal REST API from the browser — same
+// exposure pattern as your existing Telegram bot token / UltraMsg instance.
+async function sendPush(subscriptionIds, title, body, data){
+  const ids=(subscriptionIds||[]).filter(Boolean);
+  if(!ids.length)return;
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({app_id:ONESIGNAL_APP_ID, target_channel:'push', include_subscription_ids:ids, headings:{en:title}, contents:{en:body}, data:data||{}})
+    });
+  }catch(e){console.warn('push send failed',e);}
+}
+
+// Broadcast a new-ride push to every currently-available driver (tag filter).
+async function sendPushToAvailableDrivers(title, body, data){
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({
+        app_id:ONESIGNAL_APP_ID, target_channel:'push',
+        filters:[{field:'tag',key:'role',relation:'=',value:'driver'},{operator:'AND'},{field:'tag',key:'available',relation:'=',value:'true'}],
+        headings:{en:title}, contents:{en:body}, data:data||{}
+      })
+    });
+  }catch(e){console.warn('driver broadcast push failed',e);}
+}
 
 let pricing={baseFare:20,perKm:12,minFare:30,allowBargain:true,maxBargainPct:30};
 let bookingMap,pickupMarker,dropMarker,routeLine;
@@ -601,7 +684,7 @@ window.requestRide=async function(){
 
   try{
     const rideDoc={
-      riderName:name, riderMobile:mobile,
+      riderName:name, riderMobile:mobile, riderOneSignalId:myOneSignalId||null,
       pickup, drop, distanceKm, estimatedFare,
       currentFare:offer, lastOfferBy:'customer',
       status:'requested', driverId:null,
@@ -612,6 +695,7 @@ window.requestRide=async function(){
     currentRideId=ref.id;
     watchRide(ref.id);
     switchPage('waiting');
+    sendPushToAvailableDrivers('🛺 Naya Ride Request!',`${pickup.address||'Pickup'} → ${drop.address||'Drop'} · ₹${offer}`,{rideId:ref.id,type:'new_ride'});
   }catch(e){
     showToast('Request bhejne mein error aayi','error');
     btn.disabled=false; btn.innerHTML='<i class="ti ti-steering-wheel"></i> Request Rickshaw';
@@ -623,6 +707,7 @@ function watchRide(rideId){
   unsubRide=onSnapshot(doc(db,'rickshaw_rides',rideId),(snap)=>{
     if(!snap.exists()){return;}
     const ride={id:snap.id,...snap.data()};
+    window._lastRideSnapshot=ride;
     handleRideUpdate(ride);
   });
 }
@@ -685,10 +770,14 @@ window.sendCustomerCounter=async function(rideId){
     negotiationLog:arrayUnion({by:'customer',amount:val,ts:Date.now()})
   });
   showToast('Counter offer bheja','success');
+  const ride=window._lastRideSnapshot;
+  if(ride?.driverOneSignalId) sendPush([ride.driverOneSignalId],'💬 Customer ne counter offer diya',`₹${val} — app kholo dekhne ke liye`,{rideId,type:'counter'});
 };
 
 window.acceptDriverOffer=async function(rideId){
   await updateDoc(doc(db,'rickshaw_rides',rideId),{status:'accepted',finalFare:document.querySelector('.neg-offer-val')?.textContent.replace('₹','')||undefined,acceptedAt:Date.now()});
+  const ride=window._lastRideSnapshot;
+  if(ride?.driverOneSignalId) sendPush([ride.driverOneSignalId],'✅ Customer ne offer accept kiya','Ride confirm ho gayi, pickup ki taraf nikal pado',{rideId,type:'accepted_by_customer'});
 };
 
 // ── Tracking ──────────────────────────────────────────────────────────────
