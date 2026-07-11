@@ -380,8 +380,8 @@ window.useMyLocation=function(type){
   showToast('Location dhoondh rahe hain… (accurate GPS ke liye khule aasman mein aa jao)','');
 
   let bestPos=null;
-  const TARGET_ACCURACY=200; // meters
-  const MAX_WAIT=15000; // 15s
+  const TARGET_ACCURACY=50; // meters
+  const MAX_WAIT=20000; // 20s — tighter accuracy target needs a bit more time to lock
 
   const finish=async(pos)=>{
     if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
