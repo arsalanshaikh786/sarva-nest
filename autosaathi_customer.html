@@ -32,7 +32,10 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 .page{display:none;padding:1rem 1rem calc(1rem + var(--sb));}
 .page.active{display:block;}
 
-.booking-map{width:100%;height:230px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;}
+.booking-map{width:100%;height:230px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;position:relative;}
+.map-wrap{position:relative;}
+.map-layer-toggle{position:absolute;top:10px;right:10px;z-index:400;background:rgba(18,18,18,.92);backdrop-filter:blur(6px);border:1.5px solid var(--yellow-border);border-radius:10px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;color:var(--yellow);cursor:pointer;display:flex;align-items:center;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.4);}
+.map-layer-toggle:active{transform:scale(.95);}
 
 .city-card{background:var(--card);border:1.5px solid var(--yellow-border);border-radius:16px;padding:.9rem;margin-bottom:1rem;}
 .city-card-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
@@ -111,7 +114,7 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 
 /* TRACKING SCREEN */
 .tracking-wrap{padding:0;}
-#trackMap{width:100%;height:260px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;}
+#trackMap{width:100%;height:260px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;position:relative;}
 .driver-info-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:1rem;}
 .driver-info-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;}
 .driver-info-avatar{width:48px;height:48px;border-radius:13px;background:var(--yellow-dim);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;}
@@ -163,7 +166,10 @@ button:active{transform:scale(.95);}
     </div>
   </div>
 
-  <div id="bookingMap" class="booking-map"></div>
+  <div class="map-wrap">
+    <div id="bookingMap" class="booking-map"></div>
+    <button type="button" class="map-layer-toggle" id="bookingMapToggle" onclick="toggleMapLayer('booking')"><i class="ti ti-satellite"></i> <span id="bookingMapToggleLabel">Satellite</span></button>
+  </div>
   <div class="locked-hint show" id="lockedHint">Location search ke liye pehle upar shahar select karo 👆</div>
 
   <div class="loc-inputs loc-inputs-locked" id="locInputsWrap">
@@ -222,7 +228,10 @@ button:active{transform:scale(.95);}
 <div class="page" id="pageTracking">
   <div class="tracking-wrap">
     <span class="ride-status-badge" id="trackStatusBadge"></span>
-    <div id="trackMap"></div>
+    <div class="map-wrap">
+      <div id="trackMap"></div>
+      <button type="button" class="map-layer-toggle" id="trackMapToggle" onclick="toggleMapLayer('track')"><i class="ti ti-satellite"></i> <span id="trackMapToggleLabel">Satellite</span></button>
+    </div>
     <div class="driver-info-card">
       <div class="driver-info-top">
         <div class="driver-info-avatar" id="trackDriverAvatar">D</div>
@@ -279,10 +288,42 @@ onSnapshot(doc(db,'rickshaw_settings','pricing'),(snap)=>{
   if(snap.exists()) pricing={...pricing,...snap.data()};
 });
 
+// ── Map tile layers (Street / Satellite) ────────────────────────────────
+// Esri World Imagery is free, needs no API key — used for the "real" satellite look.
+function streetLayer(){
+  return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
+}
+function satelliteLayer(){
+  return L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri'}),
+    // label overlay so road/place names still show on top of the satellite photo
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{attribution:''})
+  ]);
+}
+
+let bookingActiveLayer, trackActiveLayer;
+let bookingIsSat=false, trackIsSat=false;
+
+window.toggleMapLayer=function(which){
+  if(which==='booking'){
+    bookingIsSat=!bookingIsSat;
+    bookingMap.removeLayer(bookingActiveLayer);
+    bookingActiveLayer=bookingIsSat?satelliteLayer():streetLayer();
+    bookingActiveLayer.addTo(bookingMap);
+    document.getElementById('bookingMapToggleLabel').textContent=bookingIsSat?'Street':'Satellite';
+  }else{
+    trackIsSat=!trackIsSat;
+    trackMap.removeLayer(trackActiveLayer);
+    trackActiveLayer=trackIsSat?satelliteLayer():streetLayer();
+    trackActiveLayer.addTo(trackMap);
+    document.getElementById('trackMapToggleLabel').textContent=trackIsSat?'Street':'Satellite';
+  }
+};
+
 // ── Init map ──────────────────────────────────────────────────────────────
 function initBookingMap(){
   bookingMap=L.map('bookingMap').setView([22.5,79.0],5); // neutral India-wide view until a city is picked
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(bookingMap);
+  bookingActiveLayer=streetLayer().addTo(bookingMap);
   bookingMap.on('click',(e)=>{
     if(!selectedCity){ showToast('Pehle upar shahar select karo','warn'); return; }
     setPoint(activePoint,e.latlng.lat,e.latlng.lng,'Selected on map');
@@ -666,7 +707,9 @@ function renderTracking(ride){
 
   if(!trackMap){
     trackMap=L.map('trackMap').setView([ride.pickup.lat,ride.pickup.lng],14);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(trackMap);
+    trackIsSat=false;
+    trackActiveLayer=streetLayer().addTo(trackMap);
+    document.getElementById('trackMapToggleLabel').textContent='Satellite';
     trackPickupMarker=L.marker([ride.pickup.lat,ride.pickup.lng],{icon:dotIcon('#22C55E')}).addTo(trackMap).bindPopup('Pickup');
     trackDropMarker=L.marker([ride.drop.lat,ride.drop.lng],{icon:dotIcon('#EF4444')}).addTo(trackMap).bindPopup('Drop');
   }else{
@@ -705,7 +748,7 @@ window.finishAndReset=async function(){
 function resetBooking(){
   if(unsubRide){unsubRide();unsubRide=null;}
   currentRideId=null; pickup=null; drop=null; selectedStars=0;
-  if(trackMap){trackMap.remove();trackMap=null;trackDriverMarker=null;}
+  if(trackMap){trackMap.remove();trackMap=null;trackDriverMarker=null;trackIsSat=false;}
   document.getElementById('pickupInput').value='';
   document.getElementById('dropInput').value='';
   document.getElementById('fareCard').classList.remove('show');
