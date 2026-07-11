@@ -110,6 +110,10 @@ main{padding:0 1rem 1rem;}
 .empty-state i{font-size:2rem;display:block;margin-bottom:.6rem;opacity:.3;}
 .empty-state p{font-size:.85rem;color:var(--muted);}
 
+.push-banner{margin:0 1rem 1rem;background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:12px;padding:.7rem .9rem;font-size:.75rem;color:var(--blue);display:none;align-items:center;justify-content:space-between;gap:.6rem;}
+.push-banner.show{display:flex;}
+.push-banner button{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+
 .toast{position:fixed;bottom:1.2rem;left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.7rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateY(0);}
 .toast.success{background:var(--green);}
@@ -142,6 +146,11 @@ button:active{transform:scale(.95);}
     </div>
   </div>
   <button class="logout-mini" onclick="doLogout()"><i class="ti ti-logout"></i></button>
+</div>
+
+<div class="push-banner" id="pushBanner">
+  <span><i class="ti ti-bell-ringing"></i> Naye ride requests ka notification on karo — app band ho tab bhi milega</span>
+  <button onclick="enablePushNotifications()">Enable</button>
 </div>
 
 <div class="avail-toggle-wrap">
@@ -189,10 +198,67 @@ button:active{transform:scale(.95);}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, updateDoc, onSnapshot, runTransaction, arrayUnion, serverTimestamp, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getMessaging, getToken, onMessage, isSupported } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging.js";
 
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
 const db=getFirestore(app);
+
+// ── Push notifications (Firebase Cloud Messaging) ─────────────────────────
+// VAPID public key — safe to keep in client code, it only identifies your
+// Firebase project for Web Push, it can't be used to send messages.
+const VAPID_KEY="BAC7OUCf5zcKpBy1tQCRSHs5X4_dDPqSbx-kg3kkMxWfZsiZJcfIdy1NE56cXGn-PhDBEIIDQ9RQh0An3pjc1Xo";
+let messaging=null;
+
+window.enablePushNotifications=async function(){
+  try{
+    if(!('Notification' in window) || !('serviceWorker' in navigator)){
+      showToast('Is browser mein push notification support nahi hai','error');return;
+    }
+    const supported=await isSupported().catch(()=>false);
+    if(!supported){showToast('Is browser/device mein push notification support nahi hai','error');return;}
+
+    const permission=await Notification.requestPermission();
+    if(permission!=='granted'){
+      showToast('Notification permission allow nahi ki gayi','warn');return;
+    }
+    if(!messaging) messaging=getMessaging(app);
+
+    // firebase-messaging-sw.js must be uploaded at the ROOT of your domain
+    // (e.g. https://yourdomain.com/firebase-messaging-sw.js), not in a subfolder.
+    const registration=await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+    const token=await getToken(messaging,{vapidKey:VAPID_KEY,serviceWorkerRegistration:registration});
+    if(token && driver){
+      await updateDoc(doc(db,'rickshaw_drivers',driver.id),{fcmToken:token,fcmUpdatedAt:Date.now()});
+      document.getElementById('pushBanner').classList.remove('show');
+      localStorage.setItem('autosaathi_push_dismissed','1');
+      showToast('Push notifications ON ho gaye ✅','success');
+    }else{
+      showToast('Token nahi mila, phir try karo','error');
+    }
+
+    onMessage(messaging,(payload)=>{
+      // foreground message — app already open, so just toast + refresh list
+      const body=payload.notification?.body||'Naya ride request aaya hai';
+      showToast('🔔 '+body,'success');
+    });
+  }catch(e){
+    console.error('FCM setup failed',e);
+    showToast('Push notification setup mein error aayi','error');
+  }
+};
+
+function maybeShowPushBanner(){
+  if(localStorage.getItem('autosaathi_push_dismissed')==='1')return;
+  if(!('Notification' in window))return;
+  if(Notification.permission==='granted'){
+    // already granted earlier (maybe different device/session) — just (re)register silently
+    window.enablePushNotifications();
+    return;
+  }
+  if(Notification.permission==='denied')return;
+  document.getElementById('pushBanner').classList.add('show');
+}
 
 let driver=null; // logged-in driver doc {id, ...}
 let allDriversCache=[];
@@ -281,6 +347,7 @@ function initDriverSession(){
   document.getElementById('availCheckbox').checked=driver.status==='available'||driver.status==='busy';
   updateAvailUI(driver.status==='available'||driver.status==='busy');
   setLocationMode(driver.locationMode||'auto',true);
+  maybeShowPushBanner();
 
   unsubDriverDoc=onSnapshot(doc(db,'rickshaw_drivers',driver.id),(snap)=>{
     if(!snap.exists())return;
