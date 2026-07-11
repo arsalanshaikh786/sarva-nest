@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>AutoSaathi — Book a Rickshaw</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{
+  --bg:#121212;--surface:#191919;--card:#212121;--card2:#282828;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --yellow:#FFC107;--yellow-dim:rgba(255,193,7,0.12);--yellow-border:rgba(255,193,7,0.3);
+  --green:#22C55E;--green-dim:rgba(34,197,94,0.12);
+  --red:#EF4444;--red-dim:rgba(239,68,68,0.12);
+  --blue:#4F8EF7;--blue-dim:rgba(79,142,247,0.12);
+  --purple:#9B59F5;--purple-dim:rgba(155,89,245,0.12);
+  --text:#F5F5F0;--muted:#9A9A9A;--muted2:#6B6B6B;
+  --radius:16px;--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
+
+.topbar{position:sticky;top:0;z-index:200;background:rgba(18,18,18,.95);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:.9rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:var(--yellow);}
+.logo span{color:var(--text);}
+.track-mini-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:.4rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;}
+
+.page{display:none;padding:1rem 1rem calc(1rem + var(--sb));}
+.page.active{display:block;}
+
+.booking-map{width:100%;height:230px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;}
+
+.city-card{background:var(--card);border:1.5px solid var(--yellow-border);border-radius:16px;padding:.9rem;margin-bottom:1rem;}
+.city-card-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.city-search-row{position:relative;}
+.city-search-row input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:11px;padding:.65rem .8rem;color:var(--text);font-size:.88rem;outline:none;}
+.city-search-row input:focus{border-color:var(--yellow);}
+.city-selected-chip{display:none;align-items:center;justify-content:space-between;background:var(--yellow-dim);border:1.5px solid var(--yellow-border);border-radius:12px;padding:.7rem .9rem;}
+.city-selected-chip.show{display:flex;}
+.city-selected-name{display:flex;align-items:center;gap:.5rem;font-weight:700;color:var(--yellow);font-size:.92rem;}
+.change-city-btn{background:none;border:none;color:var(--muted);font-size:.75rem;font-weight:700;cursor:pointer;text-decoration:underline;}
+.loc-inputs-locked{opacity:.4;pointer-events:none;}
+.locked-hint{font-size:.7rem;color:var(--muted);text-align:center;padding:.6rem;display:none;}
+.locked-hint.show{display:block;}
+
+.loc-inputs{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:.3rem;margin-bottom:1rem;}
+.loc-row{display:flex;align-items:center;gap:.6rem;padding:.7rem .8rem;position:relative;}
+.loc-row+.loc-row{border-top:1px solid var(--border);}
+.loc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.loc-dot.pickup{background:var(--green);}
+.loc-dot.drop{background:var(--red);}
+.loc-row input{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:.86rem;}
+.loc-row input::placeholder{color:var(--muted2);}
+.loc-gps-btn{background:var(--yellow-dim);color:var(--yellow);border:none;border-radius:8px;padding:.35rem .5rem;font-size:.9rem;cursor:pointer;flex-shrink:0;}
+.loc-gps-btn:disabled{opacity:.5;cursor:not-allowed;}
+.search-suggestions{position:absolute;top:100%;left:0;right:0;background:var(--card2);border:1px solid var(--border2);border-radius:10px;margin-top:4px;z-index:50;max-height:200px;overflow-y:auto;display:none;}
+.search-suggestions.show{display:block;}
+.sugg-item{padding:.6rem .8rem;font-size:.8rem;cursor:pointer;border-bottom:1px solid var(--border);}
+.sugg-item:last-child{border-bottom:none;}
+.sugg-item:hover{background:var(--card);}
+
+.fare-estimate-card{background:linear-gradient(135deg,var(--card),var(--card2));border:1.5px solid var(--yellow-border);border-radius:16px;padding:1rem;margin-bottom:1rem;display:none;}
+.fare-estimate-card.show{display:block;}
+.fare-row{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:.3rem;}
+.fare-total-row{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--border2);padding-top:.6rem;margin-top:.4rem;}
+.fare-total-label{font-size:.85rem;font-weight:700;}
+.fare-total-val{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;color:var(--yellow);}
+
+.bargain-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:1rem;display:none;}
+.bargain-card.show{display:block;}
+.bargain-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.bargain-input-row{display:flex;align-items:center;gap:.6rem;background:var(--surface);border-radius:12px;padding:.4rem .4rem .4rem .9rem;}
+.bargain-input-row span{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:800;color:var(--yellow);}
+.bargain-input-row input{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;width:100%;}
+.bargain-slider{width:100%;margin-top:.7rem;accent-color:var(--yellow);}
+.bargain-hint{font-size:.68rem;color:var(--muted);margin-top:.4rem;}
+
+.book-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:14px;padding:.9rem;font-family:'Space Grotesk',sans-serif;font-size:1rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+.book-btn:disabled{opacity:.4;cursor:not-allowed;}
+
+.name-inputs{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:.8rem;margin-bottom:1rem;}
+.name-inputs input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:.6rem .8rem;color:var(--text);font-size:.86rem;outline:none;margin-bottom:.5rem;}
+.name-inputs input:focus{border-color:var(--yellow);}
+.name-inputs input:last-child{margin-bottom:0;}
+
+/* WAITING / STATUS SCREEN */
+.status-screen{text-align:center;padding:2rem 1rem;}
+.pulse-orb{width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,var(--yellow),#8a6200);margin:0 auto 1.2rem;animation:pulseOrb 1.6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:2.2rem;}
+@keyframes pulseOrb{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,193,7,.4);}50%{transform:scale(1.06);box-shadow:0 0 0 18px rgba(255,193,7,0);}}
+.status-title{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:.4rem;}
+.status-sub{font-size:.85rem;color:var(--muted);margin-bottom:1.3rem;}
+.cancel-search-btn{background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:10px;padding:.6rem 1.3rem;font-weight:700;font-size:.82rem;cursor:pointer;}
+
+.negotiation-card{background:var(--card);border:1.5px solid var(--purple);border-radius:16px;padding:1.1rem;text-align:left;margin-top:1rem;}
+.neg-driver-row{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;}
+.neg-avatar{width:40px;height:40px;border-radius:11px;background:var(--purple-dim);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:800;}
+.neg-offer-box{background:var(--surface);border-radius:12px;padding:.8rem;text-align:center;margin-bottom:.8rem;}
+.neg-offer-label{font-size:.68rem;color:var(--muted);text-transform:uppercase;font-weight:700;}
+.neg-offer-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--purple);margin-top:.2rem;}
+.neg-actions{display:flex;gap:.5rem;}
+.neg-accept-btn{flex:1;background:var(--green);color:#062b13;border:none;border-radius:10px;padding:.65rem;font-weight:800;font-size:.85rem;cursor:pointer;}
+.neg-counter-btn{flex:1;background:var(--purple-dim);color:var(--purple);border:1.5px solid var(--purple);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;}
+.neg-counter-input-row{display:none;gap:.5rem;margin-top:.6rem;}
+.neg-counter-input-row.show{display:flex;}
+.neg-counter-input-row input{flex:1;padding:.55rem .7rem;border:1.5px solid var(--border);border-radius:9px;background:var(--surface);color:var(--text);font-size:.85rem;outline:none;}
+.neg-counter-input-row button{background:var(--purple);color:#fff;border:none;border-radius:9px;padding:.55rem .9rem;font-weight:700;cursor:pointer;}
+
+/* TRACKING SCREEN */
+.tracking-wrap{padding:0;}
+#trackMap{width:100%;height:260px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;}
+.driver-info-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:1rem;}
+.driver-info-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;}
+.driver-info-avatar{width:48px;height:48px;border-radius:13px;background:var(--yellow-dim);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;}
+.driver-info-name{font-weight:800;font-size:1rem;}
+.driver-info-vehicle{font-size:.75rem;color:var(--muted);}
+.ride-status-badge{display:inline-flex;align-items:center;gap:5px;padding:.35rem .8rem;border-radius:50px;font-size:.75rem;font-weight:700;margin-bottom:.7rem;}
+.rsb-accepted{background:var(--blue-dim);color:var(--blue);}
+.rsb-driver_arrived{background:var(--yellow-dim);color:var(--yellow);}
+.rsb-in_progress{background:var(--green-dim);color:var(--green);}
+.rsb-completed{background:var(--green-dim);color:var(--green);}
+.fare-display{text-align:center;padding:.8rem;background:var(--surface);border-radius:12px;margin-bottom:.7rem;}
+.fare-display-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--yellow);}
+.call-driver-btn{width:100%;background:var(--blue-dim);color:var(--blue);border:1.5px solid var(--blue);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+.cancel-ride-btn{width:100%;background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;margin-top:.6rem;}
+
+.rate-stars{display:flex;justify-content:center;gap:.5rem;margin:1rem 0;}
+.rate-star{font-size:2rem;color:#3a3a3a;cursor:pointer;}
+.rate-star.filled{color:var(--yellow);}
+.done-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:12px;padding:.85rem;font-weight:800;font-size:.9rem;cursor:pointer;}
+
+.toast{position:fixed;bottom:1.2rem;left:1rem;right:1rem;max-width:460px;margin:0 auto;background:var(--text);color:var(--bg);padding:.7rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.success{background:var(--green);}
+.toast.error{background:var(--red);}
+.toast.warn{background:var(--yellow);color:#1a1400;}
+
+button{transition:transform .15s cubic-bezier(.34,1.56,.64,1),filter .15s ease;}
+button:active{transform:scale(.95);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">Auto<span>Saathi</span></div>
+</div>
+
+<!-- BOOKING PAGE -->
+<div class="page active" id="pageBooking">
+
+  <div class="city-card">
+    <div class="city-card-label"><i class="ti ti-building-community"></i> Pehle apna shahar/gaon select karo</div>
+    <div class="city-search-row" id="citySearchRow">
+      <input type="text" id="cityInput" placeholder="Shahar ya gaon ka naam type karo…" oninput="searchCity(this.value)"/>
+      <div class="search-suggestions" id="citySuggestions"></div>
+    </div>
+    <div class="city-selected-chip" id="citySelectedChip">
+      <div class="city-selected-name"><i class="ti ti-map-pin-filled"></i> <span id="citySelectedName"></span></div>
+      <button class="change-city-btn" onclick="changeCity()">Change</button>
+    </div>
+  </div>
+
+  <div id="bookingMap" class="booking-map"></div>
+  <div class="locked-hint show" id="lockedHint">Location search ke liye pehle upar shahar select karo 👆</div>
+
+  <div class="loc-inputs loc-inputs-locked" id="locInputsWrap">
+    <div class="loc-row">
+      <div class="loc-dot pickup"></div>
+      <input type="text" id="pickupInput" placeholder="Pickup location" oninput="searchAddress(this.value,'pickup')" onfocus="setActivePoint('pickup')"/>
+      <button class="loc-gps-btn" id="gpsBtn" onclick="useMyLocation('pickup')"><i class="ti ti-current-location"></i></button>
+      <div class="search-suggestions" id="pickupSuggestions"></div>
+    </div>
+    <div class="loc-row">
+      <div class="loc-dot drop"></div>
+      <input type="text" id="dropInput" placeholder="Where to?" oninput="searchAddress(this.value,'drop')" onfocus="setActivePoint('drop')"/>
+      <div class="search-suggestions" id="dropSuggestions"></div>
+    </div>
+  </div>
+
+  <div class="fare-estimate-card" id="fareCard">
+    <div class="fare-row"><span>Distance</span><span id="fareDistance">0 km</span></div>
+    <div class="fare-row"><span>Estimated fare</span><span id="fareEstimate">₹0</span></div>
+    <div class="fare-total-row">
+      <span class="fare-total-label">Base price</span>
+      <span class="fare-total-val" id="fareTotal">₹0</span>
+    </div>
+  </div>
+
+  <div class="bargain-card" id="bargainCard">
+    <div class="bargain-label">Apna offer do (bargain)</div>
+    <div class="bargain-input-row">
+      <span>₹</span>
+      <input type="number" id="bargainInput" oninput="syncBargainSlider()"/>
+    </div>
+    <input type="range" class="bargain-slider" id="bargainSlider" oninput="syncBargainInput()"/>
+    <div class="bargain-hint" id="bargainHint"></div>
+  </div>
+
+  <div class="name-inputs" id="nameInputs" style="display:none">
+    <input type="text" id="riderName" placeholder="Your name"/>
+    <input type="tel" id="riderMobile" placeholder="Mobile number" maxlength="10"/>
+  </div>
+
+  <button class="book-btn" id="bookBtn" disabled onclick="requestRide()"><i class="ti ti-steering-wheel"></i> Set pickup &amp; drop first</button>
+</div>
+
+<!-- WAITING / NEGOTIATION PAGE -->
+<div class="page" id="pageWaiting">
+  <div class="status-screen">
+    <div class="pulse-orb">🛺</div>
+    <div class="status-title" id="waitingTitle">Driver dhoond rahe hain…</div>
+    <div class="status-sub" id="waitingSub">Thoda intezaar karo, jaldi milega</div>
+    <div id="negotiationSlot"></div>
+    <button class="cancel-search-btn" onclick="cancelRide()"><i class="ti ti-x"></i> Cancel</button>
+  </div>
+</div>
+
+<!-- TRACKING PAGE -->
+<div class="page" id="pageTracking">
+  <div class="tracking-wrap">
+    <span class="ride-status-badge" id="trackStatusBadge"></span>
+    <div id="trackMap"></div>
+    <div class="driver-info-card">
+      <div class="driver-info-top">
+        <div class="driver-info-avatar" id="trackDriverAvatar">D</div>
+        <div>
+          <div class="driver-info-name" id="trackDriverName">—</div>
+          <div class="driver-info-vehicle" id="trackDriverVehicle">—</div>
+        </div>
+      </div>
+      <div class="fare-display"><div class="fare-display-val" id="trackFare">₹0</div></div>
+      <a class="call-driver-btn" id="callDriverBtn" href="#"><i class="ti ti-phone"></i> Call Driver</a>
+      <button class="cancel-ride-btn" id="cancelRideBtn" onclick="cancelRide()"><i class="ti ti-x"></i> Cancel Ride</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETED / RATING PAGE -->
+<div class="page" id="pageCompleted">
+  <div class="status-screen">
+    <div class="pulse-orb" style="animation:none;background:radial-gradient(circle,var(--green),#0a3a1e)">✅</div>
+    <div class="status-title">Ride Complete!</div>
+    <div class="status-sub">Fare: <b id="completedFare" style="color:var(--yellow)">₹0</b></div>
+    <div class="rate-stars" id="rateStars">
+      <span class="rate-star" data-val="1">★</span>
+      <span class="rate-star" data-val="2">★</span>
+      <span class="rate-star" data-val="3">★</span>
+      <span class="rate-star" data-val="4">★</span>
+      <span class="rate-star" data-val="5">★</span>
+    </div>
+    <button class="done-btn" onclick="finishAndReset()">Done</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
+const app=initializeApp(FC);
+const db=getFirestore(app);
+
+let pricing={baseFare:20,perKm:12,minFare:30,allowBargain:true,maxBargainPct:30};
+let bookingMap,pickupMarker,dropMarker,routeLine;
+let pickup=null, drop=null, activePoint='pickup';
+let estimatedFare=0, distanceKm=0;
+let currentRideId=null, unsubRide=null;
+let trackMap,trackDriverMarker,trackPickupMarker,trackDropMarker;
+let searchDebounce, citySearchDebounce;
+let selectedCity=null; // {name,lat,lng} — chosen before pickup/drop search is enabled
+
+// ── Pricing (realtime) ──────────────────────────────────────────────────
+onSnapshot(doc(db,'rickshaw_settings','pricing'),(snap)=>{
+  if(snap.exists()) pricing={...pricing,...snap.data()};
+});
+
+// ── Init map ──────────────────────────────────────────────────────────────
+function initBookingMap(){
+  bookingMap=L.map('bookingMap').setView([22.5,79.0],5); // neutral India-wide view until a city is picked
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(bookingMap);
+  bookingMap.on('click',(e)=>{
+    if(!selectedCity){ showToast('Pehle upar shahar select karo','warn'); return; }
+    setPoint(activePoint,e.latlng.lat,e.latlng.lng,'Selected on map');
+  });
+}
+initBookingMap();
+
+// ── City selection (step 1) ─────────────────────────────────────────────
+window.searchCity=function(q){
+  clearTimeout(citySearchDebounce);
+  const suggEl=document.getElementById('citySuggestions');
+  if(q.length<2){suggEl.classList.remove('show');return;}
+  citySearchDebounce=setTimeout(async()=>{
+    try{
+      const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&city=${encodeURIComponent(q)}&country=India&limit=6&addressdetails=1`);
+      const results=await res.json();
+      if(!results.length){suggEl.classList.remove('show');return;}
+      suggEl.innerHTML=results.map(r=>{
+        const a=r.address||{};
+        const state=a.state?`, ${a.state}`:'';
+        return `<div class="sugg-item" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${(r.display_name||'').replace(/"/g,'&quot;')}">
+          <div style="font-weight:700">${a.city||a.town||a.village||r.name||r.display_name}</div>
+          <div style="font-size:.68rem;color:var(--muted);margin-top:2px">${r.display_name}</div>
+        </div>`;
+      }).join('');
+      suggEl.classList.add('show');
+      suggEl.querySelectorAll('.sugg-item').forEach(item=>{
+        item.onclick=()=>{ selectCity(+item.dataset.lat,+item.dataset.lon,item.dataset.name); };
+      });
+    }catch(e){}
+  },400);
+};
+
+window.selectCity=function(lat,lng,name){
+  selectedCity={name,lat,lng};
+  document.getElementById('citySearchRow').style.display='none';
+  document.getElementById('citySuggestions').classList.remove('show');
+  document.getElementById('citySelectedChip').classList.add('show');
+  document.getElementById('citySelectedName').textContent=name.split(',').slice(0,2).join(',');
+  document.getElementById('locInputsWrap').classList.remove('loc-inputs-locked');
+  document.getElementById('lockedHint').classList.remove('show');
+  bookingMap.setView([lat,lng],13);
+};
+
+window.changeCity=function(){
+  selectedCity=null;
+  document.getElementById('citySearchRow').style.display='block';
+  document.getElementById('cityInput').value='';
+  document.getElementById('citySelectedChip').classList.remove('show');
+  document.getElementById('locInputsWrap').classList.add('loc-inputs-locked');
+  document.getElementById('lockedHint').classList.add('show');
+  resetBooking(true);
+  bookingMap.setView([22.5,79.0],5);
+};
+
+window.setActivePoint=function(p){ activePoint=p; };
+
+function setPoint(type,lat,lng,address){
+  const point={lat,lng,address};
+  if(type==='pickup'){
+    pickup=point;
+    document.getElementById('pickupInput').value=address;
+    if(pickupMarker) bookingMap.removeLayer(pickupMarker);
+    pickupMarker=L.marker([lat,lng],{icon:dotIcon('#22C55E')}).addTo(bookingMap);
+  }else{
+    drop=point;
+    document.getElementById('dropInput').value=address;
+    if(dropMarker) bookingMap.removeLayer(dropMarker);
+    dropMarker=L.marker([lat,lng],{icon:dotIcon('#EF4444')}).addTo(bookingMap);
+  }
+  document.getElementById(type+'Suggestions').classList.remove('show');
+  bookingMap.setView([lat,lng],14);
+  if(pickup&&drop) computeFare();
+}
+
+function dotIcon(color){
+  return L.divIcon({className:'',html:`<div style="width:18px;height:18px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)"></div>`,iconSize:[18,18],iconAnchor:[9,9]});
+}
+
+// ── GPS location (high-accuracy, target ≤200m) ─────────────────────────
+// Uses watchPosition (not getCurrentPosition) so we keep receiving fresh GPS
+// fixes and pick the best one — cell/wifi-only fixes on first read are often
+// wildly off (can jump to a whole different city). We wait up to 15s for an
+// accuracy of 200m or better, and otherwise fall back to the best fix seen.
+let gpsWatchId=null;
+
+window.useMyLocation=function(type){
+  if(!selectedCity){showToast('Pehle upar shahar select karo','warn');return;}
+  if(!navigator.geolocation){showToast('GPS support nahi hai','error');return;}
+  if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
+
+  const btn=document.getElementById('gpsBtn');
+  btn.disabled=true;
+  btn.innerHTML='<i class="ti ti-loader-2"></i>';
+  showToast('Location dhoondh rahe hain… (accurate GPS ke liye khule aasman mein aa jao)','');
+
+  let bestPos=null;
+  const TARGET_ACCURACY=200; // meters
+  const MAX_WAIT=15000; // 15s
+
+  const finish=async(pos)=>{
+    if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
+    clearTimeout(timeoutTimer);
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-current-location"></i>';
+    const lat=pos.coords.latitude, lng=pos.coords.longitude, acc=Math.round(pos.coords.accuracy);
+    if(acc>TARGET_ACCURACY){
+      showToast(`Location mili (±${acc}m accuracy) — thodi kam sahi ho sakti hai`,'warn');
+    }else{
+      showToast(`Location mil gayi (±${acc}m accuracy)`,'success');
+    }
+    const address=await reverseGeocode(lat,lng);
+    setPoint(type,lat,lng,address);
+  };
+
+  const timeoutTimer=setTimeout(()=>{
+    if(bestPos){
+      finish(bestPos);
+    }else{
+      if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
+      btn.disabled=false;
+      btn.innerHTML='<i class="ti ti-current-location"></i>';
+      showToast('Accurate location nahi mil payi, phir try karo','error');
+    }
+  },MAX_WAIT);
+
+  gpsWatchId=navigator.geolocation.watchPosition((pos)=>{
+    if(!bestPos || pos.coords.accuracy<bestPos.coords.accuracy){
+      bestPos=pos;
+    }
+    if(pos.coords.accuracy<=TARGET_ACCURACY){
+      finish(pos);
+    }
+  },(err)=>{
+    if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
+    clearTimeout(timeoutTimer);
+    btn.disabled=false;
+    btn.innerHTML='<i class="ti ti-current-location"></i>';
+    if(err.code===1) showToast('Location permission do browser settings mein','error');
+    else if(err.code===2) showToast('Location detect nahi ho paayi, GPS/Location ON karo','error');
+    else showToast('Location lene mein time zyada laga, phir try karo','error');
+  },{
+    enableHighAccuracy:true,
+    timeout:MAX_WAIT,
+    maximumAge:0
+  });
+};
+
+async function reverseGeocode(lat,lng){
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`);
+    const data=await res.json();
+    return buildShortAddress(data) || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  }catch(e){ return `${lat.toFixed(5)}, ${lng.toFixed(5)}`; }
+}
+
+// Prefer granular parts (road/colony/locality) over the full display_name, which
+// often leads with just city/district and buries the actual street or colony name.
+function buildShortAddress(data){
+  const a=data?.address;
+  if(!a) return data?.display_name || '';
+  const parts=[
+    a.road || a.pedestrian || a.footway,
+    a.neighbourhood || a.suburb || a.residential || a.quarter || a.hamlet,
+    a.village || a.town || a.city_district || a.city,
+  ].filter(Boolean);
+  const unique=[...new Set(parts)];
+  return unique.length ? unique.join(', ') : (data.display_name || '');
+}
+
+window.searchAddress=function(q,type){
+  if(!selectedCity){showToast('Pehle upar shahar select karo','warn');return;}
+  clearTimeout(searchDebounce);
+  const suggEl=document.getElementById(type+'Suggestions');
+  if(q.length<3){suggEl.classList.remove('show');return;}
+  searchDebounce=setTimeout(async()=>{
+    try{
+      // Bias strictly around the chosen city so small localities (galis, colonies,
+      // wards) inside that city/town rank above unrelated places with the same name.
+      const d=0.18; // ~18-20km box around the selected city — strictly enforced (bounded=1), wide enough to cover the town/taluka
+      const viewbox=`${selectedCity.lng-d},${selectedCity.lat+d},${selectedCity.lng+d},${selectedCity.lat-d}`;
+      const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=8&addressdetails=1&countrycodes=in&viewbox=${viewbox}&bounded=1`;
+      const res=await fetch(url);
+      const results=await res.json();
+      if(!results.length){suggEl.classList.remove('show');return;}
+      suggEl.innerHTML=results.map(r=>{
+        const short=buildShortAddress(r);
+        return `<div class="sugg-item" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${(r.display_name||short).replace(/"/g,'&quot;')}">
+          <div style="font-weight:700">${short||r.display_name}</div>
+          <div style="font-size:.68rem;color:var(--muted);margin-top:2px">${r.display_name}</div>
+        </div>`;
+      }).join('');
+      suggEl.classList.add('show');
+      suggEl.querySelectorAll('.sugg-item').forEach(item=>{
+        item.onclick=()=>{ setPoint(type,+item.dataset.lat,+item.dataset.lon,item.dataset.name); };
+      });
+    }catch(e){}
+  },400);
+};
+
+// ── Fare calc (Haversine) ───────────────────────────────────────────────
+function haversineKm(lat1,lon1,lat2,lon2){
+  const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+async function computeFare(){
+  distanceKm=haversineKm(pickup.lat,pickup.lng,drop.lat,drop.lng)*1.25; // rough road-distance correction
+  estimatedFare=Math.max(pricing.minFare, Math.round(pricing.baseFare+distanceKm*pricing.perKm));
+  document.getElementById('fareDistance').textContent=distanceKm.toFixed(1)+' km';
+  document.getElementById('fareEstimate').textContent='₹'+estimatedFare;
+  document.getElementById('fareTotal').textContent='₹'+estimatedFare;
+  document.getElementById('fareCard').classList.add('show');
+  document.getElementById('nameInputs').style.display='block';
+
+  if(pricing.allowBargain){
+    document.getElementById('bargainCard').classList.add('show');
+    const minOffer=Math.max(pricing.minFare,Math.round(estimatedFare*(1-pricing.maxBargainPct/100)));
+    const maxOffer=Math.round(estimatedFare*1.3);
+    document.getElementById('bargainInput').value=estimatedFare;
+    document.getElementById('bargainInput').min=minOffer;
+    document.getElementById('bargainSlider').min=minOffer;
+    document.getElementById('bargainSlider').max=maxOffer;
+    document.getElementById('bargainSlider').value=estimatedFare;
+    document.getElementById('bargainHint').textContent=`Minimum offer ₹${minOffer} ke upar rakho`;
+  }else{
+    document.getElementById('bargainCard').classList.remove('show');
+  }
+
+  const btn=document.getElementById('bookBtn');
+  btn.disabled=false;
+  btn.innerHTML='<i class="ti ti-steering-wheel"></i> Request Rickshaw';
+
+  drawRoute();
+}
+
+async function drawRoute(){
+  if(routeLine){bookingMap.removeLayer(routeLine);routeLine=null;}
+  try{
+    const res=await fetch(`https://router.project-osrm.org/route/v1/driving/${pickup.lng},${pickup.lat};${drop.lng},${drop.lat}?overview=full&geometries=geojson`);
+    const data=await res.json();
+    const coords=data.routes?.[0]?.geometry?.coordinates;
+    if(coords){
+      const latlngs=coords.map(c=>[c[1],c[0]]);
+      routeLine=L.polyline(latlngs,{color:'#FFC107',weight:4,opacity:.8}).addTo(bookingMap);
+      bookingMap.fitBounds(routeLine.getBounds(),{padding:[30,30]});
+    }
+  }catch(e){ /* route drawing is cosmetic only — fare calc doesn't depend on it */ }
+}
+
+window.syncBargainSlider=function(){ document.getElementById('bargainSlider').value=document.getElementById('bargainInput').value; };
+window.syncBargainInput=function(){ document.getElementById('bargainInput').value=document.getElementById('bargainSlider').value; };
+
+// ── Request ride ─────────────────────────────────────────────────────────
+window.requestRide=async function(){
+  if(!pickup||!drop){showToast('Pickup aur drop dono set karo','error');return;}
+  const name=document.getElementById('riderName').value.trim();
+  const mobile=document.getElementById('riderMobile').value.trim();
+  if(!name||!mobile){showToast('Naam aur mobile daalo','error');return;}
+  if(!/^\d{10}$/.test(mobile)){showToast('Valid 10-digit mobile daalo','error');return;}
+
+  let offer=estimatedFare;
+  if(pricing.allowBargain){
+    offer=+document.getElementById('bargainInput').value||estimatedFare;
+    const minOffer=Math.max(pricing.minFare,Math.round(estimatedFare*(1-pricing.maxBargainPct/100)));
+    if(offer<minOffer){showToast(`Offer kam se kam ₹${minOffer} rakho`,'error');return;}
+  }
+
+  localStorage.setItem('as_rider_name',name);
+  localStorage.setItem('as_rider_mobile',mobile);
+
+  const btn=document.getElementById('bookBtn');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-loader-2"></i> Requesting…';
+
+  try{
+    const rideDoc={
+      riderName:name, riderMobile:mobile,
+      pickup, drop, distanceKm, estimatedFare,
+      currentFare:offer, lastOfferBy:'customer',
+      status:'requested', driverId:null,
+      negotiationLog:[{by:'customer',amount:offer,ts:Date.now()}],
+      createdAt:Date.now()
+    };
+    const ref=await addDoc(collection(db,'rickshaw_rides'),rideDoc);
+    currentRideId=ref.id;
+    watchRide(ref.id);
+    switchPage('waiting');
+  }catch(e){
+    showToast('Request bhejne mein error aayi','error');
+    btn.disabled=false; btn.innerHTML='<i class="ti ti-steering-wheel"></i> Request Rickshaw';
+  }
+};
+
+function watchRide(rideId){
+  if(unsubRide)unsubRide();
+  unsubRide=onSnapshot(doc(db,'rickshaw_rides',rideId),(snap)=>{
+    if(!snap.exists()){return;}
+    const ride={id:snap.id,...snap.data()};
+    handleRideUpdate(ride);
+  });
+}
+
+function handleRideUpdate(ride){
+  if(ride.status==='requested'){
+    switchPage('waiting');
+    document.getElementById('waitingTitle').textContent='Driver dhoond rahe hain…';
+    document.getElementById('waitingSub').textContent='Thoda intezaar karo, jaldi milega';
+    document.getElementById('negotiationSlot').innerHTML='';
+  }else if(ride.status==='negotiating'){
+    switchPage('waiting');
+    renderNegotiation(ride);
+  }else if(['accepted','driver_arrived','in_progress'].includes(ride.status)){
+    switchPage('tracking');
+    renderTracking(ride);
+  }else if(ride.status==='completed'){
+    switchPage('completed');
+    document.getElementById('completedFare').textContent='₹'+(ride.finalFare||ride.currentFare||0);
+    window._completedRideId=ride.id;
+  }else if(ride.status==='cancelled'){
+    showToast('Ride cancel ho gayi','warn');
+    resetBooking();
+  }
+}
+
+function renderNegotiation(ride){
+  const el=document.getElementById('negotiationSlot');
+  const driverOffered=ride.lastOfferBy==='driver';
+  document.getElementById('waitingTitle').textContent=driverOffered?'Driver ne counter offer bheja hai':'Offer bheja gaya, wait karo…';
+  document.getElementById('waitingSub').textContent='';
+  if(!driverOffered){ el.innerHTML=''; return; }
+  el.innerHTML=`<div class="negotiation-card">
+    <div class="neg-driver-row">
+      <div class="neg-avatar">${(ride.driverName||'D')[0]}</div>
+      <div><b>${ride.driverName}</b><br><span style="font-size:.75rem;color:var(--muted)">${ride.driverVehicle||''}</span></div>
+    </div>
+    <div class="neg-offer-box">
+      <div class="neg-offer-label">Driver ka offer</div>
+      <div class="neg-offer-val">₹${ride.currentFare}</div>
+    </div>
+    <div class="neg-actions">
+      <button class="neg-accept-btn" onclick="acceptDriverOffer('${ride.id}')"><i class="ti ti-check"></i> Accept</button>
+      <button class="neg-counter-btn" onclick="toggleNegCounter()"><i class="ti ti-message-2"></i> Counter</button>
+    </div>
+    <div class="neg-counter-input-row" id="negCounterRow">
+      <input type="number" id="negCounterInput" placeholder="Apna price"/>
+      <button onclick="sendCustomerCounter('${ride.id}')">Bhejo</button>
+    </div>
+  </div>`;
+}
+
+window.toggleNegCounter=function(){ document.getElementById('negCounterRow').classList.toggle('show'); };
+
+window.sendCustomerCounter=async function(rideId){
+  const val=+document.getElementById('negCounterInput').value;
+  if(!val||val<=0){showToast('Valid amount daalo','error');return;}
+  await updateDoc(doc(db,'rickshaw_rides',rideId),{
+    currentFare:val, lastOfferBy:'customer',
+    negotiationLog:arrayUnion({by:'customer',amount:val,ts:Date.now()})
+  });
+  showToast('Counter offer bheja','success');
+};
+
+window.acceptDriverOffer=async function(rideId){
+  await updateDoc(doc(db,'rickshaw_rides',rideId),{status:'accepted',finalFare:document.querySelector('.neg-offer-val')?.textContent.replace('₹','')||undefined,acceptedAt:Date.now()});
+};
+
+// ── Tracking ──────────────────────────────────────────────────────────────
+function renderTracking(ride){
+  document.getElementById('trackStatusBadge').className='ride-status-badge rsb-'+ride.status;
+  document.getElementById('trackStatusBadge').textContent=
+    ride.status==='accepted'?'🛺 Driver aa raha hai':
+    ride.status==='driver_arrived'?'📍 Driver pahunch gaya':
+    ride.status==='in_progress'?'🚀 Ride shuru ho gayi':'—';
+  document.getElementById('trackDriverAvatar').textContent=(ride.driverName||'D')[0];
+  document.getElementById('trackDriverName').textContent=ride.driverName||'—';
+  document.getElementById('trackDriverVehicle').textContent=ride.driverVehicle||'—';
+  document.getElementById('trackFare').textContent='₹'+(ride.finalFare||ride.currentFare||0);
+  document.getElementById('callDriverBtn').href='tel:'+(ride.driverMobile||'');
+  document.getElementById('cancelRideBtn').style.display=ride.status==='accepted'?'block':'none';
+
+  if(!trackMap){
+    trackMap=L.map('trackMap').setView([ride.pickup.lat,ride.pickup.lng],14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(trackMap);
+    trackPickupMarker=L.marker([ride.pickup.lat,ride.pickup.lng],{icon:dotIcon('#22C55E')}).addTo(trackMap).bindPopup('Pickup');
+    trackDropMarker=L.marker([ride.drop.lat,ride.drop.lng],{icon:dotIcon('#EF4444')}).addTo(trackMap).bindPopup('Drop');
+  }else{
+    setTimeout(()=>trackMap.invalidateSize(),80);
+  }
+  if(ride.driverLat&&ride.driverLng){
+    const autoIcon=L.divIcon({className:'',html:'<div style="font-size:22px">🛺</div>',iconSize:[26,26],iconAnchor:[13,13]});
+    if(trackDriverMarker) trackDriverMarker.setLatLng([ride.driverLat,ride.driverLng]);
+    else trackDriverMarker=L.marker([ride.driverLat,ride.driverLng],{icon:autoIcon}).addTo(trackMap);
+    const pts=[[ride.pickup.lat,ride.pickup.lng],[ride.drop.lat,ride.drop.lng],[ride.driverLat,ride.driverLng]];
+    trackMap.fitBounds(L.latLngBounds(pts),{padding:[40,40],maxZoom:15});
+  }
+}
+
+window.cancelRide=async function(){
+  if(!currentRideId)return;
+  if(!confirm('Ride cancel karni hai?'))return;
+  await updateDoc(doc(db,'rickshaw_rides',currentRideId),{status:'cancelled'});
+};
+
+// ── Rating & reset ───────────────────────────────────────────────────────
+let selectedStars=0;
+document.getElementById('rateStars').addEventListener('click',(e)=>{
+  const star=e.target.closest('.rate-star');if(!star)return;
+  selectedStars=+star.dataset.val;
+  document.querySelectorAll('.rate-star').forEach(s=>s.classList.toggle('filled',+s.dataset.val<=selectedStars));
+});
+
+window.finishAndReset=async function(){
+  if(selectedStars&&window._completedRideId){
+    await updateDoc(doc(db,'rickshaw_rides',window._completedRideId),{rating:selectedStars}).catch(()=>{});
+  }
+  resetBooking();
+};
+
+function resetBooking(){
+  if(unsubRide){unsubRide();unsubRide=null;}
+  currentRideId=null; pickup=null; drop=null; selectedStars=0;
+  if(trackMap){trackMap.remove();trackMap=null;trackDriverMarker=null;}
+  document.getElementById('pickupInput').value='';
+  document.getElementById('dropInput').value='';
+  document.getElementById('fareCard').classList.remove('show');
+  document.getElementById('bargainCard').classList.remove('show');
+  document.getElementById('nameInputs').style.display='none';
+  const btn=document.getElementById('bookBtn');
+  btn.disabled=true; btn.innerHTML='<i class="ti ti-steering-wheel"></i> Set pickup & drop first';
+  if(pickupMarker){bookingMap.removeLayer(pickupMarker);pickupMarker=null;}
+  if(dropMarker){bookingMap.removeLayer(dropMarker);dropMarker=null;}
+  if(routeLine){bookingMap.removeLayer(routeLine);routeLine=null;}
+  switchPage('booking');
+  setTimeout(()=>bookingMap.invalidateSize(),100);
+
+  const savedName=localStorage.getItem('as_rider_name');
+  const savedMobile=localStorage.getItem('as_rider_mobile');
+  if(savedName)document.getElementById('riderName').value=savedName;
+  if(savedMobile)document.getElementById('riderMobile').value=savedMobile;
+}
+
+window.switchPage=function(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+page[0].toUpperCase()+page.slice(1)).classList.add('active');
+};
+
+// ── Toast ────────────────────────────────────────────────────────────────
+let toastTimer;
+window.showToast=function(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+(type||'');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400);
+};
+
+// Prefill saved rider details
+const savedName=localStorage.getItem('as_rider_name');
+const savedMobile=localStorage.getItem('as_rider_mobile');
+if(savedName)document.getElementById('riderName').value=savedName;
+if(savedMobile)document.getElementById('riderMobile').value=savedMobile;
+
+// Default city — app abhi sirf Akole mein use hoga, isliye city-select step skip kar diya.
+// Jab doosre gaon/city mein expand karo, bas ye line hata dena (ya "Change" button customer khud use kar sakta hai).
+window.selectCity(19.5800,74.0300,'Akole, Maharashtra');
+</script>
+</body>
+</html>
