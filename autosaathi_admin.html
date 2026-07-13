@@ -21,9 +21,16 @@
   --text:#F5F5F0;--muted:#9A9A9A;--muted2:#6B6B6B;
   --radius:14px;--sb:env(safe-area-inset-bottom,0px);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overscroll-behavior-y:contain;}
 h1,h2,.brand,.sec-title,.form-card-title{font-family:'Space Grotesk',sans-serif;}
+@media(max-width:600px){
+  input,select,textarea{font-size:16px!important;}
+}
+@media(max-width:420px){
+  .form-grid{grid-template-columns:1fr;}
+}
 
 .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
 .login-box{background:var(--surface);border-radius:20px;border:1px solid var(--border2);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
@@ -362,6 +369,27 @@ let allDrivers=[],allRides=[],allSos=[];
 let unsubDrivers=null,unsubRides=null,unsubPricing=null,unsubSos=null;
 let adminMap=null,driverMarkers={};
 
+// ── WhatsApp notifications (Whapi Cloud) ──────────────────────────────────
+const WHAPI_URL="https://gate.whapi.cloud/messages/text";
+const WHAPI_TOKEN="nTnhPJL8auy4n60sxlmsKMKgV0lNuwYG";
+function toWhatsappNumber(mobile){
+  if(!mobile)return null;
+  let m=(''+mobile).replace(/\D/g,'');
+  if(m.length===10) m='91'+m;
+  return m;
+}
+async function sendWhatsApp(mobile, message){
+  const to=toWhatsappNumber(mobile);
+  if(!to)return;
+  try{
+    await fetch(WHAPI_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+WHAPI_TOKEN},
+      body:JSON.stringify({to, body:message})
+    });
+  }catch(e){ console.warn('WhatsApp send failed',e); }
+}
+
 // ── Push notifications (OneSignal) — admin subscribes for SOS alerts ─────
 const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
 window.OneSignalDeferred=window.OneSignalDeferred||[];
@@ -605,6 +633,10 @@ function renderDriversList(){
 window.verifyAadhar=async function(driverId,verified){
   await updateDoc(doc(db,'rickshaw_drivers',driverId),{aadharVerified:verified});
   showToast(verified?'Aadhar verify ho gaya ✅':'Verification hata diya','success');
+  if(verified){
+    const d=allDrivers.find(x=>x.id===driverId);
+    if(d?.mobile) sendWhatsApp(d.mobile,`✅ *Aadhar Verified!*\nAapka Aadhar verify ho gaya hai. Ab aap rides accept kar sakte ho!`);
+  }
 };
 
 window.saveDriver=async function(){
@@ -625,6 +657,7 @@ window.saveDriver=async function(){
       if(allDrivers.some(d=>d.mobile===mobile)){showToast('A driver with this mobile already exists','error');return;}
       await addDoc(collection(db,'rickshaw_drivers'),{name,mobile,pin,vehicleNumber,photo,status:'offline',locationMode:'auto',lat:null,lng:null,rating:5,totalRides:0,totalEarnings:0,aadharUrl:null,aadharVerified:false,createdAt:serverTimestamp()});
       showToast('Driver added! 🛺','success');
+      sendWhatsApp(mobile,`👋 *Welcome to AutoSaathi!*\nAapka driver account ban gaya hai.\nLogin Mobile: ${mobile}\nPIN: ${pin}\nVehicle: ${vehicleNumber}\nDriver app khol ke login karo.`);
     }
     resetDriverForm();
   }catch(e){showToast('Error saving driver','error');}
