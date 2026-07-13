@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <style>
 :root{
   --bg:#121212;--surface:#191919;--card:#212121;--card2:#282828;
@@ -40,12 +41,18 @@ h1,h2,.brand,.sec-title,.form-card-title{font-family:'Space Grotesk',sans-serif;
 .nav-logo span{color:var(--text);}
 .nav-right{display:flex;align-items:center;gap:.65rem;}
 .admin-badge{background:var(--yellow-dim);border:1px solid var(--yellow-border);color:var(--yellow);font-size:.65rem;font-weight:700;padding:3px 9px;border-radius:50px;}
+.sos-nav-badge{background:var(--red);color:#fff;font-size:.62rem;font-weight:800;padding:2px 7px;border-radius:50px;display:none;}
 .logout-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:.8rem;font-weight:600;display:flex;align-items:center;gap:3px;}
 
+.push-banner{margin:0 1rem 1rem;background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:12px;padding:.7rem .9rem;font-size:.75rem;color:var(--blue);display:none;align-items:center;justify-content:space-between;gap:.6rem;}
+.push-banner.show{display:flex;}
+.push-banner button{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+
 .bnav-bar{position:fixed;bottom:0;left:0;right:0;z-index:150;background:var(--surface);border-top:1px solid var(--border);display:flex;padding-bottom:var(--sb);}
-.bnav{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;}
+.bnav{flex:1;display:flex;flex-direction:column;align-items:center;padding:.5rem .25rem;cursor:pointer;gap:2px;color:var(--muted);font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;position:relative;}
 .bnav i{font-size:1.2rem;}
 .bnav.active{color:var(--yellow);}
+.bnav-dot{position:absolute;top:2px;right:22%;width:8px;height:8px;background:var(--red);border-radius:50%;display:none;}
 
 .page{display:none;padding-bottom:calc(70px + var(--sb));}
 .page.active{display:block;}
@@ -76,6 +83,8 @@ main{padding:1rem;}
 .s-accepted,.s-driver_arrived,.s-in_progress{background:var(--yellow-dim);color:var(--yellow);}
 .s-completed{background:var(--green-dim);color:var(--green);}
 .s-cancelled{background:var(--red-dim);color:var(--red);}
+.s-open{background:var(--red-dim);color:var(--red);}
+.s-resolved{background:var(--green-dim);color:var(--green);}
 
 .form-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:1.1rem;margin-bottom:.9rem;}
 .form-card-title{font-size:.95rem;font-weight:700;margin-bottom:.8rem;display:flex;align-items:center;gap:5px;}
@@ -93,7 +102,8 @@ select.form-input{cursor:pointer;}
 .btn-primary{background:var(--yellow);color:#1a1400;border:none;border-radius:9px;padding:.55rem 1.1rem;font-size:.85rem;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:4px;}
 .btn-secondary{background:transparent;color:var(--muted);border:1.5px solid var(--border);border-radius:9px;padding:.55rem .9rem;font-size:.82rem;cursor:pointer;font-weight:600;}
 
-.driver-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;display:flex;align-items:center;gap:.7rem;}
+.driver-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;}
+.driver-card-top{display:flex;align-items:center;gap:.7rem;}
 .driver-avatar{width:44px;height:44px;border-radius:11px;background:var(--yellow-dim);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;flex-shrink:0;}
 .driver-info{flex:1;min-width:0;}
 .driver-name{font-weight:700;font-size:.88rem;}
@@ -102,6 +112,12 @@ select.form-input{cursor:pointer;}
 .icon-btn-sm{background:var(--surface);border:1px solid var(--border);color:var(--muted);border-radius:7px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.85rem;}
 .icon-btn-sm.danger:hover{color:var(--red);border-color:var(--red);}
 .icon-btn-sm.edit:hover{color:var(--yellow);border-color:var(--yellow);}
+.aadhar-row{display:flex;align-items:center;gap:.6rem;margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--border);}
+.aadhar-thumb{width:52px;height:36px;object-fit:cover;border-radius:6px;background:var(--surface);flex-shrink:0;}
+.aadhar-verify-actions{display:flex;gap:.4rem;margin-left:auto;}
+.mini-btn{border:none;border-radius:8px;padding:.4rem .7rem;font-size:.7rem;font-weight:700;cursor:pointer;}
+.mini-btn.approve{background:var(--green-dim);color:var(--green);}
+.mini-btn.reject{background:var(--red-dim);color:var(--red);}
 
 .ride-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;border-left:3px solid var(--border);}
 .ride-card.live{border-left-color:var(--yellow);}
@@ -111,9 +127,21 @@ select.form-input{cursor:pointer;}
 .ride-route{font-size:.72rem;color:var(--muted);margin-bottom:.4rem;line-height:1.5;}
 .ride-fare{font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--yellow);font-size:.95rem;}
 .ride-driver{font-size:.7rem;color:var(--muted);margin-top:.3rem;}
+.ride-cancel-reason{font-size:.7rem;color:var(--red);margin-top:.3rem;}
 
 .filter-bar{display:flex;gap:.45rem;margin-bottom:.8rem;flex-wrap:wrap;}
 .filter-bar select{padding:.45rem .65rem;border:1.5px solid var(--border);border-radius:50px;font-size:.78rem;outline:none;background:var(--card);cursor:pointer;color:var(--muted);}
+
+/* SOS PAGE */
+.sos-card{background:var(--card);border:1.5px solid var(--red);border-radius:var(--radius);padding:1rem;margin-bottom:.7rem;}
+.sos-card.resolved{border-color:var(--green);opacity:.7;}
+.sos-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;}
+.sos-who{font-weight:800;font-size:.9rem;}
+.sos-time{font-size:.68rem;color:var(--muted);}
+.sos-detail{font-size:.78rem;color:var(--muted);line-height:1.6;margin-bottom:.6rem;}
+.sos-actions{display:flex;gap:.5rem;}
+.sos-call-link{flex:1;background:var(--red);color:#fff;text-decoration:none;text-align:center;border-radius:9px;padding:.55rem;font-weight:800;font-size:.8rem;}
+.sos-resolve-btn{flex:1;background:var(--green-dim);color:var(--green);border:1.5px solid var(--green);border-radius:9px;padding:.55rem;font-weight:800;font-size:.8rem;cursor:pointer;}
 
 .toast{position:fixed;bottom:calc(70px + var(--sb) + .65rem);left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.68rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateY(0);}
@@ -152,6 +180,10 @@ button:focus-visible,.form-input:focus-visible{outline:2px solid var(--yellow);o
 <!-- DASHBOARD -->
 <div class="page active" id="pageDashboard">
   <main>
+    <div class="push-banner" id="pushBanner">
+      <span><i class="ti ti-bell-ringing"></i> SOS alerts ka notification on karo — turant pata chalega</span>
+      <button onclick="enablePushNotifications()">Enable</button>
+    </div>
     <div class="stats-grid">
       <div class="stat-card">
         <div class="stat-icon" style="background:var(--green-dim)"><i class="ti ti-steering-wheel" style="color:var(--green)"></i></div>
@@ -293,11 +325,25 @@ button:focus-visible,.form-input:focus-visible{outline:2px solid var(--yellow);o
   </main>
 </div>
 
+<!-- SOS PAGE -->
+<div class="page" id="pageSos">
+  <main>
+    <div class="sec-hdr">
+      <div class="sec-title">🆘 Emergency / SOS Alerts</div>
+      <button class="refresh-btn" onclick="renderSosList()"><i class="ti ti-refresh"></i></button>
+    </div>
+    <div id="sosListFull">
+      <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Loading…</p>
+    </div>
+  </main>
+</div>
+
 <nav class="bnav-bar">
   <div class="bnav active" id="bnav-dashboard" onclick="switchPage('dashboard')"><i class="ti ti-dashboard"></i>Dash</div>
   <div class="bnav" id="bnav-drivers" onclick="switchPage('drivers')"><i class="ti ti-users"></i>Drivers</div>
   <div class="bnav" id="bnav-pricing" onclick="switchPage('pricing')"><i class="ti ti-cash"></i>Pricing</div>
   <div class="bnav" id="bnav-rides" onclick="switchPage('rides')"><i class="ti ti-route"></i>Rides</div>
+  <div class="bnav" id="bnav-sos" onclick="switchPage('sos')"><span class="bnav-dot" id="sosNavDot"></span><i class="ti ti-alert-triangle"></i>SOS</div>
 </nav>
 
 <div class="toast" id="toast"></div>
@@ -312,9 +358,37 @@ const db=getFirestore(app);
 window._db=db;
 
 const ADMIN_USER="admin",ADMIN_PASS="autosaathi2025";
-let allDrivers=[],allRides=[];
-let unsubDrivers=null,unsubRides=null,unsubPricing=null;
+let allDrivers=[],allRides=[],allSos=[];
+let unsubDrivers=null,unsubRides=null,unsubPricing=null,unsubSos=null;
 let adminMap=null,driverMarkers={};
+
+// ── Push notifications (OneSignal) — admin subscribes for SOS alerts ─────
+const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
+window.OneSignalDeferred=window.OneSignalDeferred||[];
+OneSignalDeferred.push(async function(OneSignal){
+  await OneSignal.init({appId:ONESIGNAL_APP_ID, allowLocalhostAsSecureOrigin:true});
+});
+window.enablePushNotifications=async function(){
+  OneSignalDeferred.push(async function(OneSignal){
+    await OneSignal.Notifications.requestPermission();
+    if(OneSignal.User?.PushSubscription?.id){
+      await OneSignal.User.addTags({role:'admin'});
+      document.getElementById('pushBanner').classList.remove('show');
+      localStorage.setItem('autosaathi_admin_push_dismissed','1');
+      showToast('Push notifications ON ho gaye ✅','success');
+    }
+  });
+};
+function maybeShowAdminPushBanner(){
+  if(localStorage.getItem('autosaathi_admin_push_dismissed')==='1')return;
+  if(!('Notification' in window))return;
+  if(Notification.permission==='granted'){
+    OneSignalDeferred.push(async function(OneSignal){ await OneSignal.User.addTags({role:'admin'}); });
+    return;
+  }
+  if(Notification.permission==='denied')return;
+  document.getElementById('pushBanner').classList.add('show');
+}
 
 window.doLogin=function(){
   const u=document.getElementById('loginUser').value.trim();
@@ -322,6 +396,7 @@ window.doLogin=function(){
   if(u===ADMIN_USER&&p===ADMIN_PASS){
     document.getElementById('loginScreen').style.display='none';
     startListeners();
+    maybeShowAdminPushBanner();
   }else{document.getElementById('loginError').style.display='block';}
 };
 window.doLogout=function(){document.getElementById('loginScreen').style.display='flex';};
@@ -332,6 +407,7 @@ window.switchPage=function(page){
   document.getElementById('page'+page[0].toUpperCase()+page.slice(1)).classList.add('active');
   document.getElementById('bnav-'+page).classList.add('active');
   if(page==='dashboard') setTimeout(initMap,80);
+  if(page==='sos'){ renderSosList(); document.getElementById('sosNavDot').style.display='none'; }
 };
 
 function startListeners(){
@@ -358,6 +434,17 @@ function startListeners(){
     document.getElementById('pMaxBargain').value=d.maxBargainPct??30;
     document.getElementById('pAllowBargain').checked=d.allowBargain!==false;
   },(e)=>console.error('pricing listener',e));
+
+  unsubSos=onSnapshot(collection(db,'sos_alerts'),(snap)=>{
+    const prevOpenCount=allSos.filter(s=>s.status!=='resolved').length;
+    allSos=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    const openCount=allSos.filter(s=>s.status!=='resolved').length;
+    if(openCount>0){
+      const dot=document.getElementById('sosNavDot');
+      if(dot && !document.getElementById('pageSos').classList.contains('active')) dot.style.display='block';
+    }
+    if(document.getElementById('pageSos').classList.contains('active')) renderSosList();
+  },(e)=>console.error('sos listener',e));
 
   setTimeout(initMap,150);
 }
@@ -396,6 +483,7 @@ function rideCardHtml(r){
     <div class="ride-route"><i class="ti ti-map-pin"></i> ${r.pickup?.address||'—'} → <i class="ti ti-flag"></i> ${r.drop?.address||'—'} (${(r.distanceKm||0).toFixed(1)} km)</div>
     <div class="ride-fare">₹${r.currentFare||r.estimatedFare||0}</div>
     ${r.driverName?`<div class="ride-driver"><i class="ti ti-steering-wheel"></i> ${r.driverName} · ${r.driverVehicle||''}</div>`:''}
+    ${r.status==='cancelled'&&r.cancelReason?`<div class="ride-cancel-reason"><i class="ti ti-x"></i> Cancel wajah: ${r.cancelReason} (${r.cancelledBy||'—'})</div>`:''}
   </div>`;
 }
 
@@ -407,8 +495,39 @@ window.renderRidesList=function(){
   el.innerHTML=list.map(r=>rideCardHtml(r)).join('');
 };
 
-// ── MAP TILE LAYERS (Street / Satellite) ────────────────────────────────
-// Esri World Imagery is free and needs no API key — gives the "real photo" satellite look.
+// ── SOS PAGE ────────────────────────────────────────────────────────────
+window.renderSosList=function(){
+  const el=document.getElementById('sosListFull');
+  if(!allSos.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">Koi SOS alert nahi.</p>';return;}
+  el.innerHTML=allSos.map(s=>{
+    const locStr=s.location?`${(+s.location.lat).toFixed(5)}, ${(+s.location.lng).toFixed(5)}`:'Unknown';
+    const mapLink=s.location?`https://www.google.com/maps?q=${s.location.lat},${s.location.lng}`:'#';
+    return `<div class="sos-card ${s.status==='resolved'?'resolved':''}">
+      <div class="sos-hdr">
+        <div class="sos-who">🆘 ${s.by==='driver'?'Driver':'Customer'}: ${s.by==='driver'?(s.driverName||'—'):(s.riderName||'—')}</div>
+        <span class="sbadge s-${s.status}">${s.status}</span>
+      </div>
+      <div class="sos-time">${new Date(s.createdAt||Date.now()).toLocaleString()}</div>
+      <div class="sos-detail">
+        Mobile: ${s.by==='driver'?(s.driverMobile||'—'):(s.riderMobile||'—')}<br>
+        ${s.rideId?`Ride ID: ${s.rideId}<br>`:''}
+        ${s.riderName&&s.by==='driver'?`Customer: ${s.riderName} (${s.riderMobile||'—'})<br>`:''}
+        ${s.driverName&&s.by==='customer'?`Driver: ${s.driverName} (${s.driverMobile||'—'})<br>`:''}
+        Location: <a href="${mapLink}" target="_blank" style="color:var(--blue)">${locStr}</a>
+      </div>
+      <div class="sos-actions">
+        <a class="sos-call-link" href="tel:${s.by==='driver'?(s.driverMobile||''):(s.riderMobile||'')}"><i class="ti ti-phone"></i> Call</a>
+        ${s.status!=='resolved'?`<button class="sos-resolve-btn" onclick="resolveSos('${s.id}')"><i class="ti ti-check"></i> Mark Resolved</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+};
+window.resolveSos=async function(id){
+  await updateDoc(doc(db,'sos_alerts',id),{status:'resolved',resolvedAt:Date.now()});
+  showToast('SOS resolved ✅','success');
+};
+
+// ── MAP TILE LAYERS ────────────────────────────────────────────────────
 function streetLayer(){
   return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
 }
@@ -427,11 +546,10 @@ window.toggleMapLayer=function(){
   document.getElementById('adminMapToggleLabel').textContent=adminIsSat?'Street':'Satellite';
 };
 
-// ── MAP ──────────────────────────────────────────────────────────────────
 function initMap(){
   const el=document.getElementById('adminMap');
   if(!el||adminMap) { if(adminMap) setTimeout(()=>adminMap.invalidateSize(),100); return; }
-  adminMap=L.map('adminMap').setView([19.5800,74.0300],12); // default Akole area
+  adminMap=L.map('adminMap').setView([19.5800,74.0300],12);
   adminActiveLayer=streetLayer().addTo(adminMap);
   updateMapMarkers();
 }
@@ -457,18 +575,37 @@ function updateMapMarkers(){
 function renderDriversList(){
   const el=document.getElementById('driversList');
   if(!allDrivers.length){el.innerHTML='<p style="color:var(--muted);font-size:.85rem;text-align:center;padding:1.5rem">No drivers yet. Add one above.</p>';return;}
-  el.innerHTML=allDrivers.map(d=>`<div class="driver-card">
-    <div class="driver-avatar">${d.photo?`<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.textContent='${(d.name||'D')[0]}'"/>`:(d.name||'D')[0]}</div>
-    <div class="driver-info">
-      <div class="driver-name">${d.name} <span class="sbadge s-${d.status||'offline'}">${d.status||'offline'}</span></div>
-      <div class="driver-meta">${d.mobile} · ${d.vehicleNumber||'—'} · ${d.locationMode==='manual'?'📍 manual':'📡 auto'}${d.rating?` · ⭐${(+d.rating).toFixed(1)}`:''}</div>
+  el.innerHTML=allDrivers.map(d=>{
+    const aadharStatus=!d.aadharUrl?'Not uploaded':(d.aadharVerified?'Verified ✅':'Pending review');
+    const aadharColor=!d.aadharUrl?'var(--muted)':(d.aadharVerified?'var(--green)':'var(--yellow)');
+    return `<div class="driver-card">
+    <div class="driver-card-top">
+      <div class="driver-avatar">${d.photo?`<img src="${d.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:11px" onerror="this.parentElement.textContent='${(d.name||'D')[0]}'"/>`:(d.name||'D')[0]}</div>
+      <div class="driver-info">
+        <div class="driver-name">${d.name} <span class="sbadge s-${d.status||'offline'}">${d.status||'offline'}</span></div>
+        <div class="driver-meta">${d.mobile} · ${d.vehicleNumber||'—'} · ${d.locationMode==='manual'?'📍 manual':'📡 auto'}${d.rating?` · ⭐${(+d.rating).toFixed(1)}`:''}</div>
+        <div class="driver-meta" style="color:${aadharColor}">Aadhar: ${aadharStatus}</div>
+      </div>
+      <div class="driver-actions">
+        <button class="icon-btn-sm edit" onclick="editDriver('${d.id}')"><i class="ti ti-edit"></i></button>
+        <button class="icon-btn-sm danger" onclick="deleteDriver('${d.id}')"><i class="ti ti-trash"></i></button>
+      </div>
     </div>
-    <div class="driver-actions">
-      <button class="icon-btn-sm edit" onclick="editDriver('${d.id}')"><i class="ti ti-edit"></i></button>
-      <button class="icon-btn-sm danger" onclick="deleteDriver('${d.id}')"><i class="ti ti-trash"></i></button>
-    </div>
-  </div>`).join('');
+    ${d.aadharUrl?`<div class="aadhar-row">
+      <img class="aadhar-thumb" src="${d.aadharUrl}" onclick="window.open('${d.aadharUrl}','_blank')"/>
+      <span style="font-size:.72rem;color:var(--muted)">Aadhar Card</span>
+      <div class="aadhar-verify-actions">
+        ${!d.aadharVerified?`<button class="mini-btn approve" onclick="verifyAadhar('${d.id}',true)"><i class="ti ti-check"></i> Verify</button>`:`<button class="mini-btn reject" onclick="verifyAadhar('${d.id}',false)"><i class="ti ti-x"></i> Unverify</button>`}
+      </div>
+    </div>`:''}
+  </div>`;
+  }).join('');
 }
+
+window.verifyAadhar=async function(driverId,verified){
+  await updateDoc(doc(db,'rickshaw_drivers',driverId),{aadharVerified:verified});
+  showToast(verified?'Aadhar verify ho gaya ✅':'Verification hata diya','success');
+};
 
 window.saveDriver=async function(){
   const id=document.getElementById('editDriverId').value;
@@ -486,7 +623,7 @@ window.saveDriver=async function(){
       showToast('Driver updated ✅','success');
     }else{
       if(allDrivers.some(d=>d.mobile===mobile)){showToast('A driver with this mobile already exists','error');return;}
-      await addDoc(collection(db,'rickshaw_drivers'),{name,mobile,pin,vehicleNumber,photo,status:'offline',locationMode:'auto',lat:null,lng:null,rating:5,totalRides:0,createdAt:serverTimestamp()});
+      await addDoc(collection(db,'rickshaw_drivers'),{name,mobile,pin,vehicleNumber,photo,status:'offline',locationMode:'auto',lat:null,lng:null,rating:5,totalRides:0,totalEarnings:0,aadharUrl:null,aadharVerified:false,createdAt:serverTimestamp()});
       showToast('Driver added! 🛺','success');
     }
     resetDriverForm();
