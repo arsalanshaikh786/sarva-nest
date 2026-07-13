@@ -29,6 +29,9 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 .logo{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;font-weight:800;color:var(--yellow);}
 .logo span{color:var(--text);}
 .track-mini-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:.4rem .8rem;font-size:.75rem;font-weight:700;cursor:pointer;}
+.topbar-actions{display:flex;gap:.4rem;}
+.icon-btn-top{background:var(--card);border:1px solid var(--border);color:var(--muted);border-radius:9px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;}
+.icon-btn-top.active-glow{color:var(--yellow);border-color:var(--yellow-border);}
 
 .page{display:none;padding:1rem 1rem calc(1rem + var(--sb));}
 .page.active{display:block;}
@@ -36,6 +39,9 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 .push-banner{background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:12px;padding:.7rem .9rem;font-size:.75rem;color:var(--blue);display:none;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:1rem;}
 .push-banner.show{display:flex;}
 .push-banner button{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+
+.geo-banner{background:var(--red-dim);border:1.5px solid var(--red);border-radius:12px;padding:.7rem .9rem;font-size:.72rem;color:var(--red);display:none;margin-bottom:1rem;}
+.geo-banner.show{display:block;}
 
 .booking-map{width:100%;height:230px;border-radius:16px;border:1px solid var(--border);margin-bottom:1rem;position:relative;}
 .map-wrap{position:relative;}
@@ -77,6 +83,10 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 .fare-total-row{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed var(--border2);padding-top:.6rem;margin-top:.4rem;}
 .fare-total-label{font-size:.85rem;font-weight:700;}
 .fare-total-val{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;color:var(--yellow);}
+
+.fav-strip{display:flex;gap:.5rem;overflow-x:auto;margin-bottom:1rem;padding-bottom:.2rem;}
+.fav-chip{flex-shrink:0;background:var(--card);border:1.5px solid var(--yellow-border);border-radius:50px;padding:.45rem .8rem;font-size:.74rem;font-weight:700;color:var(--yellow);display:flex;align-items:center;gap:5px;cursor:pointer;white-space:nowrap;}
+.fav-chip.selected{background:var(--yellow);color:#1a1400;}
 
 .bargain-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:1rem;display:none;}
 .bargain-card.show{display:block;}
@@ -123,22 +133,84 @@ h1,h2,.brand{font-family:'Space Grotesk',sans-serif;}
 .driver-info-card{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:1rem;margin-bottom:1rem;}
 .driver-info-top{display:flex;align-items:center;gap:.7rem;margin-bottom:.7rem;}
 .driver-info-avatar{width:48px;height:48px;border-radius:13px;background:var(--yellow-dim);color:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;}
-.driver-info-name{font-weight:800;font-size:1rem;}
+.driver-info-name{font-weight:800;font-size:1rem;display:flex;align-items:center;gap:6px;}
 .driver-info-vehicle{font-size:.75rem;color:var(--muted);}
+.fav-star-btn{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--muted2);}
+.fav-star-btn.filled{color:var(--yellow);}
 .ride-status-badge{display:inline-flex;align-items:center;gap:5px;padding:.35rem .8rem;border-radius:50px;font-size:.75rem;font-weight:700;margin-bottom:.7rem;}
 .rsb-accepted{background:var(--blue-dim);color:var(--blue);}
 .rsb-driver_arrived{background:var(--yellow-dim);color:var(--yellow);}
 .rsb-in_progress{background:var(--green-dim);color:var(--green);}
 .rsb-completed{background:var(--green-dim);color:var(--green);}
+.eta-badge{display:inline-flex;align-items:center;gap:4px;background:var(--blue-dim);color:var(--blue);border-radius:50px;padding:.3rem .7rem;font-size:.72rem;font-weight:700;margin-left:.4rem;}
 .fare-display{text-align:center;padding:.8rem;background:var(--surface);border-radius:12px;margin-bottom:.7rem;}
 .fare-display-val{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;font-weight:800;color:var(--yellow);}
-.call-driver-btn{width:100%;background:var(--blue-dim);color:var(--blue);border:1.5px solid var(--blue);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+.action-row{display:flex;gap:.5rem;}
+.call-driver-btn{flex:1;background:var(--blue-dim);color:var(--blue);border:1.5px solid var(--blue);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;}
+.chat-btn{flex:1;background:var(--purple-dim);color:var(--purple);border:1.5px solid var(--purple);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;position:relative;}
+.chat-unread-dot{position:absolute;top:-4px;right:-4px;width:10px;height:10px;background:var(--red);border-radius:50%;display:none;}
+.share-btn{width:100%;background:var(--green-dim);color:var(--green);border:1.5px solid var(--green);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;margin-top:.6rem;display:flex;align-items:center;justify-content:center;gap:6px;}
 .cancel-ride-btn{width:100%;background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:10px;padding:.65rem;font-weight:700;font-size:.85rem;cursor:pointer;margin-top:.6rem;}
+.sos-fab{position:fixed;bottom:calc(1.2rem + var(--sb));right:1rem;width:56px;height:56px;border-radius:50%;background:var(--red);color:#fff;border:none;font-size:1.4rem;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(239,68,68,.5);z-index:500;display:none;align-items:center;justify-content:center;}
+.sos-fab.show{display:flex;}
 
 .rate-stars{display:flex;justify-content:center;gap:.5rem;margin:1rem 0;}
 .rate-star{font-size:2rem;color:#3a3a3a;cursor:pointer;}
 .rate-star.filled{color:var(--yellow);}
 .done-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:12px;padding:.85rem;font-weight:800;font-size:.9rem;cursor:pointer;}
+.fav-prompt{background:var(--card);border:1.5px solid var(--yellow-border);border-radius:14px;padding:.9rem;margin:1rem 0;text-align:left;display:none;}
+.fav-prompt.show{display:block;}
+.fav-prompt-row{display:flex;align-items:center;justify-content:space-between;gap:.6rem;}
+.fav-add-btn{background:var(--yellow-dim);color:var(--yellow);border:1.5px solid var(--yellow);border-radius:9px;padding:.45rem .8rem;font-weight:700;font-size:.78rem;cursor:pointer;}
+
+/* HISTORY PAGE */
+.history-item{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:.85rem;margin-bottom:.6rem;}
+.history-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;}
+.history-date{font-size:.68rem;color:var(--muted);}
+.history-route{font-size:.76rem;color:var(--muted);line-height:1.5;margin-bottom:.4rem;}
+.history-fare{font-family:'Space Grotesk',sans-serif;font-weight:800;color:var(--yellow);}
+.history-driver-row{display:flex;align-items:center;justify-content:space-between;margin-top:.4rem;font-size:.74rem;color:var(--muted);}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted2);}
+.empty-state i{font-size:2rem;display:block;margin-bottom:.6rem;opacity:.3;}
+.empty-state p{font-size:.85rem;color:var(--muted);}
+.back-row{display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;}
+.back-btn{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:9px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.page-title{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:800;}
+
+/* CANCEL REASON MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--surface);width:100%;max-width:460px;border-radius:20px 20px 0 0;padding:1.2rem;}
+@media(min-width:600px){.modal-overlay{align-items:center;}.modal-sheet{border-radius:20px;}}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:.8rem;}
+.reason-opt{background:var(--card);border:1.5px solid var(--border);border-radius:11px;padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer;font-size:.85rem;font-weight:600;}
+.reason-opt:active{background:var(--card2);}
+.reason-opt.selected{border-color:var(--red);background:var(--red-dim);color:var(--red);}
+.modal-close-btn{width:100%;background:var(--card2);color:var(--muted);border:none;border-radius:11px;padding:.7rem;font-weight:700;margin-top:.5rem;cursor:pointer;}
+.modal-confirm-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:11px;padding:.75rem;font-weight:800;margin-top:.3rem;cursor:pointer;}
+
+/* SOS MODAL */
+.sos-modal .modal-sheet{text-align:center;}
+.sos-icon{font-size:2.5rem;margin-bottom:.4rem;}
+.sos-desc{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
+.sos-call-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:11px;padding:.8rem;font-weight:800;margin-bottom:.5rem;cursor:pointer;text-decoration:none;display:block;}
+.sos-send-btn{width:100%;background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:11px;padding:.75rem;font-weight:800;margin-bottom:.5rem;cursor:pointer;}
+
+/* CHAT PANEL */
+.chat-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2100;display:none;align-items:flex-end;justify-content:center;}
+.chat-overlay.show{display:flex;}
+.chat-sheet{background:var(--surface);width:100%;max-width:460px;height:70vh;border-radius:20px 20px 0 0;display:flex;flex-direction:column;}
+@media(min-width:600px){.chat-overlay{align-items:center;}.chat-sheet{border-radius:20px;height:65vh;}}
+.chat-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid var(--border);}
+.chat-hdr-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;}
+.chat-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.5rem;}
+.chat-msg{max-width:75%;padding:.55rem .8rem;border-radius:14px;font-size:.82rem;line-height:1.4;}
+.chat-msg.me{align-self:flex-end;background:var(--yellow);color:#1a1400;border-bottom-right-radius:4px;}
+.chat-msg.them{align-self:flex-start;background:var(--card);border-bottom-left-radius:4px;}
+.chat-input-row{display:flex;gap:.5rem;padding:.8rem;border-top:1px solid var(--border);}
+.chat-input-row input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1rem;color:var(--text);outline:none;font-size:.85rem;}
+.chat-input-row button{background:var(--yellow);color:#1a1400;border:none;border-radius:50%;width:40px;height:40px;flex-shrink:0;font-size:1rem;cursor:pointer;}
 
 .toast{position:fixed;bottom:1.2rem;left:1rem;right:1rem;max-width:460px;margin:0 auto;background:var(--text);color:var(--bg);padding:.7rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateY(0);}
@@ -154,6 +226,9 @@ button:active{transform:scale(.95);}
 
 <div class="topbar">
   <div class="logo">Auto<span>Saathi</span></div>
+  <div class="topbar-actions">
+    <button type="button" class="icon-btn-top" id="historyBtn" onclick="openHistory()"><i class="ti ti-history"></i></button>
+  </div>
 </div>
 
 <!-- BOOKING PAGE -->
@@ -163,6 +238,8 @@ button:active{transform:scale(.95);}
     <span><i class="ti ti-bell-ringing"></i> Ride updates ka notification on karo — app band ho tab bhi milega</span>
     <button onclick="enablePushNotifications()">Enable</button>
   </div>
+
+  <div class="geo-banner" id="geoBanner"></div>
 
   <div class="city-card">
     <div class="city-card-label"><i class="ti ti-building-community"></i> Pehle apna shahar/gaon select karo</div>
@@ -175,6 +252,8 @@ button:active{transform:scale(.95);}
       <button class="change-city-btn" onclick="changeCity()">Change</button>
     </div>
   </div>
+
+  <div class="fav-strip" id="favStrip" style="display:none"></div>
 
   <div class="map-wrap">
     <div id="bookingMap" class="booking-map"></div>
@@ -199,6 +278,7 @@ button:active{transform:scale(.95);}
   <div class="fare-estimate-card" id="fareCard">
     <div class="fare-row"><span>Distance</span><span id="fareDistance">0 km</span></div>
     <div class="fare-row"><span>Estimated fare</span><span id="fareEstimate">₹0</span></div>
+    <div class="fare-row"><span>Estimated time</span><span id="fareEta">—</span></div>
     <div class="fare-total-row">
       <span class="fare-total-label">Base price</span>
       <span class="fare-total-val" id="fareTotal">₹0</span>
@@ -230,14 +310,14 @@ button:active{transform:scale(.95);}
     <div class="status-title" id="waitingTitle">Driver dhoond rahe hain…</div>
     <div class="status-sub" id="waitingSub">Thoda intezaar karo, jaldi milega</div>
     <div id="negotiationSlot"></div>
-    <button class="cancel-search-btn" onclick="cancelRide()"><i class="ti ti-x"></i> Cancel</button>
+    <button class="cancel-search-btn" onclick="openCancelModal()"><i class="ti ti-x"></i> Cancel</button>
   </div>
 </div>
 
 <!-- TRACKING PAGE -->
 <div class="page" id="pageTracking">
   <div class="tracking-wrap">
-    <span class="ride-status-badge" id="trackStatusBadge"></span>
+    <span class="ride-status-badge" id="trackStatusBadge"></span><span class="eta-badge" id="etaBadge" style="display:none"></span>
     <div class="map-wrap">
       <div id="trackMap"></div>
       <button type="button" class="map-layer-toggle" id="trackMapToggle" onclick="toggleMapLayer('track')"><i class="ti ti-satellite"></i> <span id="trackMapToggleLabel">Satellite</span></button>
@@ -245,14 +325,21 @@ button:active{transform:scale(.95);}
     <div class="driver-info-card">
       <div class="driver-info-top">
         <div class="driver-info-avatar" id="trackDriverAvatar">D</div>
-        <div>
-          <div class="driver-info-name" id="trackDriverName">—</div>
+        <div style="flex:1">
+          <div class="driver-info-name">
+            <span id="trackDriverName">—</span>
+            <button class="fav-star-btn" id="favStarBtn" onclick="toggleFavoriteDriver()">★</button>
+          </div>
           <div class="driver-info-vehicle" id="trackDriverVehicle">—</div>
         </div>
       </div>
       <div class="fare-display"><div class="fare-display-val" id="trackFare">₹0</div></div>
-      <a class="call-driver-btn" id="callDriverBtn" href="#"><i class="ti ti-phone"></i> Call Driver</a>
-      <button class="cancel-ride-btn" id="cancelRideBtn" onclick="cancelRide()"><i class="ti ti-x"></i> Cancel Ride</button>
+      <div class="action-row">
+        <a class="call-driver-btn" id="callDriverBtn" href="#"><i class="ti ti-phone"></i> Call</a>
+        <button class="chat-btn" onclick="openChat()"><i class="ti ti-message-circle"></i> Chat<span class="chat-unread-dot" id="chatUnreadDot"></span></button>
+      </div>
+      <button class="share-btn" onclick="shareRideDetails()"><i class="ti ti-share-2"></i> Share Ride Details</button>
+      <button class="cancel-ride-btn" id="cancelRideBtn" onclick="openCancelModal()"><i class="ti ti-x"></i> Cancel Ride</button>
     </div>
   </div>
 </div>
@@ -270,7 +357,68 @@ button:active{transform:scale(.95);}
       <span class="rate-star" data-val="4">★</span>
       <span class="rate-star" data-val="5">★</span>
     </div>
+    <div class="fav-prompt" id="favPrompt">
+      <div class="fav-prompt-row">
+        <span id="favPromptText">Is driver ko favorite banao?</span>
+        <button class="fav-add-btn" onclick="addCompletedDriverToFavorites()">⭐ Add</button>
+      </div>
+    </div>
     <button class="done-btn" onclick="finishAndReset()">Done</button>
+  </div>
+</div>
+
+<!-- HISTORY PAGE -->
+<div class="page" id="pageHistory">
+  <div class="back-row">
+    <button class="back-btn" onclick="closeHistory()"><i class="ti ti-arrow-left"></i></button>
+    <div class="page-title">Ride History</div>
+  </div>
+  <div id="historyList"><div class="empty-state"><i class="ti ti-history"></i><p>Loading…</p></div></div>
+</div>
+
+<button class="sos-fab" id="sosFab" onclick="openSosModal()">SOS</button>
+
+<!-- CANCEL REASON MODAL -->
+<div class="modal-overlay" id="cancelModalOverlay">
+  <div class="modal-sheet">
+    <div class="modal-title">Ride cancel karne ki wajah?</div>
+    <div id="cancelReasonList">
+      <div class="reason-opt" data-reason="Driver bahut late hai">Driver bahut late hai</div>
+      <div class="reason-opt" data-reason="Plan change ho gaya">Plan change ho gaya</div>
+      <div class="reason-opt" data-reason="Doosri gaadi mil gayi">Doosri gaadi mil gayi</div>
+      <div class="reason-opt" data-reason="Galat pickup/drop daala">Galat pickup/drop daala</div>
+      <div class="reason-opt" data-reason="Fare zyada lag raha hai">Fare zyada lag raha hai</div>
+      <div class="reason-opt" data-reason="Other">Other</div>
+    </div>
+    <button class="modal-confirm-btn" onclick="confirmCancelRide()">Cancel Ride</button>
+    <button class="modal-close-btn" onclick="closeCancelModal()">Wapas jao</button>
+  </div>
+</div>
+
+<!-- SOS MODAL -->
+<div class="modal-overlay sos-modal" id="sosModalOverlay">
+  <div class="modal-sheet">
+    <div class="sos-icon">🆘</div>
+    <div class="modal-title">Emergency Help</div>
+    <div class="sos-desc">Agar tum khatre mein ho, turant neeche diye options use karo. Tumhari location aur ride details admin ko turant bhej di jayengi.</div>
+    <a class="sos-call-btn" href="tel:112"><i class="ti ti-phone"></i> Call Emergency (112)</a>
+    <button class="sos-send-btn" onclick="sendSosAlert()"><i class="ti ti-send"></i> Admin ko Alert Bhejo</button>
+    <button class="modal-close-btn" onclick="closeSosModal()">Band karo</button>
+  </div>
+</div>
+
+<!-- CHAT PANEL -->
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-sheet">
+    <div class="chat-hdr">
+      <div class="chat-hdr-title" id="chatHdrTitle">Chat with Driver</div>
+      <button class="chat-close" onclick="closeChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Message likho…" onkeydown="if(event.key==='Enter')sendChatMessage()"/>
+      <button onclick="sendChatMessage()"><i class="ti ti-send"></i></button>
+    </div>
   </div>
 </div>
 
@@ -278,15 +426,13 @@ button:active{transform:scale(.95);}
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, arrayUnion, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, deleteDoc, arrayUnion, serverTimestamp, query, where, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
 const db=getFirestore(app);
 
-// ── Push notifications (OneSignal — free, no Firebase billing needed) ─────
-// Same App ID and REST API Key as the driver app (from onesignal.com → your
-// Web Push app → Settings → Keys & IDs).
+// ── Push notifications (OneSignal) ─────────────────────────────────────
 const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
 const ONESIGNAL_REST_API_KEY="os_v2_app_w3x4nnuadfh6pczzzxfxeogzmtia56jw7xreyc5acqosvjpfgjzdv5km7iaeqfhn34owagm3nmcbejk34frghl6rbtwdoohmvqy76ta";
 let myOneSignalId=null;
@@ -322,14 +468,12 @@ window.enablePushNotifications=async function(){
 function maybeShowPushBanner(){
   if(localStorage.getItem('as_push_dismissed')==='1')return;
   if(!('Notification' in window))return;
-  if(Notification.permission==='granted')return; // already on, myOneSignalId picked up on init
+  if(Notification.permission==='granted')return;
   if(Notification.permission==='denied')return;
   document.getElementById('pushBanner').classList.add('show');
 }
 maybeShowPushBanner();
 
-// Sends a push directly via OneSignal REST API from the browser — same
-// exposure pattern as your existing Telegram bot token / UltraMsg instance.
 async function sendPush(subscriptionIds, title, body, data){
   const ids=(subscriptionIds||[]).filter(Boolean);
   if(!ids.length)return;
@@ -342,7 +486,6 @@ async function sendPush(subscriptionIds, title, body, data){
   }catch(e){console.warn('push send failed',e);}
 }
 
-// Broadcast a new-ride push to every currently-available driver (tag filter).
 async function sendPushToAvailableDrivers(title, body, data){
   try{
     await fetch('https://api.onesignal.com/notifications',{
@@ -357,29 +500,46 @@ async function sendPushToAvailableDrivers(title, body, data){
   }catch(e){console.warn('driver broadcast push failed',e);}
 }
 
+async function sendPushToAdmins(title, body, data){
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({
+        app_id:ONESIGNAL_APP_ID, target_channel:'push',
+        filters:[{field:'tag',key:'role',relation:'=',value:'admin'}],
+        headings:{en:title}, contents:{en:body}, data:data||{}
+      })
+    });
+  }catch(e){console.warn('admin push failed',e);}
+}
+
 let pricing={baseFare:20,perKm:12,minFare:30,allowBargain:true,maxBargainPct:30};
 let bookingMap,pickupMarker,dropMarker,routeLine;
 let pickup=null, drop=null, activePoint='pickup';
-let estimatedFare=0, distanceKm=0;
-let currentRideId=null, unsubRide=null;
+let estimatedFare=0, distanceKm=0, estimatedEtaMin=0;
+let currentRideId=null, unsubRide=null, unsubChat=null;
 let trackMap,trackDriverMarker,trackPickupMarker,trackDropMarker;
 let searchDebounce, citySearchDebounce;
-let selectedCity=null; // {name,lat,lng} — chosen before pickup/drop search is enabled
+let selectedCity=null;
+let preferredDriverId=null;
+let chatOpen=false, lastSeenMsgCount=0;
 
-// ── Pricing (realtime) ──────────────────────────────────────────────────
+// ── Geofencing constants (service area = Akole) ─────────────────────────
+const SERVICE_CITY_NAME="Akole";
+const SERVICE_CENTER={lat:19.5800,lng:74.0300};
+const SERVICE_RADIUS_KM=22; // pickup/drop must be within this radius
+
 onSnapshot(doc(db,'rickshaw_settings','pricing'),(snap)=>{
   if(snap.exists()) pricing={...pricing,...snap.data()};
 });
 
-// ── Map tile layers (Street / Satellite) ────────────────────────────────
-// Esri World Imagery is free, needs no API key — used for the "real" satellite look.
 function streetLayer(){
   return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
 }
 function satelliteLayer(){
   return L.layerGroup([
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri'}),
-    // label overlay so road/place names still show on top of the satellite photo
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{attribution:''})
   ]);
 }
@@ -403,9 +563,8 @@ window.toggleMapLayer=function(which){
   }
 };
 
-// ── Init map ──────────────────────────────────────────────────────────────
 function initBookingMap(){
-  bookingMap=L.map('bookingMap').setView([22.5,79.0],5); // neutral India-wide view until a city is picked
+  bookingMap=L.map('bookingMap').setView([22.5,79.0],5);
   bookingActiveLayer=streetLayer().addTo(bookingMap);
   bookingMap.on('click',(e)=>{
     if(!selectedCity){ showToast('Pehle upar shahar select karo','warn'); return; }
@@ -414,7 +573,6 @@ function initBookingMap(){
 }
 initBookingMap();
 
-// ── City selection (step 1) ─────────────────────────────────────────────
 window.searchCity=function(q){
   clearTimeout(citySearchDebounce);
   const suggEl=document.getElementById('citySuggestions');
@@ -426,7 +584,6 @@ window.searchCity=function(q){
       if(!results.length){suggEl.classList.remove('show');return;}
       suggEl.innerHTML=results.map(r=>{
         const a=r.address||{};
-        const state=a.state?`, ${a.state}`:'';
         return `<div class="sugg-item" data-lat="${r.lat}" data-lon="${r.lon}" data-name="${(r.display_name||'').replace(/"/g,'&quot;')}">
           <div style="font-weight:700">${a.city||a.town||a.village||r.name||r.display_name}</div>
           <div style="font-size:.68rem;color:var(--muted);margin-top:2px">${r.display_name}</div>
@@ -449,6 +606,7 @@ window.selectCity=function(lat,lng,name){
   document.getElementById('locInputsWrap').classList.remove('loc-inputs-locked');
   document.getElementById('lockedHint').classList.remove('show');
   bookingMap.setView([lat,lng],13);
+  checkGeofence(lat,lng);
 };
 
 window.changeCity=function(){
@@ -464,7 +622,38 @@ window.changeCity=function(){
 
 window.setActivePoint=function(p){ activePoint=p; };
 
+// ── Geofencing / city auto-detect ───────────────────────────────────────
+function checkGeofence(lat,lng){
+  const distFromCenter=haversineKm(lat,lng,SERVICE_CENTER.lat,SERVICE_CENTER.lng);
+  const banner=document.getElementById('geoBanner');
+  if(distFromCenter>SERVICE_RADIUS_KM){
+    banner.textContent=`⚠️ AutoSaathi abhi sirf ${SERVICE_CITY_NAME} (~${SERVICE_RADIUS_KM}km area) mein available hai. Tumhara chuna hua shahar service area ke bahar lag raha hai.`;
+    banner.classList.add('show');
+  }else{
+    banner.classList.remove('show');
+  }
+}
+
+function autoDetectCity(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(async(pos)=>{
+    const lat=pos.coords.latitude,lng=pos.coords.longitude;
+    const distFromCenter=haversineKm(lat,lng,SERVICE_CENTER.lat,SERVICE_CENTER.lng);
+    if(distFromCenter>SERVICE_RADIUS_KM*1.5){
+      const banner=document.getElementById('geoBanner');
+      banner.textContent=`📍 Aisa lagta hai tum ${SERVICE_CITY_NAME} se door ho. Ye app abhi sirf ${SERVICE_CITY_NAME} mein kaam karta hai.`;
+      banner.classList.add('show');
+    }
+  },()=>{},{enableHighAccuracy:false,timeout:8000,maximumAge:600000});
+}
+autoDetectCity();
+
 function setPoint(type,lat,lng,address){
+  const distFromCenter=haversineKm(lat,lng,SERVICE_CENTER.lat,SERVICE_CENTER.lng);
+  if(distFromCenter>SERVICE_RADIUS_KM){
+    showToast(`Ye jagah ${SERVICE_CITY_NAME} service area (~${SERVICE_RADIUS_KM}km) ke bahar hai`,'error');
+    return;
+  }
   const point={lat,lng,address};
   if(type==='pickup'){
     pickup=point;
@@ -486,11 +675,6 @@ function dotIcon(color){
   return L.divIcon({className:'',html:`<div style="width:18px;height:18px;border-radius:50%;background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)"></div>`,iconSize:[18,18],iconAnchor:[9,9]});
 }
 
-// ── GPS location (high-accuracy, target ≤200m) ─────────────────────────
-// Uses watchPosition (not getCurrentPosition) so we keep receiving fresh GPS
-// fixes and pick the best one — cell/wifi-only fixes on first read are often
-// wildly off (can jump to a whole different city). We wait up to 15s for an
-// accuracy of 200m or better, and otherwise fall back to the best fix seen.
 let gpsWatchId=null;
 
 window.useMyLocation=function(type){
@@ -504,8 +688,8 @@ window.useMyLocation=function(type){
   showToast('Location dhoondh rahe hain… (accurate GPS ke liye khule aasman mein aa jao)','');
 
   let bestPos=null;
-  const TARGET_ACCURACY=50; // meters
-  const MAX_WAIT=20000; // 20s — tighter accuracy target needs a bit more time to lock
+  const TARGET_ACCURACY=50;
+  const MAX_WAIT=20000;
 
   const finish=async(pos)=>{
     if(gpsWatchId!==null){ navigator.geolocation.clearWatch(gpsWatchId); gpsWatchId=null; }
@@ -563,8 +747,6 @@ async function reverseGeocode(lat,lng){
   }catch(e){ return `${lat.toFixed(5)}, ${lng.toFixed(5)}`; }
 }
 
-// Prefer granular parts (road/colony/locality) over the full display_name, which
-// often leads with just city/district and buries the actual street or colony name.
 function buildShortAddress(data){
   const a=data?.address;
   if(!a) return data?.display_name || '';
@@ -584,9 +766,7 @@ window.searchAddress=function(q,type){
   if(q.length<3){suggEl.classList.remove('show');return;}
   searchDebounce=setTimeout(async()=>{
     try{
-      // Bias strictly around the chosen city so small localities (galis, colonies,
-      // wards) inside that city/town rank above unrelated places with the same name.
-      const d=0.18; // ~18-20km box around the selected city — strictly enforced (bounded=1), wide enough to cover the town/taluka
+      const d=0.18;
       const viewbox=`${selectedCity.lng-d},${selectedCity.lat+d},${selectedCity.lng+d},${selectedCity.lat-d}`;
       const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=8&addressdetails=1&countrycodes=in&viewbox=${viewbox}&bounded=1`;
       const res=await fetch(url);
@@ -607,7 +787,6 @@ window.searchAddress=function(q,type){
   },400);
 };
 
-// ── Fare calc (Haversine) ───────────────────────────────────────────────
 function haversineKm(lat1,lon1,lat2,lon2){
   const R=6371, dLat=(lat2-lat1)*Math.PI/180, dLon=(lon2-lon1)*Math.PI/180;
   const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
@@ -615,10 +794,12 @@ function haversineKm(lat1,lon1,lat2,lon2){
 }
 
 async function computeFare(){
-  distanceKm=haversineKm(pickup.lat,pickup.lng,drop.lat,drop.lng)*1.25; // rough road-distance correction
+  distanceKm=haversineKm(pickup.lat,pickup.lng,drop.lat,drop.lng)*1.25;
   estimatedFare=Math.max(pricing.minFare, Math.round(pricing.baseFare+distanceKm*pricing.perKm));
+  estimatedEtaMin=Math.max(2,Math.round(distanceKm/22*60)); // assume ~22km/h avg city speed
   document.getElementById('fareDistance').textContent=distanceKm.toFixed(1)+' km';
   document.getElementById('fareEstimate').textContent='₹'+estimatedFare;
+  document.getElementById('fareEta').textContent='~'+estimatedEtaMin+' min';
   document.getElementById('fareTotal').textContent='₹'+estimatedFare;
   document.getElementById('fareCard').classList.add('show');
   document.getElementById('nameInputs').style.display='block';
@@ -649,17 +830,75 @@ async function drawRoute(){
   try{
     const res=await fetch(`https://router.project-osrm.org/route/v1/driving/${pickup.lng},${pickup.lat};${drop.lng},${drop.lat}?overview=full&geometries=geojson`);
     const data=await res.json();
-    const coords=data.routes?.[0]?.geometry?.coordinates;
+    const route=data.routes?.[0];
+    const coords=route?.geometry?.coordinates;
+    if(route?.duration){
+      estimatedEtaMin=Math.max(2,Math.round(route.duration/60));
+      document.getElementById('fareEta').textContent='~'+estimatedEtaMin+' min';
+    }
     if(coords){
       const latlngs=coords.map(c=>[c[1],c[0]]);
       routeLine=L.polyline(latlngs,{color:'#FFC107',weight:4,opacity:.8}).addTo(bookingMap);
       bookingMap.fitBounds(routeLine.getBounds(),{padding:[30,30]});
     }
-  }catch(e){ /* route drawing is cosmetic only — fare calc doesn't depend on it */ }
+  }catch(e){ /* cosmetic only */ }
 }
 
 window.syncBargainSlider=function(){ document.getElementById('bargainSlider').value=document.getElementById('bargainInput').value; };
 window.syncBargainInput=function(){ document.getElementById('bargainInput').value=document.getElementById('bargainSlider').value; };
+
+// ── Favorites ────────────────────────────────────────────────────────────
+function getFavorites(){
+  try{ return JSON.parse(localStorage.getItem('as_favorite_drivers')||'[]'); }catch(e){ return []; }
+}
+function saveFavorites(list){ localStorage.setItem('as_favorite_drivers',JSON.stringify(list)); }
+
+function renderFavStrip(){
+  const favs=getFavorites();
+  const strip=document.getElementById('favStrip');
+  if(!favs.length){strip.style.display='none';strip.innerHTML='';return;}
+  strip.style.display='flex';
+  strip.innerHTML=favs.map(f=>`<div class="fav-chip ${preferredDriverId===f.id?'selected':''}" data-id="${f.id}"><i class="ti ti-star-filled"></i> ${f.name}</div>`).join('');
+  strip.querySelectorAll('.fav-chip').forEach(chip=>{
+    chip.onclick=()=>{
+      const id=chip.dataset.id;
+      preferredDriverId=(preferredDriverId===id)?null:id;
+      renderFavStrip();
+      showToast(preferredDriverId?'Request seedha is driver ko bheji jayegi':'Preference hata di','');
+    };
+  });
+}
+renderFavStrip();
+
+window.toggleFavoriteDriver=function(){
+  const ride=window._lastRideSnapshot;
+  if(!ride?.driverId)return;
+  let favs=getFavorites();
+  const exists=favs.find(f=>f.id===ride.driverId);
+  const btn=document.getElementById('favStarBtn');
+  if(exists){
+    favs=favs.filter(f=>f.id!==ride.driverId);
+    btn.classList.remove('filled');
+    showToast('Favorites se hata diya','');
+  }else{
+    favs.push({id:ride.driverId,name:ride.driverName||'Driver',vehicle:ride.driverVehicle||''});
+    btn.classList.add('filled');
+    showToast('Favorite driver add ho gaya ⭐','success');
+  }
+  saveFavorites(favs);
+}
+
+window.addCompletedDriverToFavorites=function(){
+  const ride=window._lastCompletedRide;
+  if(!ride?.driverId)return;
+  let favs=getFavorites();
+  if(!favs.find(f=>f.id===ride.driverId)){
+    favs.push({id:ride.driverId,name:ride.driverName||'Driver',vehicle:ride.driverVehicle||''});
+    saveFavorites(favs);
+    showToast('Favorite driver add ho gaya ⭐','success');
+  }
+  document.getElementById('favPrompt').classList.remove('show');
+}
 
 // ── Request ride ─────────────────────────────────────────────────────────
 window.requestRide=async function(){
@@ -685,9 +924,10 @@ window.requestRide=async function(){
   try{
     const rideDoc={
       riderName:name, riderMobile:mobile, riderOneSignalId:myOneSignalId||null,
-      pickup, drop, distanceKm, estimatedFare,
+      pickup, drop, distanceKm, estimatedFare, estimatedEtaMin,
       currentFare:offer, lastOfferBy:'customer',
       status:'requested', driverId:null,
+      preferredDriverId:preferredDriverId||null,
       negotiationLog:[{by:'customer',amount:offer,ts:Date.now()}],
       createdAt:Date.now()
     };
@@ -695,6 +935,9 @@ window.requestRide=async function(){
     currentRideId=ref.id;
     watchRide(ref.id);
     switchPage('waiting');
+    if(preferredDriverId){
+      document.getElementById('waitingSub').textContent='Tumhare favorite driver ko request bheji gayi hai…';
+    }
     sendPushToAvailableDrivers('🛺 Naya Ride Request!',`${pickup.address||'Pickup'} → ${drop.address||'Drop'} · ₹${offer}`,{rideId:ref.id,type:'new_ride'});
   }catch(e){
     showToast('Request bhejne mein error aayi','error');
@@ -710,13 +953,14 @@ function watchRide(rideId){
     window._lastRideSnapshot=ride;
     handleRideUpdate(ride);
   });
+  watchChat(rideId);
 }
 
 function handleRideUpdate(ride){
   if(ride.status==='requested'){
     switchPage('waiting');
     document.getElementById('waitingTitle').textContent='Driver dhoond rahe hain…';
-    document.getElementById('waitingSub').textContent='Thoda intezaar karo, jaldi milega';
+    if(!preferredDriverId) document.getElementById('waitingSub').textContent='Thoda intezaar karo, jaldi milega';
     document.getElementById('negotiationSlot').innerHTML='';
   }else if(ride.status==='negotiating'){
     switchPage('waiting');
@@ -724,12 +968,21 @@ function handleRideUpdate(ride){
   }else if(['accepted','driver_arrived','in_progress'].includes(ride.status)){
     switchPage('tracking');
     renderTracking(ride);
+    document.getElementById('sosFab').classList.add('show');
   }else if(ride.status==='completed'){
     switchPage('completed');
     document.getElementById('completedFare').textContent='₹'+(ride.finalFare||ride.currentFare||0);
     window._completedRideId=ride.id;
+    window._lastCompletedRide=ride;
+    document.getElementById('sosFab').classList.remove('show');
+    const favs=getFavorites();
+    if(ride.driverId && !favs.find(f=>f.id===ride.driverId)){
+      document.getElementById('favPromptText').textContent=`${ride.driverName||'Is driver'} ko favorite banao?`;
+      document.getElementById('favPrompt').classList.add('show');
+    }
   }else if(ride.status==='cancelled'){
-    showToast('Ride cancel ho gayi','warn');
+    showToast('Ride cancel ho gayi'+(ride.cancelReason?(' — '+ride.cancelReason):''),'warn');
+    document.getElementById('sosFab').classList.remove('show');
     resetBooking();
   }
 }
@@ -780,7 +1033,7 @@ window.acceptDriverOffer=async function(rideId){
   if(ride?.driverOneSignalId) sendPush([ride.driverOneSignalId],'✅ Customer ne offer accept kiya','Ride confirm ho gayi, pickup ki taraf nikal pado',{rideId,type:'accepted_by_customer'});
 };
 
-// ── Tracking ──────────────────────────────────────────────────────────────
+// ── Tracking + ETA ────────────────────────────────────────────────────────
 function renderTracking(ride){
   document.getElementById('trackStatusBadge').className='ride-status-badge rsb-'+ride.status;
   document.getElementById('trackStatusBadge').textContent=
@@ -793,6 +1046,21 @@ function renderTracking(ride){
   document.getElementById('trackFare').textContent='₹'+(ride.finalFare||ride.currentFare||0);
   document.getElementById('callDriverBtn').href='tel:'+(ride.driverMobile||'');
   document.getElementById('cancelRideBtn').style.display=ride.status==='accepted'?'block':'none';
+
+  const favs=getFavorites();
+  document.getElementById('favStarBtn').classList.toggle('filled',!!favs.find(f=>f.id===ride.driverId));
+
+  // ETA badge
+  const etaBadge=document.getElementById('etaBadge');
+  if(ride.driverLat&&ride.driverLng){
+    const target=ride.status==='in_progress'?ride.drop:ride.pickup;
+    const distToTarget=haversineKm(ride.driverLat,ride.driverLng,target.lat,target.lng);
+    const etaMin=Math.max(1,Math.round(distToTarget/22*60));
+    etaBadge.textContent='ETA ~'+etaMin+' min';
+    etaBadge.style.display='inline-flex';
+  }else{
+    etaBadge.style.display='none';
+  }
 
   if(!trackMap){
     trackMap=L.map('trackMap').setView([ride.pickup.lat,ride.pickup.lng],14);
@@ -813,11 +1081,101 @@ function renderTracking(ride){
   }
 }
 
-window.cancelRide=async function(){
-  if(!currentRideId)return;
-  if(!confirm('Ride cancel karni hai?'))return;
-  await updateDoc(doc(db,'rickshaw_rides',currentRideId),{status:'cancelled'});
+// ── Cancel with reason ────────────────────────────────────────────────────
+let selectedCancelReason=null;
+window.openCancelModal=function(){
+  selectedCancelReason=null;
+  document.querySelectorAll('.reason-opt').forEach(o=>o.classList.remove('selected'));
+  document.getElementById('cancelModalOverlay').classList.add('show');
 };
+window.closeCancelModal=function(){ document.getElementById('cancelModalOverlay').classList.remove('show'); };
+document.getElementById('cancelReasonList').addEventListener('click',(e)=>{
+  const opt=e.target.closest('.reason-opt'); if(!opt)return;
+  document.querySelectorAll('.reason-opt').forEach(o=>o.classList.remove('selected'));
+  opt.classList.add('selected');
+  selectedCancelReason=opt.dataset.reason;
+});
+window.confirmCancelRide=async function(){
+  if(!currentRideId)return;
+  if(!selectedCancelReason){showToast('Pehle wajah select karo','warn');return;}
+  await updateDoc(doc(db,'rickshaw_rides',currentRideId),{status:'cancelled',cancelReason:selectedCancelReason,cancelledBy:'customer'});
+  closeCancelModal();
+};
+
+// ── Share ride details ────────────────────────────────────────────────────
+window.shareRideDetails=async function(){
+  const ride=window._lastRideSnapshot;
+  if(!ride)return;
+  const text=`🛺 AutoSaathi Ride\nDriver: ${ride.driverName||'—'} (${ride.driverVehicle||'—'})\nPickup: ${ride.pickup?.address||'—'}\nDrop: ${ride.drop?.address||'—'}\nFare: ₹${ride.finalFare||ride.currentFare||0}\nStatus: ${ride.status}`;
+  if(navigator.share){
+    try{ await navigator.share({title:'My AutoSaathi Ride',text}); }catch(e){}
+  }else{
+    window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+  }
+};
+
+// ── SOS ───────────────────────────────────────────────────────────────────
+window.openSosModal=function(){ document.getElementById('sosModalOverlay').classList.add('show'); };
+window.closeSosModal=function(){ document.getElementById('sosModalOverlay').classList.remove('show'); };
+window.sendSosAlert=async function(){
+  const ride=window._lastRideSnapshot;
+  try{
+    await addDoc(collection(db,'sos_alerts'),{
+      by:'customer',
+      riderName:ride?.riderName||localStorage.getItem('as_rider_name')||'Unknown',
+      riderMobile:ride?.riderMobile||localStorage.getItem('as_rider_mobile')||'',
+      rideId:currentRideId||null,
+      driverName:ride?.driverName||null,
+      driverMobile:ride?.driverMobile||null,
+      location:ride?.driverLat?{lat:ride.driverLat,lng:ride.driverLng}:(ride?.pickup||null),
+      status:'open',
+      createdAt:Date.now()
+    });
+    sendPushToAdmins('🆘 SOS ALERT!',`${ride?.riderName||'Customer'} ne emergency alert bheja hai — turant dekho!`,{type:'sos',rideId:currentRideId});
+    showToast('Admin ko alert bhej diya gaya ✅','success');
+    closeSosModal();
+  }catch(e){
+    showToast('Alert bhejne mein error aayi, seedha 112 call karo','error');
+  }
+};
+
+// ── Live chat ─────────────────────────────────────────────────────────────
+function watchChat(rideId){
+  if(unsubChat)unsubChat();
+  const q=query(collection(db,'rickshaw_rides',rideId,'messages'),orderBy('ts','asc'));
+  unsubChat=onSnapshot(q,(snap)=>{
+    const msgs=snap.docs.map(d=>d.data());
+    renderChatMessages(msgs);
+    if(!chatOpen && msgs.length>lastSeenMsgCount && msgs.length && msgs[msgs.length-1].sender==='driver'){
+      document.getElementById('chatUnreadDot').style.display='block';
+    }
+  });
+}
+function renderChatMessages(msgs){
+  const el=document.getElementById('chatMessages');
+  el.innerHTML=msgs.map(m=>`<div class="chat-msg ${m.sender==='customer'?'me':'them'}">${escapeHtml(m.text)}</div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+window.openChat=function(){
+  chatOpen=true;
+  document.getElementById('chatOverlay').classList.add('show');
+  document.getElementById('chatUnreadDot').style.display='none';
+  const ride=window._lastRideSnapshot;
+  document.getElementById('chatHdrTitle').textContent='Chat with '+(ride?.driverName||'Driver');
+};
+window.closeChat=function(){ chatOpen=false; document.getElementById('chatOverlay').classList.remove('show'); };
+window.sendChatMessage=async function(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text||!currentRideId)return;
+  input.value='';
+  await addDoc(collection(db,'rickshaw_rides',currentRideId,'messages'),{sender:'customer',text,ts:Date.now()});
+  const ride=window._lastRideSnapshot;
+  if(ride?.driverOneSignalId) sendPush([ride.driverOneSignalId],'💬 Naya message',text,{rideId:currentRideId,type:'chat'});
+};
+
+window.cancelRide=async function(){ openCancelModal(); }; // backward-compat alias
 
 // ── Rating & reset ───────────────────────────────────────────────────────
 let selectedStars=0;
@@ -831,12 +1189,14 @@ window.finishAndReset=async function(){
   if(selectedStars&&window._completedRideId){
     await updateDoc(doc(db,'rickshaw_rides',window._completedRideId),{rating:selectedStars}).catch(()=>{});
   }
+  document.getElementById('favPrompt').classList.remove('show');
   resetBooking();
 };
 
 function resetBooking(){
   if(unsubRide){unsubRide();unsubRide=null;}
-  currentRideId=null; pickup=null; drop=null; selectedStars=0;
+  if(unsubChat){unsubChat();unsubChat=null;}
+  currentRideId=null; pickup=null; drop=null; selectedStars=0; preferredDriverId=null;
   if(trackMap){trackMap.remove();trackMap=null;trackDriverMarker=null;trackIsSat=false;}
   document.getElementById('pickupInput').value='';
   document.getElementById('dropInput').value='';
@@ -848,6 +1208,7 @@ function resetBooking(){
   if(pickupMarker){bookingMap.removeLayer(pickupMarker);pickupMarker=null;}
   if(dropMarker){bookingMap.removeLayer(dropMarker);dropMarker=null;}
   if(routeLine){bookingMap.removeLayer(routeLine);routeLine=null;}
+  renderFavStrip();
   switchPage('booking');
   setTimeout(()=>bookingMap.invalidateSize(),100);
 
@@ -861,6 +1222,41 @@ window.switchPage=function(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page'+page[0].toUpperCase()+page.slice(1)).classList.add('active');
 };
+
+// ── Ride History ──────────────────────────────────────────────────────────
+window.openHistory=async function(){
+  switchPage('history');
+  document.getElementById('sosFab').classList.remove('show');
+  const mobile=localStorage.getItem('as_rider_mobile');
+  const el=document.getElementById('historyList');
+  if(!mobile){ el.innerHTML='<div class="empty-state"><i class="ti ti-history"></i><p>Pehle ek ride book karo, history yahan dikhegi.</p></div>'; return; }
+  el.innerHTML='<div class="empty-state"><i class="ti ti-loader-2"></i><p>Loading…</p></div>';
+  try{
+    const q=query(collection(db,'rickshaw_rides'),where('riderMobile','==',mobile));
+    const snap=await getDocs(q);
+    let rides=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+    if(!rides.length){ el.innerHTML='<div class="empty-state"><i class="ti ti-history"></i><p>Abhi tak koi ride nahi hui.</p></div>'; return; }
+    const favs=getFavorites();
+    el.innerHTML=rides.map(r=>{
+      const isFav=r.driverId&&favs.find(f=>f.id===r.driverId);
+      return `<div class="history-item">
+        <div class="history-top">
+          <div>
+            <div class="history-fare">₹${r.finalFare||r.currentFare||r.estimatedFare||0}</div>
+            <div class="history-date">${new Date(r.createdAt||Date.now()).toLocaleString()}</div>
+          </div>
+          <span class="sbadge" style="font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:50px;background:${r.status==='completed'?'var(--green-dim)':r.status==='cancelled'?'var(--red-dim)':'var(--blue-dim)'};color:${r.status==='completed'?'var(--green)':r.status==='cancelled'?'var(--red)':'var(--blue)'}">${r.status}</span>
+        </div>
+        <div class="history-route"><i class="ti ti-map-pin"></i> ${r.pickup?.address||'—'}<br><i class="ti ti-flag"></i> ${r.drop?.address||'—'}</div>
+        ${r.cancelReason?`<div class="history-route" style="color:var(--red)">Cancel wajah: ${r.cancelReason}</div>`:''}
+        ${r.driverName?`<div class="history-driver-row"><span>${isFav?'⭐ ':''}${r.driverName} · ${r.driverVehicle||''}</span></div>`:''}
+      </div>`;
+    }).join('');
+  }catch(e){
+    el.innerHTML='<div class="empty-state"><i class="ti ti-alert-circle"></i><p>History load nahi ho payi.</p></div>';
+  }
+};
+window.closeHistory=function(){ switchPage('booking'); };
 
 // ── Toast ────────────────────────────────────────────────────────────────
 let toastTimer;
@@ -876,8 +1272,7 @@ const savedMobile=localStorage.getItem('as_rider_mobile');
 if(savedName)document.getElementById('riderName').value=savedName;
 if(savedMobile)document.getElementById('riderMobile').value=savedMobile;
 
-// Default city — app abhi sirf Akole mein use hoga, isliye city-select step skip kar diya.
-// Jab doosre gaon/city mein expand karo, bas ye line hata dena (ya "Change" button customer khud use kar sakta hai).
+// Default city — app abhi sirf Akole mein use hoga.
 window.selectCity(19.5800,74.0300,'Akole, Maharashtra');
 </script>
 </body>
