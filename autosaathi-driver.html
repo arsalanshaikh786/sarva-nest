@@ -22,7 +22,7 @@
   --radius:16px;--sb:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
 h1,h2,.brand,.sec-title{font-family:'Space Grotesk',sans-serif;}
 
 .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
@@ -78,8 +78,36 @@ main{padding:0 1rem 1rem;}
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 .6rem;}
 .sec-title{font-size:.92rem;font-weight:700;}
 
+/* TABS */
+.tab-row{display:flex;gap:.4rem;padding:0 1rem 1rem;}
+.tab-chip{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:.6rem;text-align:center;font-size:.78rem;font-weight:700;color:var(--muted);cursor:pointer;}
+.tab-chip.active{border-color:var(--yellow);background:var(--yellow-dim);color:var(--yellow);}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* Aadhar / verification card */
+.doc-card{background:var(--card);border-radius:var(--radius);border:1.5px solid var(--yellow-border);padding:1rem;margin:0 1rem 1rem;}
+.doc-card.verified{border-color:var(--green);}
+.doc-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem;}
+.doc-status{font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:50px;}
+.doc-status.pending{background:var(--yellow-dim);color:var(--yellow);}
+.doc-status.verified{background:var(--green-dim);color:var(--green);}
+.doc-status.none{background:var(--red-dim);color:var(--red);}
+.doc-preview{width:100%;max-height:160px;object-fit:contain;border-radius:10px;margin-bottom:.6rem;display:none;background:var(--surface);}
+.doc-preview.show{display:block;}
+.doc-upload-btn{width:100%;background:var(--yellow-dim);color:var(--yellow);border:1.5px dashed var(--yellow);border-radius:10px;padding:.7rem;font-weight:700;font-size:.82rem;cursor:pointer;}
+
+/* EARNINGS */
+.earn-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;padding:0 1rem 1rem;}
+.earn-stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;}
+.earn-stat-label{font-size:.62rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem;}
+.earn-stat-val{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:800;color:var(--yellow);}
+.earn-list-item{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:.7rem .9rem;margin:0 1rem .5rem;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;}
+
 .req-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:.9rem;margin-bottom:.7rem;border-left:3px solid var(--blue);}
 .req-card.negotiating{border-left-color:var(--purple);}
+.req-card.direct{border-left-color:var(--yellow);}
+.req-direct-badge{display:inline-flex;align-items:center;gap:3px;background:var(--yellow-dim);color:var(--yellow);font-size:.62rem;font-weight:800;padding:2px 8px;border-radius:50px;margin-bottom:.4rem;}
 .req-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;}
 .req-cust{font-weight:700;font-size:.88rem;}
 .req-time{font-size:.68rem;color:var(--muted);}
@@ -103,7 +131,11 @@ main{padding:0 1rem 1rem;}
 .ride-detail-row{display:flex;justify-content:space-between;font-size:.8rem;padding:.35rem 0;border-bottom:1px solid var(--border);}
 .ride-detail-row:last-of-type{border-bottom:none;}
 .ride-detail-row span:first-child{color:var(--muted);}
-.call-btn{background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);border-radius:9px;padding:.4rem .7rem;font-size:.75rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:none;margin-top:.5rem;}
+.active-action-row{display:flex;gap:.5rem;margin-top:.5rem;}
+.call-btn{flex:1;background:var(--blue-dim);color:var(--blue);border:1px solid var(--blue);border-radius:9px;padding:.5rem .7rem;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;text-decoration:none;}
+.chat-btn-drv{flex:1;background:var(--purple-dim);color:var(--purple);border:1px solid var(--purple);border-radius:9px;padding:.5rem .7rem;font-size:.75rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;position:relative;}
+.chat-unread-dot{position:absolute;top:-3px;right:-3px;width:9px;height:9px;background:var(--red);border-radius:50%;display:none;}
+.sos-btn-drv{width:100%;background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:9px;padding:.55rem;font-size:.78rem;font-weight:800;cursor:pointer;margin-top:.5rem;}
 .progress-btn{width:100%;background:var(--yellow);color:#1a1400;border:none;border-radius:10px;padding:.75rem;font-weight:800;font-size:.9rem;cursor:pointer;margin-top:.8rem;display:flex;align-items:center;justify-content:center;gap:6px;}
 .progress-btn.complete{background:var(--green);color:#062b13;}
 
@@ -114,6 +146,33 @@ main{padding:0 1rem 1rem;}
 .push-banner{margin:0 1rem 1rem;background:var(--blue-dim);border:1.5px solid var(--blue);border-radius:12px;padding:.7rem .9rem;font-size:.75rem;color:var(--blue);display:none;align-items:center;justify-content:space-between;gap:.6rem;}
 .push-banner.show{display:flex;}
 .push-banner button{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:.4rem .7rem;font-size:.72rem;font-weight:700;cursor:pointer;flex-shrink:0;}
+
+/* SOS MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-sheet{background:var(--surface);width:100%;max-width:460px;border-radius:20px 20px 0 0;padding:1.2rem;text-align:center;}
+@media(min-width:600px){.modal-overlay{align-items:center;}.modal-sheet{border-radius:20px;}}
+.modal-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:.6rem;}
+.sos-desc{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
+.sos-call-btn{width:100%;background:var(--red);color:#fff;border:none;border-radius:11px;padding:.8rem;font-weight:800;margin-bottom:.5rem;cursor:pointer;text-decoration:none;display:block;}
+.sos-send-btn{width:100%;background:var(--red-dim);color:var(--red);border:1.5px solid var(--red);border-radius:11px;padding:.75rem;font-weight:800;margin-bottom:.5rem;cursor:pointer;}
+.modal-close-btn{width:100%;background:var(--card2);color:var(--muted);border:none;border-radius:11px;padding:.7rem;font-weight:700;margin-top:.3rem;cursor:pointer;}
+
+/* CHAT PANEL */
+.chat-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2100;display:none;align-items:flex-end;justify-content:center;}
+.chat-overlay.show{display:flex;}
+.chat-sheet{background:var(--surface);width:100%;max-width:460px;height:70vh;border-radius:20px 20px 0 0;display:flex;flex-direction:column;}
+@media(min-width:600px){.chat-overlay{align-items:center;}.chat-sheet{border-radius:20px;height:65vh;}}
+.chat-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid var(--border);}
+.chat-hdr-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;}
+.chat-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.5rem;}
+.chat-msg{max-width:75%;padding:.55rem .8rem;border-radius:14px;font-size:.82rem;line-height:1.4;}
+.chat-msg.me{align-self:flex-end;background:var(--yellow);color:#1a1400;border-bottom-right-radius:4px;}
+.chat-msg.them{align-self:flex-start;background:var(--card);border-bottom-left-radius:4px;}
+.chat-input-row{display:flex;gap:.5rem;padding:.8rem;border-top:1px solid var(--border);}
+.chat-input-row input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1rem;color:var(--text);outline:none;font-size:.85rem;}
+.chat-input-row button{background:var(--yellow);color:#1a1400;border:none;border-radius:50%;width:40px;height:40px;flex-shrink:0;font-size:1rem;cursor:pointer;}
 
 .toast{position:fixed;bottom:1.2rem;left:1rem;right:1rem;background:var(--text);color:var(--bg);padding:.7rem 1rem;border-radius:12px;font-size:.82rem;font-weight:600;z-index:9999;opacity:0;transform:translateY(14px);transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;text-align:center;}
 .toast.show{opacity:1;transform:translateY(0);}
@@ -184,29 +243,88 @@ button:active{transform:scale(.95);}
   <button class="save-loc-btn" onclick="saveManualLocation()">Save My Location</button>
 </div>
 
-<main>
-  <!-- ACTIVE RIDE (shown when a ride is accepted/in progress) -->
-  <div id="activeRideSection"></div>
+<!-- TABS: Requests / Earnings / Documents -->
+<div class="tab-row">
+  <div class="tab-chip active" id="tabReqBtn" onclick="switchTab('requests')"><i class="ti ti-bell-ringing"></i> Requests</div>
+  <div class="tab-chip" id="tabEarnBtn" onclick="switchTab('earnings')"><i class="ti ti-currency-rupee"></i> Earnings</div>
+  <div class="tab-chip" id="tabDocBtn" onclick="switchTab('docs')"><i class="ti ti-id"></i> Aadhar</div>
+</div>
 
-  <div class="sec-hdr"><div class="sec-title">🔔 Ride Requests</div></div>
-  <div id="requestsList">
-    <div class="empty-state"><i class="ti ti-bell-off"></i><p>Online ho jao naye requests dekhne ke liye</p></div>
+<!-- REQUESTS TAB -->
+<div class="tab-panel active" id="tabPanelRequests">
+  <main>
+    <div id="activeRideSection"></div>
+    <div class="sec-hdr"><div class="sec-title">🔔 Ride Requests</div></div>
+    <div id="requestsList">
+      <div class="empty-state"><i class="ti ti-bell-off"></i><p>Online ho jao naye requests dekhne ke liye</p></div>
+    </div>
+  </main>
+</div>
+
+<!-- EARNINGS TAB -->
+<div class="tab-panel" id="tabPanelEarnings">
+  <div class="earn-stats-grid">
+    <div class="earn-stat-card"><div class="earn-stat-label">Today</div><div class="earn-stat-val" id="earnToday">₹0</div></div>
+    <div class="earn-stat-card"><div class="earn-stat-label">This Week</div><div class="earn-stat-val" id="earnWeek">₹0</div></div>
+    <div class="earn-stat-card"><div class="earn-stat-label">Total Earnings</div><div class="earn-stat-val" id="earnTotal">₹0</div></div>
+    <div class="earn-stat-card"><div class="earn-stat-label">Total Rides</div><div class="earn-stat-val" id="earnRideCount">0</div></div>
   </div>
-</main>
+  <div class="sec-hdr" style="padding:0 1rem"><div class="sec-title">Recent Completed Rides</div></div>
+  <div id="earnList"></div>
+</div>
+
+<!-- DOCUMENTS (AADHAR) TAB -->
+<div class="tab-panel" id="tabPanelDocs">
+  <div class="doc-card" id="aadharDocCard">
+    <div class="doc-hdr">
+      <div class="sec-title">Aadhar Card</div>
+      <span class="doc-status none" id="aadharStatus">Not Uploaded</span>
+    </div>
+    <img class="doc-preview" id="aadharPreview" alt="Aadhar preview"/>
+    <input type="file" id="aadharFile" accept="image/*" style="display:none" onchange="uploadAadhar()"/>
+    <button class="doc-upload-btn" onclick="document.getElementById('aadharFile').click()"><i class="ti ti-upload"></i> Aadhar Card Photo Upload Karo</button>
+    <div style="font-size:.68rem;color:var(--muted);margin-top:.6rem">Admin tumhara Aadhar verify karega. Verify hone tak "Pending" dikhega.</div>
+  </div>
+</div>
 
 <div class="toast" id="toast"></div>
 
+<!-- SOS MODAL -->
+<div class="modal-overlay" id="sosModalOverlay">
+  <div class="modal-sheet">
+    <div style="font-size:2.5rem;margin-bottom:.4rem">🆘</div>
+    <div class="modal-title">Emergency Help</div>
+    <div class="sos-desc">Agar tum khatre mein ho, turant neeche diye options use karo. Location aur ride details admin ko turant bhej di jayengi.</div>
+    <a class="sos-call-btn" href="tel:112"><i class="ti ti-phone"></i> Call Emergency (112)</a>
+    <button class="sos-send-btn" onclick="sendSosAlert()"><i class="ti ti-send"></i> Admin ko Alert Bhejo</button>
+    <button class="modal-close-btn" onclick="closeSosModal()">Band karo</button>
+  </div>
+</div>
+
+<!-- CHAT PANEL -->
+<div class="chat-overlay" id="chatOverlay">
+  <div class="chat-sheet">
+    <div class="chat-hdr">
+      <div class="chat-hdr-title" id="chatHdrTitle">Chat with Customer</div>
+      <button class="chat-close" onclick="closeChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Message likho…" onkeydown="if(event.key==='Enter')sendChatMessage()"/>
+      <button onclick="sendChatMessage()"><i class="ti ti-send"></i></button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, updateDoc, onSnapshot, runTransaction, arrayUnion, serverTimestamp, getDocs, getDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, doc, updateDoc, onSnapshot, runTransaction, arrayUnion, serverTimestamp, getDocs, getDoc, query, where, orderBy, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const FC={apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",authDomain:"multi-service-app-77dd8.firebaseapp.com",projectId:"multi-service-app-77dd8",storageBucket:"multi-service-app-77dd8.appspot.com",messagingSenderId:"123732555482",appId:"1:123732555482:web:ea47c825e0dbb504f597e3"};
 const app=initializeApp(FC);
 const db=getFirestore(app);
 
-// ── Push notifications (OneSignal — free, no Firebase billing needed) ─────
-// Sign up free at onesignal.com → create a "Web Push" app → paste your
-// App ID and REST API Key below (Settings → Keys & IDs).
+// ── Push notifications (OneSignal) ──────────────────────────────────────
 const ONESIGNAL_APP_ID="b6efc6b6-8019-4fe7-8b39-cdcb7238d964";
 const ONESIGNAL_REST_API_KEY="os_v2_app_w3x4nnuadfh6pczzzxfxeogzmtia56jw7xreyc5acqosvjpfgjzdv5km7iaeqfhn34owagm3nmcbejk34frghl6rbtwdoohmvqy76ta";
 
@@ -247,10 +365,6 @@ function maybeShowPushBanner(){
   document.getElementById('pushBanner').classList.add('show');
 }
 
-// Sends a push via OneSignal REST API directly from the browser — same
-// exposure pattern as your existing Telegram bot token / UltraMsg instance.
-// Anyone with this REST key could send pushes to your subscribers, so don't
-// share this file publicly with the real key filled in.
 async function sendPush(subscriptionIds, title, body, data){
   const ids=(subscriptionIds||[]).filter(Boolean);
   if(!ids.length)return;
@@ -263,7 +377,6 @@ async function sendPush(subscriptionIds, title, body, data){
   }catch(e){console.warn('push send failed',e);}
 }
 
-// Notify all available drivers about a fresh ride request (broadcast by tag).
 async function sendPushToAvailableDrivers(title, body, data){
   try{
     await fetch('https://api.onesignal.com/notifications',{
@@ -278,16 +391,28 @@ async function sendPushToAvailableDrivers(title, body, data){
   }catch(e){console.warn('driver broadcast push failed',e);}
 }
 
-let driver=null; // logged-in driver doc {id, ...}
-let allDriversCache=[];
+async function sendPushToAdmins(title, body, data){
+  try{
+    await fetch('https://api.onesignal.com/notifications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json; charset=utf-8','Authorization':'Key '+ONESIGNAL_REST_API_KEY},
+      body:JSON.stringify({
+        app_id:ONESIGNAL_APP_ID, target_channel:'push',
+        filters:[{field:'tag',key:'role',relation:'=',value:'admin'}],
+        headings:{en:title}, contents:{en:body}, data:data||{}
+      })
+    });
+  }catch(e){console.warn('admin push failed',e);}
+}
+
+let driver=null;
 let watchId=null;
-let unsubDriverDoc=null, unsubRides=null;
+let unsubDriverDoc=null, unsubRides=null, unsubChat=null;
 let allRides=[];
 let pickMap=null, pickMarker=null, pendingManualLatLng=null;
 let activeRideMapInstances={};
+let chatOpen=false, activeChatRideId=null;
 
-// ── MAP TILE LAYERS (Street / Satellite) ────────────────────────────────
-// Esri World Imagery is free and needs no API key — gives the "real photo" satellite look.
 function streetLayer(){
   return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'});
 }
@@ -298,7 +423,7 @@ function satelliteLayer(){
   ]);
 }
 let pickActiveLayer, pickIsSat=false;
-let activeRideLayers={}; // rideId -> {map, activeLayer, isSat}
+let activeRideLayers={};
 
 window.toggleMapLayer=function(which,rideId){
   if(which==='pick'){
@@ -317,6 +442,18 @@ window.toggleMapLayer=function(which,rideId){
     const lbl=document.getElementById('activeRideMapToggleLabel');
     if(lbl) lbl.textContent=state.isSat?'Street':'Satellite';
   }
+};
+
+// ── Tabs ─────────────────────────────────────────────────────────────────
+window.switchTab=function(tab){
+  document.querySelectorAll('.tab-chip').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab'+tab[0].toUpperCase()+tab.slice(1).replace('requests','Req').replace('earnings','Earn').replace('docs','Doc')+'Btn')?.classList.add('active');
+  const idMap={requests:'tabReqBtn',earnings:'tabEarnBtn',docs:'tabDocBtn'};
+  document.getElementById(idMap[tab]).classList.add('active');
+  const panelMap={requests:'tabPanelRequests',earnings:'tabPanelEarnings',docs:'tabPanelDocs'};
+  document.getElementById(panelMap[tab]).classList.add('active');
+  if(tab==='earnings') renderEarnings();
 };
 
 // ── LOGIN ────────────────────────────────────────────────────────────────
@@ -341,6 +478,7 @@ window.doLogout=function(){
   stopAutoTracking();
   if(unsubDriverDoc)unsubDriverDoc();
   if(unsubRides)unsubRides();
+  if(unsubChat)unsubChat();
   localStorage.removeItem('autosaathi_driver_id');
   if(driver) updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'offline'}).catch(()=>{});
   driver=null;
@@ -366,18 +504,21 @@ function initDriverSession(){
   updateAvailUI(driver.status==='available'||driver.status==='busy');
   setLocationMode(driver.locationMode||'auto',true);
   maybeShowPushBanner();
+  renderAadharCard();
 
   unsubDriverDoc=onSnapshot(doc(db,'rickshaw_drivers',driver.id),(snap)=>{
     if(!snap.exists())return;
     driver={id:snap.id,...snap.data()};
     document.getElementById('availCheckbox').checked=driver.status==='available'||driver.status==='busy';
     updateAvailUI(driver.status==='available'||driver.status==='busy');
+    renderAadharCard();
   });
 
   unsubRides=onSnapshot(collection(db,'rickshaw_rides'),(snap)=>{
     allRides=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
     renderRequests();
     renderActiveRide();
+    if(document.getElementById('tabPanelEarnings').classList.contains('active')) renderEarnings();
   },(e)=>console.error('rides listener',e));
 
   if((driver.locationMode||'auto')==='auto' && (driver.status==='available'||driver.status==='busy')) startAutoTracking();
@@ -410,10 +551,7 @@ window.setLocationMode=async function(mode,skipSave){
   if(!skipSave && driver) await updateDoc(doc(db,'rickshaw_drivers',driver.id),{locationMode:mode});
 };
 
-// GPS auto-tracking — ignores wildly inaccurate fixes so the driver's dot
-// doesn't jump to a completely different city (e.g. Pune) on a bad cell-tower
-// reading. Only fixes accurate to ~300m or better are pushed to Firestore.
-const MAX_ACCEPTABLE_ACCURACY=300; // meters
+const MAX_ACCEPTABLE_ACCURACY=300;
 function startAutoTracking(){
   if(!navigator.geolocation){showToast('GPS is browser support nahi karta','error');return;}
   if(watchId) return;
@@ -455,7 +593,6 @@ window.saveManualLocation=async function(){
   showToast('Location updated ✅','success');
 };
 
-// ── Nearby search for manual location (biased to ~5-10km around current pick-map center) ──
 let manualSearchDebounce;
 window.searchNearbyManual=function(q){
   clearTimeout(manualSearchDebounce);
@@ -464,7 +601,7 @@ window.searchNearbyManual=function(q){
   manualSearchDebounce=setTimeout(async()=>{
     try{
       const center=pickMap?pickMap.getCenter():{lat:driver?.lat||19.58,lng:driver?.lng||74.03};
-      const d=0.07; // ~7km box — keeps results within the requested 5-10km range
+      const d=0.07;
       const viewbox=`${center.lng-d},${center.lat+d},${center.lng+d},${center.lat-d}`;
       const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=8&addressdetails=1&countrycodes=in&viewbox=${viewbox}&bounded=1`;
       const res=await fetch(url);
@@ -486,7 +623,55 @@ window.searchNearbyManual=function(q){
   },400);
 };
 
-// ── RIDE REQUESTS (open pool + this driver's negotiation) ─────────────────
+// ── AADHAR UPLOAD & VERIFICATION ─────────────────────────────────────────
+function renderAadharCard(){
+  const card=document.getElementById('aadharDocCard');
+  const statusEl=document.getElementById('aadharStatus');
+  const preview=document.getElementById('aadharPreview');
+  if(driver.aadharUrl){
+    preview.src=driver.aadharUrl;
+    preview.classList.add('show');
+    if(driver.aadharVerified===true){
+      statusEl.textContent='Verified ✅';statusEl.className='doc-status verified';card.classList.add('verified');
+    }else{
+      statusEl.textContent='Pending Review';statusEl.className='doc-status pending';card.classList.remove('verified');
+    }
+  }else{
+    preview.classList.remove('show');
+    statusEl.textContent='Not Uploaded';statusEl.className='doc-status none';card.classList.remove('verified');
+  }
+}
+
+window.uploadAadhar=async function(){
+  const file=document.getElementById('aadharFile').files[0];
+  if(!file)return;
+  showToast('Aadhar upload ho raha hai…','');
+  const formData=new FormData();
+  formData.append('file',file);
+  formData.append('upload_preset','ml_default');
+  try{
+    const response=await fetch('https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload',{method:'POST',body:formData});
+    const data=await response.json();
+    if(data.secure_url){
+      await updateDoc(doc(db,'rickshaw_drivers',driver.id),{aadharUrl:data.secure_url,aadharVerified:false,aadharUploadedAt:Date.now()});
+      showToast('Aadhar upload ho gaya, admin verify karega ✅','success');
+    }else{
+      showToast('Upload fail ho gaya','error');
+    }
+  }catch(e){
+    showToast('Upload mein error aayi','error');
+  }
+};
+
+// ── RIDE REQUESTS (open pool + this driver's negotiation + preferred) ─────
+function isRequestVisibleToMe(r){
+  if(r.driverId) return false;
+  if(!r.preferredDriverId) return true;
+  if(r.preferredDriverId===driver.id) return true;
+  // preferred window: opens up to everyone after 60s if the preferred driver hasn't responded
+  return (Date.now()-(r.createdAt||0))>60000;
+}
+
 function renderRequests(){
   if(!driver) return;
   const isOnline=driver.status==='available'||driver.status==='busy';
@@ -495,7 +680,7 @@ function renderRequests(){
     el.innerHTML=`<div class="empty-state"><i class="ti ti-bell-off"></i><p>Online ho jao naye requests dekhne ke liye</p></div>`;
     return;
   }
-  const openPool=allRides.filter(r=>r.status==='requested'&&!r.driverId);
+  const openPool=allRides.filter(r=>r.status==='requested'&&isRequestVisibleToMe(r));
   const myNegotiations=allRides.filter(r=>r.driverId===driver.id&&r.status==='negotiating');
   const combined=[...myNegotiations,...openPool];
   if(!combined.length){
@@ -505,7 +690,9 @@ function renderRequests(){
   el.innerHTML=combined.map(r=>{
     const negotiating=r.status==='negotiating';
     const lastByCustomer=r.lastOfferBy==='customer';
-    return `<div class="req-card ${negotiating?'negotiating':''}">
+    const isDirect=r.preferredDriverId===driver.id;
+    return `<div class="req-card ${negotiating?'negotiating':''} ${isDirect?'direct':''}">
+      ${isDirect?'<div class="req-direct-badge"><i class="ti ti-star-filled"></i> Direct Request (Favorite)</div>':''}
       <div class="req-top">
         <div>
           <div class="req-cust">${r.riderName||'Customer'}</div>
@@ -513,7 +700,7 @@ function renderRequests(){
         </div>
         ${negotiating?'<span class="sbadge s-negotiating">Negotiating</span>':'<span class="sbadge s-requested">New</span>'}
       </div>
-      <div class="req-route"><i class="ti ti-map-pin"></i> ${r.pickup?.address||'—'}<br><i class="ti ti-flag"></i> ${r.drop?.address||'—'}<br><i class="ti ti-road"></i> ${(r.distanceKm||0).toFixed(1)} km</div>
+      <div class="req-route"><i class="ti ti-map-pin"></i> ${r.pickup?.address||'—'}<br><i class="ti ti-flag"></i> ${r.drop?.address||'—'}<br><i class="ti ti-road"></i> ${(r.distanceKm||0).toFixed(1)} km ${r.estimatedEtaMin?('· ~'+r.estimatedEtaMin+' min'):''}</div>
       <div class="req-fare-row">
         <span class="req-fare-label">${negotiating?(lastByCustomer?"Customer's offer":"Your offer"):"Offered fare"}</span>
         <span class="req-fare-val">₹${r.currentFare||r.estimatedFare||0}</span>
@@ -613,11 +800,16 @@ function renderActiveRide(){
     <div class="ride-detail-row"><span>Drop</span><span style="text-align:right;max-width:60%">${ride.drop?.address||'—'}</span></div>
     <div class="ride-detail-row"><span>Distance</span><span>${(ride.distanceKm||0).toFixed(1)} km</span></div>
     <div class="ride-detail-row"><span>Fare</span><span style="color:var(--yellow);font-weight:800">₹${ride.finalFare||ride.currentFare||0}</span></div>
-    ${ride.riderMobile?`<a class="call-btn" href="tel:${ride.riderMobile}"><i class="ti ti-phone"></i> Call Customer</a>`:''}
+    <div class="active-action-row">
+      ${ride.riderMobile?`<a class="call-btn" href="tel:${ride.riderMobile}"><i class="ti ti-phone"></i> Call</a>`:''}
+      <button class="chat-btn-drv" onclick="openChat('${ride.id}')"><i class="ti ti-message-circle"></i> Chat<span class="chat-unread-dot" id="chatUnreadDot"></span></button>
+    </div>
+    <button class="sos-btn-drv" onclick="openSosModal()"><i class="ti ti-alert-triangle"></i> Emergency / SOS</button>
     <button class="progress-btn ${nextAction.complete?'complete':''}" onclick="${nextAction.fn}"><i class="ti ${nextAction.icon}"></i> ${nextAction.label}</button>
   </div>`;
 
   setTimeout(()=>initActiveRideMap(ride),80);
+  watchChat(ride.id);
 }
 
 function initActiveRideMap(ride){
@@ -648,13 +840,37 @@ window.updateRideStatus=async function(rideId,status){
 
 window.completeRide=async function(rideId){
   const ride=allRides.find(r=>r.id===rideId);
+  const fare=+(ride?.finalFare||ride?.currentFare||0);
   await updateDoc(doc(db,'rickshaw_rides',rideId),{status:'completed',completedAt:Date.now()});
-  await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'available',totalRides:(driver.totalRides||0)+1});
+  await updateDoc(doc(db,'rickshaw_drivers',driver.id),{status:'available',totalRides:(driver.totalRides||0)+1,totalEarnings:(driver.totalEarnings||0)+fare});
   delete activeRideMapInstances[rideId];
   delete activeRideLayers[rideId];
   showToast('Ride complete! 🎉','success');
   if(ride?.riderOneSignalId) sendPush([ride.riderOneSignalId],'✅ Ride complete!',`Fare: ₹${ride.finalFare||ride.currentFare||0} — thanks for riding!`,{rideId,type:'completed'});
 };
+
+// ── EARNINGS DASHBOARD ────────────────────────────────────────────────────
+function renderEarnings(){
+  if(!driver)return;
+  const myCompleted=allRides.filter(r=>r.driverId===driver.id&&r.status==='completed');
+  const today=new Date().toDateString();
+  const weekAgo=Date.now()-7*24*60*60*1000;
+  const todayRides=myCompleted.filter(r=>r.completedAt&&new Date(r.completedAt).toDateString()===today);
+  const weekRides=myCompleted.filter(r=>r.completedAt&&r.completedAt>=weekAgo);
+  const sum=(list)=>list.reduce((s,r)=>s+(+r.finalFare||+r.currentFare||0),0);
+  document.getElementById('earnToday').textContent='₹'+sum(todayRides).toLocaleString('en-IN');
+  document.getElementById('earnWeek').textContent='₹'+sum(weekRides).toLocaleString('en-IN');
+  document.getElementById('earnTotal').textContent='₹'+sum(myCompleted).toLocaleString('en-IN');
+  document.getElementById('earnRideCount').textContent=myCompleted.length;
+
+  const el=document.getElementById('earnList');
+  const recent=myCompleted.slice(0,15);
+  if(!recent.length){el.innerHTML='<div class="empty-state"><i class="ti ti-currency-rupee"></i><p>Abhi tak koi completed ride nahi.</p></div>';return;}
+  el.innerHTML=recent.map(r=>`<div class="earn-list-item">
+    <span>${r.riderName||'Customer'} · ${new Date(r.completedAt).toLocaleDateString()}</span>
+    <span style="color:var(--yellow);font-weight:800">₹${r.finalFare||r.currentFare||0}</span>
+  </div>`).join('');
+}
 
 function timeAgo(ts){
   if(!ts)return'';
@@ -663,6 +879,71 @@ function timeAgo(ts){
   if(diff<60)return diff+' min pehle';
   return Math.floor(diff/60)+' hr pehle';
 }
+
+// ── SOS ───────────────────────────────────────────────────────────────────
+window.openSosModal=function(){ document.getElementById('sosModalOverlay').classList.add('show'); };
+window.closeSosModal=function(){ document.getElementById('sosModalOverlay').classList.remove('show'); };
+window.sendSosAlert=async function(){
+  const activeRide=allRides.find(r=>r.driverId===driver?.id&&['accepted','driver_arrived','in_progress'].includes(r.status));
+  try{
+    await addDoc(collection(db,'sos_alerts'),{
+      by:'driver',
+      driverName:driver.name,
+      driverMobile:driver.mobile,
+      rideId:activeRide?.id||null,
+      riderName:activeRide?.riderName||null,
+      riderMobile:activeRide?.riderMobile||null,
+      location:driver.lat?{lat:driver.lat,lng:driver.lng}:null,
+      status:'open',
+      createdAt:Date.now()
+    });
+    sendPushToAdmins('🆘 SOS ALERT!',`${driver.name} (driver) ne emergency alert bheja hai — turant dekho!`,{type:'sos'});
+    showToast('Admin ko alert bhej diya gaya ✅','success');
+    closeSosModal();
+  }catch(e){
+    showToast('Alert bhejne mein error aayi, seedha 112 call karo','error');
+  }
+};
+
+// ── Live chat ─────────────────────────────────────────────────────────────
+function watchChat(rideId){
+  if(activeChatRideId===rideId && unsubChat) return;
+  if(unsubChat)unsubChat();
+  activeChatRideId=rideId;
+  const q=query(collection(db,'rickshaw_rides',rideId,'messages'),orderBy('ts','asc'));
+  unsubChat=onSnapshot(q,(snap)=>{
+    const msgs=snap.docs.map(d=>d.data());
+    if(chatOpen) renderChatMessages(msgs);
+    else if(msgs.length && msgs[msgs.length-1].sender==='customer'){
+      const dot=document.getElementById('chatUnreadDot');
+      if(dot) dot.style.display='block';
+    }
+  });
+}
+function renderChatMessages(msgs){
+  const el=document.getElementById('chatMessages');
+  el.innerHTML=msgs.map(m=>`<div class="chat-msg ${m.sender==='driver'?'me':'them'}">${escapeHtml(m.text)}</div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+window.openChat=function(rideId){
+  chatOpen=true;
+  document.getElementById('chatOverlay').classList.add('show');
+  const dot=document.getElementById('chatUnreadDot'); if(dot) dot.style.display='none';
+  const ride=allRides.find(r=>r.id===rideId);
+  document.getElementById('chatHdrTitle').textContent='Chat with '+(ride?.riderName||'Customer');
+  watchChat(rideId);
+};
+window.closeChat=function(){ chatOpen=false; document.getElementById('chatOverlay').classList.remove('show'); };
+window.sendChatMessage=async function(){
+  const input=document.getElementById('chatInput');
+  const text=input.value.trim();
+  if(!text||!activeChatRideId)return;
+  input.value='';
+  await addDoc(collection(db,'rickshaw_rides',activeChatRideId,'messages'),{sender:'driver',text,ts:Date.now()});
+  const ride=allRides.find(r=>r.id===activeChatRideId);
+  if(ride?.riderOneSignalId) sendPush([ride.riderOneSignalId],'💬 Naya message from driver',text,{rideId:activeChatRideId,type:'chat'});
+};
 
 let toastTimer;
 window.showToast=function(msg,type){
