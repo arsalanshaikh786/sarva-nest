@@ -21,9 +21,14 @@
   --text:#F5F5F0;--muted:#9A9A9A;--muted2:#6B6B6B;
   --radius:16px;--sb:env(safe-area-inset-bottom,0px);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:60px;overscroll-behavior-y:contain;}
 h1,h2,.brand,.sec-title{font-family:'Space Grotesk',sans-serif;}
+@media(max-width:600px){
+  input,select,textarea{font-size:16px!important;}
+}
+.chat-messages,.manual-suggestions{-webkit-overflow-scrolling:touch;}
 
 .login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;padding:1.5rem;}
 .login-box{background:var(--surface);border-radius:20px;border:1px solid var(--border2);padding:2rem 1.5rem;width:100%;max-width:360px;text-align:center;}
@@ -150,7 +155,7 @@ main{padding:0 1rem 1rem;}
 /* SOS MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;display:none;align-items:flex-end;justify-content:center;}
 .modal-overlay.show{display:flex;}
-.modal-sheet{background:var(--surface);width:100%;max-width:460px;border-radius:20px 20px 0 0;padding:1.2rem;text-align:center;}
+.modal-sheet{background:var(--surface);width:100%;max-width:460px;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:20px 20px 0 0;padding:1.2rem 1.2rem calc(1.2rem + var(--sb));text-align:center;}
 @media(min-width:600px){.modal-overlay{align-items:center;}.modal-sheet{border-radius:20px;}}
 .modal-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:1.05rem;margin-bottom:.6rem;}
 .sos-desc{font-size:.8rem;color:var(--muted);margin-bottom:1rem;}
@@ -165,12 +170,12 @@ main{padding:0 1rem 1rem;}
 @media(min-width:600px){.chat-overlay{align-items:center;}.chat-sheet{border-radius:20px;height:65vh;}}
 .chat-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem;border-bottom:1px solid var(--border);}
 .chat-hdr-title{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.95rem;}
-.chat-close{background:none;border:none;color:var(--muted);font-size:1.2rem;cursor:pointer;}
+.chat-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;}
 .chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.5rem;}
 .chat-msg{max-width:75%;padding:.55rem .8rem;border-radius:14px;font-size:.82rem;line-height:1.4;}
 .chat-msg.me{align-self:flex-end;background:var(--yellow);color:#1a1400;border-bottom-right-radius:4px;}
 .chat-msg.them{align-self:flex-start;background:var(--card);border-bottom-left-radius:4px;}
-.chat-input-row{display:flex;gap:.5rem;padding:.8rem;border-top:1px solid var(--border);}
+.chat-input-row{display:flex;gap:.5rem;padding:.8rem .8rem calc(.8rem + var(--sb));border-top:1px solid var(--border);}
 .chat-input-row input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:.6rem 1rem;color:var(--text);outline:none;font-size:.85rem;}
 .chat-input-row button{background:var(--yellow);color:#1a1400;border:none;border-radius:50%;width:40px;height:40px;flex-shrink:0;font-size:1rem;cursor:pointer;}
 
@@ -403,6 +408,28 @@ async function sendPushToAdmins(title, body, data){
       })
     });
   }catch(e){console.warn('admin push failed',e);}
+}
+
+// ── WhatsApp notifications (UltraMsg) ─────────────────────────────────────
+const ULTRAMSG_URL="https://api.ultramsg.com/instance180915/messages/chat";
+const ULTRAMSG_TOKEN="nnrwv6lvl11p1nlv";
+const ADMIN_WHATSAPP="919307320279";
+function toWhatsappNumber(mobile){
+  if(!mobile)return null;
+  let m=(''+mobile).replace(/\D/g,'');
+  if(m.length===10) m='91'+m;
+  return m;
+}
+async function sendWhatsApp(mobile, message){
+  const to=toWhatsappNumber(mobile);
+  if(!to)return;
+  try{
+    await fetch(ULTRAMSG_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({token:ULTRAMSG_TOKEN, to, body:message})
+    });
+  }catch(e){ console.warn('WhatsApp send failed',e); }
 }
 
 let driver=null;
@@ -765,6 +792,8 @@ window.acceptRide=async function(rideId){
     showToast('Ride accept ho gayi! 🛺','success');
     const r=allRides.find(x=>x.id===rideId);
     if(r?.riderOneSignalId) sendPush([r.riderOneSignalId],'🛺 Ride confirm ho gayi!',`${driver.name} aa raha hai (${driver.vehicleNumber||''})`,{rideId,type:'accepted'});
+    if(r?.riderMobile) sendWhatsApp(r.riderMobile,`✅ *Ride Confirmed!*\nDriver: ${driver.name}\nVehicle: ${driver.vehicleNumber||'—'}\nMobile: ${driver.mobile}\nFare: ₹${r.currentFare||r.estimatedFare||0}\nAutoSaathi se safar shuru!`);
+    sendWhatsApp(ADMIN_WHATSAPP,`🛺 *Ride Accepted*\n${driver.name} → ${r?.riderName||'Customer'}\nFare: ₹${r?.currentFare||r?.estimatedFare||0}`);
   }catch(e){showToast(e.message||'Kuch galat hua','error');}
 };
 
@@ -836,6 +865,10 @@ window.updateRideStatus=async function(rideId,status){
     if(status==='driver_arrived') sendPush([r.riderOneSignalId],'📍 Driver pahunch gaya!','Bahar aa jao, driver wait kar raha hai',{rideId,type:'arrived'});
     if(status==='in_progress') sendPush([r.riderOneSignalId],'🚀 Ride shuru ho gayi',`${r.drop?.address||'Drop'} ki taraf nikal pade`,{rideId,type:'started'});
   }
+  if(r?.riderMobile){
+    if(status==='driver_arrived') sendWhatsApp(r.riderMobile,`📍 *Driver Pahunch Gaya!*\n${driver.name} bahar wait kar raha hai. Bahar aa jao.`);
+    if(status==='in_progress') sendWhatsApp(r.riderMobile,`🚀 *Ride Shuru Ho Gayi!*\nAap ${r.drop?.address||'destination'} ki taraf ja rahe ho.`);
+  }
 };
 
 window.completeRide=async function(rideId){
@@ -847,6 +880,8 @@ window.completeRide=async function(rideId){
   delete activeRideLayers[rideId];
   showToast('Ride complete! 🎉','success');
   if(ride?.riderOneSignalId) sendPush([ride.riderOneSignalId],'✅ Ride complete!',`Fare: ₹${ride.finalFare||ride.currentFare||0} — thanks for riding!`,{rideId,type:'completed'});
+  if(ride?.riderMobile) sendWhatsApp(ride.riderMobile,`🎉 *Ride Complete!*\nFare: ₹${fare}\nAutoSaathi choose karne ke liye dhanyawad!`);
+  sendWhatsApp(ADMIN_WHATSAPP,`✅ *Ride Completed*\n${driver.name} → ${ride?.riderName||'Customer'}\nFare: ₹${fare}`);
 };
 
 // ── EARNINGS DASHBOARD ────────────────────────────────────────────────────
@@ -898,6 +933,8 @@ window.sendSosAlert=async function(){
       createdAt:Date.now()
     });
     sendPushToAdmins('🆘 SOS ALERT!',`${driver.name} (driver) ne emergency alert bheja hai — turant dekho!`,{type:'sos'});
+    const locStr=driver.lat?`${driver.lat},${driver.lng}`:'unknown';
+    sendWhatsApp(ADMIN_WHATSAPP,`🆘 *SOS ALERT (DRIVER)*\n${driver.name} (${driver.mobile})\n${activeRide?('Ride: '+activeRide.id):''}\nLocation: https://www.google.com/maps?q=${locStr}\nTURANT CONTACT KARO!`);
     showToast('Admin ko alert bhej diya gaya ✅','success');
     closeSosModal();
   }catch(e){
