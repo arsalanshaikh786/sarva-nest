@@ -536,6 +536,48 @@ window._reviews=[];
 let _editSvcId=null;
 let _urgentOnly=false;
 
+// --- ULTRAMSG WHATSAPP CONFIG (customer status-update notifications) ---
+const ULTRAMSG_INSTANCE_URL='https://api.ultramsg.com/instance180915/messages/chat';
+const ULTRAMSG_TOKEN='nnrwv6lvl11p1nlv';
+// TODO: replace with your live LaundroLux admin panel URL if different
+const ADMIN_PANEL_URL='https://sarvanest.in/laundrolux-admin.html';
+
+// Formats any Indian number into UltraMsg's expected "91XXXXXXXXXX" (no + , no spaces)
+function formatWhatsAppNumber(phone){
+  let digits=(phone||'').replace(/\D/g,'');
+  if(digits.startsWith('0'))digits=digits.slice(1);
+  if(digits.length===10)digits='91'+digits;
+  else if(digits.startsWith('91')&&digits.length===12){/* already fine */}
+  else if(!digits.startsWith('91'))digits='91'+digits;
+  return digits;
+}
+
+function sendUltraMsg(to,body){
+  const params=new URLSearchParams();
+  params.append('token',ULTRAMSG_TOKEN);
+  params.append('to',to);
+  params.append('body',body);
+  fetch(ULTRAMSG_INSTANCE_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:params
+  }).catch(e=>console.warn('WhatsApp notify failed:',e));
+}
+
+function sendStatusUpdateToCustomer(o,status){
+  if(!o.phone)return;
+  const to=formatWhatsAppNumber(o.phone);
+  const msg=`🧺 *LaundroLux Order Update*\n\n`+
+    `Order ID: #${o.id.slice(0,8).toUpperCase()}\n`+
+    `${o.urgent?'⚡ Urgent Order\n':''}`+
+    `New Status: *${status}*\n\n`+
+    (status==='Delivered'
+      ?`Your fresh, clean clothes have been delivered! Thank you for choosing LaundroLux. 🙏`
+      :`We'll keep you posted as your order moves forward.`)+
+    `\n\nAdmin Panel: ${ADMIN_PANEL_URL}`;
+  sendUltraMsg(to,msg);
+}
+
 // --- LOGIN ---
 window.doLogin=async function(){
   const email=document.getElementById('loginEmail').value.trim();
@@ -744,8 +786,10 @@ window.viewOrder=function(id){
 
 window.updateOrderStatus=async function(id){
   const status=document.getElementById('orderStatusSel').value;
+  const o=window._orders.find(x=>x.id===id);
   try{
     await window._fb.updateDoc(window._fb.doc(window._fb.db,'orders',id),{status});
+    if(o)sendStatusUpdateToCustomer(o,status);
     showToast(status==='Delivered'?'Marked as Delivered — customer will get a review prompt!':'Order status updated!','s');
     closeModal('orderDetailModal');
   } catch(e){showToast('Error updating status','e');}
