@@ -592,6 +592,45 @@ else window._pendingTrackInit=true;
 // --- URGENT SERVICE CONFIG ---
 const URGENT_FEE=49;
 
+// --- ULTRAMSG WHATSAPP CONFIG (new-order group notifications) ---
+const ULTRAMSG_INSTANCE_URL='https://api.ultramsg.com/instance180915/messages/chat';
+const ULTRAMSG_TOKEN='nnrwv6lvl11p1nlv';
+const WHATSAPP_GROUP_ID='120363409488190822@g.us';
+// TODO: replace with your live LaundroLux admin panel URL if different
+const ADMIN_PANEL_URL='https://sarvanest.in/laundrolux-admin.html';
+
+function sendUltraMsg(to,body){
+  const params=new URLSearchParams();
+  params.append('token',ULTRAMSG_TOKEN);
+  params.append('to',to);
+  params.append('body',body);
+  fetch(ULTRAMSG_INSTANCE_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:params
+  }).catch(e=>console.warn('WhatsApp notify failed:',e));
+}
+
+function sendNewOrderToGroup(docId,order){
+  const mapsLink='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(order.address);
+  const servicesLines=order.services.map(s=>`- ${s.name}${s.storeName?' ('+s.storeName+')':''} ×${s.qty} = ₹${s.subtotal}`).join('\n');
+  const msg=`🧺 *New LaundroLux Order!*\n`+
+    (order.urgent?`⚡ *URGENT ORDER*\n`:'')+
+    `\nOrder ID: #${docId.slice(0,8).toUpperCase()}\n`+
+    `Customer: ${order.customerName}\n`+
+    `Phone: ${order.phone}\n`+
+    `Address: ${order.address}\n`+
+    `📍 Location: ${mapsLink}\n\n`+
+    `Services:\n${servicesLines}\n\n`+
+    `Pickup: ${order.pickupDate}\n`+
+    `Delivery: ${order.deliveryDate}\n`+
+    (order.notes?`Notes: ${order.notes}\n`:'')+
+    (order.urgent?`Urgent Fee: ₹${order.urgentFee}\n`:'')+
+    `\n*Total: ₹${order.totalAmount}*\n\n`+
+    `🔗 Admin Panel: ${ADMIN_PANEL_URL}`;
+  sendUltraMsg(WHATSAPP_GROUP_ID,msg);
+}
+
 // --- DEFAULT SERVICES (used if Firestore empty) ---
 window._defaultServices=[
   {id:'s1',name:'Wash & Fold',description:'Machine wash with premium detergents, dried and neatly folded. Perfect for everyday clothes.',price:49,category:'washing',image:'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'},
@@ -889,6 +928,8 @@ window.placeOrder=async function(){
       const ref=await window._addDoc(window._collection(window._db,'orders'),order);
       docId=ref.id;
     }
+    // Notify the WhatsApp group with full order details, live location link, and admin panel link
+    sendNewOrderToGroup(docId,order);
     // Save details for autofill next time (shared sn_user key across Sarva-Nest apps)
     try{localStorage.setItem('sn_user',JSON.stringify({name,phone,address}));}catch(e){}
     // Remember this order for live auto tracking
