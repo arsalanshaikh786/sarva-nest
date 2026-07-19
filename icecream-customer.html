@@ -856,6 +856,43 @@ window.backToCart = backToCart;
 function isPhone(v){ return /^[6-9]\d{9}$/.test(v); }
 function isEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
 
+/* ── ULTRAMSG WHATSAPP CONFIG (new-order group notifications) ── */
+const ULTRAMSG_INSTANCE_URL='https://api.ultramsg.com/instance180915/messages/chat';
+const ULTRAMSG_TOKEN='nnrwv6lvl11p1nlv';
+const WHATSAPP_GROUP_ID='120363409488190822@g.us';
+// TODO: replace with your live Ice Cream admin panel URL if different
+const ADMIN_PANEL_URL='https://sarvanest.in/icecream-admin.html';
+
+function sendUltraMsg(to,body){
+  const params=new URLSearchParams();
+  params.append('token',ULTRAMSG_TOKEN);
+  params.append('to',to);
+  params.append('body',body);
+  fetch(ULTRAMSG_INSTANCE_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:params
+  }).catch(e=>console.warn('WhatsApp notify failed:',e));
+}
+
+function sendNewOrderToGroup(docId,order){
+  const mapsLink='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(order.address);
+  const itemsLines=order.items.map(i=>`- ${i.name}${i.size?' ('+i.size+')':''} ×${i.qty} = ₹${i.price*i.qty}`).join('\n');
+  const msg=`🍦 *New Sarva-Nest Ice Cream Order!*\n\n`+
+    `Order ID: #${docId.slice(-6).toUpperCase()}\n`+
+    `Customer: ${order.customerName}\n`+
+    `Phone: ${order.mobile}\n`+
+    `Address: ${order.address}\n`+
+    `📍 Location: ${mapsLink}\n\n`+
+    `Items:\n${itemsLines}\n\n`+
+    (order.notes?`Notes: ${order.notes}\n\n`:'')+
+    `Subtotal: ₹${order.subtotal}\n`+
+    `Delivery Fee: ₹${order.deliveryFee}\n`+
+    `*Total: ₹${order.total}*\n\n`+
+    `🔗 Admin Panel: ${ADMIN_PANEL_URL}`;
+  sendUltraMsg(WHATSAPP_GROUP_ID,msg);
+}
+
 window.placeOrder = async function(){
   const name    = document.getElementById("ck_name").value.trim();
   const email   = document.getElementById("ck_email").value.trim().toLowerCase();
@@ -907,8 +944,8 @@ window.placeOrder = async function(){
       name, email, mobile, address
     }));
 
-    /* notify admin via Telegram (best-effort, non-blocking) */
-    notifyAdminTelegram(docRef.id, orderData);
+    /* Notify the WhatsApp group with full order details, live location link, and admin panel link */
+    sendNewOrderToGroup(docRef.id, orderData);
 
     document.getElementById("successOrderId").textContent = "#" + docRef.id.slice(-6).toUpperCase();
     document.getElementById("checkoutView").style.display = "none";
@@ -924,16 +961,6 @@ window.placeOrder = async function(){
     btn.disabled = false; btn.classList.remove("loading");
   }
 };
-
-function notifyAdminTelegram(orderId, order){
-  /* best-effort fire-and-forget; admin can also see orders live in admin dashboard */
-  try {
-    const itemsText = order.items.map(i=>`${i.name}${i.size ? " ("+i.size+")" : ""} x${i.qty}`).join(", ");
-    const msg = `🍦 New Ice Cream Order #${orderId.slice(-6).toUpperCase()}\n${order.customerName} | ${order.mobile}\n${itemsText}\nTotal: ₹${order.total}\nAddr: ${order.address}`;
-    /* Replace BOT_TOKEN/CHAT_ID with your actual Telegram bot credentials if available */
-    console.log("Telegram notify (configure bot token to enable):", msg);
-  } catch(e){ /* never block order placement on notification failure */ }
-}
 
 function getActiveCategory(){
   const active = document.querySelector(".cat-tab.active");
