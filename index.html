@@ -1659,7 +1659,7 @@ header h1 span {
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, doc, setDoc, getDoc, updateDoc, increment, serverTimestamp, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
   const app = initializeApp(firebaseConfig),
     auth = getAuth(app),
@@ -1700,8 +1700,24 @@ header h1 span {
     return false;
   }
 
+  async function logAppOpen(uid) {
+    try {
+      await updateDoc(doc(db, "users", uid), {
+        appOpenCount: increment(1),
+        lastOpenAt: serverTimestamp()
+      });
+      await addDoc(collection(db, "users", uid, "opens"), {
+        openedAt: serverTimestamp(),
+        userAgent: navigator.userAgent || ""
+      });
+    } catch (e) {
+      console.warn("open log failed", e);
+    }
+  }
+
   onAuthStateChanged(auth, async (user) => {
     if (user) {
+      logAppOpen(user.uid);
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists()) {
         const d = snap.data();
