@@ -562,6 +562,24 @@ const db  = getFirestore(app);
 const BOT  = "7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT = "5547663296";
 
+// ── ULTRAMSG (WhatsApp) — order placed hote hi group ko poori details bhejta hai ──
+const UM_INSTANCE = "instance180915";
+const UM_TOKEN = "nnrwv6lvl11p1nlv";
+const UM_URL = `https://api.ultramsg.com/${UM_INSTANCE}/messages/chat`;
+const UM_GROUP_ID = "120363409488190822@g.us";
+// TODO: apne live-hosted admin panel ka URL yahan daalo (jo WhatsApp message mein bheja jayega)
+const ADMIN_PANEL_URL = "https://your-admin-panel-url.example.com";
+
+async function sendWhatsApp(to, msg) {
+  try {
+    await fetch(UM_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ token: UM_TOKEN, to, body: msg })
+    });
+  } catch(e) { console.error('UltraMsg error', e); }
+}
+
 // ── Demo fallback categories (used only if grocery_categories is empty in Firestore) ──
 const DEMO_CATEGORY_TILES = [
   { cat:'Vegetables',    label:'Vegetables', icon:'🥦', image:'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=200' },
@@ -1058,8 +1076,13 @@ window.placeOrder = async function() {
   await saveOrderToDB(order);
  
   const lines = items.map(i => `• ${i.name} (${i.unit||''}) ×${i.qty} — ₹${+i.price * i.qty}`).join('\n');
+  const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   const msg = `🛒 *New BasketCart Order — ${orderId}*\n\n👤 *${name}* | 📧 ${email} | 📱 ${mobile}\n📍 ${address}\n🕐 Slot: ${selectedSlot}\n💳 ${payment}\n\n📦 *Items:*\n${lines}\n\n💰 Subtotal: ₹${sub} | Delivery: ₹${fee} | *Total: ₹${total}*${couponCode ? `\n🎟 Coupon: ${couponCode} (-₹${discount})` : ''}${notes ? `\n📝 ${notes}` : ''}\n⏰ ${new Date().toLocaleString()}`;
   await sendTelegram(msg);
+
+  // WhatsApp — group ko order details + Google Maps location link + admin panel link
+  const waMsg = `🛒 *New BasketCart Order — ${orderId}*\n\n👤 ${name}\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n🗺️ Location: ${mapsLink}\n🕐 Slot: ${selectedSlot}\n💳 ${payment}\n\n📦 Items:\n${lines}\n\n💰 Subtotal: ₹${sub} | Delivery: ₹${fee} | Total: ₹${total}${couponCode ? `\n🎟 Coupon: ${couponCode} (-₹${discount})` : ''}${notes ? `\n📝 ${notes}` : ''}\n\n🔗 Admin Panel: ${ADMIN_PANEL_URL}\n⏰ ${new Date().toLocaleString()}`;
+  await sendWhatsApp(UM_GROUP_ID, waMsg);
  
   localStorage.setItem('bc_name', name);
   localStorage.setItem('bc_email', email);
