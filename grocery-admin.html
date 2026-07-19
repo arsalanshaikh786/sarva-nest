@@ -627,6 +627,25 @@ const db=getFirestore(app);
 const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT="5547663296";
 
+// ── ULTRAMSG (WhatsApp) — sends order-status updates to the customer's number ──
+const UM_INSTANCE="instance180915";
+const UM_TOKEN="nnrwv6lvl11p1nlv";
+const UM_URL=`https://api.ultramsg.com/${UM_INSTANCE}/messages/chat`;
+async function sendWhatsApp(to,msg){
+  try{
+    await fetch(UM_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({token:UM_TOKEN,to,body:msg})
+    });
+  }catch(e){console.error('UltraMsg error',e);}
+}
+function toWaNumber(mobile){
+  // customer ke number mein +91 laga ke WhatsApp format banate hain
+  const digits=(mobile||'').replace(/\D/g,'');
+  return '+91'+digits;
+}
+
 window._db=db;
 const ADMIN_USER="admin",ADMIN_PASS="basketcart2025";
 
@@ -1363,13 +1382,19 @@ window.updateStatus=async function(docId,name,orderId){
   const emoji={pending:'⏳',confirmed:'✅',packing:'📦',out_for_delivery:'🚴',delivered:'🎉',cancelled:'❌'};
   const msg=`${emoji[status]||'📋'} *BasketCart Order Update*\n\nHi ${name}! Your order *${orderId}* is now:\n*${status.replace('_',' ').toUpperCase()}*\n\nThank you for shopping with BasketCart! 🛒`;
   await sendTelegram(msg);
+  // WhatsApp: status change hote hi customer ke number pe (+91 ke saath) msg jaye
+  const o=allOrders.find(x=>x.docId===docId);
+  if(o && o.mobile){
+    await sendWhatsApp(toWaNumber(o.mobile),msg);
+  }
 };
 
 window.notifyCustomer=async function(docId){
   const o=allOrders.find(x=>x.docId===docId);if(!o)return;
   const msg=`📦 *Order ${o.orderId}* Update\nStatus: *${(o.status||'pending').replace('_',' ').toUpperCase()}*\n🛒 ${(o.cart||[]).map(i=>`${i.name} ×${i.qty}`).join(', ')}\n💰 ₹${o.total} · Slot: ${o.slot||'—'}\n📍 ${o.address}`;
   await sendTelegram(msg);
-  showToast('Telegram notification sent! 📨','success');
+  if(o.mobile){ await sendWhatsApp(toWaNumber(o.mobile),msg); }
+  showToast('Telegram + WhatsApp notification sent! 📨','success');
 };
 
 window.deleteOrder=async function(docId){
