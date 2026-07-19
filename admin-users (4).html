@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sarva Nest - User Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Marathi&family=Poppins:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --saffron: #E8650A;
+  --saffron-deep: #C4510A;
+  --green: #1B6B35;
+  --green-light: #2A9050;
+  --cream: #FDF8F0;
+  --text: #1A0F00;
+  --muted: #6B5B45;
+  --muted-light: #A0907A;
+  --card: #FFFFFF;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --shadow-sm: 0 2px 12px rgba(232,101,10,0.08);
+  --shadow-md: 0 8px 32px rgba(232,101,10,0.12);
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html{-webkit-text-size-adjust:100%;}
+body { background:var(--cream); color:var(--text); font-family:'Poppins',sans-serif; min-height:100vh; overflow-x:hidden; width:100%; }
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-thumb{background:var(--saffron);border-radius:10px;}
+button, input { font-family:'Poppins',sans-serif; -webkit-appearance:none; appearance:none; }
+
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-140px);background:rgba(26,15,0,0.92);color:#fff;padding:14px 28px;border-radius:60px;font-size:14px;font-weight:600;box-shadow:0 12px 48px rgba(0,0,0,0.3);z-index:9999;transition:transform .5s cubic-bezier(.34,1.56,.64,1),opacity .4s;white-space:nowrap;max-width:90vw;text-align:center;opacity:0;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+#toast.error{background:linear-gradient(135deg,#991b1b,#dc2626);}
+#toast.success{background:linear-gradient(135deg,#166534,#15803d);}
+
+/* ---------- LOGIN ---------- */
+#loginScreen{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(160deg,#7A1E1E 0%, var(--saffron-deep) 45%, var(--saffron) 100%);}
+.login-box{background:#fff;border-radius:24px;padding:36px 26px;max-width:360px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,0.3);text-align:center;}
+.login-box h1{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.5rem;margin-bottom:4px;}
+.login-box p{color:var(--muted);font-size:13px;margin-bottom:22px;}
+.login-box input{width:100%;padding:14px 16px;border:2px solid #EDD9B5;border-radius:var(--radius-sm);font-size:16px;margin-bottom:12px;outline:none;font-family:'Poppins',sans-serif;background:#FDFAF5;min-height:48px;}
+.login-box input:focus{border-color:var(--saffron);}
+.login-box button{width:100%;padding:15px;border:none;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));color:#fff;font-weight:800;font-size:15px;cursor:pointer;box-shadow:0 6px 24px rgba(232,101,10,0.35);min-height:50px;}
+.login-box button:active{transform:scale(0.97);}
+.login-err{color:#dc2626;font-size:12px;font-weight:700;margin-top:10px;display:none;}
+
+/* ---------- DASHBOARD ---------- */
+#dashboard{display:none;}
+.topbar{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,#7A1E1E,var(--saffron-deep));color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 4px 20px rgba(0,0,0,0.15);flex-wrap:wrap;}
+.topbar h1{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:clamp(0.95rem,4vw,1.15rem);}
+.topbar .sub{font-size:11px;opacity:.8;margin-top:2px;}
+.logout-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);color:#fff;padding:10px 18px;border-radius:30px;font-size:12px;font-weight:700;cursor:pointer;min-height:40px;flex-shrink:0;}
+.live-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 0 rgba(74,222,128,0.6);animation:livePulse 1.6s infinite;margin-left:4px;vertical-align:middle;}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,0.6);}70%{box-shadow:0 0 0 8px rgba(74,222,128,0);}100%{box-shadow:0 0 0 0 rgba(74,222,128,0);}}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px 12px;max-width:1100px;margin:0 auto;}
+.stat-card{background:#fff;border-radius:var(--radius-sm);padding:14px 6px;text-align:center;box-shadow:var(--shadow-sm);border:2px solid rgba(245,232,208,0.5);min-width:0;}
+.stat-card .num{font-size:clamp(16px,5vw,22px);font-weight:900;color:var(--saffron-deep);font-family:'Syne',sans-serif;}
+.stat-card .lbl{font-size:10px;color:var(--muted);font-weight:700;margin-top:2px;line-height:1.3;}
+
+.search-wrap{padding:0 12px 14px;max-width:1100px;margin:0 auto;}
+.search-wrap input{width:100%;padding:14px 18px;border:2px solid rgba(232,101,10,0.15);border-radius:60px;font-size:16px;background:#fff;outline:none;box-shadow:var(--shadow-sm);min-height:48px;}
+.search-wrap input:focus{border-color:var(--saffron);}
+
+.sort-row{display:flex;gap:8px;padding:0 12px 14px;max-width:1100px;margin:0 auto;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.sort-row::-webkit-scrollbar{display:none;}
+.sort-btn{flex-shrink:0;padding:10px 16px;border-radius:30px;border:2px solid rgba(232,101,10,0.15);background:#fff;color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;min-height:40px;}
+.sort-btn.active{background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));color:#fff;border-color:transparent;}
+
+.user-grid{display:grid;grid-template-columns:1fr;gap:12px;padding:0 16px 40px;max-width:1100px;margin:0 auto;}
+@media(min-width:640px){.user-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:960px){.user-grid{grid-template-columns:repeat(3,1fr);}}
+
+.user-card{background:#fff;border-radius:var(--radius);padding:16px;box-shadow:var(--shadow-sm);border:2px solid rgba(245,232,208,0.5);cursor:pointer;transition:transform .2s,box-shadow .3s;}
+.user-card:active{transform:scale(0.98);}
+.user-card:hover{box-shadow:var(--shadow-md);}
+.uc-top{display:flex;align-items:center;gap:12px;}
+.uc-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--saffron-deep),#7A1E1E);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;flex-shrink:0;overflow:hidden;}
+.uc-avatar img{width:100%;height:100%;object-fit:cover;}
+.uc-name{font-weight:800;font-size:15px;line-height:1.3;}
+.uc-email{font-size:11px;color:var(--muted-light);word-break:break-all;}
+.uc-badge{margin-left:auto;flex-shrink:0;background:#FFF3E6;border:2px solid #FFD4A0;color:var(--saffron-deep);border-radius:30px;padding:6px 12px;font-size:11px;font-weight:800;text-align:center;min-width:50px;}
+.uc-badge .n{font-size:16px;display:block;line-height:1;}
+.uc-info{margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--text);}
+.uc-info span{color:var(--muted-light);font-weight:700;margin-right:4px;}
+.uc-last{margin-top:10px;padding-top:10px;border-top:1px solid #F5EDD6;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+.uc-last b{color:var(--green);}
+
+.no-users{text-align:center;padding:60px 20px;color:var(--muted);font-weight:600;}
+.loading-wrap{text-align:center;padding:60px 20px;color:var(--muted);font-weight:600;}
+.spinner{width:32px;height:32px;border:3px solid #F0E0C0;border-top-color:var(--saffron);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- MODAL ---------- */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,15,0,0.55);backdrop-filter:blur(6px);z-index:2000;display:none;align-items:flex-end;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal-sheet{background:#FFFCF7;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:16px 18px 30px;position:relative;animation:sheetUp .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes sheetUp{from{transform:translateY(60px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+@media(min-width:600px){.modal-overlay{align-items:center;}.modal-sheet{border-radius:24px;max-height:82vh;}}
+.modal-handle{width:44px;height:5px;background:rgba(0,0,0,0.12);border-radius:10px;margin:4px auto 14px;}
+.modal-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.9);border:none;font-size:16px;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+
+.modal-profile{display:flex;align-items:center;gap:14px;margin-bottom:16px;padding-right:30px;}
+.modal-avatar{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--saffron-deep),#7A1E1E);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:24px;overflow:hidden;flex-shrink:0;}
+.modal-avatar img{width:100%;height:100%;object-fit:cover;}
+.modal-profile h2{font-family:'Tiro Devanagari Marathi','Syne',sans-serif;font-size:1.15rem;}
+.modal-profile p{font-size:12px;color:var(--muted);}
+
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.detail-item{background:#fff;border-radius:var(--radius-sm);padding:10px 12px;border:2px solid rgba(245,232,208,0.5);}
+.detail-item .dl{font-size:10px;color:var(--muted-light);font-weight:800;text-transform:uppercase;letter-spacing:.4px;}
+.detail-item .dv{font-size:13px;font-weight:700;margin-top:2px;word-break:break-word;}
+.detail-item.wide{grid-column:1/-1;}
+
+.open-summary{display:flex;gap:10px;margin-bottom:14px;}
+.open-summary .os-box{flex:1;background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;border-radius:var(--radius-sm);padding:14px;text-align:center;}
+.open-summary .os-box .n{font-size:22px;font-weight:900;font-family:'Syne',sans-serif;}
+.open-summary .os-box .l{font-size:10px;opacity:.85;font-weight:700;margin-top:2px;}
+
+.log-title{font-size:13px;font-weight:800;color:var(--text);margin:6px 0 10px;display:flex;align-items:center;gap:6px;}
+.log-list{display:flex;flex-direction:column;gap:8px;}
+.log-item{background:#fff;border-radius:var(--radius-sm);padding:10px 14px;border:2px solid rgba(245,232,208,0.5);display:flex;align-items:center;gap:10px;font-size:12px;}
+.log-item .li-icon{font-size:16px;}
+.log-item .li-date{font-weight:800;color:var(--text);}
+.log-item .li-time{color:var(--muted);margin-left:auto;}
+.log-empty{text-align:center;color:var(--muted-light);font-size:12px;padding:20px;}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h1>🔐 Admin Login</h1>
+    <p>Sarva Nest User Activity Panel</p>
+    <input type="text" id="adminUser" placeholder="Username" autocomplete="off">
+    <input type="password" id="adminPass" placeholder="Password" autocomplete="off">
+    <button onclick="tryLogin()">Login</button>
+    <div class="login-err" id="loginErr">❌ Incorrect username or password</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <div>
+      <h1>👥 User Activity <span class="live-dot"></span></h1>
+      <div class="sub">See how many times each customer opened the app — Live</div>
+    </div>
+    <button class="logout-btn" onclick="adminLogout()">Logout</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num" id="statUsers">0</div><div class="lbl">Total Users</div></div>
+    <div class="stat-card"><div class="num" id="statOpens">0</div><div class="lbl">Total App Opens</div></div>
+    <div class="stat-card"><div class="num" id="statToday">0</div><div class="lbl">Opened Today</div></div>
+  </div>
+
+  <div class="search-wrap">
+    <input type="search" id="searchUsers" placeholder="Search by name, mobile, email or address...">
+  </div>
+
+  <div class="sort-row">
+    <button class="sort-btn active" data-sort="opensDesc" onclick="setSort('opensDesc',this)">🔥 Most Opens</button>
+    <button class="sort-btn" data-sort="recent" onclick="setSort('recent',this)">🕒 Recently Opened</button>
+    <button class="sort-btn" data-sort="name" onclick="setSort('name',this)">🔤 By Name</button>
+    <button class="sort-btn" data-sort="new" onclick="setSort('new',this)">✨ New Signups</button>
+  </div>
+
+  <div id="loadingWrap" class="loading-wrap"><div class="spinner"></div>Loading data...</div>
+  <div class="user-grid" id="userGrid" style="display:none;"></div>
+  <div class="no-users" id="noUsers" style="display:none;">😕 No users found</div>
+</div>
+
+<!-- MODAL: full open history -->
+<div class="modal-overlay" id="historyModal" onclick="if(event.target===this) closeHistory()">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <button class="modal-close" onclick="closeHistory()">✕</button>
+    <div class="modal-profile">
+      <div class="modal-avatar" id="mAvatar">?</div>
+      <div>
+        <h2 id="mName">–</h2>
+        <p id="mEmail">–</p>
+      </div>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-item"><div class="dl">Mobile</div><div class="dv" id="mMobile">–</div></div>
+      <div class="detail-item"><div class="dl">WhatsApp</div><div class="dv" id="mWhatsapp">–</div></div>
+      <div class="detail-item"><div class="dl">Age</div><div class="dv" id="mAge">–</div></div>
+      <div class="detail-item"><div class="dl">Signup Date</div><div class="dv" id="mCreated">–</div></div>
+      <div class="detail-item wide"><div class="dl">Address</div><div class="dv" id="mAddress">–</div></div>
+    </div>
+    <div class="open-summary">
+      <div class="os-box"><div class="n" id="mCount">0</div><div class="l">Total Opens</div></div>
+      <div class="os-box"><div class="n" id="mLast">–</div><div class="l">Last Opened</div></div>
+    </div>
+    <div class="log-title">📜 Full Open History</div>
+    <div class="log-list" id="logList"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const ADMIN_USER = "admin";
+  const ADMIN_PASS = "sarvanest2025";
+
+  let allUsers = [];
+  let currentSort = "opensDesc";
+
+  function showToast(msg, type = "") {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "toast show " + type;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove("show"), 3000);
+  }
+
+  window.tryLogin = function () {
+    const u = document.getElementById("adminUser").value.trim();
+    const p = document.getElementById("adminPass").value.trim();
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+      sessionStorage.setItem("sn_admin_ok", "1");
+      loadUsers();
+    } else {
+      document.getElementById("loginErr").style.display = "block";
+    }
+  };
+
+  window.adminLogout = function () {
+    sessionStorage.removeItem("sn_admin_ok");
+    document.getElementById("dashboard").style.display = "none";
+    document.getElementById("loginScreen").style.display = "flex";
+  };
+
+  if (sessionStorage.getItem("sn_admin_ok") === "1") {
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    loadUsers();
+  }
+
+  function fmtDateTime(ts) {
+    if (!ts) return "–";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) +
+      " • " + d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  }
+  function fmtDateOnly(ts) {
+    if (!ts) return "–";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  }
+  function fmtTimeOnly(ts) {
+    if (!ts) return "–";
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  }
+  function isToday(ts) {
+    if (!ts) return false;
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    const now = new Date();
+    return d.toDateString() === now.toDateString();
+  }
+
+  let usersUnsub = null;
+
+  function loadUsers() {
+    document.getElementById("loadingWrap").style.display = "block";
+    document.getElementById("userGrid").style.display = "none";
+    if (usersUnsub) usersUnsub();
+    usersUnsub = onSnapshot(collection(db, "users"), (snap) => {
+      allUsers = [];
+      snap.forEach(docSnap => {
+        const d = docSnap.data();
+        allUsers.push({
+          uid: docSnap.id,
+          name: d.name || "No name",
+          email: d.email || "",
+          mobile: d.mobile || "",
+          whatsapp: d.whatsapp || "",
+          address: d.address || "",
+          age: d.age || "",
+          photoUrl: d.photoUrl || "",
+          appOpenCount: d.appOpenCount || 0,
+          lastOpenAt: d.lastOpenAt || null,
+          createdAt: d.createdAt || null
+        });
+      });
+      document.getElementById("loadingWrap").style.display = "none";
+      document.getElementById("userGrid").style.display = "grid";
+      renderStats();
+      renderGrid();
+      // keep the open history modal's header numbers fresh if it's currently showing this user
+      const openUid = document.getElementById("historyModal").dataset.uid;
+      if (openUid && document.getElementById("historyModal").classList.contains("open")) {
+        const u = allUsers.find(x => x.uid === openUid);
+        if (u) {
+          document.getElementById("mCount").textContent = u.appOpenCount || 0;
+          document.getElementById("mLast").textContent = u.lastOpenAt ? fmtDateOnly(u.lastOpenAt) : "–";
+        }
+      }
+    }, (e) => {
+      console.error(e);
+      document.getElementById("loadingWrap").style.display = "none";
+      showToast("❌ Could not get real-time data", "error");
+    });
+  }
+
+  function renderStats() {
+    document.getElementById("statUsers").textContent = allUsers.length;
+    const totalOpens = allUsers.reduce((s, u) => s + (u.appOpenCount || 0), 0);
+    document.getElementById("statOpens").textContent = totalOpens;
+    const todayCount = allUsers.filter(u => isToday(u.lastOpenAt)).length;
+    document.getElementById("statToday").textContent = todayCount;
+  }
+
+  window.setSort = function (sort, btn) {
+    currentSort = sort;
+    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    renderGrid();
+  };
+
+  function sortedFiltered() {
+    const q = document.getElementById("searchUsers").value.trim().toLowerCase();
+    let list = allUsers.filter(u => {
+      if (!q) return true;
+      return (u.name + u.mobile + u.whatsapp + u.email + u.address).toLowerCase().includes(q);
+    });
+    if (currentSort === "opensDesc") list.sort((a, b) => (b.appOpenCount || 0) - (a.appOpenCount || 0));
+    else if (currentSort === "recent") list.sort((a, b) => {
+      const ta = a.lastOpenAt && a.lastOpenAt.toMillis ? a.lastOpenAt.toMillis() : 0;
+      const tb = b.lastOpenAt && b.lastOpenAt.toMillis ? b.lastOpenAt.toMillis() : 0;
+      return tb - ta;
+    });
+    else if (currentSort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
+    else if (currentSort === "new") list.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    return list;
+  }
+
+  function renderGrid() {
+    const list = sortedFiltered();
+    const grid = document.getElementById("userGrid");
+    const noUsers = document.getElementById("noUsers");
+    grid.innerHTML = "";
+    if (list.length === 0) {
+      grid.style.display = "none";
+      noUsers.style.display = "block";
+      return;
+    }
+    grid.style.display = "grid";
+    noUsers.style.display = "none";
+    list.forEach(u => {
+      const initial = (u.name || "?")[0].toUpperCase();
+      const avatarHtml = u.photoUrl ? `<img src="${u.photoUrl}" alt="">` : initial;
+      const card = document.createElement("div");
+      card.className = "user-card";
+      card.onclick = () => openHistory(u.uid);
+      card.innerHTML = `
+        <div class="uc-top">
+          <div class="uc-avatar">${avatarHtml}</div>
+          <div>
+            <div class="uc-name">${escapeHtml(u.name)}</div>
+            <div class="uc-email">${escapeHtml(u.email)}</div>
+          </div>
+          <div class="uc-badge"><span class="n">${u.appOpenCount || 0}</span>Opens</div>
+        </div>
+        <div class="uc-info">
+          <div>📱 <span>Mobile:</span>${escapeHtml(u.mobile || "–")}</div>
+          <div>🏠 <span>Address:</span>${escapeHtml(u.address || "–")}</div>
+        </div>
+        <div class="uc-last">
+          <span>Last Opened</span>
+          <b>${u.lastOpenAt ? fmtDateTime(u.lastOpenAt) : "Never"}</b>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  }
+
+  document.getElementById("searchUsers").addEventListener("input", renderGrid);
+
+  let opensUnsub = null;
+
+  window.openHistory = function (uid) {
+    const u = allUsers.find(x => x.uid === uid);
+    if (!u) return;
+    const initial = (u.name || "?")[0].toUpperCase();
+    document.getElementById("mAvatar").innerHTML = u.photoUrl ? `<img src="${u.photoUrl}">` : initial;
+    document.getElementById("mName").textContent = u.name;
+    document.getElementById("mEmail").textContent = u.email || "–";
+    document.getElementById("mMobile").textContent = u.mobile || "–";
+    document.getElementById("mWhatsapp").textContent = u.whatsapp || "–";
+    document.getElementById("mAge").textContent = u.age || "–";
+    document.getElementById("mAddress").textContent = u.address || "–";
+    document.getElementById("mCreated").textContent = u.createdAt ? new Date(u.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "–";
+    document.getElementById("mCount").textContent = u.appOpenCount || 0;
+    document.getElementById("mLast").textContent = u.lastOpenAt ? fmtDateOnly(u.lastOpenAt) : "–";
+
+    const historyModal = document.getElementById("historyModal");
+    historyModal.dataset.uid = uid;
+    const logList = document.getElementById("logList");
+    logList.innerHTML = `<div class="log-empty">Loading...</div>`;
+    historyModal.classList.add("open");
+    document.body.style.overflow = "hidden";
+
+    if (opensUnsub) opensUnsub();
+    opensUnsub = onSnapshot(
+      query(collection(db, "users", uid, "opens"), orderBy("openedAt", "desc"), limit(200)),
+      (opensSnap) => {
+        if (opensSnap.empty) {
+          logList.innerHTML = `<div class="log-empty">No records yet</div>`;
+          return;
+        }
+        logList.innerHTML = "";
+        opensSnap.forEach(docSnap => {
+          const d = docSnap.data();
+          const item = document.createElement("div");
+          item.className = "log-item";
+          item.innerHTML = `<span class="li-icon">📲</span><span class="li-date">${fmtDateOnly(d.openedAt)}</span><span class="li-time">${fmtTimeOnly(d.openedAt)}</span>`;
+          logList.appendChild(item);
+        });
+      },
+      (e) => {
+        console.error(e);
+        logList.innerHTML = `<div class="log-empty">Could not load history</div>`;
+      }
+    );
+  };
+
+  window.closeHistory = function () {
+    document.getElementById("historyModal").classList.remove("open");
+    document.getElementById("historyModal").dataset.uid = "";
+    document.body.style.overflow = "";
+    if (opensUnsub) { opensUnsub(); opensUnsub = null; }
+  };
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeHistory(); });
+</script>
+
+</body>
+</html>
