@@ -263,6 +263,17 @@ body.rest-mode .main{padding-top:86px}
 .special-wrapper .variants-section-label i{color:#6A1B9A}
 .spec-tag-pill{font-size:.6rem;background:#F3E5F5;color:#6A1B9A;border:1px solid rgba(106,27,154,.2);border-radius:50px;padding:1px 7px;font-weight:600}
 
+/* ══ NOTIFY / WHATSAPP ══ */
+.notify-log{font-size:.62rem;color:var(--mut);margin-top:.35rem;display:flex;align-items:center;gap:4px}
+.notify-log.ok{color:var(--ok)}
+.notify-log.err{color:var(--err)}
+.custom-msg-row{display:flex;gap:.4rem;margin-top:.5rem;align-items:center}
+.custom-msg-row input{flex:1;padding:.4rem .65rem;border:1.5px solid var(--bdr);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:.76rem;outline:none;background:#fff;color:var(--txt)}
+.custom-msg-row input:focus{border-color:var(--brand)}
+.wa-btn{background:#25D366;color:#fff;border:none;border-radius:7px;padding:.4rem .6rem;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.wa-btn:disabled{background:#ccc;cursor:default}
+.receipt-btn{background:#1565C0;color:#fff;border:none;border-radius:7px;padding:.28rem .6rem;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px}
+
 @media(min-width:768px){
   .bottom-nav{display:none}
   .main{padding-top:58px;padding-bottom:0}
@@ -755,6 +766,79 @@ const app=initializeApp(cfg);
 const db=getFirestore(app);
 const BOT="7458392373:AAFfQ-C-AZLoQboxuA5fRZEuRoT8ShkRVNE";
 const CHAT="5547663296";
+
+// ══ ULTRAMSG WHATSAPP CONFIG ══
+const UM_INSTANCE="instance180915";
+const UM_TOKEN="nnrwv6lvl11p1nlv";
+const UM_BASE=`https://api.ultramsg.com/${UM_INSTANCE}`;
+
+// Normalize any Indian number to "91XXXXXXXXXX" format (no +, no spaces) — what UltraMsg expects
+function normalizePhone(raw){
+  if(!raw) return '';
+  let d = String(raw).replace(/[^0-9]/g,''); // digits only
+  if(d.length===10) d = '91'+d;               // plain 10-digit -> add 91
+  else if(d.length===11 && d.startsWith('0')) d = '91'+d.slice(1); // 0XXXXXXXXXX
+  else if(d.length===12 && d.startsWith('91')) { /* already fine */ }
+  else if(d.length>12 && d.startsWith('91')) d = d.slice(0,12);
+  return d;
+}
+
+// Core sender — returns {ok, data}
+async function umSend(phone, message){
+  const to = normalizePhone(phone);
+  if(!to || to.length<12){ return {ok:false, error:'Invalid phone number'}; }
+  try{
+    const res = await fetch(`${UM_BASE}/messages/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({ token: UM_TOKEN, to, body: message, priority:'1' })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(res.ok){ return {ok:true, data}; }
+    return {ok:false, error:data?.error||('HTTP '+res.status)};
+  }catch(e){ return {ok:false, error:e.message}; }
+}
+window.umSend = umSend;
+
+// Status-wise customer message templates (Hinglish, friendly)
+function statusMessage(order, status){
+  const name = order.name || 'Customer';
+  const rName = order.restaurantName || getRestName(order.restaurantId) || 'Restaurant';
+  const oid = order.orderId || (order.id? order.id.slice(0,8): '');
+  const map = {
+    pending: `Hi ${name}! 👋 Aapka order *#${oid}* ${rName} ko mil gaya hai. Restaurant confirm karega jaldi hi. 🙏`,
+    confirmed: `✅ Good news ${name}! Aapka order *#${oid}* *${rName}* ne confirm kar diya hai. Ab kitchen mein taiyari shuru hogi. 👨‍🍳`,
+    preparing: `👨‍🍳 Aapka khana ban raha hai! Order *#${oid}* abhi *${rName}* ki kitchen mein preparing status mein hai. Thodi der mein ready ho jayega.`,
+    out_for_delivery: `🛵 Aapka order *#${oid}* nikal chuka hai delivery ke liye! Bas thodi der mein pahuch jayega aapke pass. 📍`,
+    delivered: `🎉 Order *#${oid}* deliver ho gaya! Enjoy your meal 😋 ${rName} ki taraf se shukriya order karne ke liye — dubara zaroor order kijiyega! ⭐`,
+    cancelled: `❌ Maaf kijiye ${name}, aapka order *#${oid}* cancel kar diya gaya hai. Kisi bhi sawal ke liye restaurant se sampark karein.`
+  };
+  return map[status] || `Aapke order *#${oid}* ka status update hua hai: *${status.replace(/_/g,' ')}*`;
+}
+
+// Full itemized receipt text for "delivered" orders
+function buildReceiptText(order){
+  const name = order.name || 'Customer';
+  const rName = order.restaurantName || getRestName(order.restaurantId) || 'Restaurant';
+  const oid = order.orderId || (order.id? order.id.slice(0,8): '');
+  const items = (order.cart||[]).map(i=>{
+    const line = `${i.qty>1?i.qty+'x ':''}${i.name}${i.variantName?' ('+i.variantName+')':''}`;
+    const amt = (i.price||0)*(i.qty||1);
+    return `• ${line} — ₹${amt}`;
+  }).join('\n');
+  const sub = (order.cart||[]).reduce((s,i)=>s+((i.price||0)*(i.qty||1)),0);
+  const delFee = order.deliveryFee!=null? order.deliveryFee : '';
+  let txt = `🧾 *Delivery Receipt — ${rName}*\n`;
+  txt += `Order: #${oid}\n`;
+  txt += `Customer: ${name}\n\n`;
+  txt += `${items||'—'}\n\n`;
+  txt += `Subtotal: ₹${sub}\n`;
+  if(delFee!=='') txt += `Delivery Fee: ₹${delFee}\n`;
+  txt += `*Total Paid: ₹${order.total||sub}*\n`;
+  txt += `Payment: ${order.payment||'—'}\n\n`;
+  txt += `✅ Order delivered. Thank you for ordering from ${rName}! 🙏`;
+  return txt;
+}
 
 // ══ SESSION STATE ══
 let session = { role: null, restaurantId: null, restaurantName: null };
@@ -1739,6 +1823,7 @@ function orderCardHTML(o,showUpdate){
   const st=o.status||'pending';
   const items=(o.cart||[]).map(i=>i.name+(i.variantName?' ('+i.variantName+')':``)+(i.qty>1?` ×${i.qty}`:'')).join(', ');
   const t=o.timestamp?new Date(o.timestamp):null;const rName=o.restaurantName||getRestName(o.restaurantId)||'—';
+  const hasPhone = !!(o.mobile && String(o.mobile).replace(/[^0-9]/g,'').length>=10);
   return `<div class="order-card">
     <div class="oc-head"><div><div class="oc-id">${o.orderId||o.id?.slice(0,10)||'—'}</div><div class="oc-sub">${o.name||'—'} · ${o.email||''}</div></div><span class="st-badge st-${st}">${st.replace(/_/g,' ')}</span></div>
     <div class="oc-row"><span>🏪 ${rName}</span><span>💰 ₹${o.total||0}</span><span>💳 ${o.payment||'—'}</span></div>
@@ -1747,16 +1832,66 @@ function orderCardHTML(o,showUpdate){
     <div style="font-size:.66rem;color:var(--mut)">${t?t.toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):''}</div>
     ${showUpdate?`<div class="oc-actions">
       <select class="status-sel" id="osel-${o.id}">${['pending','confirmed','preparing','out_for_delivery','delivered','cancelled'].map(s=>`<option value="${s}"${st===s?' selected':''}>${s.replace(/_/g,' ')}</option>`).join('')}</select>
-      <button class="update-btn" onclick="updateStatus('${o.id}')">Update</button></div>`:''}
+      <button class="update-btn" onclick="updateStatus('${o.id}')">Update</button>
+      ${hasPhone?`<button class="receipt-btn" onclick="sendReceipt('${o.id}')" title="Delivery receipt WhatsApp pe bhejo"><i class="ti ti-file-invoice"></i> Receipt</button>`:''}
+    </div>
+    ${hasPhone?`<div class="custom-msg-row">
+      <input type="text" id="cmsg-${o.id}" placeholder="Custom message likho customer ko…"/>
+      <button class="wa-btn" id="cmsg-btn-${o.id}" onclick="sendCustomMsg('${o.id}')"><i class="ti ti-brand-whatsapp"></i> Send</button>
+    </div>
+    <div class="notify-log" id="notify-${o.id}"></div>`
+    :`<div class="notify-log err"><i class="ti ti-alert-circle"></i> Customer ka mobile number nahi mila — WhatsApp notify nahi ja sakta</div>`}`:''}
   </div>`;
 }
 window.updateStatus=async id=>{
   const sel=document.getElementById('osel-'+id);if(!sel)return;const status=sel.value;
+  const o=orders.find(x=>x.id===id);
   try{
     await updateDoc(doc(db,'food_orders',id),{status});
     showToast('✅ Order → '+status.replace(/_/g,' '));
     fetch(`https://api.telegram.org/bot${BOT}/sendMessage`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({chat_id:CHAT,text:`🔔 Order status: *${status.replace(/_/g,' ').toUpperCase()}*`,parse_mode:'Markdown'})}).catch(()=>{});
+
+    // ── WhatsApp customer notification via UltraMsg ──
+    if(o && o.mobile){
+      const logEl=document.getElementById('notify-'+id);
+      const msg=statusMessage({...o,status},status);
+      const r=await umSend(o.mobile,msg);
+      if(logEl){
+        logEl.className='notify-log '+(r.ok?'ok':'err');
+        logEl.innerHTML=r.ok?'<i class="ti ti-brand-whatsapp"></i> WhatsApp notification bhej di gayi':'<i class="ti ti-alert-circle"></i> WhatsApp nahi bheja gaya: '+(r.error||'error');
+      }
+      // Auto-send delivery receipt when marked delivered
+      if(status==='delivered'){
+        const receiptMsg=buildReceiptText({...o,status});
+        await umSend(o.mobile,receiptMsg);
+      }
+    }
   }catch(e){showToast('❌ '+e.message);}
+};
+
+// Manual "resend delivery receipt" button
+window.sendReceipt=async(id)=>{
+  const o=orders.find(x=>x.id===id);if(!o||!o.mobile){showToast('❌ Mobile number nahi mila');return;}
+  const btn=event?.target?.closest('button');if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i>';}
+  const logEl=document.getElementById('notify-'+id);
+  const r=await umSend(o.mobile, buildReceiptText(o));
+  if(logEl){logEl.className='notify-log '+(r.ok?'ok':'err');logEl.innerHTML=r.ok?'<i class="ti ti-file-invoice"></i> Receipt WhatsApp pe bhej di gayi':'<i class="ti ti-alert-circle"></i> Receipt nahi bhej payi: '+(r.error||'error');}
+  showToast(r.ok?'✅ Receipt sent!':'❌ '+r.error);
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-file-invoice"></i> Receipt';}
+};
+
+// Custom message to a specific customer
+window.sendCustomMsg=async(id)=>{
+  const o=orders.find(x=>x.id===id);if(!o||!o.mobile){showToast('❌ Mobile number nahi mila');return;}
+  const inp=document.getElementById('cmsg-'+id);const text=inp?.value.trim();
+  if(!text){showToast('Message likho pehle');return;}
+  const btn=document.getElementById('cmsg-btn-'+id);if(btn){btn.disabled=true;btn.innerHTML='<i class="ti ti-loader-2"></i>';}
+  const logEl=document.getElementById('notify-'+id);
+  const r=await umSend(o.mobile,text);
+  if(logEl){logEl.className='notify-log '+(r.ok?'ok':'err');logEl.innerHTML=r.ok?'<i class="ti ti-brand-whatsapp"></i> Custom message bhej di gayi':'<i class="ti ti-alert-circle"></i> Nahi bheja gaya: '+(r.error||'error');}
+  showToast(r.ok?'✅ Message sent!':'❌ '+r.error);
+  if(r.ok && inp) inp.value='';
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="ti ti-brand-whatsapp"></i> Send';}
 };
 
 // ══ DELIVERY SETTINGS ══
