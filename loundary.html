@@ -46,6 +46,14 @@ button,input,select,textarea{font-family:inherit}
 .cart-count{background:var(--coral);color:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-size:.7rem;font-weight:700;position:absolute;top:-6px;right:-6px;animation:pop .2s ease}
 @keyframes pop{0%{transform:scale(.5)}60%{transform:scale(1.2)}100%{transform:scale(1)}}
 
+/* STORE INFO BAR (location, phone, hours) */
+.store-info-bar{background:var(--indigo);border-top:1px solid rgba(255,255,255,.08);padding:8px 5%}
+.store-info-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:center}
+.store-info-item{display:flex;align-items:center;gap:7px;color:rgba(255,255,255,.75);font-size:.78rem;font-weight:500}
+.store-info-item i{color:var(--violet-light);font-size:.85rem;width:14px;text-align:center}
+.store-info-item a{color:inherit;text-decoration:none}
+.store-info-item a:hover{color:#fff}
+
 /* HERO */
 .hero{background:linear-gradient(135deg,var(--indigo) 0%,#2d1b69 60%,#1a1f4b 100%);padding:32px 5% 26px;position:relative;overflow:hidden;min-height:auto;display:flex;align-items:center}
 .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236c63ff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
@@ -69,6 +77,28 @@ button,input,select,textarea{font-family:inherit}
 .urgent-banner span{color:#fff;font-family:'Poppins',sans-serif;font-weight:600;font-size:.78rem}
 .urgent-banner i{color:#fff;font-size:.85rem;animation:pulse 1.4s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+/* STORE PHOTO SLIDER (gallery) */
+.store-gallery{padding:26px 5% 6px;max-width:1200px;margin:0 auto}
+.gallery-slider{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-md);background:var(--lavender)}
+.gallery-track{display:flex;transition:transform .45s cubic-bezier(.4,0,.2,1);height:220px}
+.gallery-slide{position:relative;flex:0 0 100%;height:100%}
+.gallery-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.gallery-slide-caption{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;background:linear-gradient(to top,rgba(26,31,75,.85),transparent);color:#fff}
+.gallery-slide-caption .g-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:.92rem}
+.gallery-slide-caption .g-sub{font-size:.72rem;color:rgba(255,255,255,.8);margin-top:2px}
+.gallery-nav{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(26,31,75,.55);border:none;color:#fff;display:grid;place-items:center;cursor:pointer;transition:var(--transition);z-index:3;font-size:.85rem}
+.gallery-nav:hover{background:var(--violet)}
+.gallery-nav.prev{left:12px}
+.gallery-nav.next{right:12px}
+.gallery-dots{position:absolute;bottom:10px;left:0;right:0;display:flex;justify-content:center;gap:6px;z-index:3}
+.gallery-dots .g-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.5);cursor:pointer;transition:var(--transition);border:none;padding:0}
+.gallery-dots .g-dot.active{background:#fff;width:20px;border-radius:5px}
+@media(max-width:600px){
+  .gallery-track{height:170px}
+  .store-info-inner{gap:12px}
+  .store-info-item{font-size:.7rem}
+}
 
 /* SEARCH & FILTER */
 .filter-bar{background:#fff;padding:16px 5%;box-shadow:0 4px 20px rgba(0,0,0,.06);position:sticky;top:64px;z-index:800}
@@ -311,6 +341,11 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </header>
 
+<!-- STORE INFO BAR (filled from Admin Panel > Store Info) -->
+<div class="store-info-bar" id="storeInfoBar" style="display:none">
+  <div class="store-info-inner" id="storeInfoInner"></div>
+</div>
+
 <!-- URGENT SERVICE BANNER -->
 <div class="urgent-banner">
   <i class="fas fa-bolt"></i>
@@ -326,6 +361,16 @@ button,input,select,textarea{font-family:inherit}
     <p class="hero-sub">Professional laundry at your doorstep. We pick up, clean with care, and deliver — so you can focus on what matters.</p>
   </div>
   <div class="hero-visual"><i class="fas fa-soap"></i></div>
+</section>
+
+<!-- STORE PHOTO SLIDER -->
+<section class="store-gallery" style="display:none">
+  <div class="gallery-slider" id="gallerySlider">
+    <div class="gallery-track" id="galleryTrack"></div>
+    <button class="gallery-nav prev" onclick="gallerySlide(-1)"><i class="fas fa-chevron-left"></i></button>
+    <button class="gallery-nav next" onclick="gallerySlide(1)"><i class="fas fa-chevron-right"></i></button>
+    <div class="gallery-dots" id="galleryDots"></div>
+  </div>
 </section>
 
 <!-- FILTER BAR -->
@@ -574,6 +619,23 @@ try{
   });
 }catch(e){console.warn(e);}
 
+// Load Store Info (location/phone/hours/rating) — managed from Admin Panel
+try{
+  onSnapshot(doc(db,'settings','store'),snap=>{
+    if(window.renderStoreInfo)window.renderStoreInfo(snap.exists()?snap.data():null);
+  },err=>console.warn('Store info listener error:',err.message));
+}catch(e){console.warn(e);}
+
+// Load Gallery photos — managed from Admin Panel (falls back to defaults if none added yet)
+try{
+  const gq=query(collection(db,'gallery'),orderBy('createdAt','asc'));
+  onSnapshot(gq,snap=>{
+    const photos=[];
+    snap.forEach(d=>photos.push({id:d.id,...d.data()}));
+    if(window.renderGallery)window.renderGallery(photos);
+  },err=>console.warn('Gallery listener error:',err.message));
+}catch(e){console.warn(e);}
+
 // Seed default services if none exist
 setTimeout(()=>{
   if(!window._firestoreServices||window._firestoreServices.length===0){
@@ -658,6 +720,103 @@ let allServices=[];
     c.appendChild(b);
   }
 })();
+
+// --- STORE INFO BAR (rendered from Admin Panel > Store Info; hidden if nothing set) ---
+window.renderStoreInfo=function(info){
+  const bar=document.getElementById('storeInfoBar');
+  const inner=document.getElementById('storeInfoInner');
+  if(!bar||!inner)return;
+  if(!info||(!info.location&&!info.phone&&!info.hours&&!info.rating)){
+    bar.style.display='none';
+    return;
+  }
+  let html='';
+  if(info.location){
+    const mapsLink='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(info.mapsQuery||info.location);
+    html+=`<div class="store-info-item"><i class="fas fa-map-marker-alt"></i><a href="${mapsLink}" target="_blank" rel="noopener">${info.location}</a></div>`;
+  }
+  if(info.phone){
+    html+=`<div class="store-info-item"><i class="fas fa-phone-alt"></i><a href="tel:${info.phone.replace(/\s/g,'')}">${info.phone}</a></div>`;
+  }
+  if(info.hours){
+    html+=`<div class="store-info-item"><i class="fas fa-clock"></i><span>${info.hours}</span></div>`;
+  }
+  if(info.rating){
+    html+=`<div class="store-info-item"><i class="fas fa-star" style="color:#ffb400"></i><span>${info.rating} Rating</span></div>`;
+  }
+  inner.innerHTML=html;
+  bar.style.display='block';
+};
+
+// --- STORE PHOTO GALLERY SLIDER (photos managed from Admin Panel > Gallery) ---
+window._galleryPhotos=[];
+let _galIndex=0;
+let _galTimer=null;
+
+window.renderGallery=function(photos){
+  window._galleryPhotos=photos||[];
+  const section=document.getElementById('gallerySlider')?.closest('.store-gallery');
+  const track=document.getElementById('galleryTrack');
+  const dots=document.getElementById('galleryDots');
+  if(!track||!dots)return;
+  if(!window._galleryPhotos.length){
+    if(section)section.style.display='none';
+    return;
+  }
+  if(section)section.style.display='block';
+  track.innerHTML=window._galleryPhotos.map(p=>`
+    <div class="gallery-slide">
+      <img src="${p.image}" alt="${p.title||'Store photo'}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=900&q=80'"/>
+      ${(p.title||p.sub)?`<div class="gallery-slide-caption">
+        ${p.title?`<div class="g-title"><i class="fas fa-store"></i> ${p.title}</div>`:''}
+        ${p.sub?`<div class="g-sub"><i class="fas fa-map-marker-alt"></i> ${p.sub}</div>`:''}
+      </div>`:''}
+    </div>`).join('');
+  dots.innerHTML=window._galleryPhotos.map((_,i)=>`<button class="g-dot ${i===0?'active':''}" onclick="galleryGoTo(${i})"></button>`).join('');
+  _galIndex=0;
+  updateGalleryPosition();
+  startGalleryAutoplay();
+};
+
+(function initGalleryHover(){
+  const slider=document.getElementById('gallerySlider');
+  if(slider){
+    slider.addEventListener('mouseenter',stopGalleryAutoplay);
+    slider.addEventListener('mouseleave',startGalleryAutoplay);
+  }
+})();
+
+function updateGalleryPosition(){
+  const track=document.getElementById('galleryTrack');
+  if(!track)return;
+  track.style.transform=`translateX(-${_galIndex*100}%)`;
+  document.querySelectorAll('#galleryDots .g-dot').forEach((d,i)=>d.classList.toggle('active',i===_galIndex));
+}
+
+window.gallerySlide=function(dir){
+  const total=(window._galleryPhotos||[]).length;
+  if(!total)return;
+  _galIndex=(_galIndex+dir+total)%total;
+  updateGalleryPosition();
+  startGalleryAutoplay();
+};
+window.galleryGoTo=function(i){
+  _galIndex=i;
+  updateGalleryPosition();
+  startGalleryAutoplay();
+};
+function startGalleryAutoplay(){
+  stopGalleryAutoplay();
+  const total=(window._galleryPhotos||[]).length;
+  if(total<=1)return;
+  _galTimer=setInterval(()=>{
+    _galIndex=(_galIndex+1)%total;
+    updateGalleryPosition();
+  },4000);
+}
+function stopGalleryAutoplay(){
+  if(_galTimer){clearInterval(_galTimer);_galTimer=null;}
+}
 
 // --- MIN DATE ---
 (function setMinDates(){
