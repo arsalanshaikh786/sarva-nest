@@ -178,6 +178,18 @@ button,input,select,textarea{font-family:inherit}
 .svc-store-badges{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
 .svc-store-badge{font-size:.66rem;background:var(--gray-100);color:var(--gray-700);padding:2px 8px;border-radius:50px}
 
+/* GALLERY MANAGEMENT */
+.gallery-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.gal-mgmt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;transition:var(--transition);border:1.5px solid transparent}
+.gal-mgmt-card:hover{box-shadow:var(--shadow-md);border-color:rgba(108,99,255,.15)}
+.gal-mgmt-img{height:130px;object-fit:cover;width:100%;background:var(--lavender)}
+.gal-mgmt-body{padding:12px 14px}
+.gal-mgmt-title{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.88rem;margin-bottom:2px}
+.gal-mgmt-sub{font-size:.74rem;color:var(--gray-500);margin-bottom:10px}
+.gal-mgmt-actions{display:flex;gap:8px}
+.store-info-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;max-width:560px;margin-bottom:24px}
+.store-info-card h3{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.95rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(4px);padding:16px}
 .modal-overlay.show{opacity:1;pointer-events:all}
@@ -299,6 +311,7 @@ button,input,select,textarea{font-family:inherit}
     <button class="nav-item" onclick="showPage('urgent',this)"><i class="fas fa-bolt"></i> Urgent Orders <span class="nav-badge" id="urgentBadge" style="display:none">0</span></button>
     <div class="nav-section">Manage</div>
     <button class="nav-item" onclick="showPage('services',this)"><i class="fas fa-concierge-bell"></i> Services</button>
+    <button class="nav-item" onclick="showPage('storeinfo',this)"><i class="fas fa-store"></i> Store & Gallery</button>
     <button class="nav-item" onclick="showPage('reviews',this)"><i class="fas fa-star"></i> Reviews <span class="nav-badge" id="reviewsBadge" style="display:none">0</span></button>
   </nav>
   <div class="sidebar-footer">
@@ -368,6 +381,46 @@ button,input,select,textarea{font-family:inherit}
       </div>
       <div class="services-mgmt-grid" id="servicesMgmtGrid">
         <div class="empty-state" style="grid-column:1/-1"><i class="fas fa-concierge-bell"></i><p>No services yet</p></div>
+      </div>
+    </div>
+
+    <!-- STORE INFO + GALLERY -->
+    <div class="page" id="page-storeinfo">
+      <div class="section-hdr"><h2>Store Info</h2></div>
+      <div class="store-info-card">
+        <h3><i class="fas fa-map-marker-alt"></i> Shown in the header bar on the customer site</h3>
+        <div class="form-group">
+          <label>Location / Area Name</label>
+          <input type="text" id="siLocation" placeholder="e.g. Sirūr, Maharashtra"/>
+        </div>
+        <div class="form-group">
+          <label>Google Maps Search Text (optional — defaults to location above)</label>
+          <input type="text" id="siMapsQuery" placeholder="e.g. LaundroLux Sirur Maharashtra"/>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="tel" id="siPhone" placeholder="+91 98765 43210"/>
+          </div>
+          <div class="form-group">
+            <label>Rating (optional)</label>
+            <input type="text" id="siRating" placeholder="e.g. 4.8" inputmode="decimal"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Working Hours</label>
+          <input type="text" id="siHours" placeholder="e.g. Open Daily · 8:00 AM – 9:00 PM"/>
+        </div>
+        <div style="font-size:.72rem;color:var(--gray-500);margin-bottom:14px">Leave a field empty to hide just that item on the customer site. Leave everything empty to hide the whole bar.</div>
+        <button class="btn btn-primary" id="saveStoreInfoBtn" onclick="saveStoreInfo()"><i class="fas fa-save"></i> Save Store Info</button>
+      </div>
+
+      <div class="section-hdr">
+        <h2>Store Photo Gallery <span style="font-weight:400;color:var(--gray-500);font-size:.8rem">— shows as a slide bar on the customer site</span></h2>
+        <button class="btn btn-primary" onclick="openGalleryModal()"><i class="fas fa-plus"></i> Add Photo</button>
+      </div>
+      <div class="gallery-mgmt-grid" id="galleryMgmtGrid">
+        <div class="empty-state" style="grid-column:1/-1"><i class="fas fa-images"></i><p>No gallery photos yet. Add your first store photo!</p></div>
       </div>
     </div>
 
@@ -452,13 +505,47 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </div>
 
+<!-- GALLERY PHOTO MODAL -->
+<div class="modal-overlay" id="galleryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="galleryModalTitle">Add Gallery Photo</span>
+      <button class="modal-close" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label>Photo Title (optional caption)</label>
+      <input type="text" id="galTitle" placeholder="e.g. LaundroLux Main Store"/>
+    </div>
+    <div class="form-group">
+      <label>Photo Subtitle (optional)</label>
+      <input type="text" id="galSub" placeholder="e.g. Sirūr, Maharashtra"/>
+    </div>
+    <div class="form-group">
+      <label>Photo</label>
+      <div class="img-upload-area" onclick="document.getElementById('galImgFile').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <div style="font-size:.85rem;color:var(--gray-500)">Tap to upload image</div>
+        <div style="font-size:.72rem;color:var(--gray-300);margin-top:4px">PNG, JPG up to 5MB</div>
+        <input type="file" id="galImgFile" accept="image/*" style="display:none" onchange="handleGalImgSelect(event)"/>
+        <img id="galImgPreview" class="img-preview"/>
+      </div>
+      <div class="upload-progress" id="galUploadProgress"><div class="upload-bar" id="galUploadBar"></div></div>
+      <input type="hidden" id="galImageUrl"/>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('galleryModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveGalleryBtn" onclick="saveGalleryPhoto()"><i class="fas fa-save"></i> Save Photo</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast-c" id="toastC"></div>
 
 <!-- FIREBASE -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import{getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,onSnapshot,serverTimestamp,query,orderBy}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import{getFirestore,collection,addDoc,updateDoc,deleteDoc,doc,setDoc,getDoc,onSnapshot,serverTimestamp,query,orderBy}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import{getAuth,signInWithEmailAndPassword,signOut,onAuthStateChanged}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 const firebaseConfig={
@@ -474,7 +561,7 @@ const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const auth=getAuth(app);
 
-window._fb={db,auth,collection,addDoc,updateDoc,deleteDoc,doc,serverTimestamp,signInWithEmailAndPassword,signOut};
+window._fb={db,auth,collection,addDoc,updateDoc,deleteDoc,doc,setDoc,getDoc,serverTimestamp,signInWithEmailAndPassword,signOut};
 
 // Auth state
 onAuthStateChanged(auth,user=>{
@@ -508,6 +595,20 @@ function startListeners(){
     window.refreshCategoryList();
   },err=>{console.warn('Services listener error:',err.message);});
 
+  // Store Info (single settings doc)
+  onSnapshot(doc(db,'settings','store'),snap=>{
+    window._storeInfo=snap.exists()?snap.data():{};
+    window.fillStoreInfoForm();
+  },err=>console.warn('Store info listener error:',err.message));
+
+  // Gallery photos
+  const gq=query(collection(db,'gallery'),orderBy('createdAt','asc'));
+  onSnapshot(gq,snap=>{
+    window._gallery=[];
+    snap.forEach(d=>window._gallery.push({id:d.id,...d.data()}));
+    window.renderGalleryMgmt();
+  },err=>console.warn('Gallery listener error:',err.message));
+
   // Reviews — admin verifies genuine reviews before they go live.
   // Avoid orderBy here too (same reasoning as the customer site) so this
   // never silently breaks waiting on a composite index; sort on client instead.
@@ -533,7 +634,10 @@ function startListeners(){
 window._orders=[];
 window._services=[];
 window._reviews=[];
+window._storeInfo={};
+window._gallery=[];
 let _editSvcId=null;
+let _editGalId=null;
 let _urgentOnly=false;
 
 // --- ULTRAMSG WHATSAPP CONFIG (customer status-update notifications) ---
@@ -603,7 +707,7 @@ window.showPage=function(name,btn){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(btn)btn.classList.add('active');
   else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.toLowerCase().includes(name.slice(0,4)))n.classList.add('active');});
-  const titles={dashboard:'Dashboard',orders:'Orders',urgent:'Urgent Orders',services:'Services Management',reviews:'Reviews'};
+  const titles={dashboard:'Dashboard',orders:'Orders',urgent:'Urgent Orders',services:'Services Management',storeinfo:'Store & Gallery',reviews:'Reviews'};
   document.getElementById('topbarTitle').textContent=titles[name]||name;
   closeSidebar();
 };
@@ -924,6 +1028,113 @@ window.deleteService=async function(id){
   } catch(e){showToast('Error deleting service','e');}
 };
 
+// --- STORE INFO (location / phone / hours / rating shown in customer header bar) ---
+window.fillStoreInfoForm=function(){
+  const info=window._storeInfo||{};
+  const l=document.getElementById('siLocation');
+  const m=document.getElementById('siMapsQuery');
+  const p=document.getElementById('siPhone');
+  const r=document.getElementById('siRating');
+  const h=document.getElementById('siHours');
+  if(!l)return;
+  // Only fill if the field isn't currently focused (avoid overwriting while typing)
+  if(document.activeElement!==l)l.value=info.location||'';
+  if(document.activeElement!==m)m.value=info.mapsQuery||'';
+  if(document.activeElement!==p)p.value=info.phone||'';
+  if(document.activeElement!==r)r.value=info.rating||'';
+  if(document.activeElement!==h)h.value=info.hours||'';
+};
+
+window.saveStoreInfo=async function(){
+  const data={
+    location:document.getElementById('siLocation').value.trim(),
+    mapsQuery:document.getElementById('siMapsQuery').value.trim(),
+    phone:document.getElementById('siPhone').value.trim(),
+    rating:document.getElementById('siRating').value.trim(),
+    hours:document.getElementById('siHours').value.trim()
+  };
+  const btn=document.getElementById('saveStoreInfoBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
+  try{
+    await window._fb.setDoc(window._fb.doc(window._fb.db,'settings','store'),data,{merge:true});
+    showToast('Store info updated — now live on the customer site!','s');
+  }catch(e){console.error(e);showToast('Error saving store info','e');}
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Store Info';
+};
+
+// --- GALLERY MANAGEMENT (store photos shown as a slide bar on customer site) ---
+window.renderGalleryMgmt=function(){
+  const el=document.getElementById('galleryMgmtGrid');
+  const photos=window._gallery||[];
+  if(!photos.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-images"></i><p>No gallery photos yet. Add your first store photo!</p></div>';return;}
+  el.innerHTML=photos.map(p=>`
+    <div class="gal-mgmt-card">
+      <img class="gal-mgmt-img" src="${p.image}" alt="${p.title||'Store photo'}" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'"/>
+      <div class="gal-mgmt-body">
+        <div class="gal-mgmt-title">${p.title||'Untitled'}</div>
+        <div class="gal-mgmt-sub">${p.sub||''}</div>
+        <div class="gal-mgmt-actions">
+          <button class="btn btn-outline btn-sm" onclick="editGalleryPhoto('${p.id}')"><i class="fas fa-edit"></i> Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteGalleryPhoto('${p.id}')"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>`).join('');
+};
+
+window.openGalleryModal=function(){
+  _editGalId=null;
+  document.getElementById('galleryModalTitle').textContent='Add Gallery Photo';
+  document.getElementById('galTitle').value='';
+  document.getElementById('galSub').value='';
+  document.getElementById('galImageUrl').value='';
+  document.getElementById('galImgPreview').style.display='none';
+  document.getElementById('saveGalleryBtn').innerHTML='<i class="fas fa-save"></i> Save Photo';
+  openModal('galleryModal');
+};
+
+window.editGalleryPhoto=function(id){
+  const p=(window._gallery||[]).find(x=>x.id===id);
+  if(!p)return;
+  _editGalId=id;
+  document.getElementById('galleryModalTitle').textContent='Edit Gallery Photo';
+  document.getElementById('galTitle').value=p.title||'';
+  document.getElementById('galSub').value=p.sub||'';
+  document.getElementById('galImageUrl').value=p.image||'';
+  const prev=document.getElementById('galImgPreview');
+  if(p.image){prev.src=p.image;prev.style.display='block';}
+  else prev.style.display='none';
+  openModal('galleryModal');
+};
+
+window.saveGalleryPhoto=async function(){
+  const title=document.getElementById('galTitle').value.trim();
+  const sub=document.getElementById('galSub').value.trim();
+  const image=document.getElementById('galImageUrl').value;
+  if(!image){showToast('Please upload a photo','e');return;}
+  const btn=document.getElementById('saveGalleryBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
+  const data={title,sub,image};
+  try{
+    if(_editGalId){
+      await window._fb.updateDoc(window._fb.doc(window._fb.db,'gallery',_editGalId),data);
+      showToast('Photo updated!','s');
+    } else {
+      await window._fb.addDoc(window._fb.collection(window._fb.db,'gallery'),{...data,createdAt:window._fb.serverTimestamp()});
+      showToast('Photo added to gallery!','s');
+    }
+    closeModal('galleryModal');
+  } catch(e){console.error(e);showToast('Error saving photo','e');}
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Photo';
+};
+
+window.deleteGalleryPhoto=async function(id){
+  if(!confirm('Delete this gallery photo?'))return;
+  try{
+    await window._fb.deleteDoc(window._fb.doc(window._fb.db,'gallery',id));
+    showToast('Photo deleted','s');
+  } catch(e){showToast('Error deleting photo','e');}
+};
+
 // --- REVIEWS MODERATION (approve genuine, remove fake) ---
 window.renderReviewsAdmin=function(){
   const el=document.getElementById('reviewsTable');
@@ -971,7 +1182,7 @@ window.deleteReview=async function(id){
   }catch(e){showToast('Error deleting review','e');}
 };
 
-// --- CLOUDINARY IMAGE UPLOAD ---
+// --- CLOUDINARY IMAGE UPLOAD (service images) ---
 window.handleImgSelect=async function(e){
   const file=e.target.files[0];
   if(!file){showToast('Select image first','e');return;}
@@ -993,6 +1204,37 @@ window.handleImgSelect=async function(e){
     setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},400);
     if(data.error){showToast(data.error.message,'e');return;}
     document.getElementById('svcImageUrl').value=data.secure_url;
+    prev.src=data.secure_url;
+    showToast('Image uploaded successfully ✅','s');
+  } catch(err){
+    console.error(err);
+    prog.style.display='none';
+    showToast('Upload failed','e');
+  }
+};
+
+// --- CLOUDINARY IMAGE UPLOAD (gallery photos) ---
+window.handleGalImgSelect=async function(e){
+  const file=e.target.files[0];
+  if(!file){showToast('Select image first','e');return;}
+  const prev=document.getElementById('galImgPreview');
+  prev.src=URL.createObjectURL(file);
+  prev.style.display='block';
+  const prog=document.getElementById('galUploadProgress');
+  const bar=document.getElementById('galUploadBar');
+  prog.style.display='block';bar.style.width='10%';
+  showToast('Uploading image...','');
+  const formData=new FormData();
+  formData.append('file',file);
+  formData.append('upload_preset','ml_default');
+  try{
+    bar.style.width='50%';
+    const response=await fetch('https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload',{method:'POST',body:formData});
+    const data=await response.json();
+    bar.style.width='100%';
+    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},400);
+    if(data.error){showToast(data.error.message,'e');return;}
+    document.getElementById('galImageUrl').value=data.secure_url;
     prev.src=data.secure_url;
     showToast('Image uploaded successfully ✅','s');
   } catch(err){
