@@ -172,11 +172,26 @@ button,input,select,textarea{font-family:inherit}
 .svc-mgmt-body{padding:13px 15px}
 .svc-mgmt-name{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.92rem;margin-bottom:3px}
 .svc-mgmt-cat{font-size:.68rem;background:var(--lavender);color:var(--violet);padding:2px 9px;border-radius:50px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:inline-block;margin-bottom:6px}
+.svc-mgmt-gender{font-size:.68rem;background:var(--gray-100);color:var(--gray-700);padding:2px 9px;border-radius:50px;font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:inline-block;margin-bottom:6px;margin-left:5px}
 .svc-mgmt-price{font-family:'Poppins',sans-serif;font-weight:700;color:var(--violet);font-size:1rem}
 .svc-mgmt-desc{font-size:.76rem;color:var(--gray-500);margin:6px 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5}
 .svc-mgmt-actions{display:flex;gap:8px;flex-wrap:wrap}
 .svc-store-badges{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}
 .svc-store-badge{font-size:.66rem;background:var(--gray-100);color:var(--gray-700);padding:2px 8px;border-radius:50px}
+.svc-extra-badge{font-size:.66rem;background:rgba(255,159,67,.15);color:var(--warning);padding:2px 8px;border-radius:50px}
+.svc-size-badge{font-size:.66rem;background:rgba(0,207,232,.15);color:var(--info);padding:2px 8px;border-radius:50px}
+
+/* CATEGORY MANAGEMENT */
+.category-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.cat-mgmt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;text-align:center;transition:var(--transition);border:1.5px solid transparent}
+.cat-mgmt-card:hover{box-shadow:var(--shadow-md);border-color:rgba(108,99,255,.15)}
+.cat-mgmt-icon{width:52px;height:52px;margin:0 auto 10px;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--violet-light));color:#fff;display:grid;place-items:center;font-size:1.3rem}
+.cat-mgmt-name{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.9rem;margin-bottom:10px}
+.cat-mgmt-actions{display:flex;gap:8px;justify-content:center}
+.icon-preview-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.icon-preview-box{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--violet),var(--violet-light));color:#fff;display:grid;place-items:center;font-size:1.2rem;flex-shrink:0}
+.icon-hint{font-size:.72rem;color:var(--gray-500)}
+.icon-hint a{color:var(--violet)}
 
 /* GALLERY MANAGEMENT */
 .gallery-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
@@ -220,6 +235,7 @@ button,input,select,textarea{font-family:inherit}
 .upload-bar{height:100%;background:var(--violet);width:0%;transition:width .3s ease;border-radius:2px}
 .modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:16px;border-top:1px solid var(--gray-100);flex-wrap:wrap}
 .modal-footer .btn{flex:1;justify-content:center}
+.subsection-hint{font-size:.72rem;color:var(--gray-500);margin-top:6px}
 
 /* ORDER DETAIL MODAL */
 .order-detail-section{margin-bottom:16px}
@@ -310,6 +326,7 @@ button,input,select,textarea{font-family:inherit}
     <button class="nav-item" onclick="showPage('orders',this)"><i class="fas fa-clipboard-list"></i> Orders <span class="nav-badge" id="ordersBadge" style="display:none">0</span></button>
     <button class="nav-item" onclick="showPage('urgent',this)"><i class="fas fa-bolt"></i> Urgent Orders <span class="nav-badge" id="urgentBadge" style="display:none">0</span></button>
     <div class="nav-section">Manage</div>
+    <button class="nav-item" onclick="showPage('categories',this)"><i class="fas fa-th-large"></i> Categories</button>
     <button class="nav-item" onclick="showPage('services',this)"><i class="fas fa-concierge-bell"></i> Services</button>
     <button class="nav-item" onclick="showPage('storeinfo',this)"><i class="fas fa-store"></i> Store & Gallery</button>
     <button class="nav-item" onclick="showPage('reviews',this)"><i class="fas fa-star"></i> Reviews <span class="nav-badge" id="reviewsBadge" style="display:none">0</span></button>
@@ -371,6 +388,17 @@ button,input,select,textarea{font-family:inherit}
       <div class="section-hdr"><h2><i class="fas fa-bolt" style="color:var(--coral)"></i> Urgent Orders — Priority Queue</h2></div>
       <div class="table-wrap" id="urgentTable"><div class="empty-state"><i class="fas fa-bolt"></i><p>No urgent orders right now</p></div></div>
       <div class="order-cards" id="urgentCards"></div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div class="page" id="page-categories">
+      <div class="section-hdr">
+        <h2>Categories <span style="font-weight:400;color:var(--gray-500);font-size:.8rem">— shown as cards on the customer site homepage</span></h2>
+        <button class="btn btn-primary" onclick="openCategoryModal()"><i class="fas fa-plus"></i> Add Category</button>
+      </div>
+      <div class="category-mgmt-grid" id="categoryMgmtGrid">
+        <div class="empty-state" style="grid-column:1/-1"><i class="fas fa-th-large"></i><p>No categories yet. Add your first one, e.g. Press, Dry Clean, Home!</p></div>
+      </div>
     </div>
 
     <!-- SERVICES -->
@@ -454,6 +482,32 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </div>
 
+<!-- CATEGORY MODAL -->
+<div class="modal-overlay" id="categoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="categoryModalTitle">Add Category</span>
+      <button class="modal-close" onclick="closeModal('categoryModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label>Category Name</label>
+      <input type="text" id="catName" placeholder="e.g. Press, Dry Clean, Home"/>
+    </div>
+    <div class="icon-preview-row">
+      <div class="icon-preview-box" id="catIconPreview"><i class="fas fa-tshirt"></i></div>
+      <div class="form-group" style="flex:1;margin-bottom:0">
+        <label>FontAwesome Icon Class</label>
+        <input type="text" id="catIcon" placeholder="e.g. fa-tshirt" oninput="updateCatIconPreview()" value="fa-tshirt"/>
+      </div>
+    </div>
+    <div class="icon-hint">Browse free icon names at <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" rel="noopener">fontawesome.com</a> — copy just the class like <code>fa-shirt</code>.</div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('categoryModal')">Cancel</button>
+      <button class="btn btn-primary" id="saveCategoryBtn" onclick="saveCategory()"><i class="fas fa-save"></i> Save Category</button>
+    </div>
+  </div>
+</div>
+
 <!-- SERVICE MODAL -->
 <div class="modal-overlay" id="serviceModal">
   <div class="modal">
@@ -477,6 +531,14 @@ button,input,select,textarea{font-family:inherit}
       </div>
     </div>
     <div class="form-group">
+      <label>Gender</label>
+      <select id="svcGender">
+        <option value="unisex">All (Unisex)</option>
+        <option value="men">Men</option>
+        <option value="women">Women</option>
+      </select>
+    </div>
+    <div class="form-group">
       <label>Description</label>
       <textarea id="svcDesc" placeholder="Describe the service…"></textarea>
     </div>
@@ -484,7 +546,19 @@ button,input,select,textarea{font-family:inherit}
       <label>Available At (Optional — add 2-3 laundry stores with their own price)</label>
       <div id="storeRows"></div>
       <button type="button" class="btn btn-outline btn-sm" style="margin-top:6px" onclick="addStoreRow()"><i class="fas fa-plus"></i> Add Laundry Store</button>
-      <div style="font-size:.72rem;color:var(--gray-500);margin-top:6px">Leave empty to just use the base price above with no store choice.</div>
+      <div class="subsection-hint">Leave empty to just use the base price above with no store choice.</div>
+    </div>
+    <div class="form-group">
+      <label>Size Options (Optional — e.g. Small / Big with their own price)</label>
+      <div id="sizeRows"></div>
+      <button type="button" class="btn btn-outline btn-sm" style="margin-top:6px" onclick="addSizeRow()"><i class="fas fa-plus"></i> Add Size</button>
+      <div class="subsection-hint">If added, customer picks a size and its price is used instead of the base price / store price.</div>
+    </div>
+    <div class="form-group">
+      <label>Optional Extra Charges (e.g. Stain Removal +₹30)</label>
+      <div id="extraRows"></div>
+      <button type="button" class="btn btn-outline btn-sm" style="margin-top:6px" onclick="addExtraRow()"><i class="fas fa-plus"></i> Add Extra Charge</button>
+      <div class="subsection-hint">Shown as an optional checkbox toggle on the service card — customer can tick it to add the charge.</div>
     </div>
     <div class="form-group">
       <label>Service Image</label>
@@ -595,6 +669,15 @@ function startListeners(){
     window.refreshCategoryList();
   },err=>{console.warn('Services listener error:',err.message);});
 
+  // Categories (shown as cards on customer homepage)
+  const catq=query(collection(db,'categories'),orderBy('createdAt','asc'));
+  onSnapshot(catq,snap=>{
+    window._categories=[];
+    snap.forEach(d=>window._categories.push({id:d.id,...d.data()}));
+    window.renderCategoryMgmt();
+    window.refreshCategoryList();
+  },err=>{console.warn('Categories listener error:',err.message);});
+
   // Store Info (single settings doc)
   onSnapshot(doc(db,'settings','store'),snap=>{
     window._storeInfo=snap.exists()?snap.data():{};
@@ -636,8 +719,10 @@ window._services=[];
 window._reviews=[];
 window._storeInfo={};
 window._gallery=[];
+window._categories=[];
 let _editSvcId=null;
 let _editGalId=null;
+let _editCatId=null;
 let _urgentOnly=false;
 
 // --- ULTRAMSG WHATSAPP CONFIG (customer status-update notifications) ---
@@ -707,7 +792,7 @@ window.showPage=function(name,btn){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(btn)btn.classList.add('active');
   else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.toLowerCase().includes(name.slice(0,4)))n.classList.add('active');});
-  const titles={dashboard:'Dashboard',orders:'Orders',urgent:'Urgent Orders',services:'Services Management',storeinfo:'Store & Gallery',reviews:'Reviews'};
+  const titles={dashboard:'Dashboard',orders:'Orders',urgent:'Urgent Orders',categories:'Categories',services:'Services Management',storeinfo:'Store & Gallery',reviews:'Reviews'};
   document.getElementById('topbarTitle').textContent=titles[name]||name;
   closeSidebar();
 };
@@ -870,7 +955,13 @@ window.viewOrder=function(id){
     </div>
     <div class="order-detail-section">
       <h4><i class="fas fa-concierge-bell"></i> Services</h4>
-      ${(o.services||[]).map(s=>`<div class="service-item-row"><span>${s.name}</span><span>×${s.qty} = <strong>₹${s.subtotal||s.price*s.qty}</strong></span></div>`).join('')||'<p style="color:var(--gray-500);font-size:.85rem">No services listed</p>'}
+      ${(o.services||[]).map(s=>{
+        const tags=[];
+        if(s.sizeLabel)tags.push(s.sizeLabel);
+        if(s.storeName)tags.push(s.storeName);
+        const extraNames=(s.extras||[]).map(e=>e.name);
+        return `<div class="service-item-row"><span>${s.name}${tags.length?' ('+tags.join(', ')+')':''}${extraNames.length?'<br><small style="color:var(--gray-500)">+ '+extraNames.join(', ')+'</small>':''}</span><span>×${s.qty} = <strong>₹${s.subtotal||s.price*s.qty}</strong></span></div>`;
+      }).join('')||'<p style="color:var(--gray-500);font-size:.85rem">No services listed</p>'}
       ${o.urgent?`<div class="detail-row"><span><i class="fas fa-bolt"></i> Urgent Fee</span><span>₹${o.urgentFee||49}</span></div>`:''}
       <div class="detail-row" style="margin-top:10px"><span style="font-weight:700">Total</span><span style="color:var(--violet);font-family:Poppins,sans-serif;font-weight:800">₹${(o.totalAmount||0).toLocaleString('en-IN')}</span></div>
     </div>
@@ -907,6 +998,77 @@ window.deleteOrder=async function(id){
   } catch(e){showToast('Error deleting order','e');}
 };
 
+// --- CATEGORIES MANAGEMENT (shown on customer homepage as cards) ---
+window.renderCategoryMgmt=function(){
+  const el=document.getElementById('categoryMgmtGrid');
+  const cats=window._categories||[];
+  if(!cats.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-th-large"></i><p>No categories yet. Add your first one, e.g. Press, Dry Clean, Home!</p></div>';return;}
+  el.innerHTML=cats.map(c=>`
+    <div class="cat-mgmt-card">
+      <div class="cat-mgmt-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>
+      <div class="cat-mgmt-name">${c.name}</div>
+      <div class="cat-mgmt-actions">
+        <button class="btn btn-outline btn-sm" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>`).join('');
+};
+
+window.updateCatIconPreview=function(){
+  const val=document.getElementById('catIcon').value.trim()||'fa-tshirt';
+  document.getElementById('catIconPreview').innerHTML=`<i class="fas ${val}"></i>`;
+};
+
+window.openCategoryModal=function(){
+  _editCatId=null;
+  document.getElementById('categoryModalTitle').textContent='Add Category';
+  document.getElementById('catName').value='';
+  document.getElementById('catIcon').value='fa-tshirt';
+  window.updateCatIconPreview();
+  document.getElementById('saveCategoryBtn').innerHTML='<i class="fas fa-save"></i> Save Category';
+  openModal('categoryModal');
+};
+
+window.editCategory=function(id){
+  const c=(window._categories||[]).find(x=>x.id===id);
+  if(!c)return;
+  _editCatId=id;
+  document.getElementById('categoryModalTitle').textContent='Edit Category';
+  document.getElementById('catName').value=c.name||'';
+  document.getElementById('catIcon').value=c.icon||'fa-tshirt';
+  window.updateCatIconPreview();
+  openModal('categoryModal');
+};
+
+window.saveCategory=async function(){
+  const name=document.getElementById('catName').value.trim();
+  const icon=document.getElementById('catIcon').value.trim()||'fa-tshirt';
+  if(!name){showToast('Please enter a category name','e');return;}
+  const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+  const btn=document.getElementById('saveCategoryBtn');
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
+  const data={name,icon,slug};
+  try{
+    if(_editCatId){
+      await window._fb.updateDoc(window._fb.doc(window._fb.db,'categories',_editCatId),data);
+      showToast('Category updated!','s');
+    } else {
+      await window._fb.addDoc(window._fb.collection(window._fb.db,'categories'),{...data,createdAt:window._fb.serverTimestamp()});
+      showToast('Category added!','s');
+    }
+    closeModal('categoryModal');
+  } catch(e){console.error(e);showToast('Error saving category','e');}
+  btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Category';
+};
+
+window.deleteCategory=async function(id){
+  if(!confirm('Delete this category? Existing services keep their category text but the homepage card will disappear.'))return;
+  try{
+    await window._fb.deleteDoc(window._fb.doc(window._fb.db,'categories',id));
+    showToast('Category deleted','s');
+  } catch(e){showToast('Error deleting category','e');}
+};
+
 // --- SERVICES MGMT ---
 window.renderServicesMgmt=function(){
   const el=document.getElementById('servicesMgmtGrid');
@@ -914,15 +1076,20 @@ window.renderServicesMgmt=function(){
   if(!svcs.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-concierge-bell"></i><p>No services yet. Add your first service!</p></div>';return;}
   el.innerHTML=svcs.map(s=>{
     const stores=(s.stores||[]).filter(st=>st&&st.name);
+    const sizes=(s.sizes||[]).filter(sz=>sz&&sz.label);
+    const extras=(s.extraCharges||[]).filter(ex=>ex&&ex.name);
+    const genderLabel=s.gender&&s.gender!=='unisex'?s.gender.charAt(0).toUpperCase()+s.gender.slice(1):'All';
     return`
     <div class="svc-mgmt-card">
       <img class="svc-mgmt-img" src="${s.image||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'}" alt="${s.name}" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'"/>
       <div class="svc-mgmt-body">
-        <div class="svc-mgmt-cat">${s.category||'service'}</div>
+        <div class="svc-mgmt-cat">${s.category||'service'}</div><span class="svc-mgmt-gender">${genderLabel}</span>
         <div class="svc-mgmt-name">${s.name}</div>
         <div class="svc-mgmt-price">₹${s.price} <span style="font-size:.72rem;font-weight:400;color:var(--gray-500)">/item base</span></div>
         <div class="svc-mgmt-desc">${s.description||''}</div>
         ${stores.length?`<div class="svc-store-badges">${stores.map(st=>`<span class="svc-store-badge"><i class="fas fa-store"></i> ${st.name} · ₹${st.price}</span>`).join('')}</div>`:''}
+        ${sizes.length?`<div class="svc-store-badges">${sizes.map(sz=>`<span class="svc-size-badge"><i class="fas fa-ruler"></i> ${sz.label} · ₹${sz.price}</span>`).join('')}</div>`:''}
+        ${extras.length?`<div class="svc-store-badges">${extras.map(ex=>`<span class="svc-extra-badge"><i class="fas fa-plus"></i> ${ex.name} · +₹${ex.price}</span>`).join('')}</div>`:''}
         <div class="svc-mgmt-actions">
           <button class="btn btn-outline btn-sm" onclick="editService('${s.id}')"><i class="fas fa-edit"></i> Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteService('${s.id}')"><i class="fas fa-trash"></i></button>
@@ -931,12 +1098,13 @@ window.renderServicesMgmt=function(){
     </div>`;}).join('');
 };
 
-// --- DYNAMIC CATEGORY DATALIST (admin can always type a brand-new category) ---
+// --- DYNAMIC CATEGORY DATALIST (prefers admin-managed categories; falls back to categories already used on services) ---
 window.refreshCategoryList=function(){
   const dl=document.getElementById('categoryList');
   if(!dl)return;
-  const cats=[...new Set((window._services||[]).map(s=>s.category).filter(Boolean))];
-  if(!cats.length){cats.push('washing','ironing','dry-cleaning','specialty');}
+  let cats=(window._categories||[]).map(c=>c.slug||c.name).filter(Boolean);
+  if(!cats.length)cats=[...new Set((window._services||[]).map(s=>s.category).filter(Boolean))];
+  if(!cats.length){cats=['washing','ironing','dry-cleaning','specialty'];}
   dl.innerHTML=cats.map(c=>`<option value="${c}"></option>`).join('');
 };
 
@@ -961,6 +1129,48 @@ function collectStoreRows(){
   }).filter(st=>st.name&&st.price>0);
 }
 
+// --- SIZE OPTION ROWS (e.g. Small / Big, each with its own price) ---
+window.addSizeRow=function(label,price){
+  const wrap=document.getElementById('sizeRows');
+  if(wrap.children.length>=5){showToast('You can add up to 5 sizes per service','e');return;}
+  const row=document.createElement('div');
+  row.className='store-row';
+  row.innerHTML=`
+    <input type="text" class="size-label-input" placeholder="Size label e.g. Small" value="${label?label.replace(/"/g,'&quot;'):''}"/>
+    <input type="number" class="size-price-input" placeholder="₹ price" min="1" inputmode="numeric" value="${price!=null?price:''}"/>
+    <button type="button" class="store-row-remove" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
+  wrap.appendChild(row);
+};
+
+function collectSizeRows(){
+  return Array.from(document.querySelectorAll('#sizeRows .store-row')).map(row=>{
+    const label=row.querySelector('.size-label-input').value.trim();
+    const price=parseFloat(row.querySelector('.size-price-input').value);
+    return{label,price};
+  }).filter(sz=>sz.label&&sz.price>0);
+}
+
+// --- EXTRA CHARGE ROWS (optional add-ons, e.g. Stain Removal +₹30) ---
+window.addExtraRow=function(name,price){
+  const wrap=document.getElementById('extraRows');
+  if(wrap.children.length>=6){showToast('You can add up to 6 extra charges per service','e');return;}
+  const row=document.createElement('div');
+  row.className='store-row';
+  row.innerHTML=`
+    <input type="text" class="extra-name-input" placeholder="e.g. Stain Removal" value="${name?name.replace(/"/g,'&quot;'):''}"/>
+    <input type="number" class="extra-price-input" placeholder="+₹" min="1" inputmode="numeric" value="${price!=null?price:''}"/>
+    <button type="button" class="store-row-remove" onclick="this.parentElement.remove()"><i class="fas fa-times"></i></button>`;
+  wrap.appendChild(row);
+};
+
+function collectExtraRows(){
+  return Array.from(document.querySelectorAll('#extraRows .store-row')).map(row=>{
+    const name=row.querySelector('.extra-name-input').value.trim();
+    const price=parseFloat(row.querySelector('.extra-price-input').value);
+    return{name,price};
+  }).filter(ex=>ex.name&&ex.price>0);
+}
+
 // --- SERVICE MODAL ---
 window.openServiceModal=function(){
   _editSvcId=null;
@@ -969,9 +1179,12 @@ window.openServiceModal=function(){
   document.getElementById('svcPrice').value='';
   document.getElementById('svcDesc').value='';
   document.getElementById('svcCategory').value='';
+  document.getElementById('svcGender').value='unisex';
   document.getElementById('svcImageUrl').value='';
   document.getElementById('imgPreview').style.display='none';
   document.getElementById('storeRows').innerHTML='';
+  document.getElementById('sizeRows').innerHTML='';
+  document.getElementById('extraRows').innerHTML='';
   document.getElementById('saveServiceBtn').innerHTML='<i class="fas fa-save"></i> Save Service';
   window.refreshCategoryList();
   openModal('serviceModal');
@@ -986,12 +1199,17 @@ window.editService=function(id){
   document.getElementById('svcPrice').value=s.price||'';
   document.getElementById('svcDesc').value=s.description||'';
   document.getElementById('svcCategory').value=s.category||'';
+  document.getElementById('svcGender').value=s.gender||'unisex';
   document.getElementById('svcImageUrl').value=s.image||'';
   const prev=document.getElementById('imgPreview');
   if(s.image){prev.src=s.image;prev.style.display='block';}
   else prev.style.display='none';
   document.getElementById('storeRows').innerHTML='';
   (s.stores||[]).filter(st=>st&&st.name).forEach(st=>window.addStoreRow(st.name,st.price));
+  document.getElementById('sizeRows').innerHTML='';
+  (s.sizes||[]).filter(sz=>sz&&sz.label).forEach(sz=>window.addSizeRow(sz.label,sz.price));
+  document.getElementById('extraRows').innerHTML='';
+  (s.extraCharges||[]).filter(ex=>ex&&ex.name).forEach(ex=>window.addExtraRow(ex.name,ex.price));
   window.refreshCategoryList();
   openModal('serviceModal');
 };
@@ -1001,12 +1219,15 @@ window.saveService=async function(){
   const price=parseFloat(document.getElementById('svcPrice').value);
   const desc=document.getElementById('svcDesc').value.trim();
   const category=document.getElementById('svcCategory').value.trim().toLowerCase()||'general';
+  const gender=document.getElementById('svcGender').value||'unisex';
   const image=document.getElementById('svcImageUrl').value||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80';
   const stores=collectStoreRows();
+  const sizes=collectSizeRows();
+  const extraCharges=collectExtraRows();
   if(!name||!price){showToast('Please fill name and base price','e');return;}
   const btn=document.getElementById('saveServiceBtn');
   btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
-  const data={name,price,description:desc,category,image,stores};
+  const data={name,price,description:desc,category,gender,image,stores,sizes,extraCharges};
   try{
     if(_editSvcId){
       await window._fb.updateDoc(window._fb.doc(window._fb.db,'services',_editSvcId),data);
