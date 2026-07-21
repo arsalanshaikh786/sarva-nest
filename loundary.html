@@ -100,6 +100,27 @@ button,input,select,textarea{font-family:inherit}
   .store-info-item{font-size:.7rem}
 }
 
+/* CATEGORIES (homepage cards) — same visual language as service-card, just bigger/bolder */
+.categories-section{padding:36px 5% 10px;max-width:1400px;margin:0 auto}
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.cat-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer;transition:var(--transition);border:1.5px solid transparent}
+.cat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:rgba(108,99,255,.2)}
+.cat-card-banner{height:120px;position:relative;overflow:hidden;display:grid;place-items:center}
+.cat-card-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='24' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='2'/%3E%3C/svg%3E")}
+.cat-card-icon{width:66px;height:66px;border-radius:18px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);color:#fff;display:grid;place-items:center;font-size:1.7rem;position:relative;z-index:2;transition:var(--transition)}
+.cat-card:hover .cat-card-icon{transform:scale(1.08);background:rgba(255,255,255,.28)}
+.cat-card-body{padding:15px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cat-card-name{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:1.02rem}
+.cat-card-arrow{width:34px;height:34px;border-radius:50%;background:var(--lavender);color:var(--violet);display:grid;place-items:center;font-size:.8rem;transition:var(--transition);flex-shrink:0}
+.cat-card:hover .cat-card-arrow{background:var(--violet);color:#fff;transform:translateX(3px)}
+.categories-empty{grid-column:1/-1;text-align:center;padding:30px;color:var(--gray-500);font-size:.85rem}
+
+/* BACK TO CATEGORIES + GENDER FILTER */
+.back-to-cats-btn{display:flex;align-items:center;gap:7px;background:var(--lavender);color:var(--violet);border:none;border-radius:50px;padding:9px 16px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.8rem;cursor:pointer;transition:var(--transition);white-space:nowrap;flex-shrink:0}
+.back-to-cats-btn:hover{background:var(--violet);color:#fff}
+.gender-chip{padding:9px 16px;border:2px solid var(--gray-100);background:#fff;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:var(--transition);color:var(--gray-500);white-space:nowrap;flex-shrink:0}
+.gender-chip:hover,.gender-chip.active{background:var(--violet);border-color:var(--violet);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+
 /* SEARCH & FILTER */
 .filter-bar{background:#fff;padding:16px 5%;box-shadow:0 4px 20px rgba(0,0,0,.06);position:sticky;top:64px;z-index:800}
 .filter-inner{display:flex;gap:12px;align-items:center;flex-wrap:wrap;max-width:1200px;margin:0 auto}
@@ -109,11 +130,9 @@ button,input,select,textarea{font-family:inherit}
 #searchInput:focus{border-color:var(--violet);background:#fff;box-shadow:0 0 0 4px rgba(108,99,255,.1)}
 .filter-btns{display:flex;gap:8px;flex-wrap:wrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
 .filter-btns::-webkit-scrollbar{display:none}
-.filter-btn{padding:9px 16px;border:2px solid var(--gray-100);background:#fff;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:var(--transition);color:var(--gray-500);white-space:nowrap;flex-shrink:0;min-height:38px}
-.filter-btn:hover,.filter-btn.active{background:var(--violet);border-color:var(--violet);color:#fff;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 
 /* SERVICES */
-.services-section{padding:44px 5%;max-width:1400px;margin:0 auto}
+.services-section{padding:24px 5% 44px;max-width:1400px;margin:0 auto}
 .section-header{text-align:center;margin-bottom:32px}
 .section-eyebrow{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--violet);margin-bottom:8px}
 .section-title{font-family:'Poppins',sans-serif;font-size:clamp(1.35rem,4.5vw,2.2rem);font-weight:700;color:var(--indigo);letter-spacing:-.3px}
@@ -124,6 +143,7 @@ button,input,select,textarea{font-family:inherit}
 .card-img-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
 .service-card:hover .card-img-wrap img{transform:scale(1.08)}
 .card-category{position:absolute;top:10px;left:10px;background:rgba(26,31,75,.8);color:#fff;font-size:.65rem;font-weight:600;padding:4px 10px;border-radius:50px;text-transform:uppercase;letter-spacing:.5px}
+.card-gender{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.9);color:var(--indigo);font-size:.62rem;font-weight:700;padding:4px 9px;border-radius:50px;text-transform:uppercase;letter-spacing:.4px}
 .card-body{padding:15px 15px 17px}
 .card-title{font-family:'Poppins',sans-serif;font-weight:700;font-size:.98rem;color:var(--indigo);margin-bottom:5px}
 .card-desc{font-size:.8rem;color:var(--gray-500);line-height:1.5;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -142,6 +162,27 @@ button,input,select,textarea{font-family:inherit}
 .no-results{text-align:center;padding:60px 20px;color:var(--gray-500)}
 .no-results i{font-size:3rem;color:var(--gray-300);margin-bottom:16px;display:block}
 
+/* SIZE PILLS (toggle) */
+.size-pills-wrap{margin-bottom:10px}
+.size-pills-wrap label{font-size:.66rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px}
+.size-pills{display:flex;flex-wrap:wrap;gap:6px}
+.size-pill{padding:6px 12px;border:2px solid var(--gray-100);border-radius:50px;font-size:.72rem;font-weight:600;color:var(--gray-500);cursor:pointer;transition:var(--transition);background:#fff}
+.size-pill.active{background:var(--violet);border-color:var(--violet);color:#fff}
+
+/* EXTRA CHARGES (optional toggle chips) */
+.extra-charges-wrap{margin-bottom:10px}
+.extra-charges-wrap label{font-size:.66rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px}
+.extra-charges-list{display:flex;flex-wrap:wrap;gap:6px}
+.extra-chip{display:flex;align-items:center;gap:5px;padding:6px 11px;border:2px solid var(--gray-100);border-radius:50px;font-size:.7rem;font-weight:600;color:var(--gray-500);cursor:pointer;transition:var(--transition);background:#fff;user-select:none}
+.extra-chip input{width:12px;height:12px;accent-color:var(--amber);cursor:pointer}
+.extra-chip.active{background:rgba(255,159,67,.15);border-color:var(--amber);color:#e8590c}
+
+/* STORE SELECT (multi-laundry option per service) */
+.store-select-wrap{margin-bottom:10px}
+.store-select-wrap label{font-size:.66rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
+.store-select{width:100%;padding:9px 10px;border:2px solid var(--gray-100);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.8rem;outline:none;background:var(--gray-50);color:var(--gray-700);cursor:pointer}
+.store-select:focus{border-color:var(--violet)}
+
 /* CART OVERLAY */
 .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(3px)}
 .cart-overlay.open{opacity:1;pointer-events:all}
@@ -159,6 +200,7 @@ button,input,select,textarea{font-family:inherit}
 .cart-item-img{width:52px;height:52px;border-radius:10px;object-fit:cover;background:var(--lavender);flex-shrink:0}
 .cart-item-info{flex:1;min-width:0}
 .cart-item-name{font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;color:var(--indigo);margin-bottom:3px}
+.cart-item-tags{font-size:.7rem;color:var(--gray-500);margin-bottom:3px}
 .cart-item-price{font-size:.8rem;color:var(--violet);font-weight:600}
 .cart-item-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
 .ciq-btn{width:28px;height:28px;border:2px solid var(--gray-100);background:#fff;border-radius:50%;cursor:pointer;font-size:.75rem;display:grid;place-items:center;transition:var(--transition)}
@@ -228,12 +270,6 @@ button,input,select,textarea{font-family:inherit}
 .toast.success{background:var(--success)}
 .toast.error{background:var(--coral)}
 
-/* STORE SELECT (multi-laundry option per service) */
-.store-select-wrap{margin-bottom:10px}
-.store-select-wrap label{font-size:.66rem;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:4px}
-.store-select{width:100%;padding:9px 10px;border:2px solid var(--gray-100);border-radius:var(--radius-sm);font-family:'Inter',sans-serif;font-size:.8rem;outline:none;background:var(--gray-50);color:var(--gray-700);cursor:pointer}
-.store-select:focus{border-color:var(--violet)}
-
 /* REVIEWS */
 .reviews-section{padding:40px 5% 20px;max-width:1200px;margin:0 auto}
 .reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:26px}
@@ -301,6 +337,12 @@ button,input,select,textarea{font-family:inherit}
   .hero-stats{gap:14px}
   .qty-wrap{padding:3px 4px}
   .qty-btn{width:26px;height:26px}
+  .categories-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .cat-card-banner{height:90px}
+  .cat-card-icon{width:52px;height:52px;font-size:1.3rem}
+  .cat-card-body{padding:12px 12px 13px}
+  .cat-card-name{font-size:.88rem}
+  .cat-card-arrow{width:28px;height:28px;font-size:.7rem}
 }
 @media(max-width:400px){
   .services-grid{grid-template-columns:1fr 1fr}
@@ -373,24 +415,40 @@ button,input,select,textarea{font-family:inherit}
   </div>
 </section>
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
+<!-- CATEGORIES (homepage step 1) -->
+<section class="categories-section" id="categoriesSection">
+  <div class="section-header">
+    <div class="section-eyebrow">Browse By</div>
+    <h2 class="section-title">What Do You Need Cleaned?</h2>
+  </div>
+  <div class="categories-grid" id="categoriesGrid">
+    <div class="categories-empty" id="categoriesEmpty">
+      <i class="fas fa-spinner fa-spin"></i> Loading categories…
+    </div>
+  </div>
+</section>
+
+<!-- FILTER BAR (shown after a category is picked) -->
+<div class="filter-bar" id="filterBar" style="display:none">
   <div class="filter-inner">
+    <button class="back-to-cats-btn" onclick="showCategoriesView()"><i class="fas fa-arrow-left"></i> All Categories</button>
     <div class="search-wrap">
       <i class="fas fa-search"></i>
       <input type="text" id="searchInput" placeholder="Search services…" oninput="filterServices()"/>
     </div>
     <div class="filter-btns" id="filterBtns">
-      <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+      <button class="gender-chip active" data-gender="all" onclick="setGenderFilter('all',this)">All</button>
+      <button class="gender-chip" data-gender="men" onclick="setGenderFilter('men',this)"><i class="fas fa-mars"></i> Men</button>
+      <button class="gender-chip" data-gender="women" onclick="setGenderFilter('women',this)"><i class="fas fa-venus"></i> Women</button>
     </div>
   </div>
 </div>
 
-<!-- SERVICES -->
-<section class="services-section">
+<!-- SERVICES (shown after a category is picked) -->
+<section class="services-section" id="servicesSection" style="display:none">
   <div class="section-header">
-    <div class="section-eyebrow">Our Services</div>
-    <h2 class="section-title">What Can We Clean For You?</h2>
+    <div class="section-eyebrow" id="servicesEyebrow">Our Services</div>
+    <h2 class="section-title" id="servicesSectionTitle">Services</h2>
   </div>
   <div class="services-grid" id="servicesGrid">
     <div class="no-results" id="noResults" style="display:none;grid-column:1/-1">
@@ -597,6 +655,14 @@ onSnapshot(q,snap=>{
   }
 });
 
+// Load Categories (managed from Admin Panel > Categories) — shown as cards on the homepage
+const catq=query(collection(db,'categories'),orderBy('createdAt','asc'));
+onSnapshot(catq,snap=>{
+  const cats=[];
+  snap.forEach(d=>cats.push({id:d.id,...d.data()}));
+  if(window.renderCategories)window.renderCategories(cats);
+},err=>console.warn('Categories listener error:',err.message));
+
 // Load approved genuine reviews only (fake/unapproved reviews never show).
 // NOTE: we intentionally avoid a composite (where + orderBy) query here so this
 // works instantly without requiring a manual Firestore index to be created —
@@ -675,7 +741,13 @@ function sendUltraMsg(to,body){
 
 function sendNewOrderToGroup(docId,order){
   const mapsLink='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(order.address);
-  const servicesLines=order.services.map(s=>`- ${s.name}${s.storeName?' ('+s.storeName+')':''} ×${s.qty} = ₹${s.subtotal}`).join('\n');
+  const servicesLines=order.services.map(s=>{
+    const tags=[];
+    if(s.sizeLabel)tags.push(s.sizeLabel);
+    if(s.storeName)tags.push(s.storeName);
+    const extraNames=(s.extras||[]).map(e=>e.name);
+    return `- ${s.name}${tags.length?' ('+tags.join(', ')+')':''} ×${s.qty} = ₹${s.subtotal}${extraNames.length?'\n  + '+extraNames.join(', '):''}`;
+  }).join('\n');
   const msg=`🧺 *New LaundroLux Order!*\n`+
     (order.urgent?`⚡ *URGENT ORDER*\n`:'')+
     `\nOrder ID: #${docId.slice(0,8).toUpperCase()}\n`+
@@ -695,19 +767,24 @@ function sendNewOrderToGroup(docId,order){
 
 // --- DEFAULT SERVICES (used if Firestore empty) ---
 window._defaultServices=[
-  {id:'s1',name:'Wash & Fold',description:'Machine wash with premium detergents, dried and neatly folded. Perfect for everyday clothes.',price:49,category:'washing',image:'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'},
-  {id:'s2',name:'Wash & Iron',description:'Full wash cycle followed by professional steam ironing. Crisp, wrinkle-free results.',price:79,category:'ironing',image:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'},
-  {id:'s3',name:'Dry Cleaning',description:'Solvent-based cleaning for delicate fabrics like suits, silk, and formal wear.',price:149,category:'dry-cleaning',image:'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400&q=80'},
-  {id:'s4',name:'Steam Iron',description:'Professional steam ironing only — bring freshness back to lightly used garments.',price:29,category:'ironing',image:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&q=80'},
-  {id:'s5',name:'Blanket Cleaning',description:'Deep clean for blankets, quilts, and comforters. Hygienic and fluffy results.',price:199,category:'specialty',image:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'},
-  {id:'s6',name:'Shoe Cleaning',description:'Detailed cleaning for sneakers, leather shoes, and sports footwear. Restore the shine.',price:99,category:'specialty',image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80'},
+  {id:'s1',name:'Wash & Fold',description:'Machine wash with premium detergents, dried and neatly folded. Perfect for everyday clothes.',price:49,category:'washing',gender:'unisex',image:'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'},
+  {id:'s2',name:'Wash & Iron',description:'Full wash cycle followed by professional steam ironing. Crisp, wrinkle-free results.',price:79,category:'ironing',gender:'unisex',image:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80'},
+  {id:'s3',name:'Dry Cleaning',description:'Solvent-based cleaning for delicate fabrics like suits, silk, and formal wear.',price:149,category:'dry-cleaning',gender:'unisex',image:'https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400&q=80'},
+  {id:'s4',name:'Steam Iron',description:'Professional steam ironing only — bring freshness back to lightly used garments.',price:29,category:'ironing',gender:'unisex',image:'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&q=80'},
+  {id:'s5',name:'Blanket Cleaning',description:'Deep clean for blankets, quilts, and comforters. Hygienic and fluffy results.',price:199,category:'specialty',gender:'unisex',image:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&q=80'},
+  {id:'s6',name:'Shoe Cleaning',description:'Detailed cleaning for sneakers, leather shoes, and sports footwear. Restore the shine.',price:99,category:'specialty',gender:'unisex',image:'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80'},
 ];
 window._firestoreServices=null;
 
 // --- STATE ---
 let cart={};
-let currentFilter='all';
+let currentCategory=null;   // slug of the selected category, or null = category picker view
+let currentCategoryName='';
+let currentGender='all';    // 'all' | 'men' | 'women'
 let allServices=[];
+let allCategories=[];
+// Per-card UI selection state (store/size/extras chosen before adding to cart)
+let cardState={};
 
 // --- BUBBLES ---
 (function createBubbles(){
@@ -826,36 +903,86 @@ function stopGalleryAutoplay(){
   document.getElementById('deliveryDate').min=tomorrow;
 })();
 
-// --- RENDER SERVICES ---
-window.renderServices=function(services){
-  allServices=services;
-  buildCategoryFilters();
+/* =====================================================
+   CATEGORIES (homepage cards, managed from Admin Panel)
+   Clicking a category card switches to the services view,
+   filtered to just that category, with a Men/Women/All
+   toggle and search still available.
+===================================================== */
+// A small rotating palette so category cards feel lively without needing
+// admin to pick a color — cycles through the site's own brand tones.
+const CAT_GRADIENTS=[
+  'linear-gradient(135deg,#6c63ff,#8b85ff)',
+  'linear-gradient(135deg,#ff6b6b,#e85555)',
+  'linear-gradient(135deg,#1a1f4b,#2d1b69)',
+  'linear-gradient(135deg,#28c76f,#20a55a)',
+  'linear-gradient(135deg,#ff9f43,#e8590c)',
+  'linear-gradient(135deg,#00b8d9,#0090ad)'
+];
+
+window.renderCategories=function(cats){
+  allCategories=cats||[];
+  const grid=document.getElementById('categoriesGrid');
+  if(!allCategories.length){
+    grid.innerHTML='<div class="categories-empty"><i class="fas fa-th-large"></i><p>No categories added yet.</p></div>';
+    return;
+  }
+  grid.innerHTML=allCategories.map((c,i)=>`
+    <div class="cat-card" onclick="selectCategory('${(c.slug||c.name).replace(/'/g,"\\'")}','${(c.name||'').replace(/'/g,"\\'")}')">
+      <div class="cat-card-banner" style="background:${CAT_GRADIENTS[i%CAT_GRADIENTS.length]}">
+        <div class="cat-card-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>
+      </div>
+      <div class="cat-card-body">
+        <div class="cat-card-name">${c.name}</div>
+        <div class="cat-card-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>`).join('');
+};
+
+window.selectCategory=function(slug,name){
+  currentCategory=slug;
+  currentCategoryName=name||slug;
+  currentGender='all';
+  document.querySelectorAll('.gender-chip').forEach(b=>b.classList.toggle('active',b.dataset.gender==='all'));
+  document.getElementById('searchInput').value='';
+  document.getElementById('categoriesSection').style.display='none';
+  document.getElementById('filterBar').style.display='block';
+  document.getElementById('servicesSection').style.display='block';
+  document.getElementById('servicesEyebrow').textContent='Our Services';
+  document.getElementById('servicesSectionTitle').textContent=currentCategoryName+' Services';
+  filterServices();
+  document.getElementById('servicesSection').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.showCategoriesView=function(){
+  currentCategory=null;
+  document.getElementById('categoriesSection').style.display='block';
+  document.getElementById('filterBar').style.display='none';
+  document.getElementById('servicesSection').style.display='none';
+  document.getElementById('categoriesSection').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+window.setGenderFilter=function(gender,btn){
+  currentGender=gender;
+  document.querySelectorAll('.gender-chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
   filterServices();
 };
 
-// --- DYNAMIC CATEGORY FILTERS (auto-picks up any new category admin adds) ---
-function buildCategoryFilters(){
-  const wrap=document.getElementById('filterBtns');
-  const cats=[...new Set(allServices.map(s=>s.category).filter(Boolean))];
-  const existing=[...new Set(Array.from(wrap.querySelectorAll('.filter-btn[data-cat]')).map(b=>b.dataset.cat))];
-  if(cats.length===existing.length&&cats.every(c=>existing.includes(c)))return;
-  wrap.querySelectorAll('.filter-btn[data-cat]').forEach(b=>b.remove());
-  cats.forEach(cat=>{
-    const btn=document.createElement('button');
-    btn.className='filter-btn';
-    btn.dataset.cat=cat;
-    btn.textContent=cat.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-    btn.onclick=()=>setFilter(cat,btn);
-    wrap.appendChild(btn);
-  });
-}
+// --- RENDER SERVICES ---
+window.renderServices=function(services){
+  allServices=services;
+  if(currentCategory!==null)filterServices();
+};
 
 function filterServices(){
   const q=(document.getElementById('searchInput').value||'').toLowerCase();
   const filtered=allServices.filter(s=>{
-    const matchCat=currentFilter==='all'||s.category===currentFilter;
+    const matchCat=currentCategory===null||s.category===currentCategory;
+    const g=s.gender||'unisex';
+    const matchGender=currentGender==='all'||g==='unisex'||g===currentGender;
     const matchQ=!q||s.name.toLowerCase().includes(q)||s.description.toLowerCase().includes(q)||(s.category||'').toLowerCase().includes(q);
-    return matchCat&&matchQ;
+    return matchCat&&matchGender&&matchQ;
   });
   const grid=document.getElementById('servicesGrid');
   const noRes=document.getElementById('noResults');
@@ -870,16 +997,32 @@ function filterServices(){
 };
 window.filterServices=filterServices;
 
-// Get currently effective price + store name for a service card (accounts for store dropdown selection)
-function getSelectedStore(svc){
-  const sel=document.getElementById('store-'+svc.id);
-  const stores=(svc.stores||[]).filter(st=>st&&st.name);
-  if(sel&&stores.length){
-    const idx=parseInt(sel.value);
-    const st=stores[idx]||stores[0];
-    return {storeName:st.name,price:Number(st.price)||svc.price};
+// Get/init the per-card selection state (store idx, size idx, chosen extras)
+function getCardState(svc){
+  if(!cardState[svc.id]){
+    const sizes=(svc.sizes||[]).filter(sz=>sz&&sz.label);
+    cardState[svc.id]={storeIdx:0,sizeIdx:sizes.length?0:null,extras:{}};
   }
-  return {storeName:null,price:svc.price};
+  return cardState[svc.id];
+}
+
+// Compute the current effective unit price (size/store based) + selected extras total
+function getEffectivePrice(svc){
+  const st=getCardState(svc);
+  const sizes=(svc.sizes||[]).filter(sz=>sz&&sz.label);
+  const stores=(svc.stores||[]).filter(s=>s&&s.name);
+  let base;
+  if(sizes.length){
+    base=Number(sizes[st.sizeIdx]?.price)||svc.price;
+  } else if(stores.length){
+    base=Number(stores[st.storeIdx]?.price)||svc.price;
+  } else {
+    base=svc.price;
+  }
+  const extraCharges=(svc.extraCharges||[]).filter(ex=>ex&&ex.name);
+  let extrasTotal=0;
+  extraCharges.forEach((ex,idx)=>{if(st.extras[idx])extrasTotal+=Number(ex.price)||0;});
+  return {base,extrasTotal,unit:base+extrasTotal};
 }
 
 function buildCard(svc,i){
@@ -887,25 +1030,42 @@ function buildCard(svc,i){
   div.className='service-card';
   div.style.animationDelay=(i*0.06)+'s';
   const qty=cart[svc.id]?cart[svc.id].qty:1;
-  const stores=(svc.stores||[]).filter(st=>st&&st.name);
-  const hasStores=stores.length>0;
-  const initPrice=hasStores?(Number(stores[0].price)||svc.price):svc.price;
+  const st=getCardState(svc);
+  const sizes=(svc.sizes||[]).filter(sz=>sz&&sz.label);
+  const stores=(svc.stores||[]).filter(s=>s&&s.name);
+  const extraCharges=(svc.extraCharges||[]).filter(ex=>ex&&ex.name);
+  const genderLabel=svc.gender&&svc.gender!=='unisex'?(svc.gender.charAt(0).toUpperCase()+svc.gender.slice(1)):'';
+  const {unit}=getEffectivePrice(svc);
   div.innerHTML=`
     <div class="card-img-wrap">
       <img src="${svc.image||'https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'}" alt="${svc.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1626806787461-102c1a6f2b1e?w=400&q=80'"/>
       <span class="card-category">${svc.category||'service'}</span>
+      ${genderLabel?`<span class="card-gender">${genderLabel}</span>`:''}
     </div>
     <div class="card-body">
       <div class="card-title">${svc.name}</div>
       <div class="card-desc">${svc.description}</div>
-      ${hasStores?`<div class="store-select-wrap">
+      ${sizes.length?`<div class="size-pills-wrap">
+        <label><i class="fas fa-ruler"></i> Size</label>
+        <div class="size-pills">
+          ${sizes.map((sz,idx)=>`<button type="button" class="size-pill ${idx===st.sizeIdx?'active':''}" onclick="selectSize('${svc.id}',${idx})">${sz.label} · ₹${sz.price}</button>`).join('')}
+        </div>
+      </div>`:(stores.length?`<div class="store-select-wrap">
         <label><i class="fas fa-store"></i> Choose Laundry</label>
-        <select class="store-select" id="store-${svc.id}" onchange="updateCardPrice('${svc.id}')">
-          ${stores.map((st,idx)=>`<option value="${idx}">${st.name} — ₹${st.price}</option>`).join('')}
+        <select class="store-select" id="store-${svc.id}" onchange="selectStore('${svc.id}',this.value)">
+          ${stores.map((st2,idx)=>`<option value="${idx}" ${idx===st.storeIdx?'selected':''}>${st2.name} — ₹${st2.price}</option>`).join('')}
         </select>
+      </div>`:'')}
+      ${extraCharges.length?`<div class="extra-charges-wrap">
+        <label><i class="fas fa-plus-circle"></i> Optional Add-ons</label>
+        <div class="extra-charges-list">
+          ${extraCharges.map((ex,idx)=>`<label class="extra-chip ${st.extras[idx]?'active':''}" id="extra-${svc.id}-${idx}">
+            <input type="checkbox" ${st.extras[idx]?'checked':''} onchange="toggleExtra('${svc.id}',${idx},this.checked)"/> ${ex.name} +₹${ex.price}
+          </label>`).join('')}
+        </div>
       </div>`:''}
       <div class="card-footer">
-        <div class="card-price" id="price-${svc.id}">₹${initPrice} <span>/item</span></div>
+        <div class="card-price" id="price-${svc.id}">₹${unit} <span>/item</span></div>
         <div class="qty-wrap">
           <button class="qty-btn" onclick="changeQty('${svc.id}',-1,this)"><i class="fas fa-minus"></i></button>
           <span class="qty-val" id="qty-${svc.id}">${qty}</span>
@@ -919,13 +1079,59 @@ function buildCard(svc,i){
   return div;
 }
 
-window.updateCardPrice=function(id){
+window.selectSize=function(id,idx){
   const svc=allServices.find(s=>s.id===id);
   if(!svc)return;
-  const {price}=getSelectedStore(svc);
-  const el=document.getElementById('price-'+id);
-  if(el)el.innerHTML=`₹${price} <span>/item</span>`;
+  getCardState(svc).sizeIdx=idx;
+  refreshCardPrice(svc);
+  // Re-highlight pills
+  const wrap=document.querySelector(`#price-${id}`)?.closest('.card-body')?.querySelector('.size-pills');
+  if(wrap)Array.from(wrap.children).forEach((btn,i)=>btn.classList.toggle('active',i===idx));
 };
+
+window.selectStore=function(id,val){
+  const svc=allServices.find(s=>s.id===id);
+  if(!svc)return;
+  getCardState(svc).storeIdx=parseInt(val);
+  refreshCardPrice(svc);
+};
+
+window.toggleExtra=function(id,idx,checked){
+  const svc=allServices.find(s=>s.id===id);
+  if(!svc)return;
+  getCardState(svc).extras[idx]=checked;
+  const chip=document.getElementById(`extra-${id}-${idx}`);
+  if(chip)chip.classList.toggle('active',checked);
+  refreshCardPrice(svc);
+};
+
+function refreshCardPrice(svc){
+  const {unit}=getEffectivePrice(svc);
+  const el=document.getElementById('price-'+svc.id);
+  if(el)el.innerHTML=`₹${unit} <span>/item</span>`;
+  // If this item is already in the cart, keep the cart price synced to the latest selection
+  if(cart[svc.id]){
+    applyCartSelection(svc);
+    updateCartUI();
+  }
+}
+
+function applyCartSelection(svc){
+  const st=getCardState(svc);
+  const sizes=(svc.sizes||[]).filter(sz=>sz&&sz.label);
+  const stores=(svc.stores||[]).filter(s=>s&&s.name);
+  const extraCharges=(svc.extraCharges||[]).filter(ex=>ex&&ex.name);
+  const {unit}=getEffectivePrice(svc);
+  const selectedExtras=extraCharges.filter((ex,idx)=>st.extras[idx]).map(ex=>({name:ex.name,price:Number(ex.price)||0}));
+  cart[svc.id]={
+    ...svc,
+    qty:cart[svc.id].qty,
+    price:unit,
+    sizeLabel:sizes.length?sizes[st.sizeIdx]?.label:null,
+    storeName:(!sizes.length&&stores.length)?stores[st.storeIdx]?.name:null,
+    extras:selectedExtras
+  };
+}
 
 // --- QTY ---
 window.changeQty=function(id,delta,btn){
@@ -944,14 +1150,21 @@ window.addToCart=function(id){
   if(!svc)return;
   const qtyEl=document.getElementById('qty-'+id);
   const qty=qtyEl?parseInt(qtyEl.textContent):1;
-  const {storeName,price}=getSelectedStore(svc);
-  cart[id]={...svc,qty,storeName,price};
+  const st=getCardState(svc);
+  const sizes=(svc.sizes||[]).filter(sz=>sz&&sz.label);
+  const stores=(svc.stores||[]).filter(s=>s&&s.name);
+  const extraCharges=(svc.extraCharges||[]).filter(ex=>ex&&ex.name);
+  const {unit}=getEffectivePrice(svc);
+  const sizeLabel=sizes.length?sizes[st.sizeIdx]?.label:null;
+  const storeName=(!sizes.length&&stores.length)?stores[st.storeIdx]?.name:null;
+  const selectedExtras=extraCharges.filter((ex,idx)=>st.extras[idx]).map(ex=>({name:ex.name,price:Number(ex.price)||0}));
+  cart[id]={...svc,qty,price:unit,sizeLabel,storeName,extras:selectedExtras};
   // Update button
   const btn=document.getElementById('btn-'+id);
   if(btn){btn.className='add-cart-btn added';btn.innerHTML='<i class="fas fa-check"></i> Added to Cart';}
   updateCartUI();
-  showToast(svc.name+(storeName?' ('+storeName+')':'')+' added to cart!','success');
-  openCart();
+  const tagBits=[sizeLabel,storeName].filter(Boolean).join(', ');
+  showToast(svc.name+(tagBits?' ('+tagBits+')':'')+' added to cart!','success');
 };
 
 // --- URGENT TOGGLE HELPER ---
@@ -982,11 +1195,15 @@ function updateCartUI(){
   } else {
     cartEmptyEl.style.display='none';
     orderFormEl.style.display='block';
-    cartItemsEl.innerHTML=items.map(item=>`
+    cartItemsEl.innerHTML=items.map(item=>{
+      const tags=[item.sizeLabel,item.storeName].filter(Boolean);
+      const extraNames=(item.extras||[]).map(e=>e.name);
+      return`
       <div class="cart-item">
         <img class="cart-item-img" src="${item.image||''}" alt="${item.name}" onerror="this.style.background='var(--lavender)'"/>
         <div class="cart-item-info">
-          <div class="cart-item-name">${item.name}${item.storeName?` <span style="font-weight:400;color:var(--gray-500);font-size:.75rem">· ${item.storeName}</span>`:''}</div>
+          <div class="cart-item-name">${item.name}</div>
+          ${(tags.length||extraNames.length)?`<div class="cart-item-tags">${tags.join(' · ')}${tags.length&&extraNames.length?' · ':''}${extraNames.length?'+ '+extraNames.join(', '):''}</div>`:''}
           <div class="cart-item-price">₹${item.price} × ${item.qty} = ₹${item.price*item.qty}</div>
           <div class="cart-item-qty">
             <button class="ciq-btn" onclick="cartQty('${item.id}',-1)"><i class="fas fa-minus"></i></button>
@@ -995,10 +1212,13 @@ function updateCartUI(){
           </div>
         </div>
         <button class="remove-item" onclick="removeItem('${item.id}')"><i class="fas fa-trash"></i></button>
-      </div>`).join('');
+      </div>`;}).join('');
     // Summary
     document.getElementById('orderSummary').innerHTML=`
-      ${items.map(i=>`<div class="summary-row"><span>${i.name}${i.storeName?' ('+i.storeName+')':''} ×${i.qty}</span><span>₹${i.price*i.qty}</span></div>`).join('')}
+      ${items.map(i=>{
+        const tags=[i.sizeLabel,i.storeName].filter(Boolean);
+        return `<div class="summary-row"><span>${i.name}${tags.length?' ('+tags.join(', ')+')':''} ×${i.qty}</span><span>₹${i.price*i.qty}</span></div>`;
+      }).join('')}
       ${isUrgent?`<div class="summary-row urgent-row"><span><i class="fas fa-bolt"></i> Urgent Service Fee</span><span>₹${URGENT_FEE}</span></div>`:''}
       <div class="summary-row"><span>Total Amount</span><span>₹${total}</span></div>`;
   }
@@ -1047,14 +1267,6 @@ function autofillCustomerDetails(){
   }catch(e){console.warn('sn_user autofill skipped:',e);}
 }
 
-// --- FILTER ---
-window.setFilter=function(cat,btn){
-  currentFilter=cat;
-  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  filterServices();
-};
-
 // --- PLACE ORDER ---
 window.placeOrder=async function(){
   const name=document.getElementById('custName').value.trim();
@@ -1075,7 +1287,13 @@ window.placeOrder=async function(){
   const order={
     customerName:name,phone,address,
     pickupDate:pickup,deliveryDate:delivery,
-    services:items.map(i=>({id:i.id,name:i.name,storeName:i.storeName||null,price:i.price,qty:i.qty,subtotal:i.price*i.qty})),
+    services:items.map(i=>({
+      id:i.id,name:i.name,
+      storeName:i.storeName||null,
+      sizeLabel:i.sizeLabel||null,
+      extras:i.extras||[],
+      price:i.price,qty:i.qty,subtotal:i.price*i.qty
+    })),
     subtotal,urgent:isUrgent,urgentFee,
     totalAmount:total,notes,status:'Pending',
     reviewGiven:false,
@@ -1095,6 +1313,7 @@ window.placeOrder=async function(){
     saveTrackedOrder(docId);
     // Reset
     cart={};
+    cardState={};
     document.getElementById('urgentToggle').checked=false;
     updateCartUI();
     closeCart();
