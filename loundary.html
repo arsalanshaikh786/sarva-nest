@@ -35,8 +35,13 @@ body{font-family:'Inter',sans-serif;background:var(--white);color:var(--gray-700
 button,input,select,textarea{font-family:inherit}
 
 /* HEADER */
-.header{position:sticky;top:0;z-index:900;background:rgba(26,31,75,.97);backdrop-filter:blur(12px);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:64px;box-shadow:0 2px 20px rgba(0,0,0,.3)}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.header{position:sticky;top:0;z-index:900;background:rgba(26,31,75,.97);backdrop-filter:blur(12px);padding:0 5%;display:flex;align-items:center;gap:10px;justify-content:space-between;height:64px;box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.header-left{display:flex;align-items:center;gap:10px;min-width:0}
+.back-nav-btn{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.15);color:#fff;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;cursor:pointer;transition:var(--transition);flex-shrink:0;font-size:.95rem}
+.back-nav-btn:hover{background:var(--violet);border-color:var(--violet)}
+.back-nav-btn:active{transform:scale(.92)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+.logo-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--violet),var(--coral));border-radius:10px;display:grid;place-items:center;font-size:17px;color:#fff}
 .logo-text{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.2rem;color:#fff;letter-spacing:-.3px}
 .logo-text span{color:var(--violet-light)}
@@ -107,6 +112,8 @@ button,input,select,textarea{font-family:inherit}
 .cat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:rgba(108,99,255,.2)}
 .cat-card-banner{height:120px;position:relative;overflow:hidden;display:grid;place-items:center}
 .cat-card-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='24' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='2'/%3E%3C/svg%3E")}
+.cat-card-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.cat-card-icon-badge{position:absolute;bottom:8px;right:8px;width:34px;height:34px;border-radius:10px;background:rgba(26,31,75,.75);color:#fff;display:grid;place-items:center;font-size:.9rem;z-index:2}
 .cat-card-icon{width:66px;height:66px;border-radius:18px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);color:#fff;display:grid;place-items:center;font-size:1.7rem;position:relative;z-index:2;transition:var(--transition)}
 .cat-card:hover .cat-card-icon{transform:scale(1.08);background:rgba(255,255,255,.28)}
 .cat-card-body{padding:15px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -264,7 +271,7 @@ button,input,select,textarea{font-family:inherit}
 .popup-box textarea:focus{border-color:var(--violet)}
 
 /* TOAST */
-.toast-container{position:fixed;bottom:20px;right:16px;left:16px;z-index:3000;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
+.toast-container{position:fixed;bottom:calc(20px + 64px + env(safe-area-inset-bottom));right:16px;left:16px;z-index:3000;display:flex;flex-direction:column;align-items:flex-end;gap:8px;pointer-events:none}
 .toast{background:var(--indigo);color:#fff;padding:12px 20px;border-radius:50px;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:500;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:8px;animation:slideUp .3s ease;transform-origin:bottom right;max-width:90vw}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .toast.success{background:var(--success)}
@@ -312,7 +319,17 @@ button,input,select,textarea{font-family:inherit}
 .track-empty{text-align:center;padding:40px 20px;color:var(--gray-500)}
 .track-empty i{font-size:2.5rem;color:var(--gray-300);margin-bottom:12px;display:block}
 
-/* LOADER */
+/* BOTTOM NAV BAR (mobile) */
+.bottom-nav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:850;background:var(--indigo);box-shadow:0 -2px 20px rgba(0,0,0,.25);padding:6px 4% calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(255,255,255,.08);transform:translateZ(0);-webkit-transform:translateZ(0)}
+.bottom-nav-inner{display:flex;align-items:stretch;justify-content:space-between;max-width:600px;margin:0 auto}
+.bn-item{background:none;border:none;color:rgba(255,255,255,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:7px 4px;flex:1;cursor:pointer;transition:var(--transition);position:relative;border-radius:12px}
+.bn-item i{font-size:1.1rem}
+.bn-item span{font-size:.62rem;font-weight:600;letter-spacing:.2px}
+.bn-item:active{transform:scale(.94)}
+.bn-item.active{color:#fff}
+.bn-item.active i{color:var(--violet-light)}
+.bn-cart-count{position:absolute;top:2px;right:calc(50% - 18px);background:var(--coral);color:#fff;border-radius:50%;min-width:16px;height:16px;font-size:.58rem;font-weight:700;display:grid;place-items:center;padding:0 3px}
+body{padding-bottom:64px}
 .page-loader{position:fixed;inset:0;background:var(--indigo);z-index:9999;display:grid;place-items:center;transition:opacity .5s ease}
 .page-loader.hidden{opacity:0;pointer-events:none}
 .loader-spin{width:48px;height:48px;border:4px solid rgba(255,255,255,.2);border-top-color:var(--violet);border-radius:50%;animation:spin .8s linear infinite}
@@ -331,7 +348,10 @@ button,input,select,textarea{font-family:inherit}
   .add-cart-btn{padding:10px;font-size:.75rem;margin-top:9px}
   .form-row{grid-template-columns:1fr}
   .header{padding:0 4%}
+  .header-left{gap:7px}
+  .back-nav-btn{width:34px;height:34px;font-size:.85rem}
   .logo-text{font-size:1.05rem}
+  .logo-text span{display:inline}
   .cart-btn,.track-btn{padding:8px 12px;font-size:.75rem}
   .cart-btn span:not(.cart-count){display:none}
   .hero-stats{gap:14px}
@@ -368,10 +388,15 @@ button,input,select,textarea{font-family:inherit}
 
 <!-- HEADER -->
 <header class="header">
-  <a href="#" class="logo">
-    <div class="logo-icon"><i class="fas fa-soap"></i></div>
-    <span class="logo-text">Sagar<span>Laundry</span></span>
-  </a>
+  <div class="header-left">
+    <button class="back-nav-btn" id="headerBackBtn" onclick="goBackNav()" aria-label="Back">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <a href="#" class="logo">
+      <div class="logo-icon"><i class="fas fa-soap"></i></div>
+      <span class="logo-text">Sagar<span>Laundry</span></span>
+    </a>
+  </div>
   <div class="header-actions">
     <button class="track-btn" onclick="openTrack()">
       <i class="fas fa-truck"></i> <span>Track Order</span>
@@ -617,6 +642,25 @@ button,input,select,textarea{font-family:inherit}
 <!-- TOAST CONTAINER -->
 <div class="toast-container" id="toastContainer"></div>
 
+<!-- BOTTOM NAV BAR (mobile) -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-inner">
+    <button class="bn-item active" id="bnHome" onclick="bnGoHome()">
+      <i class="fas fa-home"></i><span>Home</span>
+    </button>
+    <button class="bn-item" id="bnOrders" onclick="bnMyOrders()">
+      <i class="fas fa-truck"></i><span>My Orders</span>
+    </button>
+    <button class="bn-item" id="bnRating" onclick="bnRating()">
+      <i class="fas fa-star"></i><span>Rating</span>
+    </button>
+    <button class="bn-item" id="bnCart" onclick="bnCart()">
+      <i class="fas fa-shopping-bag"></i><span>Cart</span>
+      <span class="bn-cart-count" id="bnCartCount" style="display:none">0</span>
+    </button>
+  </div>
+</nav>
+
 <!-- FIREBASE -->
 <script type="module">
 import{initializeApp}from'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
@@ -708,6 +752,17 @@ setTimeout(()=>{
     window.renderServices(window._defaultServices);
   }
   document.getElementById('pageLoader').classList.add('hidden');
+  // Some mobile WebViews fail to paint a fixed-position bottom bar on
+  // first load (a known backdrop-filter/compositing quirk) until
+  // something forces a fresh paint — toggling its own display does
+  // that without touching page scroll or causing any visible flicker.
+  const bn=document.getElementById('bottomNav');
+  if(bn){
+    bn.style.display='none';
+    requestAnimationFrame(()=>{
+      bn.style.display='block';
+    });
+  }
 },1800);
 
 // Start realtime tracking of any orders saved on this device (so the delivery
@@ -929,8 +984,10 @@ window.renderCategories=function(cats){
   }
   grid.innerHTML=allCategories.map((c,i)=>`
     <div class="cat-card" onclick="selectCategory('${(c.slug||c.name).replace(/'/g,"\\'")}','${(c.name||'').replace(/'/g,"\\'")}')">
-      <div class="cat-card-banner" style="background:${CAT_GRADIENTS[i%CAT_GRADIENTS.length]}">
-        <div class="cat-card-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>
+      <div class="cat-card-banner" ${c.image?'':`style="background:${CAT_GRADIENTS[i%CAT_GRADIENTS.length]}"`}>
+        ${c.image
+          ?`<img src="${c.image}" alt="${c.name}" loading="lazy" onerror="this.style.display='none'"/><div class="cat-card-icon-badge"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>`
+          :`<div class="cat-card-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>`}
       </div>
       <div class="cat-card-body">
         <div class="cat-card-name">${c.name}</div>
@@ -960,6 +1017,22 @@ window.showCategoriesView=function(){
   document.getElementById('filterBar').style.display='none';
   document.getElementById('servicesSection').style.display='none';
   document.getElementById('categoriesSection').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+// Header back button: if a category is open, step back to the category
+// grid first (like an in-app back). If already on the home/category grid,
+// leave the app the same way the person arrived (browser back, else the
+// Sarva-Nest hub) so it behaves like a normal mobile "back" button.
+window.goBackNav=function(){
+  if(currentCategory!==null){
+    showCategoriesView();
+    return;
+  }
+  if(window.history.length>1){
+    window.history.back();
+  } else {
+    window.location.href='https://sarvanest.in';
+  }
 };
 
 window.setGenderFilter=function(gender,btn){
@@ -1616,6 +1689,45 @@ window.submitDeliveryReview=async function(){
   document.getElementById('deliveryPopup').classList.remove('show');
   currentDeliveryOrderId=null;
 };
+
+// --- BOTTOM NAV BAR (mobile) ---
+function bnSetActive(id){
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.toggle('active',b.id===id));
+}
+window.bnGoHome=function(){
+  bnSetActive('bnHome');
+  showCategoriesView();
+  window.scrollTo({top:0,behavior:'smooth'});
+};
+window.bnMyOrders=function(){
+  bnSetActive('bnOrders');
+  openTrack();
+};
+window.bnRating=function(){
+  bnSetActive('bnRating');
+  document.querySelector('.reviews-section')?.scrollIntoView({behavior:'smooth',block:'start'});
+};
+window.bnCart=function(){
+  bnSetActive('bnCart');
+  openCart();
+};
+// Keep header cart badge and bottom-nav cart badge in sync, and drop the
+// active highlight back to Home whenever a drawer/popup is closed.
+(function syncBottomNavCart(){
+  const target=document.getElementById('cartCount');
+  if(!target)return;
+  const obs=new MutationObserver(()=>{
+    const bnCount=document.getElementById('bnCartCount');
+    if(!bnCount)return;
+    bnCount.textContent=target.textContent;
+    bnCount.style.display=target.style.display;
+  });
+  obs.observe(target,{attributes:true,attributeFilter:['style'],childList:true,characterData:true,subtree:true});
+})();
+const _origCloseCart=window.closeCart;
+window.closeCart=function(){_origCloseCart();bnSetActive('bnHome');};
+const _origCloseTrack=window.closeTrack;
+window.closeTrack=function(){_origCloseTrack();bnSetActive('bnHome');};
 
 // If Firebase module finished initializing before this script ran, kick off tracking now.
 if(window._pendingTrackInit&&window.initBackgroundOrderTracking){
