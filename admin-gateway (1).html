@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sarva Nest — Admin Gateway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep-green:#0B4F3C;
+    --deep-green-2:#0E6B50;
+    --indigo:#3A3FBF;
+    --indigo-2:#5D62E0;
+    --bg:#F3F6F4;
+    --card:#ffffff;
+    --ink:#0F1A17;
+    --muted:#5C6B65;
+    --line:#E3E9E6;
+    --danger:#C0392B;
+    --gold:#C79A3A;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-tap-highlight-color:transparent;
+  }
+  h1,h2,h3,.brand{font-family:'Sora',sans-serif;}
+
+  /* ---------- Gate background ambience ---------- */
+  .gate-bg{
+    position:fixed; inset:0;
+    background:
+      radial-gradient(1100px 600px at 15% -10%, rgba(58,63,191,.25), transparent 60%),
+      radial-gradient(900px 700px at 110% 10%, rgba(199,154,58,.14), transparent 55%),
+      linear-gradient(160deg,var(--deep-green) 0%, #08392A 55%, #0A1F1A 100%);
+    z-index:0;
+  }
+  .gate-bars{
+    position:fixed; inset:0; z-index:0; opacity:.07; pointer-events:none;
+    background-image: repeating-linear-gradient(90deg, #fff 0 2px, transparent 2px 64px);
+  }
+
+  /* ============ LOGIN SCREEN ============ */
+  #loginScreen{
+    position:relative; z-index:1;
+    min-height:100vh;
+    display:flex; align-items:center; justify-content:center;
+    padding:24px;
+  }
+  .login-card{
+    width:100%; max-width:400px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border-radius:22px;
+    padding:36px 28px 30px;
+    color:#fff;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.5);
+    animation:riseIn .5s ease;
+  }
+  @keyframes riseIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+  .gate-icon{
+    width:56px;height:56px;margin:0 auto 18px;
+    display:flex;align-items:center;justify-content:center;
+    border-radius:16px;
+    background:linear-gradient(135deg,var(--gold),#a97c1f);
+    box-shadow:0 10px 24px -8px rgba(199,154,58,.6);
+  }
+  .gate-icon svg{width:28px;height:28px;}
+
+  .brand{text-align:center;font-size:22px;font-weight:800;letter-spacing:.2px;}
+  .brand span{color:var(--gold);}
+  .subtitle{text-align:center;color:rgba(255,255,255,.6);font-size:13px;margin-top:4px;margin-bottom:28px;letter-spacing:.3px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;color:rgba(255,255,255,.65);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase;font-weight:600;}
+  .field input{
+    width:100%; padding:13px 14px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.22);
+    border-radius:12px;
+    color:#fff; font-size:15px;
+    font-family:'Inter',sans-serif;
+    outline:none;
+    transition:.15s border-color, .15s background;
+  }
+  .field input::placeholder{color:rgba(255,255,255,.35);}
+  .field input:focus{border-color:var(--gold); background:rgba(255,255,255,.13);}
+
+  .login-btn{
+    width:100%; padding:14px;
+    background:linear-gradient(135deg,var(--indigo-2),var(--indigo));
+    border:none; border-radius:12px;
+    color:#fff; font-weight:700; font-size:15px;
+    font-family:'Sora',sans-serif;
+    cursor:pointer; margin-top:6px;
+    box-shadow:0 12px 24px -8px rgba(58,63,191,.55);
+    transition:.15s transform;
+  }
+  .login-btn:active{transform:scale(.98);}
+  .login-btn[disabled]{opacity:.6;cursor:not-allowed;}
+
+  .err-msg{
+    margin-top:14px; padding:10px 12px;
+    background:rgba(192,57,43,.18); border:1px solid rgba(192,57,43,.4);
+    color:#ffd9d4; font-size:13px; border-radius:10px; text-align:center;
+    display:none;
+  }
+  .foot-note{text-align:center;font-size:11px;color:rgba(255,255,255,.35);margin-top:22px;letter-spacing:.4px;}
+
+  /* ============ SUPER ADMIN DASHBOARD ============ */
+  #dashScreen{display:none; position:relative; z-index:1; min-height:100vh;}
+  .topbar{
+    position:sticky; top:0; z-index:5;
+    background:rgba(255,255,255,.85); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    padding:16px 20px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .topbar-title{display:flex;align-items:center;gap:10px;}
+  .topbar-title .dot{width:10px;height:10px;border-radius:50%;background:var(--deep-green-2);box-shadow:0 0 0 4px rgba(14,107,80,.15);}
+  .topbar-title h1{font-size:17px;font-weight:700;color:var(--ink);}
+  .logout-btn{
+    background:none; border:1px solid var(--line); color:var(--muted);
+    padding:8px 14px; border-radius:10px; font-size:13px; font-weight:600;
+    cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .logout-btn:hover{border-color:var(--danger);color:var(--danger);}
+
+  .dash-body{max-width:960px;margin:0 auto;padding:22px 18px 90px;}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+  .stat-card{
+    background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:16px; text-align:center;
+  }
+  .stat-card .num{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--deep-green);}
+  .stat-card .lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+
+  .section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+  .section-head h2{font-size:16px;color:var(--ink);}
+  .add-btn{
+    background:var(--deep-green); color:#fff; border:none;
+    padding:10px 16px; border-radius:11px; font-weight:700; font-size:13px;
+    cursor:pointer; display:flex;align-items:center;gap:6px;
+    font-family:'Sora',sans-serif;
+  }
+
+  .admin-grid{display:grid; gap:14px;}
+  .admin-card{
+    background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:16px 18px; display:flex; flex-direction:column; gap:10px;
+  }
+  .admin-card.inactive{opacity:.55;}
+  .ac-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .ac-name{font-size:15px;font-weight:700;color:var(--ink);}
+  .ac-url{font-size:12px;color:var(--indigo);word-break:break-all;text-decoration:none;}
+  .status-pill{
+    font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;
+    white-space:nowrap;
+  }
+  .status-pill.on{background:rgba(14,107,80,.12);color:var(--deep-green-2);}
+  .status-pill.off{background:rgba(192,57,43,.12);color:var(--danger);}
+
+  .cred-row{
+    display:flex; gap:10px; background:var(--bg); border-radius:10px; padding:9px 12px;
+    font-size:13px; align-items:center; flex-wrap:wrap;
+  }
+  .cred-row b{color:var(--muted); font-weight:600; font-size:11px; text-transform:uppercase; margin-right:4px;}
+  .cred-val{font-family:monospace; color:var(--ink); letter-spacing:.3px;}
+  .eye-btn{margin-left:auto; background:none;border:none;cursor:pointer;color:var(--muted);font-size:12px;font-weight:600;}
+
+  .ac-actions{display:flex; gap:8px;}
+  .ac-actions button{
+    flex:1; padding:9px; border-radius:9px; border:1px solid var(--line);
+    background:#fff; font-size:12.5px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;
+  }
+  .ac-actions .edit-b:hover{border-color:var(--indigo);color:var(--indigo);}
+  .ac-actions .toggle-b:hover{border-color:var(--gold);color:#8a6a1f;}
+  .ac-actions .del-b:hover{border-color:var(--danger);color:var(--danger);}
+
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--muted);
+    background:var(--card); border:1px dashed var(--line); border-radius:16px;
+  }
+
+  /* ============ MODAL ============ */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; z-index:20;
+    background:rgba(10,20,17,.55); backdrop-filter:blur(3px);
+    align-items:flex-end; justify-content:center;
+  }
+  .modal-box{
+    background:#fff; width:100%; max-width:460px; border-radius:20px 20px 0 0;
+    padding:24px 22px 26px; max-height:88vh; overflow-y:auto;
+    animation:slideUp .25s ease;
+  }
+  @media(min-width:600px){
+    .modal-overlay{align-items:center;}
+    .modal-box{border-radius:20px; max-width:440px;}
+  }
+  @keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  .modal-box h2{font-size:18px;margin-bottom:18px;color:var(--ink);}
+  .m-field{margin-bottom:14px;}
+  .m-field label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px;}
+  .m-field input{
+    width:100%; padding:12px 13px; border:1px solid var(--line); border-radius:10px;
+    font-size:14px; font-family:'Inter',sans-serif; outline:none;
+  }
+  .m-field input:focus{border-color:var(--indigo);}
+  .m-check{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+  .m-check input{width:18px;height:18px;}
+  .m-actions{display:flex;gap:10px;margin-top:6px;}
+  .m-actions button{flex:1;padding:13px;border-radius:11px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Sora',sans-serif;border:none;}
+  .m-save{background:var(--deep-green);color:#fff;}
+  .m-cancel{background:var(--bg);color:var(--muted);}
+
+  /* ============ ADMIN SITE VIEW (iframe) ============ */
+  #siteScreen{display:none; position:fixed; inset:0; z-index:1; background:#fff; flex-direction:column;}
+  .site-topbar{
+    background:var(--deep-green); color:#fff; padding:10px 16px;
+    display:flex; align-items:center; justify-content:space-between;
+    font-family:'Sora',sans-serif;
+  }
+  .site-topbar .stn{font-size:14px; font-weight:700; display:flex;align-items:center;gap:8px;}
+  .site-topbar button{
+    background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.3);
+    color:#fff; padding:7px 13px; border-radius:9px; font-size:12px; font-weight:600; cursor:pointer;
+  }
+  #siteFrame{flex:1; width:100%; border:none;}
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:12px 20px; border-radius:12px;
+    font-size:13px; z-index:50; opacity:0; pointer-events:none; transition:.25s;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  @media(max-width:480px){
+    .stat-row{grid-template-columns:repeat(3,1fr); gap:8px;}
+    .stat-card{padding:12px 8px;}
+    .stat-card .num{font-size:19px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="gate-bg"></div>
+<div class="gate-bars"></div>
+
+<!-- ================= LOGIN ================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="gate-icon">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L4 5.5V11c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5.5L12 2z" stroke="#0B4F3C" stroke-width="1.6" fill="#fff" fill-opacity=".9"/>
+        <circle cx="12" cy="11" r="2.4" fill="#0B4F3C"/>
+        <path d="M12 13.4V16" stroke="#0B4F3C" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="brand">Sarva<span>Nest</span></div>
+    <div class="subtitle">ADMIN GATEWAY</div>
+
+    <div class="field">
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Enter username" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Enter password">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">Enter Gateway</button>
+    <div class="err-msg" id="errMsg"></div>
+    <div class="foot-note">© Sarva Nest · Akole · Secure Admin Access</div>
+  </div>
+</div>
+
+<!-- ================= SUPER ADMIN DASHBOARD ================= -->
+<div id="dashScreen">
+  <div class="topbar">
+    <div class="topbar-title">
+      <div class="dot"></div>
+      <h1>Admin Gateway Control</h1>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="dash-body">
+    <div class="stat-row">
+      <div class="stat-card"><div class="num" id="statTotal">0</div><div class="lbl">Total</div></div>
+      <div class="stat-card"><div class="num" id="statActive">0</div><div class="lbl">Active</div></div>
+      <div class="stat-card"><div class="num" id="statInactive">0</div><div class="lbl">Disabled</div></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Admin Access List</h2>
+      <button class="add-btn" onclick="openModal()">+ Add Admin</button>
+    </div>
+
+    <div class="admin-grid" id="adminGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      No admin access created yet.<br>Tap "+ Add Admin" to give someone access to their panel.
+    </div>
+  </div>
+</div>
+
+<!-- ================= REGULAR ADMIN SITE VIEW ================= -->
+<div id="siteScreen">
+  <div class="site-topbar">
+    <div class="stn" id="siteTitle">Loading...</div>
+    <button onclick="logout()">Logout</button>
+  </div>
+  <iframe id="siteFrame"></iframe>
+</div>
+
+<!-- ================= MODAL: ADD / EDIT ADMIN ================= -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <h2 id="modalTitle">Add Admin Access</h2>
+    <input type="hidden" id="editDocId">
+    <div class="m-field">
+      <label>Site / Service Name</label>
+      <input type="text" id="mSiteName" placeholder="e.g. LaundroLux Admin">
+    </div>
+    <div class="m-field">
+      <label>Admin Panel URL</label>
+      <input type="text" id="mSiteUrl" placeholder="https://sarvanest.in/laundrolux-admin.html">
+    </div>
+    <div class="m-field">
+      <label>Username</label>
+      <input type="text" id="mUsername" placeholder="Login username" autocomplete="off">
+    </div>
+    <div class="m-field">
+      <label>Password</label>
+      <input type="text" id="mPassword" placeholder="Login password" autocomplete="off">
+    </div>
+    <div class="m-check">
+      <input type="checkbox" id="mActive" checked>
+      <label style="margin:0;text-transform:none;font-weight:500;color:var(--ink);font-size:14px;">Access active</label>
+    </div>
+    <div class="m-actions">
+      <button class="m-cancel" onclick="closeModal()">Cancel</button>
+      <button class="m-save" onclick="saveAdmin()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey:"AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+  authDomain:"multi-service-app-77dd8.firebaseapp.com",
+  projectId:"multi-service-app-77dd8",
+  storageBucket:"multi-service-app-77dd8.appspot.com",
+  messagingSenderId:"123732555482",
+  appId:"1:123732555482:web:ea47c825e0dbb504f597e3"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const ADMINS_COL = "portal_admins";
+
+// ===== CHANGE THIS SUPER ADMIN LOGIN before going live =====
+const SUPER_ADMIN = { username: "sarvanest_super", password: "SN@Gateway#2026" };
+// ============================================================
+
+const SESSION_KEY = "sn_gateway_session";
+let allAdmins = [];
+let unsubscribe = null;
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+function showError(msg){
+  const e = document.getElementById('errMsg');
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+function hideError(){
+  document.getElementById('errMsg').style.display = 'none';
+}
+
+// ---------- LOGIN ----------
+async function doLogin(){
+  hideError();
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  if(!user || !pass){ showError("Please enter username and password"); return; }
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = "Checking...";
+
+  try{
+    if(user === SUPER_ADMIN.username && pass === SUPER_ADMIN.password){
+      localStorage.setItem(SESSION_KEY, JSON.stringify({type:"super"}));
+      enterDashboard();
+      return;
+    }
+
+    const snap = await db.collection(ADMINS_COL)
+      .where("username","==",user)
+      .where("password","==",pass)
+      .limit(1).get();
+
+    if(snap.empty){
+      showError("Invalid username or password");
+      btn.disabled = false; btn.textContent = "Enter Gateway";
+      return;
+    }
+
+    const doc = snap.docs[0];
+    const data = doc.data();
+    if(data.active === false){
+      showError("Your access has been disabled. Contact super admin.");
+      btn.disabled = false; btn.textContent = "Enter Gateway";
+      return;
+    }
+
+    localStorage.setItem(SESSION_KEY, JSON.stringify({
+      type:"admin", id:doc.id, siteName:data.siteName, siteUrl:data.siteUrl
+    }));
+    enterSite(data.siteName, data.siteUrl);
+
+  }catch(err){
+    console.error(err);
+    showError("Login failed. Check internet connection.");
+    btn.disabled = false; btn.textContent = "Enter Gateway";
+  }
+}
+
+document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==="Enter") doLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==="Enter") document.getElementById('loginPass').focus(); });
+
+// ---------- SESSION RESTORE ----------
+function restoreSession(){
+  const raw = localStorage.getItem(SESSION_KEY);
+  if(!raw) return;
+  try{
+    const s = JSON.parse(raw);
+    if(s.type === "super"){ enterDashboard(); }
+    else if(s.type === "admin"){ enterSite(s.siteName, s.siteUrl); }
+  }catch(e){}
+}
+
+function logout(){
+  if(!confirm("Are you sure you want to logout?")) return;
+  localStorage.removeItem(SESSION_KEY);
+  if(unsubscribe){ unsubscribe(); unsubscribe = null; }
+  document.getElementById('dashScreen').style.display = 'none';
+  document.getElementById('siteScreen').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  hideError();
+}
+
+// ---------- ENTER SUPER ADMIN DASHBOARD ----------
+function enterDashboard(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('siteScreen').style.display = 'none';
+  document.getElementById('dashScreen').style.display = 'block';
+  listenAdmins();
+}
+
+function listenAdmins(){
+  if(unsubscribe) unsubscribe();
+  unsubscribe = db.collection(ADMINS_COL).onSnapshot(snap=>{
+    allAdmins = [];
+    snap.forEach(doc=> allAdmins.push({id:doc.id, ...doc.data()}));
+    allAdmins.sort((a,b)=> (a.siteName||"").localeCompare(b.siteName||""));
+    renderAdmins();
+  }, err=>{
+    console.error(err);
+    showToast("Could not load admin list");
+  });
+}
+
+function renderAdmins(){
+  const grid = document.getElementById('adminGrid');
+  const empty = document.getElementById('emptyState');
+  const total = allAdmins.length;
+  const active = allAdmins.filter(a=>a.active !== false).length;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statActive').textContent = active;
+  document.getElementById('statInactive').textContent = total - active;
+
+  if(total === 0){
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = allAdmins.map(a=>{
+    const isActive = a.active !== false;
+    return `
+    <div class="admin-card ${isActive?'':'inactive'}">
+      <div class="ac-top">
+        <div>
+          <div class="ac-name">${escapeHtml(a.siteName||'Untitled')}</div>
+          <a class="ac-url" href="${escapeHtml(a.siteUrl||'#')}" target="_blank" rel="noopener">${escapeHtml(a.siteUrl||'')}</a>
+        </div>
+        <span class="status-pill ${isActive?'on':'off'}">${isActive?'ACTIVE':'DISABLED'}</span>
+      </div>
+      <div class="cred-row">
+        <div><b>User</b><span class="cred-val">${escapeHtml(a.username||'')}</span></div>
+      </div>
+      <div class="cred-row">
+        <div><b>Pass</b><span class="cred-val pw-val" data-pw="${escapeHtml(a.password||'')}">••••••••</span></div>
+        <button class="eye-btn" onclick="togglePw(this)">Show</button>
+      </div>
+      <div class="ac-actions">
+        <button class="edit-b" onclick="editAdmin('${a.id}')">Edit</button>
+        <button class="toggle-b" onclick="toggleActive('${a.id}', ${isActive})">${isActive?'Disable':'Enable'}</button>
+        <button class="del-b" onclick="deleteAdmin('${a.id}')">Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function togglePw(btn){
+  const span = btn.previousElementSibling.querySelector('.pw-val');
+  if(span.textContent === '••••••••'){
+    span.textContent = span.dataset.pw;
+    btn.textContent = 'Hide';
+  }else{
+    span.textContent = '••••••••';
+    btn.textContent = 'Show';
+  }
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+// ---------- MODAL: ADD / EDIT ----------
+function openModal(){
+  document.getElementById('modalTitle').textContent = 'Add Admin Access';
+  document.getElementById('editDocId').value = '';
+  document.getElementById('mSiteName').value = '';
+  document.getElementById('mSiteUrl').value = '';
+  document.getElementById('mUsername').value = '';
+  document.getElementById('mPassword').value = '';
+  document.getElementById('mActive').checked = true;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function editAdmin(id){
+  const a = allAdmins.find(x=>x.id===id);
+  if(!a) return;
+  document.getElementById('modalTitle').textContent = 'Edit Admin Access';
+  document.getElementById('editDocId').value = id;
+  document.getElementById('mSiteName').value = a.siteName || '';
+  document.getElementById('mSiteUrl').value = a.siteUrl || '';
+  document.getElementById('mUsername').value = a.username || '';
+  document.getElementById('mPassword').value = a.password || '';
+  document.getElementById('mActive').checked = a.active !== false;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').style.display = 'none';
+}
+
+async function saveAdmin(){
+  const id = document.getElementById('editDocId').value;
+  const siteName = document.getElementById('mSiteName').value.trim();
+  const siteUrl = document.getElementById('mSiteUrl').value.trim();
+  const username = document.getElementById('mUsername').value.trim();
+  const password = document.getElementById('mPassword').value.trim();
+  const active = document.getElementById('mActive').checked;
+
+  if(!siteName || !siteUrl || !username || !password){
+    showToast("Please fill all fields");
+    return;
+  }
+
+  try{
+    // prevent duplicate usernames (except self when editing)
+    const dup = allAdmins.find(a => a.username === username && a.id !== id);
+    if(dup){ showToast("This username is already used"); return; }
+
+    if(id){
+      await db.collection(ADMINS_COL).doc(id).update({
+        siteName, siteUrl, username, password, active,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast("Admin access updated");
+    }else{
+      await db.collection(ADMINS_COL).add({
+        siteName, siteUrl, username, password, active,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast("Admin access created");
+    }
+    closeModal();
+  }catch(err){
+    console.error(err);
+    showToast("Save failed, try again");
+  }
+}
+
+async function toggleActive(id, currentlyActive){
+  try{
+    await db.collection(ADMINS_COL).doc(id).update({ active: !currentlyActive });
+    showToast(!currentlyActive ? "Access enabled" : "Access disabled");
+  }catch(err){
+    console.error(err);
+    showToast("Could not update status");
+  }
+}
+
+async function deleteAdmin(id){
+  if(!confirm("Delete this admin access? This cannot be undone.")) return;
+  try{
+    await db.collection(ADMINS_COL).doc(id).delete();
+    showToast("Admin access deleted");
+  }catch(err){
+    console.error(err);
+    showToast("Could not delete");
+  }
+}
+
+// ---------- REGULAR ADMIN SITE VIEW ----------
+function enterSite(siteName, siteUrl){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('dashScreen').style.display = 'none';
+  document.getElementById('siteScreen').style.display = 'flex';
+  document.getElementById('siteTitle').textContent = siteName || 'Admin Panel';
+  document.getElementById('siteFrame').src = siteUrl;
+}
+
+// ---------- INIT ----------
+restoreSession();
+</script>
+</body>
+</html>
