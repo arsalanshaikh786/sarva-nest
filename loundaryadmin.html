@@ -166,7 +166,7 @@ button,input,select,textarea{font-family:inherit}
 
 /* SERVICES MANAGEMENT */
 .services-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-.svc-mgmt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;transition:var(--transition);border:1.5px solid transparent}
+.svc-mgmt-card{background:#fff;border-radius:var(--radius);overflow:hidden;transition:var(--transition);border:1.5px solid transparent}
 .svc-mgmt-card:hover{box-shadow:var(--shadow-md);border-color:rgba(108,99,255,.15)}
 .svc-mgmt-img{height:140px;object-fit:cover;width:100%;background:var(--lavender)}
 .svc-mgmt-body{padding:13px 15px}
@@ -181,13 +181,19 @@ button,input,select,textarea{font-family:inherit}
 .svc-extra-badge{font-size:.66rem;background:rgba(255,159,67,.15);color:var(--warning);padding:2px 8px;border-radius:50px}
 .svc-size-badge{font-size:.66rem;background:rgba(0,207,232,.15);color:var(--info);padding:2px 8px;border-radius:50px}
 
-/* CATEGORY MANAGEMENT */
-.category-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
-.cat-mgmt-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:16px;text-align:center;transition:var(--transition);border:1.5px solid transparent}
-.cat-mgmt-card:hover{box-shadow:var(--shadow-md);border-color:rgba(108,99,255,.15)}
-.cat-mgmt-icon{width:52px;height:52px;margin:0 auto 10px;border-radius:14px;background:linear-gradient(135deg,var(--violet),var(--violet-light));color:#fff;display:grid;place-items:center;font-size:1.3rem}
-.cat-mgmt-name{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.9rem;margin-bottom:10px}
-.cat-mgmt-actions{display:flex;gap:8px;justify-content:center}
+/* CATEGORY MANAGEMENT — bigger banner-style cards to match the customer site */
+.category-mgmt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.cat-mgmt-card{background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-sm);transition:var(--transition);border:1.5px solid transparent}
+.cat-mgmt-card:hover{box-shadow:var(--shadow-md);border-color:rgba(108,99,255,.15);transform:translateY(-4px)}
+.cat-mgmt-banner{height:110px;position:relative;display:grid;place-items:center;overflow:hidden}
+.cat-mgmt-banner::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='24' fill='none' stroke='rgba(255,255,255,0.15)' stroke-width='2'/%3E%3C/svg%3E")}
+.cat-mgmt-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1}
+.cat-mgmt-icon-badge{position:absolute;bottom:8px;right:8px;width:34px;height:34px;border-radius:10px;background:rgba(26,31,75,.75);color:#fff;display:grid;place-items:center;font-size:.9rem;z-index:2}
+.cat-mgmt-icon{width:60px;height:60px;border-radius:16px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);color:#fff;display:grid;place-items:center;font-size:1.5rem;position:relative;z-index:2}
+.cat-mgmt-body{padding:14px 15px 15px}
+.cat-mgmt-name{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.98rem;margin-bottom:12px}
+.cat-mgmt-actions{display:flex;gap:8px}
+.cat-mgmt-actions .btn{flex:1;justify-content:center}
 .icon-preview-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .icon-preview-box{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--violet),var(--violet-light));color:#fff;display:grid;place-items:center;font-size:1.2rem;flex-shrink:0}
 .icon-hint{font-size:.72rem;color:var(--gray-500)}
@@ -281,6 +287,11 @@ button,input,select,textarea{font-family:inherit}
   .stat-card{padding:14px 12px}
   .stat-info .value{font-size:1.15rem}
   .modal{padding:20px 16px;border-radius:16px}
+  .category-mgmt-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .cat-mgmt-banner{height:80px}
+  .cat-mgmt-icon{width:46px;height:46px;font-size:1.15rem}
+  .cat-mgmt-body{padding:11px 12px 12px}
+  .cat-mgmt-name{font-size:.85rem;margin-bottom:9px}
 }
 
 /* Loader */
@@ -393,7 +404,7 @@ button,input,select,textarea{font-family:inherit}
     <!-- CATEGORIES -->
     <div class="page" id="page-categories">
       <div class="section-hdr">
-        <h2>Categories <span style="font-weight:400;color:var(--gray-500);font-size:.8rem">— shown as cards on the customer site homepage</span></h2>
+        <h2>Categories <span style="font-weight:400;color:var(--gray-500);font-size:.8rem">— shown as big cards on the customer site homepage</span></h2>
         <button class="btn btn-primary" onclick="openCategoryModal()"><i class="fas fa-plus"></i> Add Category</button>
       </div>
       <div class="category-mgmt-grid" id="categoryMgmtGrid">
@@ -501,6 +512,20 @@ button,input,select,textarea{font-family:inherit}
       </div>
     </div>
     <div class="icon-hint">Browse free icon names at <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" rel="noopener">fontawesome.com</a> — copy just the class like <code>fa-shirt</code>.</div>
+    <div class="form-group" style="margin-top:14px">
+      <label>Category Photo (Optional)</label>
+      <div class="img-upload-area" onclick="document.getElementById('catImgFile').click()">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <div style="font-size:.85rem;color:var(--gray-500)">Tap to upload a photo</div>
+        <div style="font-size:.72rem;color:var(--gray-300);margin-top:4px">PNG, JPG up to 5MB</div>
+        <input type="file" id="catImgFile" accept="image/*" style="display:none" onchange="handleCatImgSelect(event)"/>
+        <img id="catImgPreview" class="img-preview"/>
+      </div>
+      <div class="upload-progress" id="catUploadProgress"><div class="upload-bar" id="catUploadBar"></div></div>
+      <input type="hidden" id="catImageUrl"/>
+      <div class="subsection-hint">If uploaded, this photo replaces the color banner on the category card. Leave empty to keep the colorful icon banner.</div>
+      <button type="button" class="btn btn-outline btn-sm" id="catRemovePhotoBtn" style="margin-top:8px;display:none" onclick="removeCatPhoto()"><i class="fas fa-times"></i> Remove Photo</button>
+    </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('categoryModal')">Cancel</button>
       <button class="btn btn-primary" id="saveCategoryBtn" onclick="saveCategory()"><i class="fas fa-save"></i> Save Category</button>
@@ -724,6 +749,17 @@ let _editSvcId=null;
 let _editGalId=null;
 let _editCatId=null;
 let _urgentOnly=false;
+
+// A small rotating palette so category cards feel lively without needing
+// a separate color-picker field — same set used on the customer site.
+const CAT_GRADIENTS=[
+  'linear-gradient(135deg,#6c63ff,#8b85ff)',
+  'linear-gradient(135deg,#ff6b6b,#e85555)',
+  'linear-gradient(135deg,#1a1f4b,#2d1b69)',
+  'linear-gradient(135deg,#28c76f,#20a55a)',
+  'linear-gradient(135deg,#ff9f43,#e8590c)',
+  'linear-gradient(135deg,#00b8d9,#0090ad)'
+];
 
 // --- ULTRAMSG WHATSAPP CONFIG (customer status-update notifications) ---
 const ULTRAMSG_INSTANCE_URL='https://api.ultramsg.com/instance180915/messages/chat';
@@ -998,18 +1034,24 @@ window.deleteOrder=async function(id){
   } catch(e){showToast('Error deleting order','e');}
 };
 
-// --- CATEGORIES MANAGEMENT (shown on customer homepage as cards) ---
+// --- CATEGORIES MANAGEMENT (shown on customer homepage as big banner-style cards) ---
 window.renderCategoryMgmt=function(){
   const el=document.getElementById('categoryMgmtGrid');
   const cats=window._categories||[];
   if(!cats.length){el.innerHTML='<div class="empty-state" style="grid-column:1/-1"><i class="fas fa-th-large"></i><p>No categories yet. Add your first one, e.g. Press, Dry Clean, Home!</p></div>';return;}
-  el.innerHTML=cats.map(c=>`
+  el.innerHTML=cats.map((c,i)=>`
     <div class="cat-mgmt-card">
-      <div class="cat-mgmt-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>
-      <div class="cat-mgmt-name">${c.name}</div>
-      <div class="cat-mgmt-actions">
-        <button class="btn btn-outline btn-sm" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i></button>
-        <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')"><i class="fas fa-trash"></i></button>
+      <div class="cat-mgmt-banner" ${c.image?'':`style="background:${CAT_GRADIENTS[i%CAT_GRADIENTS.length]}"`}>
+        ${c.image
+          ?`<img src="${c.image}" alt="${c.name}" onerror="this.style.display='none'"/><div class="cat-mgmt-icon-badge"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>`
+          :`<div class="cat-mgmt-icon"><i class="fas ${c.icon||'fa-tshirt'}"></i></div>`}
+      </div>
+      <div class="cat-mgmt-body">
+        <div class="cat-mgmt-name">${c.name}</div>
+        <div class="cat-mgmt-actions">
+          <button class="btn btn-outline btn-sm" onclick="editCategory('${c.id}')"><i class="fas fa-edit"></i> Edit</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteCategory('${c.id}')"><i class="fas fa-trash"></i></button>
+        </div>
       </div>
     </div>`).join('');
 };
@@ -1025,6 +1067,9 @@ window.openCategoryModal=function(){
   document.getElementById('catName').value='';
   document.getElementById('catIcon').value='fa-tshirt';
   window.updateCatIconPreview();
+  document.getElementById('catImageUrl').value='';
+  document.getElementById('catImgPreview').style.display='none';
+  document.getElementById('catRemovePhotoBtn').style.display='none';
   document.getElementById('saveCategoryBtn').innerHTML='<i class="fas fa-save"></i> Save Category';
   openModal('categoryModal');
 };
@@ -1037,17 +1082,62 @@ window.editCategory=function(id){
   document.getElementById('catName').value=c.name||'';
   document.getElementById('catIcon').value=c.icon||'fa-tshirt';
   window.updateCatIconPreview();
+  document.getElementById('catImageUrl').value=c.image||'';
+  const prev=document.getElementById('catImgPreview');
+  if(c.image){prev.src=c.image;prev.style.display='block';document.getElementById('catRemovePhotoBtn').style.display='inline-flex';}
+  else{prev.style.display='none';document.getElementById('catRemovePhotoBtn').style.display='none';}
   openModal('categoryModal');
+};
+
+window.removeCatPhoto=function(){
+  document.getElementById('catImageUrl').value='';
+  document.getElementById('catImgPreview').style.display='none';
+  document.getElementById('catImgPreview').src='';
+  document.getElementById('catRemovePhotoBtn').style.display='none';
+  showToast('Photo removed — the colorful icon banner will be used instead','');
+};
+
+// --- CLOUDINARY IMAGE UPLOAD (category photos) ---
+window.handleCatImgSelect=async function(e){
+  const file=e.target.files[0];
+  if(!file){showToast('Select image first','e');return;}
+  const prev=document.getElementById('catImgPreview');
+  prev.src=URL.createObjectURL(file);
+  prev.style.display='block';
+  const prog=document.getElementById('catUploadProgress');
+  const bar=document.getElementById('catUploadBar');
+  prog.style.display='block';bar.style.width='10%';
+  showToast('Uploading photo...','');
+  const formData=new FormData();
+  formData.append('file',file);
+  formData.append('upload_preset','ml_default');
+  try{
+    bar.style.width='50%';
+    const response=await fetch('https://api.cloudinary.com/v1_1/dbirgrdbp/image/upload',{method:'POST',body:formData});
+    const data=await response.json();
+    bar.style.width='100%';
+    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},400);
+    if(data.error){showToast(data.error.message,'e');return;}
+    document.getElementById('catImageUrl').value=data.secure_url;
+    prev.src=data.secure_url;
+    document.getElementById('catRemovePhotoBtn').style.display='inline-flex';
+    showToast('Photo uploaded successfully ✅','s');
+  } catch(err){
+    console.error(err);
+    prog.style.display='none';
+    showToast('Upload failed','e');
+  }
 };
 
 window.saveCategory=async function(){
   const name=document.getElementById('catName').value.trim();
   const icon=document.getElementById('catIcon').value.trim()||'fa-tshirt';
+  const image=document.getElementById('catImageUrl').value||'';
   if(!name){showToast('Please enter a category name','e');return;}
   const slug=name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
   const btn=document.getElementById('saveCategoryBtn');
   btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
-  const data={name,icon,slug};
+  const data={name,icon,slug,image};
   try{
     if(_editCatId){
       await window._fb.updateDoc(window._fb.doc(window._fb.db,'categories',_editCatId),data);
