@@ -211,6 +211,17 @@ button,input,select,textarea{font-family:inherit}
 .store-info-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px;max-width:560px;margin-bottom:24px}
 .store-info-card h3{font-family:'Poppins',sans-serif;font-weight:700;color:var(--indigo);font-size:.95rem;margin-bottom:16px;display:flex;align-items:center;gap:8px}
 
+/* LOCATION DETECT BOX (store lat/lng for delivery distance calc) */
+.geo-detect-box{background:var(--lavender);border:1.5px dashed rgba(108,99,255,.35);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px}
+.geo-detect-btn{width:100%;background:var(--violet);color:#fff;border:none;border-radius:50px;padding:12px 14px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px}
+.geo-detect-btn:hover{background:var(--violet-light)}
+.geo-detect-btn:disabled{opacity:.65;pointer-events:none}
+.geo-coords-row{display:flex;gap:10px;margin-top:12px}
+.geo-coords-row .form-group{margin-bottom:0;flex:1}
+.geo-status{font-size:.75rem;color:var(--gray-500);margin-top:8px;display:flex;align-items:center;gap:6px}
+.geo-status.ok{color:var(--success)}
+.geo-status.err{color:var(--danger)}
+
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .3s ease;backdrop-filter:blur(4px);padding:16px}
 .modal-overlay.show{opacity:1;pointer-events:all}
@@ -279,6 +290,7 @@ button,input,select,textarea{font-family:inherit}
   .stats-grid{grid-template-columns:1fr 1fr}
   .page-content{padding:14px}
   .form-row-2{grid-template-columns:1fr}
+  .geo-coords-row{flex-direction:column;gap:14px}
   .topbar{padding:0 14px}
   .live-badge span{display:none}
 }
@@ -452,6 +464,52 @@ button,input,select,textarea{font-family:inherit}
         </div>
         <div style="font-size:.72rem;color:var(--gray-500);margin-bottom:14px">Leave a field empty to hide just that item on the customer site. Leave everything empty to hide the whole bar.</div>
         <button class="btn btn-primary" id="saveStoreInfoBtn" onclick="saveStoreInfo()"><i class="fas fa-save"></i> Save Store Info</button>
+      </div>
+
+      <div class="store-info-card">
+        <h3><i class="fas fa-route"></i> Store Location &amp; Distance-Based Delivery Charges</h3>
+
+        <div class="geo-detect-box">
+          <button type="button" class="geo-detect-btn" id="storeGeoBtn" onclick="detectStoreLocation()">
+            <i class="fas fa-crosshairs"></i> Use My Current Location as Store Location
+          </button>
+          <div class="geo-coords-row">
+            <div class="form-group">
+              <label>Store Latitude</label>
+              <input type="text" id="siStoreLat" placeholder="e.g. 19.0821" inputmode="decimal"/>
+            </div>
+            <div class="form-group">
+              <label>Store Longitude</label>
+              <input type="text" id="siStoreLng" placeholder="e.g. 74.5378" inputmode="decimal"/>
+            </div>
+          </div>
+          <div class="geo-status" id="storeGeoStatus"><i class="fas fa-info-circle"></i> Stand at your shop and tap the button above — fastest and most accurate way to set it. You can also paste coordinates manually.</div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Free Delivery Within (km)</label>
+            <input type="number" id="siFreeKm" placeholder="e.g. 2" min="0" step="0.1" inputmode="decimal"/>
+          </div>
+          <div class="form-group">
+            <label>Max Delivery Range (km, optional)</label>
+            <input type="number" id="siMaxKm" placeholder="e.g. 15" min="0" step="0.1" inputmode="decimal"/>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Base Fee Beyond Free Km (₹)</label>
+            <input type="number" id="siBaseFee" placeholder="e.g. 20" min="0" inputmode="numeric"/>
+          </div>
+          <div class="form-group">
+            <label>Per KM Rate Beyond Free Km (₹)</label>
+            <input type="number" id="siPerKm" placeholder="e.g. 8" min="0" inputmode="numeric"/>
+          </div>
+        </div>
+        <div style="font-size:.72rem;color:var(--gray-500);margin-bottom:14px">
+          Example: Free km = 2, Base fee = ₹20, Per km = ₹8 → a 5km order pays ₹20 + (3 × ₹8) = ₹44 delivery automatically. Customers detect this instantly with one tap using their phone's location — no manual address typing needed for pricing.
+        </div>
+        <button class="btn btn-primary" id="saveStoreInfoBtn2" onclick="saveStoreInfo()"><i class="fas fa-save"></i> Save Location &amp; Delivery Settings</button>
       </div>
 
       <div class="section-hdr">
@@ -935,7 +993,7 @@ function buildOrdersTable(orders){
   </tr></thead><tbody>${orders.map(o=>`<tr class="${o.urgent?'urgent-row':''}">
     <td><span style="font-family:'Poppins',sans-serif;font-size:.78rem;color:var(--gray-500)">#${o.id.slice(0,8).toUpperCase()}</span>${o.urgent?'<div style="margin-top:4px"><span class="urgent-badge"><i class="fas fa-bolt"></i> Urgent</span></div>':''}</td>
     <td><div class="customer-cell"><span class="customer-name">${o.customerName||'—'}</span><span class="customer-phone">${o.phone||''}</span></div></td>
-    <td class="order-services">${(o.services||[]).map(s=>`${s.name}×${s.qty}`).join(', ')||'—'}</td>
+    <td class="order-services">${(o.services||[]).map(s=>`${s.name}×${s.qty}`).join(', ')||'—'}${o.deliveryDistanceKm!=null?`<br><small style="color:var(--gray-500)"><i class="fas fa-route"></i> ${o.deliveryDistanceKm}km${o.deliveryFee?' · ₹'+o.deliveryFee+' delivery':' · Free delivery'}</small>`:''}</td>
     <td class="amount-cell">₹${(o.totalAmount||0).toLocaleString('en-IN')}</td>
     <td style="font-size:.8rem;color:var(--gray-500)">${o.pickupDate||'—'}</td>
     <td><span class="status-badge status-${(o.status||'Pending').replace(/ /g,'-')}">${o.status||'Pending'}</span></td>
@@ -960,7 +1018,7 @@ function buildOrderCards(orders){
           <span class="status-badge status-${(o.status||'Pending').replace(/ /g,'-')}">${o.status||'Pending'}</span>
         </div>
       </div>
-      <div class="order-card-services">${(o.services||[]).map(s=>`${s.name}×${s.qty}`).join(', ')||'—'} · Pickup: ${o.pickupDate||'—'}</div>
+      <div class="order-card-services">${(o.services||[]).map(s=>`${s.name}×${s.qty}`).join(', ')||'—'} · Pickup: ${o.pickupDate||'—'}${o.deliveryDistanceKm!=null?` · <i class="fas fa-route"></i> ${o.deliveryDistanceKm}km`:''}</div>
       <div class="order-card-bottom">
         <span class="amount-cell">₹${(o.totalAmount||0).toLocaleString('en-IN')}</span>
         <div class="order-card-actions">
@@ -999,6 +1057,8 @@ window.viewOrder=function(id){
         return `<div class="service-item-row"><span>${s.name}${tags.length?' ('+tags.join(', ')+')':''}${extraNames.length?'<br><small style="color:var(--gray-500)">+ '+extraNames.join(', ')+'</small>':''}</span><span>×${s.qty} = <strong>₹${s.subtotal||s.price*s.qty}</strong></span></div>`;
       }).join('')||'<p style="color:var(--gray-500);font-size:.85rem">No services listed</p>'}
       ${o.urgent?`<div class="detail-row"><span><i class="fas fa-bolt"></i> Urgent Fee</span><span>₹${o.urgentFee||49}</span></div>`:''}
+      ${o.deliveryDistanceKm!=null?`<div class="detail-row"><span><i class="fas fa-route"></i> Delivery Distance</span><span>${o.deliveryDistanceKm} km</span></div>
+      <div class="detail-row"><span><i class="fas fa-truck"></i> Delivery Charge</span><span>${o.deliveryFee?'₹'+o.deliveryFee:'FREE'}</span></div>`:''}
       <div class="detail-row" style="margin-top:10px"><span style="font-weight:700">Total</span><span style="color:var(--violet);font-family:Poppins,sans-serif;font-weight:800">₹${(o.totalAmount||0).toLocaleString('en-IN')}</span></div>
     </div>
     ${o.notes?`<div class="order-detail-section"><h4><i class="fas fa-sticky-note"></i> Notes</h4><p style="font-size:.88rem;color:var(--gray-500)">${o.notes}</p></div>`:''}
@@ -1339,7 +1399,8 @@ window.deleteService=async function(id){
   } catch(e){showToast('Error deleting service','e');}
 };
 
-// --- STORE INFO (location / phone / hours / rating shown in customer header bar) ---
+// --- STORE INFO (location / phone / hours / rating shown in customer header bar,
+//     plus store lat/lng + distance-based delivery pricing rules) ---
 window.fillStoreInfoForm=function(){
   const info=window._storeInfo||{};
   const l=document.getElementById('siLocation');
@@ -1347,6 +1408,12 @@ window.fillStoreInfoForm=function(){
   const p=document.getElementById('siPhone');
   const r=document.getElementById('siRating');
   const h=document.getElementById('siHours');
+  const lat=document.getElementById('siStoreLat');
+  const lng=document.getElementById('siStoreLng');
+  const freeKm=document.getElementById('siFreeKm');
+  const maxKm=document.getElementById('siMaxKm');
+  const baseFee=document.getElementById('siBaseFee');
+  const perKm=document.getElementById('siPerKm');
   if(!l)return;
   // Only fill if the field isn't currently focused (avoid overwriting while typing)
   if(document.activeElement!==l)l.value=info.location||'';
@@ -1354,6 +1421,41 @@ window.fillStoreInfoForm=function(){
   if(document.activeElement!==p)p.value=info.phone||'';
   if(document.activeElement!==r)r.value=info.rating||'';
   if(document.activeElement!==h)h.value=info.hours||'';
+  if(lat&&document.activeElement!==lat)lat.value=info.storeLat!=null?info.storeLat:'';
+  if(lng&&document.activeElement!==lng)lng.value=info.storeLng!=null?info.storeLng:'';
+  if(freeKm&&document.activeElement!==freeKm)freeKm.value=info.deliveryFreeKm!=null?info.deliveryFreeKm:'';
+  if(maxKm&&document.activeElement!==maxKm)maxKm.value=info.deliveryMaxKm!=null?info.deliveryMaxKm:'';
+  if(baseFee&&document.activeElement!==baseFee)baseFee.value=info.deliveryBaseFee!=null?info.deliveryBaseFee:'';
+  if(perKm&&document.activeElement!==perKm)perKm.value=info.deliveryPerKmRate!=null?info.deliveryPerKmRate:'';
+  const statusEl=document.getElementById('storeGeoStatus');
+  if(statusEl&&info.storeLat!=null&&info.storeLng!=null){
+    statusEl.className='geo-status ok';
+    statusEl.innerHTML=`<i class="fas fa-check-circle"></i> Store location set (${Number(info.storeLat).toFixed(5)}, ${Number(info.storeLng).toFixed(5)}) — customers can now auto-detect delivery distance.`;
+  }
+};
+
+// --- FAST AUTOMATIC STORE LOCATION DETECTION (one tap from the shop) ---
+window.detectStoreLocation=function(){
+  const btn=document.getElementById('storeGeoBtn');
+  const statusEl=document.getElementById('storeGeoStatus');
+  if(!navigator.geolocation){
+    statusEl.className='geo-status err';
+    statusEl.innerHTML='<i class="fas fa-exclamation-triangle"></i> Location not supported on this device/browser.';
+    return;
+  }
+  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Detecting store location…';
+  navigator.geolocation.getCurrentPosition(pos=>{
+    const{latitude,longitude}=pos.coords;
+    document.getElementById('siStoreLat').value=latitude.toFixed(6);
+    document.getElementById('siStoreLng').value=longitude.toFixed(6);
+    statusEl.className='geo-status ok';
+    statusEl.innerHTML=`<i class="fas fa-check-circle"></i> Location captured (${latitude.toFixed(5)}, ${longitude.toFixed(5)}) — accuracy ~${Math.round(pos.coords.accuracy)}m. Tap "Save" below to publish it.`;
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-crosshairs"></i> Re-Detect My Current Location';
+  },err=>{
+    statusEl.className='geo-status err';
+    statusEl.innerHTML='<i class="fas fa-exclamation-triangle"></i> Could not get location — please allow location access and try again, or type coordinates manually.';
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-crosshairs"></i> Use My Current Location as Store Location';
+  },{enableHighAccuracy:true,timeout:12000,maximumAge:0});
 };
 
 window.saveStoreInfo=async function(){
@@ -1362,15 +1464,23 @@ window.saveStoreInfo=async function(){
     mapsQuery:document.getElementById('siMapsQuery').value.trim(),
     phone:document.getElementById('siPhone').value.trim(),
     rating:document.getElementById('siRating').value.trim(),
-    hours:document.getElementById('siHours').value.trim()
+    hours:document.getElementById('siHours').value.trim(),
+    storeLat:document.getElementById('siStoreLat').value.trim()?parseFloat(document.getElementById('siStoreLat').value):null,
+    storeLng:document.getElementById('siStoreLng').value.trim()?parseFloat(document.getElementById('siStoreLng').value):null,
+    deliveryFreeKm:document.getElementById('siFreeKm').value.trim()?parseFloat(document.getElementById('siFreeKm').value):0,
+    deliveryMaxKm:document.getElementById('siMaxKm').value.trim()?parseFloat(document.getElementById('siMaxKm').value):null,
+    deliveryBaseFee:document.getElementById('siBaseFee').value.trim()?parseFloat(document.getElementById('siBaseFee').value):0,
+    deliveryPerKmRate:document.getElementById('siPerKm').value.trim()?parseFloat(document.getElementById('siPerKm').value):0
   };
   const btn=document.getElementById('saveStoreInfoBtn');
-  btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';
+  const btn2=document.getElementById('saveStoreInfoBtn2');
+  [btn,btn2].forEach(b=>{if(b){b.disabled=true;b.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving…';}});
   try{
     await window._fb.setDoc(window._fb.doc(window._fb.db,'settings','store'),data,{merge:true});
-    showToast('Store info updated — now live on the customer site!','s');
+    showToast('Store info & delivery settings updated — now live on the customer site!','s');
   }catch(e){console.error(e);showToast('Error saving store info','e');}
-  btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Store Info';
+  if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Store Info';}
+  if(btn2){btn2.disabled=false;btn2.innerHTML='<i class="fas fa-save"></i> Save Location &amp; Delivery Settings';}
 };
 
 // --- GALLERY MANAGEMENT (store photos shown as a slide bar on customer site) ---
