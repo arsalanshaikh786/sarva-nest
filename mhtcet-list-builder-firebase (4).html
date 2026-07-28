@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MHT-CET College Preference List Builder | Arsalan Shaikh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    --navy:#16304f;
+    --navy-deep:#0d1f36;
+    --paper:#eeeadd;
+    --paper-line:#d3ccb8;
+    --stamp:#9c2b2b;
+    --gold:#b8873a;
+    --ink:#26241d;
+    --ink-soft:#5c5748;
+    --good:#2f6e4f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background-color:var(--paper);
+    background-image:repeating-linear-gradient(transparent, transparent 27px, var(--paper-line) 28px);
+    font-family:'Work Sans',sans-serif;
+    color:var(--ink);
+    padding:0 0 40px;
+  }
+  .form-header{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);
+    color:#f3efe2;
+    padding:22px 28px 26px;
+    position:relative;
+    border-bottom:4px solid var(--gold);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  .htitle{display:flex;flex-direction:column;gap:2px;}
+  .htitle .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:2.5px;
+    text-transform:uppercase;
+    color:var(--gold);
+  }
+  .htitle h1{
+    font-family:'Rozha One',serif;
+    font-weight:400;
+    font-size:28px;
+    margin:2px 0 0;
+    letter-spacing:0.3px;
+  }
+  .htitle p{margin:4px 0 0;font-size:13px;color:#cfc9b8;}
+  .htitle .by{
+    margin-top:6px;
+    font-size:11.5px;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--gold);
+    letter-spacing:0.5px;
+  }
+  .seal{width:74px;height:74px;flex-shrink:0;}
+  .wrap{max-width:1040px;margin:0 auto;padding:26px 24px 0;}
+  .panel{
+    background:#fbf9f2;
+    border:1px solid var(--paper-line);
+    box-shadow:0 1px 0 rgba(0,0,0,0.04), 0 8px 22px -14px rgba(20,20,10,0.35);
+    border-radius:3px;
+  }
+  .panel + .panel{margin-top:22px;}
+  .panel-head{display:flex;align-items:baseline;gap:10px;padding:16px 20px 0;}
+  .panel-head .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--stamp);
+    border:1px solid var(--stamp);
+    border-radius:50%;
+    width:20px;height:20px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .panel-head h2{
+    font-family:'Rozha One',serif;
+    font-weight:400;
+    font-size:19px;
+    margin:0;
+    color:var(--navy-deep);
+  }
+  .panel-body{padding:16px 20px 20px;}
+  .name-gate{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .name-gate input{max-width:260px;}
+  .name-gate .hint{font-size:12.5px;color:var(--ink-soft);flex-basis:100%;}
+  .student-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:rgba(184,135,58,0.14);
+    border:1px solid var(--gold);
+    color:var(--navy-deep);
+    padding:5px 12px 5px 10px;
+    border-radius:20px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+  }
+  .student-pill button{
+    background:none;border:none;color:var(--stamp);cursor:pointer;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;text-decoration:underline;padding:0;
+  }
+  .field-grid{
+    display:grid;
+    grid-template-columns:1.4fr 0.7fr 1.2fr 0.8fr auto;
+    gap:12px;
+    align-items:end;
+  }
+  @media (max-width:800px){.field-grid{grid-template-columns:1fr 1fr;}}
+  label{
+    display:block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input, select{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--paper-line);
+    background:#fff;
+    border-radius:2px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    color:var(--ink);
+  }
+  input:focus, select:focus{
+    outline:none;
+    border-color:var(--navy);
+    box-shadow:0 0 0 3px rgba(22,48,79,0.12);
+  }
+  input:disabled{background:#efece2;color:#a29d8c;}
+  .btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:10px 16px;
+    border-radius:2px;
+    border:1px solid var(--navy);
+    background:var(--navy);
+    color:#f3efe2;
+    cursor:pointer;
+    transition:transform 0.08s ease, background 0.15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{background:var(--navy-deep);}
+  .btn:active{transform:translateY(1px);}
+  .btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;color:var(--navy);}
+  .btn-outline:hover{background:rgba(22,48,79,0.06);}
+  .btn-stamp{border-color:var(--stamp);background:var(--stamp);}
+  .btn-stamp:hover{background:#7d2222;}
+  .btn-sm{padding:6px 10px;font-size:11px;}
+  .toolbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px 0;gap:12px;flex-wrap:wrap;
+  }
+  .toolbar .left{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .count-badge{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);}
+  .view-toggle{
+    display:flex;
+    border:1px solid var(--navy);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .view-toggle button{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+    padding:7px 13px;
+    border:none;
+    background:#fff;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .view-toggle button.active{background:var(--navy);color:#f3efe2;}
+  table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13.5px;}
+  thead th{
+    text-align:left;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#fff;
+    background:var(--navy);
+    padding:10px 12px;
+  }
+  thead th:first-child{border-radius:2px 0 0 0;}
+  thead th:last-child{border-radius:0 2px 0 0;text-align:right;}
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--paper-line);vertical-align:middle;}
+  tbody tr:hover{background:rgba(184,135,58,0.07);}
+  td.mono{font-family:'IBM Plex Mono',monospace;color:var(--ink-soft);}
+  .student-tag{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    background:rgba(22,48,79,0.08);
+    color:var(--navy-deep);
+    padding:3px 8px;
+    border-radius:10px;
+    white-space:nowrap;
+  }
+  .cutoff-cell{display:flex;align-items:center;gap:8px;}
+  .cutoff-bar{flex:1;height:6px;background:#e4dfcd;border-radius:3px;overflow:hidden;max-width:90px;}
+  .cutoff-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--stamp));}
+  .cutoff-num{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--navy-deep);min-width:52px;text-align:right;}
+  .row-actions{display:flex;gap:6px;justify-content:flex-end;}
+  .icon-btn{
+    border:1px solid var(--paper-line);
+    background:#fff;
+    border-radius:2px;
+    width:28px;height:28px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    color:var(--ink-soft);
+    font-size:13px;
+  }
+  .icon-btn:hover{border-color:var(--stamp);color:var(--stamp);}
+  .empty-state{padding:44px 20px;text-align:center;color:var(--ink-soft);}
+  .empty-state .glyph{font-size:30px;margin-bottom:8px;}
+  .empty-state p{margin:4px 0;font-size:13.5px;}
+  .footer-note{
+    padding:16px 20px 22px;
+    font-size:12px;
+    color:var(--ink-soft);
+    border-top:1px dashed var(--paper-line);
+    margin-top:6px;
+  }
+  .pdf-bar{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;gap:14px;flex-wrap:wrap;}
+  .pdf-bar .desc{font-size:12.5px;color:var(--ink-soft);max-width:480px;}
+  .toast{
+    position:fixed;bottom:22px;left:50%;
+    transform:translateX(-50%) translateY(20px);
+    background:var(--navy-deep);
+    color:#f3efe2;
+    padding:10px 18px;
+    border-radius:3px;
+    font-size:13px;
+    font-family:'IBM Plex Mono',monospace;
+    opacity:0;pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+    z-index:50;
+    border-left:3px solid var(--gold);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .conn-dot{
+    display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:#5c5748;margin-right:6px;
+  }
+  .conn-dot.live{background:#3ea56b;}
+  .conn-status{font-family:'IBM Plex Mono',monospace;font-size:11px;color:#cfc9b8;display:flex;align-items:center;}
+  .site-footer{
+    max-width:1040px;
+    margin:34px auto 0;
+    padding:18px 24px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .site-footer .credit{color:var(--navy-deep);}
+  .site-footer .credit strong{color:var(--stamp);}
+
+  .table-scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .table-scroll table{ min-width:640px; }
+
+  .desktop-view{ display:block; }
+  .mobile-view{ display:none; }
+
+  .entry-card{
+    background:#fff;
+    border:1px solid var(--paper-line);
+    border-left:4px solid var(--gold);
+    border-radius:3px;
+    padding:12px 13px;
+  }
+  .entry-card .ec-top{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .entry-card .ec-college{
+    font-weight:600;
+    font-size:14.5px;
+    color:var(--navy-deep);
+    line-height:1.3;
+  }
+  .entry-card .ec-sr{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:2px;
+  }
+  .entry-card .ec-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .entry-card .ec-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+  }
+  .entry-card .ec-chip{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    background:var(--paper);
+    border:1px solid var(--paper-line);
+    color:var(--ink-soft);
+    padding:3px 8px;
+    border-radius:3px;
+  }
+  .entry-card .ec-branch{
+    font-size:12.5px;
+    color:var(--ink);
+    margin-top:7px;
+  }
+  .entry-card .ec-cutoff{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:9px;
+    padding-top:9px;
+    border-top:1px dashed var(--paper-line);
+  }
+  .entry-card .ec-cutoff .cutoff-bar{ max-width:none; flex:1; height:7px; }
+  .entry-card .ec-cutoff .cutoff-num{ font-size:15px; min-width:64px; }
+  .entry-card .ec-student{
+    margin-top:8px;
+  }
+
+  .mobile-actionbar{ display:none; }
+
+  .order-input{
+    width:52px;
+    padding:6px 4px;
+    text-align:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+  }
+  .ec-order{ display:flex; align-items:center; gap:8px; }
+  .ec-order-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:9.5px;
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    flex-shrink:0;
+  }
+
+  .group-list{ display:flex; flex-direction:column; gap:10px; }
+  .student-group{
+    border:1px solid var(--paper-line);
+    border-radius:3px;
+    background:#fff;
+    overflow:hidden;
+  }
+  .student-group-head{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:13px 14px;
+    background:#fbf9f2;
+    border:none;
+    cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+    text-align:left;
+  }
+  .student-group-head:hover{ background:rgba(184,135,58,0.1); }
+  .sg-name{ font-weight:600; font-size:14px; color:var(--navy-deep); }
+  .sg-meta{ display:flex; align-items:center; gap:10px; flex-shrink:0; }
+  .sg-count{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-soft); white-space:nowrap; }
+  .sg-chevron{ font-size:10px; color:var(--gold); }
+  .sg-body{
+    padding:10px 12px 12px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    border-top:1px dashed var(--paper-line);
+    background:var(--paper);
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:640px){
+    body{ padding-bottom:78px; }
+    .form-header{
+      padding:18px 16px 20px;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:14px;
+    }
+    .form-header > div:last-child{
+      flex-direction:row-reverse;
+      align-items:center;
+      justify-content:space-between;
+      width:100%;
+    }
+    .seal{ width:52px;height:52px; }
+    .htitle h1{ font-size:22px; }
+    .htitle p{ font-size:12.5px; }
+    .wrap{ padding:18px 12px 0; }
+    .panel-head{ padding:14px 14px 0; }
+    .panel-head h2{ font-size:17px; }
+    .panel-body{ padding:14px; }
+    .field-grid{ grid-template-columns:1fr; gap:10px; }
+    .field-grid .btn{ width:100%; padding:12px 16px; }
+    label{ font-size:10px; }
+    input, select{ font-size:16px; padding:11px 10px; } /* 16px avoids iOS zoom-on-focus */
+    .name-gate{ flex-direction:column; align-items:stretch; gap:10px; }
+    .name-gate input{ max-width:none; }
+    .name-gate .btn{ width:100%; }
+    .name-gate .hint{ order:3; }
+    .toolbar{ flex-direction:column; align-items:stretch; padding:14px 14px 0; }
+    .toolbar .left{ width:100%; justify-content:space-between; }
+    .toolbar .left:first-child{ flex-wrap:wrap; row-gap:10px; }
+    .view-toggle{ flex:1; }
+    .view-toggle button{ flex:1; padding:9px 8px; font-size:11px; }
+    .sort-select{ width:100% !important; flex:1; }
+    #sortWrap{ width:100%; }
+    #sortBy{ width:100%; }
+    .toolbar .left:last-child{ flex-wrap:wrap; gap:8px; }
+    .toolbar .left:last-child label{ display:none; }
+    .btn-sm{ flex:1; }
+    .count-badge{ width:100%; }
+    .icon-btn{ width:34px;height:34px;font-size:15px; }
+    .order-input{ font-size:14px; padding:8px 4px; width:46px; }
+    .sg-name{ font-size:13px; }
+    .sg-count{ font-size:10px; }
+    .student-group-head{ padding:12px; }
+    .add-other-btn{ padding:8px 12px; }
+    .pdf-bar{ flex-direction:column; align-items:stretch; padding:14px; }
+    .pdf-bar .desc{ max-width:none; }
+    #exportBtn{ width:100%; padding:13px 16px; }
+    .site-footer{ flex-direction:column; align-items:flex-start; gap:4px; padding:14px 12px 0; margin-top:24px; margin-bottom:70px; }
+    .student-pill{ width:100%; justify-content:space-between; }
+
+    .desktop-view{ display:none; }
+    .mobile-view{ display:flex; flex-direction:column; gap:10px; }
+
+    .mobile-actionbar{
+      display:flex;
+      position:fixed;
+      left:0; right:0; bottom:0;
+      z-index:40;
+      background:#fbf9f2;
+      border-top:1px solid var(--paper-line);
+      box-shadow:0 -6px 18px -10px rgba(20,20,10,0.4);
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      gap:10px;
+    }
+    .mobile-actionbar button{
+      flex:1;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12px;
+      letter-spacing:0.6px;
+      text-transform:uppercase;
+      padding:12px 10px;
+      border-radius:2px;
+      border:1px solid var(--navy);
+      background:var(--navy);
+      color:#f3efe2;
+    }
+    .mobile-actionbar button.ab-secondary{
+      background:transparent;
+      color:var(--navy);
+    }
+  }
+  @media (max-width:400px){
+    .htitle h1{ font-size:19px; }
+    .seal{ width:44px;height:44px; }
+  }
+</style>
+</head>
+<body>
+<div class="mobile-actionbar">
+  <button class="ab-secondary" id="abAdd">↑ Add Entry</button>
+  <button id="abExport">⬇ PDF</button>
+</div>
+<div class="form-header">
+  <div class="htitle">
+    <span class="eyebrow">CAP Round · Shared Preference Sheet</span>
+    <h1>MHT-CET College List Builder</h1>
+    <p>College name · code · branch · cutoff percentile — sabki lists ek jagah</p>
+    <span class="by">Crafted by Arsalan Shaikh</span>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:10px;">
+    <svg class="seal" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#b8873a" stroke-width="2"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="#b8873a" stroke-width="1"/>
+      <text x="50" y="42" text-anchor="middle" fill="#f3efe2" font-family="IBM Plex Mono, monospace" font-size="9" letter-spacing="1">MHT</text>
+      <text x="50" y="55" text-anchor="middle" fill="#b8873a" font-family="Rozha One, serif" font-size="15">CET</text>
+      <text x="50" y="68" text-anchor="middle" fill="#f3efe2" font-family="IBM Plex Mono, monospace" font-size="7">LIST</text>
+    </svg>
+    <span class="conn-status"><span class="conn-dot" id="connDot"></span><span id="connText">Connecting…</span></span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="panel">
+    <div class="panel-head"><span class="num">1</span><h2>Apna Naam</h2></div>
+    <div class="panel-body">
+      <div id="nameGateArea"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="num">2</span><h2>Entry Add Kara</h2></div>
+    <div class="panel-body">
+      <div class="field-grid">
+        <div>
+          <label for="fCollege">College Name</label>
+          <input id="fCollege" list="collegeSuggestions" placeholder="e.g. COEP Technological University">
+          <datalist id="collegeSuggestions"></datalist>
+        </div>
+        <div>
+          <label for="fCode">College Code</label>
+          <input id="fCode" placeholder="e.g. 6009">
+        </div>
+        <div>
+          <label for="fBranch">Branch</label>
+          <input id="fBranch" placeholder="e.g. Computer Engineering">
+        </div>
+        <div>
+          <label for="fCutoff">Cutoff Percentile</label>
+          <input id="fCutoff" type="number" step="0.01" min="0" max="100" placeholder="e.g. 97.85">
+        </div>
+        <button class="btn" id="addBtn">+ Add Row</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="toolbar">
+      <div class="left">
+        <span class="panel-head" style="padding:0;"><span class="num">3</span><h2 style="font-size:19px;">Lists</h2></span>
+        <div class="view-toggle">
+          <button id="viewMine" class="active">My List</button>
+          <button id="viewAll">All Students</button>
+        </div>
+        <span class="count-badge" id="countBadge">0 entries</span>
+      </div>
+      <div class="left">
+        <span id="sortWrap" style="display:flex;align-items:center;gap:10px;">
+          <label style="margin:0;" for="sortBy">Sort:</label>
+          <select id="sortBy" class="sort-select" style="width:auto;padding:7px 8px;font-size:12.5px;">
+            <option value="myorder">My Priority No.</option>
+            <option value="cutoff-desc">Cutoff — high to low</option>
+            <option value="cutoff-asc">Cutoff — low to high</option>
+            <option value="name">College name (A–Z)</option>
+          </select>
+        </span>
+        <button class="btn btn-outline btn-sm" id="clearAllBtn">Clear my entries</button>
+      </div>
+    </div>
+    <div class="panel-body" style="padding-top:0;">
+      <div id="tableHolder"></div>
+    </div>
+    <div class="footer-note">
+      "My List" mein "No." column mein number type karke apna CAP preference order set karo (1 = sabse pehli pasand). "All Students" mein kisi bhi naam pe tap karke unki list kholo — har college ke saamne "+ Add" button se seedha apni list mein daal sakte ho.
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="pdf-bar">
+      <div>
+        <h2 style="font-family:'Rozha One',serif;font-size:19px;color:var(--navy-deep);margin:0 0 4px;font-weight:400;">PDF Nikalo</h2>
+        <p class="desc">Jo view khula hai (My List ya All Students) wahi PDF mai export hoga.</p>
+      </div>
+      <button class="btn btn-stamp" id="exportBtn">⬇ Download PDF</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="site-footer">
+  <span>MHT-CET College List Builder</span>
+  <span class="credit">Built &amp; maintained by <strong>Arsalan Shaikh</strong></span>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  // ---------- Firebase setup ----------
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+    authDomain: "multi-service-app-77dd8.firebaseapp.com",
+    projectId: "multi-service-app-77dd8",
+    storageBucket: "multi-service-app-77dd8.appspot.com",
+    messagingSenderId: "123732555482",
+    appId: "1:123732555482:web:ea47c825e0dbb504f597e3"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const COLLECTION = 'mhtcetCollegeList';
+
+  const NAME_KEY = 'mhtcet_student_name';
+  let studentName = localStorage.getItem(NAME_KEY) || '';
+  let entries = [];
+  let view = 'mine'; // 'mine' | 'all'
+  let unsub = null;
+  let editingPrefOrder = null;
+  let expandedStudents = new Set(studentName ? [studentName.trim().toLowerCase()] : []);
+
+  const els = {
+    nameGateArea: document.getElementById('nameGateArea'),
+    college: document.getElementById('fCollege'),
+    code: document.getElementById('fCode'),
+    branch: document.getElementById('fBranch'),
+    cutoff: document.getElementById('fCutoff'),
+    addBtn: document.getElementById('addBtn'),
+    tableHolder: document.getElementById('tableHolder'),
+    countBadge: document.getElementById('countBadge'),
+    sortBy: document.getElementById('sortBy'),
+    clearAllBtn: document.getElementById('clearAllBtn'),
+    exportBtn: document.getElementById('exportBtn'),
+    toast: document.getElementById('toast'),
+    suggestions: document.getElementById('collegeSuggestions'),
+    viewMine: document.getElementById('viewMine'),
+    viewAll: document.getElementById('viewAll'),
+    connDot: document.getElementById('connDot'),
+    connText: document.getElementById('connText'),
+  };
+
+  function showToast(msg){
+    els.toast.textContent = msg;
+    els.toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=> els.toast.classList.remove('show'), 2200);
+  }
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  // ---------- Name gate ----------
+  function renderNameGate(){
+    if(studentName){
+      els.nameGateArea.innerHTML = `
+        <div class="student-pill">
+          👤 ${escapeHtml(studentName)}
+          <button id="changeNameBtn">change</button>
+        </div>`;
+      document.getElementById('changeNameBtn').addEventListener('click', () => {
+        studentName = '';
+        localStorage.removeItem(NAME_KEY);
+        renderNameGate();
+        toggleFormEnabled();
+      });
+    } else {
+      els.nameGateArea.innerHTML = `
+        <div class="name-gate">
+          <input id="nameInput" placeholder="e.g. Rohan Patil" maxlength="40">
+          <button class="btn" id="saveNameBtn">Save Naam</button>
+          <span class="hint">List add/edit karne se pehle apna naam daalo — ye sabko dikhega jab "All Students" view khologe.</span>
+        </div>`;
+      document.getElementById('saveNameBtn').addEventListener('click', saveName);
+      document.getElementById('nameInput').addEventListener('keydown', ev => { if(ev.key === 'Enter') saveName(); });
+    }
+  }
+  function saveName(){
+    const val = document.getElementById('nameInput').value.trim();
+    if(!val){ showToast('Naam daalo pehle'); return; }
+    studentName = val;
+    localStorage.setItem(NAME_KEY, val);
+    expandedStudents.add(val.trim().toLowerCase());
+    renderNameGate();
+    toggleFormEnabled();
+    showToast('Welcome, ' + val + ' 👋');
+  }
+  function toggleFormEnabled(){
+    const disabled = !studentName;
+    [els.college, els.code, els.branch, els.cutoff].forEach(el => el.disabled = disabled);
+    els.addBtn.disabled = disabled;
+  }
+
+  // ---------- Firestore live sync ----------
+  function startListening(){
+    unsub = db.collection(COLLECTION).orderBy('createdAt', 'asc')
+      .onSnapshot(snap => {
+        entries = snap.docs.map(doc => {
+          const d = doc.data();
+          return {
+            id: doc.id,
+            college: d.college || '',
+            code: d.code || '',
+            branch: d.branch || '',
+            cutoff: typeof d.cutoff === 'number' ? d.cutoff : parseFloat(d.cutoff) || 0,
+            studentName: d.studentName || 'Unknown',
+            prefOrder: typeof d.prefOrder === 'number' ? d.prefOrder : (parseFloat(d.prefOrder) || 0),
+          };
+        });
+        els.connDot.classList.add('live');
+        els.connText.textContent = 'Live';
+        render();
+      }, err => {
+        console.error(err);
+        els.connText.textContent = 'Connection issue';
+        showToast('Firebase se connect nahi ho paya');
+      });
+  }
+
+  function updateSuggestions(){
+    const names = [...new Set(entries.map(e => e.college))];
+    els.suggestions.innerHTML = names.map(n => `<option value="${escapeHtml(n)}">`).join('');
+  }
+  function autofillCode(){
+    const name = els.college.value.trim().toLowerCase();
+    if(!name) return;
+    const match = entries.find(e => e.college.toLowerCase() === name);
+    if(match && !els.code.value) els.code.value = match.code;
+  }
+
+  function getFiltered(){
+    let list = entries.filter(e => e.studentName.toLowerCase() === studentName.toLowerCase());
+    const mode = els.sortBy.value;
+    if(mode === 'cutoff-desc') list.sort((a,b) => b.cutoff - a.cutoff);
+    else if(mode === 'cutoff-asc') list.sort((a,b) => a.cutoff - b.cutoff);
+    else if(mode === 'name') list.sort((a,b) => a.college.localeCompare(b.college));
+    else list.sort((a,b) => (a.prefOrder||0) - (b.prefOrder||0)); // 'myorder'
+    return list;
+  }
+
+  function render(){
+    updateSuggestions();
+    updateToolbarForView();
+    if(view === 'mine') renderMineView();
+    else renderAllView();
+  }
+
+  function updateToolbarForView(){
+    const sortWrap = document.getElementById('sortWrap');
+    if(sortWrap) sortWrap.style.display = view === 'mine' ? 'flex' : 'none';
+  }
+
+  // ----- My List view: editable priority numbering -----
+  function renderMineView(){
+    const list = getFiltered();
+    els.countBadge.textContent = list.length + (list.length === 1 ? ' entry' : ' entries');
+
+    if(list.length === 0){
+      els.tableHolder.innerHTML = `
+        <div class="empty-state">
+          <div class="glyph">📋</div>
+          <p><strong>Tumhari list abhi khali hai.</strong></p>
+          <p>Upar form se apna pehla college add karo.</p>
+        </div>`;
+      return;
+    }
+
+    let rows = list.map((e) => {
+      const pct = Math.max(0, Math.min(100, e.cutoff));
+      return `
+      <tr data-id="${e.id}">
+        <td><input type="number" class="order-input" value="${e.prefOrder}" data-id="${e.id}" title="Preference number"></td>
+        <td>${escapeHtml(e.college)}</td>
+        <td class="mono">${escapeHtml(e.code)}</td>
+        <td>${escapeHtml(e.branch)}</td>
+        <td>
+          <div class="cutoff-cell">
+            <div class="cutoff-bar"><div class="cutoff-fill" style="width:${pct}%;"></div></div>
+            <span class="cutoff-num">${e.cutoff.toFixed(2)}%</span>
+          </div>
+        </td>
+        <td>
+          <div class="row-actions">
+            <button class="icon-btn edit-btn" title="Edit" data-id="${e.id}">✎</button>
+            <button class="icon-btn del-btn" title="Delete" data-id="${e.id}">✕</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    const tableHtml = `
+      <div class="table-scroll desktop-view">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:56px;">No.</th>
+            <th>College Name</th>
+            <th style="width:90px;">Code</th>
+            <th>Branch</th>
+            <th style="width:170px;">Cutoff %ile</th>
+            <th style="width:80px;"></th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      </div>`;
+
+    let cards = list.map((e) => {
+      const pct = Math.max(0, Math.min(100, e.cutoff));
+      return `
+      <div class="entry-card" data-id="${e.id}">
+        <div class="ec-top">
+          <div class="ec-order">
+            <span class="ec-order-label">No.</span>
+            <input type="number" class="order-input" value="${e.prefOrder}" data-id="${e.id}">
+            <div class="ec-college">${escapeHtml(e.college)}</div>
+          </div>
+          <div class="ec-actions">
+            <button class="icon-btn edit-btn" title="Edit" data-id="${e.id}">✎</button>
+            <button class="icon-btn del-btn" title="Delete" data-id="${e.id}">✕</button>
+          </div>
+        </div>
+        <div class="ec-branch">${escapeHtml(e.branch)}</div>
+        <div class="ec-meta"><span class="ec-chip">Code: ${escapeHtml(e.code)}</span></div>
+        <div class="ec-cutoff">
+          <div class="cutoff-bar"><div class="cutoff-fill" style="width:${pct}%;"></div></div>
+          <span class="cutoff-num">${e.cutoff.toFixed(2)}%</span>
+        </div>
+      </div>`;
+    }).join('');
+
+    els.tableHolder.innerHTML = tableHtml + `<div class="mobile-view">${cards}</div>`;
+
+    els.tableHolder.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', () => deleteEntry(btn.dataset.id));
+    });
+    els.tableHolder.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => editEntry(btn.dataset.id));
+    });
+    els.tableHolder.querySelectorAll('.order-input').forEach(inp => {
+      inp.addEventListener('change', () => updatePrefOrder(inp.dataset.id, inp.value));
+    });
+  }
+
+  // ----- All Students view: click a name to expand their list, add their colleges to mine -----
+  function renderAllView(){
+    const groups = {};
+    entries.forEach(e => {
+      const key = (e.studentName || 'unknown').trim().toLowerCase();
+      if(!groups[key]) groups[key] = { displayName: e.studentName, items: [] };
+      groups[key].items.push(e);
+    });
+    Object.values(groups).forEach(g => g.items.sort((a,b) => (a.prefOrder||0) - (b.prefOrder||0)));
+
+    const myKey = studentName.trim().toLowerCase();
+    let groupKeys = Object.keys(groups).sort((a, b) => {
+      if(a === myKey && b !== myKey) return -1;
+      if(b === myKey && a !== myKey) return 1;
+      return groups[a].displayName.localeCompare(groups[b].displayName);
+    });
+
+    els.countBadge.textContent = groupKeys.length + (groupKeys.length === 1 ? ' student' : ' students');
+
+    if(groupKeys.length === 0){
+      els.tableHolder.innerHTML = `
+        <div class="empty-state">
+          <div class="glyph">📋</div>
+          <p><strong>Abhi koi entry nahi hai.</strong></p>
+          <p>Jab koi student add karega, yahan dikhega.</p>
+        </div>`;
+      return;
+    }
+
+    const html = groupKeys.map(key => {
+      const g = groups[key];
+      const isMine = key === myKey;
+      const isOpen = expandedStudents.has(key);
+      const itemsHtml = isOpen ? g.items.map(e => renderAllEntryCard(e, isMine)).join('') : '';
+      return `
+        <div class="student-group">
+          <button class="student-group-head" data-key="${escapeHtml(key)}">
+            <span class="sg-name">${isMine ? '👤 You (' + escapeHtml(g.displayName) + ')' : '👤 ' + escapeHtml(g.displayName)}</span>
+            <span class="sg-meta">
+              <span class="sg-count">${g.items.length} college${g.items.length === 1 ? '' : 's'}</span>
+              <span class="sg-chevron">${isOpen ? '▲' : '▼'}</span>
+            </span>
+          </button>
+          ${isOpen ? `<div class="sg-body">${itemsHtml}</div>` : ''}
+        </div>`;
+    }).join('');
+
+    els.tableHolder.innerHTML = `<div class="group-list">${html}</div>`;
+
+    els.tableHolder.querySelectorAll('.student-group-head').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.key;
+        if(expandedStudents.has(key)) expandedStudents.delete(key);
+        else expandedStudents.add(key);
+        render();
+      });
+    });
+    els.tableHolder.querySelectorAll('.add-other-btn').forEach(btn => {
+      btn.addEventListener('click', () => addFromOther(btn.dataset.id));
+    });
+    els.tableHolder.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', () => deleteEntry(btn.dataset.id));
+    });
+    els.tableHolder.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => editEntry(btn.dataset.id));
+    });
+  }
+
+  function renderAllEntryCard(e, isMine){
+    const pct = Math.max(0, Math.min(100, e.cutoff));
+    const actions = isMine
+      ? `<div class="ec-actions">
+           <button class="icon-btn edit-btn" title="Edit" data-id="${e.id}">✎</button>
+           <button class="icon-btn del-btn" title="Delete" data-id="${e.id}">✕</button>
+         </div>`
+      : `<button class="btn btn-sm add-other-btn" data-id="${e.id}">+ Add</button>`;
+    return `
+      <div class="entry-card" data-id="${e.id}">
+        <div class="ec-top">
+          <div class="ec-college">${escapeHtml(e.college)}</div>
+          ${actions}
+        </div>
+        <div class="ec-branch">${escapeHtml(e.branch)}</div>
+        <div class="ec-meta"><span class="ec-chip">Code: ${escapeHtml(e.code)}</span></div>
+        <div class="ec-cutoff">
+          <div class="cutoff-bar"><div class="cutoff-fill" style="width:${pct}%;"></div></div>
+          <span class="cutoff-num">${e.cutoff.toFixed(2)}%</span>
+        </div>
+      </div>`;
+  }
+
+  async function addEntry(){
+    if(!studentName){ showToast('Pehle apna naam daalo'); return; }
+    const college = els.college.value.trim();
+    const code = els.code.value.trim();
+    const branch = els.branch.value.trim();
+    const cutoffRaw = els.cutoff.value.trim();
+
+    if(!college || !code || !branch || !cutoffRaw){ showToast('Sab fields bharo pehle'); return; }
+    const cutoff = parseFloat(cutoffRaw);
+    if(isNaN(cutoff) || cutoff < 0 || cutoff > 100){ showToast('Cutoff 0–100 ke beech honi chahiye'); return; }
+
+    const mine = entries.filter(e => e.studentName.toLowerCase() === studentName.toLowerCase());
+    const nextOrder = editingPrefOrder != null
+      ? editingPrefOrder
+      : (mine.length ? Math.max(...mine.map(e => e.prefOrder || 0)) + 1 : 1);
+
+    els.addBtn.disabled = true;
+    try{
+      await db.collection(COLLECTION).add({
+        college, code, branch, cutoff, studentName,
+        prefOrder: nextOrder,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      els.branch.value = '';
+      els.cutoff.value = '';
+      els.branch.focus();
+      editingPrefOrder = null;
+      showToast('Row add ho gayi ✓');
+    }catch(e){
+      console.error(e);
+      showToast('Add nahi ho paya — try again');
+    }
+    els.addBtn.disabled = false;
+  }
+
+  async function addFromOther(id){
+    if(!studentName){ showToast('Pehle apna naam daalo'); return; }
+    const src = entries.find(x => x.id === id);
+    if(!src) return;
+    const mine = entries.filter(e => e.studentName.toLowerCase() === studentName.toLowerCase());
+    const nextOrder = mine.length ? Math.max(...mine.map(e => e.prefOrder || 0)) + 1 : 1;
+    try{
+      await db.collection(COLLECTION).add({
+        college: src.college, code: src.code, branch: src.branch, cutoff: src.cutoff,
+        studentName, prefOrder: nextOrder,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      showToast(src.college + ' tumhari list mein add ho gaya ✓');
+    }catch(e){
+      console.error(e);
+      showToast('Add nahi ho paya — try again');
+    }
+  }
+
+  async function updatePrefOrder(id, val){
+    const num = parseFloat(val);
+    if(isNaN(num)) return;
+    try{
+      await db.collection(COLLECTION).doc(id).update({ prefOrder: num });
+    }catch(e){
+      console.error(e);
+      showToast('Number update nahi hua');
+    }
+  }
+
+  async function deleteEntry(id){
+    try{
+      await db.collection(COLLECTION).doc(id).delete();
+      showToast('Delete ho gaya');
+    }catch(e){
+      console.error(e);
+      showToast('Delete nahi ho paya');
+    }
+  }
+
+  function editEntry(id){
+    const e = entries.find(x => x.id === id);
+    if(!e) return;
+    els.college.value = e.college;
+    els.code.value = e.code;
+    els.branch.value = e.branch;
+    els.cutoff.value = e.cutoff;
+    editingPrefOrder = e.prefOrder;
+    deleteEntry(id).then(() => {
+      showToast('Edit ke liye form mai load kar diya — Add Row dabao save karne ke liye');
+      els.college.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  }
+
+  async function clearAll(){
+    const mine = entries.filter(e => e.studentName.toLowerCase() === studentName.toLowerCase());
+    if(mine.length === 0){ showToast('Tumhari koi entry nahi hai'); return; }
+    if(!confirm('Sirf tumhari entries clear hongi (' + mine.length + '). Confirm?')) return;
+    try{
+      await Promise.all(mine.map(e => db.collection(COLLECTION).doc(e.id).delete()));
+      showToast('Tumhari entries clear ho gayi');
+    }catch(e){
+      console.error(e);
+      showToast('Clear nahi ho paya');
+    }
+  }
+
+  function exportPDF(){
+    let list, showStudentCol;
+    if(view === 'mine'){
+      list = getFiltered();
+      showStudentCol = false;
+    } else {
+      list = [...entries].sort((a, b) => {
+        const byName = a.studentName.localeCompare(b.studentName);
+        if(byName !== 0) return byName;
+        return (a.prefOrder || 0) - (b.prefOrder || 0);
+      });
+      showStudentCol = true;
+    }
+    if(list.length === 0){ showToast('Export karne ke liye entries nahi hain'); return; }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(22, 48, 79);
+    doc.text('MHT-CET College Preference List', 14, 18);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(110, 105, 90);
+    const today = new Date();
+    const subtitle = (view === 'mine' ? studentName + ' — ' : 'All Students — ') +
+      today.toLocaleDateString('en-IN', {day:'2-digit', month:'long', year:'numeric'});
+    doc.text(subtitle, 14, 24);
+
+    const head = showStudentCol
+      ? [['Sr.', 'College Name', 'Code', 'Branch', 'Cutoff %ile', 'Student']]
+      : [['Sr.', 'College Name', 'Code', 'Branch', 'Cutoff %ile']];
+    const body = list.map((e, i) => {
+      const row = [String(i+1), e.college, e.code, e.branch, e.cutoff.toFixed(2) + '%'];
+      if(showStudentCol) row.push(e.studentName);
+      return row;
+    });
+
+    doc.autoTable({
+      startY: 30,
+      head: head,
+      body: body,
+      styles: { font: 'helvetica', fontSize: 9.5, cellPadding: 3.5, lineColor: [211,204,184], lineWidth: 0.3 },
+      headStyles: { fillColor: [22,48,79], textColor: [255,255,255], fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [246,243,235] },
+      columnStyles: {
+        0: { cellWidth: 12 },
+        2: { cellWidth: 20 },
+        4: { cellWidth: 26, halign: 'right' }
+      },
+      margin: { left: 14, right: 14 }
+    });
+
+    const finalY = doc.lastAutoTable.finalY || 30;
+    doc.setFontSize(8.5);
+    doc.setTextColor(140, 135, 115);
+    doc.text('Total entries: ' + list.length + '   ·   mhtcetcollegelist by Arsalan Shaikh', 14, finalY + 10);
+
+    doc.save('mhtcet-college-list' + (view === 'mine' ? '' : '-all-students') + '.pdf');
+    showToast('PDF download shuru ho gayi ✓');
+  }
+
+  // ---------- events ----------
+  els.addBtn.addEventListener('click', addEntry);
+  els.cutoff.addEventListener('keydown', ev => { if(ev.key === 'Enter') addEntry(); });
+  els.college.addEventListener('change', autofillCode);
+  els.college.addEventListener('blur', autofillCode);
+  els.sortBy.addEventListener('change', render);
+  els.clearAllBtn.addEventListener('click', clearAll);
+  els.exportBtn.addEventListener('click', exportPDF);
+  els.viewMine.addEventListener('click', () => { view='mine'; els.viewMine.classList.add('active'); els.viewAll.classList.remove('active'); render(); });
+  els.viewAll.addEventListener('click', () => { view='all'; els.viewAll.classList.add('active'); els.viewMine.classList.remove('active'); render(); });
+
+  const abAdd = document.getElementById('abAdd');
+  const abExport = document.getElementById('abExport');
+  if(abAdd){
+    abAdd.addEventListener('click', () => {
+      const target = studentName ? els.college : document.getElementById('nameInput');
+      if(target){
+        target.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(() => target.focus(), 300);
+      }
+    });
+  }
+  if(abExport){
+    abExport.addEventListener('click', exportPDF);
+  }
+
+  renderNameGate();
+  toggleFormEnabled();
+  startListening();
+})();
+</script>
+
+</body>
+</html>
