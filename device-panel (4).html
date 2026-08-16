@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Panel</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --card:#151b23;
+    --card-2:#1b232d;
+    --border:#2a3441;
+    --accent:#5b8def;
+    --accent-2:#4fd1c5;
+    --text:#e6edf3;
+    --text-dim:#8b98a5;
+    --red:#f85149;
+    --amber:#f0b429;
+    --green:#3fb950;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:radial-gradient(circle at 20% 0%, #131a24 0%, #0d1117 55%);
+    color:var(--text);
+    font-family:'Segoe UI',system-ui,sans-serif;
+    min-height:100vh;
+    padding:24px 16px 60px;
+  }
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:20px;flex-wrap:wrap;gap:10px;
+  }
+  header h1{font-size:22px;font-weight:700;}
+  header h1 span{color:var(--accent);}
+  header p{color:var(--text-dim);font-size:13px;margin-top:2px;}
+
+  .total-earning{
+    background:linear-gradient(135deg, rgba(63,185,80,.12), rgba(91,141,239,.08));
+    border:1px solid var(--border);border-radius:14px;
+    padding:18px 20px;margin-bottom:16px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .total-earning .label{font-size:13px;color:var(--text-dim);}
+  .total-earning .amt{font-size:30px;font-weight:800;color:var(--green);}
+
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;}
+  .stat{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:10px;padding:10px 16px;flex:1;min-width:150px;
+  }
+  .stat b{display:block;font-size:20px;}
+  .stat span{font-size:12px;color:var(--text-dim);}
+  .stat.clickable{cursor:pointer;transition:.15s;}
+  .stat.clickable:hover{border-color:var(--accent);transform:translateY(-1px);}
+  .stat.earning b{color:var(--green);}
+  .stat.pending b{color:var(--amber);}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);
+    align-items:center;justify-content:center;padding:20px;z-index:50;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;max-width:540px;width:100%;max-height:80vh;
+    display:flex;flex-direction:column;
+  }
+  .modal-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 18px;border-bottom:1px solid var(--border);
+  }
+  .modal-head h3{font-size:16px;}
+  .modal-body{padding:12px 18px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+  .hist-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--card-2);border:1px solid var(--border);
+    border-radius:8px;padding:10px 12px;font-size:13px;
+  }
+  .hist-row .amt{color:var(--green);font-weight:700;}
+  .hist-row.overdue{border-color:var(--red);}
+  .hist-total{
+    display:flex;justify-content:space-between;font-weight:700;
+    padding:10px 12px;font-size:14px;border-top:1px solid var(--border);margin-top:4px;
+  }
+
+  .timeline{list-style:none;padding-left:0;}
+  .timeline li{
+    position:relative;padding:4px 0 18px 26px;font-size:13px;
+  }
+  .timeline li::before{
+    content:"";position:absolute;left:5px;top:6px;width:10px;height:10px;
+    border-radius:50%;background:var(--accent);
+  }
+  .timeline li::after{
+    content:"";position:absolute;left:9px;top:16px;bottom:0;width:2px;background:var(--border);
+  }
+  .timeline li:last-child::after{display:none;}
+  .timeline li:last-child::before{background:var(--green);}
+  .timeline .t-status{font-weight:600;}
+  .timeline .t-date{color:var(--text-dim);font-size:11px;display:block;margin-top:2px;}
+  .timeline .t-extra{color:var(--text-dim);font-size:11px;}
+
+  form{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    margin-bottom:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:14px;
+    align-items:end;
+  }
+  form h2{grid-column:1/-1;font-size:15px;color:var(--text-dim);font-weight:600;margin-bottom:-4px;}
+  .field.full{grid-column:1/-1;}
+  .field label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:6px;}
+  .field input, .field select, .field textarea{
+    width:100%;background:var(--card-2);
+    border:1px solid var(--border);border-radius:8px;
+    padding:10px 12px;color:var(--text);font-size:14px;outline:none;
+    font-family:inherit;
+  }
+  .field textarea{resize:vertical;min-height:44px;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--accent);}
+  button{
+    background:var(--accent);color:#fff;border:none;
+    border-radius:8px;padding:11px 16px;font-size:14px;font-weight:600;
+    cursor:pointer;transition:.15s;
+  }
+  button:hover{filter:brightness(1.1);}
+  button.secondary{background:var(--card-2);border:1px solid var(--border);color:var(--text-dim);}
+  .msg{grid-column:1/-1;font-size:13px;min-height:16px;}
+  .msg.err{color:var(--red);}
+  .msg.ok{color:var(--green);}
+
+  .toolbar{
+    display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center;
+    justify-content:space-between;
+  }
+  .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .filters select, .filters input{
+    background:var(--card);border:1px solid var(--border);color:var(--text);
+    padding:8px 12px;border-radius:8px;font-size:13px;
+  }
+  .filters input[type="text"]{min-width:180px;}
+  .filters .date-sep{color:var(--text-dim);font-size:12px;}
+  #exportBtn{padding:8px 14px;font-size:13px;}
+
+  .list{display:flex;flex-direction:column;gap:10px;}
+  .entry{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:12px;padding:14px 16px;
+    display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;
+  }
+  .entry.overdue{border-color:var(--red);}
+  .entry .main{display:flex;flex-wrap:wrap;gap:16px;align-items:center;}
+  .entry .col b{display:block;font-size:14px;}
+  .entry .col span{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.03em;}
+  .badge{
+    padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;
+    white-space:nowrap;
+  }
+  .badge.web{background:rgba(91,141,239,.15);color:var(--accent);}
+  .badge.red{background:rgba(248,81,73,.15);color:var(--red);}
+  .badge.vm{background:rgba(240,180,41,.15);color:var(--amber);}
+  .badge.paid{background:rgba(63,185,80,.15);color:var(--green);}
+  .badge.due{background:rgba(248,81,73,.15);color:var(--red);}
+  .person-tag{
+    padding:3px 9px;border-radius:6px;font-size:11px;font-weight:700;
+    background:var(--card-2);border:1px solid var(--border);
+  }
+  .notes-line{font-size:12px;color:var(--text-dim);grid-column:1/-1;}
+  .actions{display:flex;gap:8px;flex-wrap:wrap;}
+  .actions button{padding:7px 12px;font-size:12px;}
+  .empty{color:var(--text-dim);text-align:center;padding:40px 0;font-size:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Device <span>Panel</span></h1>
+      <p>Bhavishay aur Arsalan ke devices ka status ek jagah</p>
+    </div>
+  </header>
+
+  <div class="total-earning">
+    <span class="label">Total Earning (Bhavishay + Arsalan)</span>
+    <span class="amt" id="totalEarningAmt">₹0</span>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <form id="entryForm">
+    <h2 id="formTitle">Naya Device Add Karo</h2>
+    <div class="field">
+      <label>Device Name / ID</label>
+      <input type="text" id="deviceId" placeholder="e.g. f7f3fc291316c7df" required>
+    </div>
+    <div class="field">
+      <label>Device Number</label>
+      <input type="text" id="deviceNumber" placeholder="e.g. 9876543210" required>
+    </div>
+    <div class="field">
+      <label>Person</label>
+      <select id="person" required>
+        <option value="Bhavishay">Bhavishay</option>
+        <option value="Arsalan">Arsalan</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <select id="status" required>
+        <option value="Only Web Work">Only Web Work</option>
+        <option value="App Install Red">App Install Red</option>
+        <option value="App Install VM">App Install VM</option>
+        <option value="Payment Received">Payment Received</option>
+      </select>
+    </div>
+    <div class="field" id="vmCodeField" style="display:none;">
+      <label>VM Device Code</label>
+      <input type="text" id="vmCode" placeholder="e.g. VM-4521">
+    </div>
+    <div class="field" id="amountField" style="display:none;">
+      <label>Amount Received (₹)</label>
+      <input type="number" id="amount" placeholder="e.g. 500" min="0" step="0.01">
+    </div>
+    <div class="field" id="dueDateField">
+      <label>Payment Due Date (optional)</label>
+      <input type="date" id="dueDate">
+    </div>
+    <div class="field full">
+      <label>Notes (optional)</label>
+      <textarea id="notes" placeholder="Koi extra detail..."></textarea>
+    </div>
+    <div class="field" style="display:flex;gap:8px;">
+      <button type="submit" id="submitBtn" style="flex:1;">Save Entry</button>
+      <button type="button" id="cancelEdit" class="secondary" style="display:none;">Cancel</button>
+    </div>
+    <div class="msg" id="formMsg"></div>
+  </form>
+
+  <div class="toolbar">
+    <div class="filters">
+      <input type="text" id="searchBox" placeholder="Device ID ya number search karo...">
+      <select id="filterPerson">
+        <option value="">Sabhi Person</option>
+        <option value="Bhavishay">Bhavishay</option>
+        <option value="Arsalan">Arsalan</option>
+      </select>
+      <select id="filterStatus">
+        <option value="">Sabhi Status</option>
+        <option value="Only Web Work">Only Web Work</option>
+        <option value="App Install Red">App Install Red</option>
+        <option value="App Install VM">App Install VM</option>
+        <option value="Payment Received">Payment Received</option>
+      </select>
+      <input type="date" id="filterFrom">
+      <span class="date-sep">se</span>
+      <input type="date" id="filterTo">
+      <span class="date-sep">tak</span>
+    </div>
+    <button id="exportBtn" class="secondary">Export CSV</button>
+  </div>
+
+  <div class="list" id="list">
+    <div class="empty">Loading...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalTitle">History</h3>
+      <button class="secondary" id="modalClose">Band Karo</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script>
+  // --- FIREBASE CONFIG ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ",
+    authDomain: "multi-service-app-77dd8.firebaseapp.com",
+    projectId: "multi-service-app-77dd8",
+    storageBucket: "multi-service-app-77dd8.appspot.com",
+    messagingSenderId: "123732555482",
+    appId: "1:123732555482:web:ea47c825e0dbb504f597e3"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const col = db.collection("devices");
+
+  let allEntries = [];
+  let editingId = null;
+
+  const badgeClass = {
+    "Only Web Work": "web",
+    "App Install Red": "red",
+    "App Install VM": "vm",
+    "Payment Received": "paid"
+  };
+
+  const form = document.getElementById("entryForm");
+  const formMsg = document.getElementById("formMsg");
+  const submitBtn = document.getElementById("submitBtn");
+  const cancelBtn = document.getElementById("cancelEdit");
+  const formTitle = document.getElementById("formTitle");
+  const statusSelect = document.getElementById("status");
+  const vmCodeField = document.getElementById("vmCodeField");
+  const vmCodeInput = document.getElementById("vmCode");
+  const amountField = document.getElementById("amountField");
+  const amountInput = document.getElementById("amount");
+  const dueDateField = document.getElementById("dueDateField");
+  const dueDateInput = document.getElementById("dueDate");
+  const notesInput = document.getElementById("notes");
+
+  function toggleVmField(){
+    const isVm = statusSelect.value === "App Install VM";
+    vmCodeField.style.display = isVm ? "block" : "none";
+    vmCodeInput.required = isVm;
+    if(!isVm) vmCodeInput.value = "";
+  }
+  function toggleAmountField(){
+    const isPaid = statusSelect.value === "Payment Received";
+    amountField.style.display = isPaid ? "block" : "none";
+    amountInput.required = isPaid;
+    if(!isPaid) amountInput.value = "";
+    // due date only makes sense when payment is NOT yet received
+    dueDateField.style.display = isPaid ? "none" : "block";
+    if(isPaid) dueDateInput.value = "";
+  }
+  statusSelect.addEventListener("change", () => { toggleVmField(); toggleAmountField(); });
+  toggleVmField();
+  toggleAmountField();
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const newStatus = statusSelect.value;
+    const data = {
+      deviceId: document.getElementById("deviceId").value.trim(),
+      deviceNumber: document.getElementById("deviceNumber").value.trim(),
+      person: document.getElementById("person").value,
+      status: newStatus,
+      vmCode: newStatus === "App Install VM" ? vmCodeInput.value.trim() : "",
+      amount: newStatus === "Payment Received" ? (parseFloat(amountInput.value) || 0) : 0,
+      dueDate: newStatus !== "Payment Received" ? (dueDateInput.value || "") : "",
+      notes: notesInput.value.trim(),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    if(!data.deviceId || !data.deviceNumber){
+      formMsg.textContent = "Device Name aur Number dono bharo.";
+      formMsg.className = "msg err";
+      return;
+    }
+    if(data.status === "App Install VM" && !data.vmCode){
+      formMsg.textContent = "VM Device Code bharo.";
+      formMsg.className = "msg err";
+      return;
+    }
+    if(data.status === "Payment Received" && !data.amount){
+      formMsg.textContent = "Amount bharo.";
+      formMsg.className = "msg err";
+      return;
+    }
+    try{
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Saving...";
+      const historyEntry = {
+        status: data.status,
+        amount: data.amount || null,
+        vmCode: data.vmCode || null,
+        at: new Date()
+      };
+      if(editingId){
+        const existing = allEntries.find(x => x.id === editingId);
+        const statusChanged = existing && existing.status !== data.status;
+        if(statusChanged){
+          data.statusHistory = firebase.firestore.FieldValue.arrayUnion(historyEntry);
+        }
+        await col.doc(editingId).update(data);
+        formMsg.textContent = "Entry update ho gayi.";
+      } else {
+        data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+        data.statusHistory = [historyEntry];
+        await col.add(data);
+        formMsg.textContent = "Entry save ho gayi.";
+      }
+      formMsg.className = "msg ok";
+      resetForm();
+    } catch(err){
+      formMsg.textContent = "Error: " + err.message;
+      formMsg.className = "msg err";
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Save Entry";
+    }
+  });
+
+  cancelBtn.addEventListener("click", resetForm);
+
+  function resetForm(){
+    form.reset();
+    editingId = null;
+    formTitle.textContent = "Naya Device Add Karo";
+    submitBtn.textContent = "Save Entry";
+    cancelBtn.style.display = "none";
+    toggleVmField();
+    toggleAmountField();
+  }
+
+  function startEdit(entry){
+    editingId = entry.id;
+    document.getElementById("deviceId").value = entry.deviceId || "";
+    document.getElementById("deviceNumber").value = entry.deviceNumber || "";
+    document.getElementById("person").value = entry.person || "Bhavishay";
+    document.getElementById("status").value = entry.status || "Only Web Work";
+    toggleVmField();
+    toggleAmountField();
+    vmCodeInput.value = entry.vmCode || "";
+    amountInput.value = entry.amount || "";
+    dueDateInput.value = entry.dueDate || "";
+    notesInput.value = entry.notes || "";
+    formTitle.textContent = "Entry Edit Karo";
+    submitBtn.textContent = "Update Entry";
+    cancelBtn.style.display = "inline-block";
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  async function deleteEntry(id){
+    if(!confirm("Ye entry delete karni hai?")) return;
+    await col.doc(id).delete();
+  }
+
+  ["filterPerson","filterStatus","filterFrom","filterTo"].forEach(id => {
+    document.getElementById(id).addEventListener("change", render);
+  });
+  document.getElementById("searchBox").addEventListener("input", render);
+  document.getElementById("exportBtn").addEventListener("click", exportCsv);
+
+  function isOverdue(entry){
+    if(entry.status === "Payment Received" || !entry.dueDate) return false;
+    const today = new Date(); today.setHours(0,0,0,0);
+    const due = new Date(entry.dueDate);
+    return due < today;
+  }
+
+  function render(){
+    const listEl = document.getElementById("list");
+    const statsEl = document.getElementById("stats");
+    const fp = document.getElementById("filterPerson").value;
+    const fs = document.getElementById("filterStatus").value;
+    const q = document.getElementById("searchBox").value.trim().toLowerCase();
+    const from = document.getElementById("filterFrom").value;
+    const to = document.getElementById("filterTo").value;
+
+    let entries = allEntries.filter(e => {
+      if(fp && e.person !== fp) return false;
+      if(fs && e.status !== fs) return false;
+      if(q && !((e.deviceId||"").toLowerCase().includes(q) || (e.deviceNumber||"").toLowerCase().includes(q))) return false;
+      if((from || to) && e.createdAt && e.createdAt.seconds){
+        const d = new Date(e.createdAt.seconds * 1000);
+        if(from && d < new Date(from)) return false;
+        if(to && d > new Date(to + "T23:59:59")) return false;
+      }
+      return true;
+    });
+
+    // stats (based on full data, not filtered)
+    const total = allEntries.length;
+    const paidEntries = allEntries.filter(e => e.status === "Payment Received");
+    const bhavishayEarning = paidEntries.filter(e => e.person === "Bhavishay").reduce((s,e) => s + (Number(e.amount)||0), 0);
+    const arsalanEarning = paidEntries.filter(e => e.person === "Arsalan").reduce((s,e) => s + (Number(e.amount)||0), 0);
+    const bhavishayCount = allEntries.filter(e => e.person === "Bhavishay").length;
+    const arsalanCount = allEntries.filter(e => e.person === "Arsalan").length;
+    const pendingEntries = allEntries.filter(e => e.status !== "Payment Received");
+    const overdueCount = pendingEntries.filter(isOverdue).length;
+
+    document.getElementById("totalEarningAmt").textContent = "₹" + (bhavishayEarning + arsalanEarning).toLocaleString('en-IN');
+
+    statsEl.innerHTML = `
+      <div class="stat"><b>${total}</b><span>Total Devices</span></div>
+      <div class="stat"><b>${bhavishayCount}</b><span>Bhavishay Devices</span></div>
+      <div class="stat"><b>${arsalanCount}</b><span>Arsalan Devices</span></div>
+      <div class="stat earning clickable" onclick="showHistory('Bhavishay')"><b>₹${bhavishayEarning.toLocaleString('en-IN')}</b><span>Bhavishay Earning · History dekho</span></div>
+      <div class="stat earning clickable" onclick="showHistory('Arsalan')"><b>₹${arsalanEarning.toLocaleString('en-IN')}</b><span>Arsalan Earning · History dekho</span></div>
+      <div class="stat pending clickable" onclick="showPending()"><b>${pendingEntries.length}${overdueCount ? ' <span style=\"color:var(--red);font-size:13px;\">('+overdueCount+' overdue)</span>' : ''}</b><span>Pending Payment · List dekho</span></div>
+    `;
+
+    if(entries.length === 0){
+      listEl.innerHTML = `<div class="empty">Koi entry nahi mili.</div>`;
+      return;
+    }
+
+    listEl.innerHTML = entries.map(e => `
+      <div class="entry ${isOverdue(e) ? 'overdue' : ''}">
+        <div class="main">
+          <div class="col">
+            <span>Device</span>
+            <b>${escapeHtml(e.deviceId)}</b>
+          </div>
+          <div class="col">
+            <span>Number</span>
+            <b>${escapeHtml(e.deviceNumber)}</b>
+          </div>
+          <span class="person-tag">${escapeHtml(e.person)}</span>
+          <span class="badge ${badgeClass[e.status] || 'web'}">${escapeHtml(e.status)}</span>
+          ${e.status === "App Install VM" && e.vmCode ? `
+          <div class="col">
+            <span>VM Code</span>
+            <b>${escapeHtml(e.vmCode)}</b>
+          </div>` : ""}
+          ${e.status === "Payment Received" && e.amount ? `
+          <div class="col">
+            <span>Amount</span>
+            <b>₹${Number(e.amount).toLocaleString('en-IN')}</b>
+          </div>` : ""}
+          ${e.status !== "Payment Received" && e.dueDate ? `
+          <span class="badge ${isOverdue(e) ? 'due' : 'web'}">${isOverdue(e) ? 'Overdue' : 'Due'}: ${formatSimpleDate(e.dueDate)}</span>
+          ` : ""}
+          ${e.notes ? `<div class="notes-line">📝 ${escapeHtml(e.notes)}</div>` : ""}
+        </div>
+        <div class="actions">
+          <button class="secondary" onclick="showTimeline('${e.id}')">History</button>
+          <button class="secondary" onclick="editRow('${e.id}')">Edit</button>
+          <button class="secondary" onclick="delRow('${e.id}')">Delete</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.editRow = (id) => {
+    const entry = allEntries.find(e => e.id === id);
+    if(entry) startEdit(entry);
+  };
+  window.delRow = (id) => deleteEntry(id);
+
+  const modalOverlay = document.getElementById("modalOverlay");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalBody = document.getElementById("modalBody");
+  document.getElementById("modalClose").addEventListener("click", closeModal);
+  modalOverlay.addEventListener("click", (e) => { if(e.target === modalOverlay) closeModal(); });
+
+  function closeModal(){ modalOverlay.classList.remove("open"); }
+
+  window.showHistory = (person) => {
+    const rows = allEntries
+      .filter(e => e.person === person && e.status === "Payment Received")
+      .sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+    const total = rows.reduce((s,e) => s + (Number(e.amount)||0), 0);
+
+    modalTitle.textContent = person + " · Payment History";
+    if(rows.length === 0){
+      modalBody.innerHTML = `<div class="empty">Abhi tak koi payment nahi.</div>`;
+    } else {
+      modalBody.innerHTML = rows.map(e => `
+        <div class="hist-row">
+          <div>
+            <b>${escapeHtml(e.deviceId)}</b><br>
+            <span style="color:var(--text-dim);font-size:11px;">${escapeHtml(e.deviceNumber)} · ${formatDate(e.createdAt)}</span>
+          </div>
+          <div class="amt">₹${Number(e.amount).toLocaleString('en-IN')}</div>
+        </div>
+      `).join("") + `<div class="hist-total"><span>Total</span><span>₹${total.toLocaleString('en-IN')}</span></div>`;
+    }
+    modalOverlay.classList.add("open");
+  };
+
+  window.showPending = () => {
+    const rows = allEntries
+      .filter(e => e.status !== "Payment Received")
+      .sort((a,b) => {
+        const ao = isOverdue(a), bo = isOverdue(b);
+        if(ao !== bo) return ao ? -1 : 1;
+        return (a.dueDate || "9999").localeCompare(b.dueDate || "9999");
+      });
+
+    modalTitle.textContent = "Pending Payment Devices";
+    if(rows.length === 0){
+      modalBody.innerHTML = `<div class="empty">Koi pending payment nahi hai.</div>`;
+    } else {
+      modalBody.innerHTML = rows.map(e => `
+        <div class="hist-row ${isOverdue(e) ? 'overdue' : ''}">
+          <div>
+            <b>${escapeHtml(e.deviceId)}</b><br>
+            <span style="color:var(--text-dim);font-size:11px;">${escapeHtml(e.person)} · ${escapeHtml(e.status)}</span>
+          </div>
+          <div style="text-align:right;font-size:12px;color:${isOverdue(e) ? 'var(--red)' : 'var(--text-dim)'};">
+            ${e.dueDate ? (isOverdue(e) ? 'Overdue: ' : 'Due: ') + formatSimpleDate(e.dueDate) : 'Koi due date nahi'}
+          </div>
+        </div>
+      `).join("");
+    }
+    modalOverlay.classList.add("open");
+  };
+
+  window.showTimeline = (id) => {
+    const entry = allEntries.find(e => e.id === id);
+    if(!entry) return;
+    modalTitle.textContent = entry.deviceId + " · Status Timeline";
+    const hist = (entry.statusHistory || []).slice().sort((a,b) => (a.at?.seconds||0) - (b.at?.seconds||0));
+    if(hist.length === 0){
+      modalBody.innerHTML = `<div class="empty">Koi history record nahi mila.</div>`;
+    } else {
+      modalBody.innerHTML = `<ul class="timeline">` + hist.map(h => `
+        <li>
+          <span class="t-status">${escapeHtml(h.status)}</span>
+          <span class="t-date">${formatDate(h.at)}</span>
+          ${h.amount ? `<span class="t-extra">₹${Number(h.amount).toLocaleString('en-IN')}</span>` : ""}
+          ${h.vmCode ? `<span class="t-extra">VM Code: ${escapeHtml(h.vmCode)}</span>` : ""}
+        </li>
+      `).join("") + `</ul>`;
+    }
+    modalOverlay.classList.add("open");
+  };
+
+  function exportCsv(){
+    const headers = ["Device ID","Device Number","Person","Status","VM Code","Amount","Due Date","Notes","Created At"];
+    const rows = allEntries.map(e => [
+      e.deviceId, e.deviceNumber, e.person, e.status, e.vmCode || "",
+      e.amount || "", e.dueDate || "", (e.notes || "").replace(/\n/g," "), formatDate(e.createdAt)
+    ]);
+    const csv = [headers, ...rows].map(r =>
+      r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(",")
+    ).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "devices-" + new Date().toISOString().slice(0,10) + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function formatDate(ts){
+    if(!ts || !ts.seconds) return "--";
+    const d = new Date(ts.seconds * 1000);
+    return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) +
+      " " + d.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+  }
+  function formatSimpleDate(dateStr){
+    if(!dateStr) return "--";
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  function escapeHtml(str){
+    return String(str || "").replace(/[&<>"']/g, m => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+    }[m]));
+  }
+
+  col.orderBy("createdAt", "desc").onSnapshot(snap => {
+    allEntries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+  }, err => {
+    document.getElementById("list").innerHTML =
+      `<div class="empty">Firestore error: ${escapeHtml(err.message)}</div>`;
+  });
+</script>
+</body>
+</html>
