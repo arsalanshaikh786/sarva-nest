@@ -694,13 +694,13 @@ window.placeOrder = async function() {
     await addDoc(collection(db, "veg_orders"), order);
     const lines = items.map(i => `• ${i.name} (${i.unit||''}) ×${i.qty} — ₹${+i.price*i.qty}`).join('\n');
     const msg = `🥦 *New Veggie Order — ${orderId}*\n\n👤 *${name}*\n📧 ${email} | 📱 ${mobile}\n📍 ${address}\n🕐 Slot: ${selectedSlot}\n💳 ${payment}\n\n🧺 *Items:*\n${lines}\n\n💰 Total: ₹${total}${savings>0?` (saved ₹${savings})`:''}${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString()}`;
-   await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
+   await fetch("https://api.ultramsg.com/instance192669/messages/chat", {
   method: "POST",
   headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   },
   body: new URLSearchParams({
-    token: "nnrwv6lvl11p1nlv",
+    token: "xnbaeejigdwjjij1",
     to: "919307320279",
     body: msg
   })
