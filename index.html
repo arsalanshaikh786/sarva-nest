@@ -1763,6 +1763,28 @@ header h1 span {
 
   applyCachedUserData();
 
+  // ── WhatsApp welcome message (UltraMsg) — sirf naya register hote waqt ek baar ──
+  async function sendWelcomeWhatsapp(mobile, name) {
+    try {
+      const cleanMobile = (mobile || "").replace(/\D/g, "");
+      if (cleanMobile.length !== 10) return;
+      const waNumber = "91" + cleanMobile;
+      const msg = `🎉 नमस्कार ${name || "दोस्त"}!\n\nसर्व नेस्ट मध्ये आपले हार्दिक स्वागत आहे 🙏\nअकोले मधील जेवण, भाजीपाला, किराणा, लाँड्री, रिक्षा आणि बरेच काही — आता एका क्लिकवर!\n\nहॅप्पी ऑर्डरिंग! 🛍️`;
+      await fetch("https://api.ultramsg.com/instance192669/messages/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          token: "xnbaeejigdwjjij1",
+          to: waNumber,
+          body: msg
+        })
+      });
+    } catch (e) {
+      console.warn("whatsapp welcome failed", e);
+    }
+  }
+  window.sendWelcomeWhatsapp = sendWelcomeWhatsapp;
+
   window.registerUser = async () => {
     if (!window.validateRegister()) return;
     const name = document.getElementById("reg_name").value.trim(),
@@ -1780,6 +1802,8 @@ header h1 span {
       const uc = await createUserWithEmailAndPassword(auth, email, password);
       await setDoc(doc(db, "users", uc.user.uid), { name, age, mobile, whatsapp, address, email, photoUrl, uid: uc.user.uid, createdAt: new Date().toISOString() });
       localStorage.setItem("sn_user", JSON.stringify({ name, email, mobile, whatsapp, address, photoUrl, age }));
+      // naya user hai, isliye welcome WhatsApp bhejo (WhatsApp number diya ho to usse, warna mobile pe)
+      sendWelcomeWhatsapp(whatsapp || mobile, name);
       showToast("✅ खाते तयार झाले! स्वागत, " + name.split(" ")[0] + "!", "success");
       closeAccountModal();
     } catch (e) {
