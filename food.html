@@ -1101,10 +1101,10 @@ window.placeOrder=async function(){
     const lines=items.map(i=>`• ${i.name}${i.variantName?' ('+i.variantName+')':''} ×${i.qty} — ₹${(+i.price*i.qty).toFixed(0)}`).join('\n');
     const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
     const msg=`🍽️ *New Order — ${order.orderId}*\n🏪 *${order.restaurantName}*\n\n👤 *${name}*\n📧 ${email}\n📱 ${mobile}\n📍 ${address}\n🗺️ Map: ${mapsLink}\n💳 ${payment}\n\n🛒 *Items:*\n${lines}\n\n💰 *Total: ₹${total}*${notes?'\n📝 '+notes:''}\n⏰ ${new Date().toLocaleString('en-IN')}\n\n🔧 Food Admin: https://www.sarvanest.in/foodadmin.html`;
-    await fetch("https://api.ultramsg.com/instance180915/messages/chat", {
+    await fetch("https://api.ultramsg.com/instance192669/messages/chat", {
       method: "POST",
       headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: new URLSearchParams({token:"nnrwv6lvl11p1nlv",to:"120363410979027896@g.us",body:msg})
+      body: new URLSearchParams({token:"xnbaeejigdwjjij1",to:"120363432149866016@g.us",body:msg})
     });
     localStorage.setItem('zN',name); localStorage.setItem('zE',email); localStorage.setItem('zM',mobile); localStorage.setItem('zA',address);
     cart={}; discount=0; saveCart(); renderCartUI(); renderFoods(); renderSpecialCards();
