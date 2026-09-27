@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<title>सर्व नेस्ट - Admin Broadcast</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --saffron: #E8650A;
+  --saffron-deep: #C4510A;
+  --green: #1B6B35;
+  --cream: #FDF8F0;
+  --text: #1A0F00;
+  --muted: #6B5B45;
+  --card: #FFFFFF;
+  --radius: 16px;
+  --shadow: 0 4px 20px rgba(232,101,10,0.10);
+}
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',Arial,sans-serif; }
+body { background: var(--cream); color: var(--text); min-height:100vh; padding-bottom:40px; }
+
+/* ── LOGIN GATE ── */
+#gate {
+  position:fixed; inset:0; background:linear-gradient(160deg,#7A1E1E,#E8650A);
+  display:flex; align-items:center; justify-content:center; z-index:999; padding:20px;
+}
+#gate .box {
+  background:#fff; border-radius:20px; padding:32px 26px; max-width:340px; width:100%;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3); text-align:center;
+}
+#gate h2 { margin-bottom:6px; font-size:1.3rem; }
+#gate p { color:var(--muted); font-size:13px; margin-bottom:18px; }
+#gate input {
+  width:100%; padding:14px; border:2px solid #EDD9B5; border-radius:12px; font-size:15px;
+  margin-bottom:14px; outline:none;
+}
+#gate input:focus { border-color:var(--saffron); }
+#gate button {
+  width:100%; padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
+  color:#fff; font-weight:800; font-size:15px; cursor:pointer;
+}
+#gate .err { color:#dc2626; font-size:12px; margin-top:8px; display:none; font-weight:600; }
+
+/* ── MAIN APP ── */
+#app { display:none; max-width:900px; margin:0 auto; padding:20px 16px; }
+header.top {
+  background:linear-gradient(135deg,#7A1E1E,var(--saffron-deep)); color:#fff; padding:20px; border-radius:var(--radius);
+  margin-bottom:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+}
+header.top h1 { font-size:1.3rem; }
+header.top p { font-size:12px; opacity:0.85; margin-top:2px; }
+#logoutBtn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#fff; padding:8px 16px; border-radius:30px; font-size:12px; font-weight:700; cursor:pointer; }
+
+.stats-row { display:flex; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+.stat-card { flex:1; min-width:120px; background:#fff; border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); text-align:center; }
+.stat-card .num { font-size:1.6rem; font-weight:800; color:var(--saffron-deep); }
+.stat-card .lbl { font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; }
+
+.panel { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin-bottom:16px; }
+.panel h3 { font-size:15px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+
+.toolbar { display:flex; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+.toolbar input[type=search] {
+  flex:1; min-width:160px; padding:12px 16px; border:2px solid #EDD9B5; border-radius:30px; font-size:14px; outline:none;
+}
+.toolbar input[type=search]:focus { border-color:var(--saffron); }
+.toolbar button {
+  padding:10px 16px; border-radius:30px; border:2px solid #EDD9B5; background:#fff; font-size:12px; font-weight:700; cursor:pointer; color:var(--muted);
+}
+.toolbar button.active { background:linear-gradient(135deg,var(--saffron-deep),var(--saffron)); color:#fff; border-color:transparent; }
+
+#userList { max-height:360px; overflow-y:auto; border:1px solid #F5EDD6; border-radius:12px; }
+.user-row { display:flex; align-items:center; gap:12px; padding:12px 14px; border-bottom:1px solid #F5EDD6; cursor:pointer; transition:0.15s; }
+.user-row:last-child { border-bottom:none; }
+.user-row:hover { background:#FFF8EE; }
+.user-row.selected { background:#FFF3E6; }
+.user-row input[type=checkbox] { width:18px; height:18px; accent-color:var(--saffron); flex-shrink:0; }
+.user-row .avatar {
+  width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,var(--saffron-deep),var(--green));
+  color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; flex-shrink:0; overflow:hidden;
+}
+.user-row .avatar img { width:100%; height:100%; object-fit:cover; }
+.user-row .info { flex:1; min-width:0; }
+.user-row .info .name { font-weight:700; font-size:14px; }
+.user-row .info .sub { font-size:11px; color:var(--muted); }
+.user-row .badge { font-size:10px; padding:3px 8px; border-radius:20px; background:#e5f5ea; color:var(--green); font-weight:700; }
+.user-row .badge.no-num { background:#fee2e2; color:#dc2626; }
+.user-row .opens-info { font-size:10px; color:var(--muted); margin-top:2px; }
+.user-row .opens-info.active-today { color:var(--saffron-deep); font-weight:700; }
+.toolbar button.filter-active { background:linear-gradient(135deg,var(--green),#2A9050); color:#fff; border-color:transparent; }
+.empty-msg { text-align:center; padding:30px; color:var(--muted); font-size:13px; }
+
+textarea#msgBox {
+  width:100%; min-height:110px; padding:14px; border:2px solid #EDD9B5; border-radius:12px; font-size:14px;
+  font-family:inherit; outline:none; resize:vertical;
+}
+textarea#msgBox:focus { border-color:var(--saffron); }
+.char-count { text-align:right; font-size:11px; color:var(--muted); margin-top:4px; }
+
+.send-row { display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px; }
+.send-row .sel-count { font-size:13px; font-weight:700; color:var(--saffron-deep); }
+#sendBtn {
+  padding:14px 28px; border:none; border-radius:30px; background:linear-gradient(135deg,var(--saffron-deep),var(--saffron));
+  color:#fff; font-weight:800; font-size:15px; cursor:pointer; box-shadow:0 6px 20px rgba(232,101,10,0.35);
+  display:flex; align-items:center; gap:8px;
+}
+#sendBtn:disabled { opacity:0.5; cursor:not-allowed; }
+.spinner { width:16px; height:16px; border:2px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:none; }
+#sendBtn.loading .spinner { display:inline-block; }
+@keyframes spin { to { transform:rotate(360deg); } }
+
+#progressWrap { margin-top:14px; display:none; }
+#progressBar { height:8px; background:#F0E0C0; border-radius:6px; overflow:hidden; }
+#progressBar .fill { height:100%; width:0%; background:linear-gradient(90deg,var(--saffron-deep),var(--saffron)); transition:width 0.3s; }
+#progressText { font-size:12px; color:var(--muted); margin-top:6px; text-align:center; }
+
+#log { max-height:160px; overflow-y:auto; font-size:12px; margin-top:10px; }
+#log .line { padding:6px 10px; border-radius:8px; margin-bottom:4px; display:flex; justify-content:space-between; }
+#log .line.ok { background:#e5f5ea; color:var(--green); }
+#log .line.fail { background:#fee2e2; color:#dc2626; }
+
+#toast {
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) translateY(-140px);
+  background:rgba(26,15,0,0.92); color:#fff; padding:12px 24px; border-radius:40px; font-size:13px; font-weight:600;
+  z-index:9999; transition:0.4s; white-space:nowrap; max-width:90vw;
+}
+#toast.show { transform:translateX(-50%) translateY(0); }
+#toast.success { background:linear-gradient(135deg,#166534,#15803d); }
+#toast.error { background:linear-gradient(135deg,#991b1b,#dc2626); }
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<div id="gate">
+  <div class="box">
+    <h2>🔐 Admin Login</h2>
+    <p>Sarva Nest broadcast panel — sirf admin ke liye</p>
+    <input type="password" id="gatePass" placeholder="Admin password" autocomplete="off">
+    <button onclick="tryLogin()">Login</button>
+    <div class="err" id="gateErr">❌ Galat password</div>
+  </div>
+</div>
+
+<div id="app">
+  <header class="top">
+    <div>
+      <h1>📢 सर्व नेस्ट — Admin Broadcast</h1>
+      <p>Users select karo aur WhatsApp pe message bhejo</p>
+    </div>
+    <button id="logoutBtn" onclick="doLogout()">🚪 Logout</button>
+  </header>
+
+  <div class="stats-row">
+    <div class="stat-card"><div class="num" id="statTotal">0</div><div class="lbl">Total Users</div></div>
+    <div class="stat-card"><div class="num" id="statValid">0</div><div class="lbl">WhatsApp Valid</div></div>
+    <div class="stat-card"><div class="num" id="statSelected">0</div><div class="lbl">Selected</div></div>
+    <div class="stat-card"><div class="num" id="statActiveToday">0</div><div class="lbl">Aaj App Open Kiya</div></div>
+  </div>
+
+  <div class="panel">
+    <h3>👥 Users</h3>
+    <div class="toolbar">
+      <input type="search" id="searchUsers" placeholder="Naam, mobile ya address se search karo...">
+      <button id="btnSelectAll" onclick="toggleSelectAll()">Select All</button>
+      <button id="btnFilterActive" onclick="toggleActiveFilter()">🟢 Aaj Active</button>
+      <button onclick="refreshUsers()">🔄 Refresh</button>
+    </div>
+    <div id="userList"><div class="empty-msg">Loading users...</div></div>
+  </div>
+
+  <div class="panel">
+    <h3>💬 Message</h3>
+    <textarea id="msgBox" maxlength="1000" placeholder="Yaha apna advertising message likho... (emoji bhi chalega 🎉)"></textarea>
+    <div class="char-count"><span id="charCount">0</span>/1000</div>
+    <div class="send-row">
+      <div class="sel-count"><span id="selCountText">0 users selected</span></div>
+      <button id="sendBtn" onclick="sendBroadcast()">
+        <span class="spinner"></span>
+        <span class="btn-text">🚀 Bhej Do</span>
+      </button>
+    </div>
+    <div id="progressWrap">
+      <div id="progressBar"><div class="fill" id="progressFill"></div></div>
+      <div id="progressText">0 / 0 bheja gaya</div>
+      <div id="log"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = { apiKey: "AIzaSyBcXm5QQaYCCddVXNgGqTBAszdKEK-0PJQ", authDomain: "multi-service-app-77dd8.firebaseapp.com", projectId: "multi-service-app-77dd8", storageBucket: "multi-service-app-77dd8.appspot.com", messagingSenderId: "123732555482", appId: "1:123732555482:web:ea47c825e0dbb504f597e3" };
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const ULTRAMSG_TOKEN = "xnbaeejigdwjjij1";
+  const ULTRAMSG_URL = "https://api.ultramsg.com/instance192669/messages/chat";
+  const ADMIN_PASSWORD = "sarvanest@admin"; // ⚠️ isko badal lena apni marzi se
+
+  let allUsers = [];
+  let selectedIds = new Set();
+  let showOnlyActiveToday = false;
+
+  function showToast(msg, type = "") {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "toast show " + type;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove("show"), 3000);
+  }
+  window.showToast = showToast;
+
+  function cleanNumber(n) {
+    const c = (n || "").replace(/\D/g, "");
+    return c.length === 10 ? c : (c.length === 12 && c.startsWith("91") ? c.slice(2) : "");
+  }
+
+  function toJsDate(ts) {
+    if (!ts) return null;
+    if (typeof ts.toDate === "function") return ts.toDate();
+    if (ts.seconds) return new Date(ts.seconds * 1000);
+    return null;
+  }
+
+  function isToday(ts) {
+    const d = toJsDate(ts);
+    if (!d) return false;
+    const now = new Date();
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+  }
+
+  function formatOpenInfo(u) {
+    const count = u.appOpenCount || 0;
+    const d = toJsDate(u.lastOpenAt);
+    const lastStr = d ? d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : "—";
+    return { count, lastStr, activeToday: isToday(u.lastOpenAt) };
+  }
+
+  function renderUsers(filter = "") {
+    const list = document.getElementById("userList");
+    const f = filter.trim().toLowerCase();
+    let filtered = allUsers.filter(u => {
+      if (!f) return true;
+      return ((u.name || "") + (u.mobile || "") + (u.address || "") + (u.email || "")).toLowerCase().includes(f);
+    });
+    if (showOnlyActiveToday) filtered = filtered.filter(u => isToday(u.lastOpenAt));
+    if (filtered.length === 0) {
+      list.innerHTML = '<div class="empty-msg">😕 Koi user nahi mila</div>';
+      return;
+    }
+    list.innerHTML = filtered.map(u => {
+      const num = cleanNumber(u.whatsapp || u.mobile);
+      const initial = (u.name || "?")[0].toUpperCase();
+      const avatarHtml = u.photoUrl ? `<img src="${u.photoUrl}">` : initial;
+      const isSel = selectedIds.has(u.id);
+      const oi = formatOpenInfo(u);
+      return `
+        <div class="user-row ${isSel ? 'selected' : ''}" data-id="${u.id}" onclick="window.toggleUser('${u.id}')">
+          <input type="checkbox" ${isSel ? 'checked' : ''} ${!num ? 'disabled' : ''} onclick="event.stopPropagation(); window.toggleUser('${u.id}')">
+          <div class="avatar">${avatarHtml}</div>
+          <div class="info">
+            <div class="name">${u.name || "बेनाम"}</div>
+            <div class="sub">${num ? '📱 ' + num : (u.email || '—')}</div>
+            <div class="opens-info ${oi.activeToday ? 'active-today' : ''}">${oi.activeToday ? '🟢 Aaj open kiya' : '⚪ Last: ' + oi.lastStr} · ${oi.count} opens</div>
+          </div>
+          <div class="badge ${!num ? 'no-num' : ''}">${num ? 'OK' : 'No Number'}</div>
+        </div>`;
+    }).join("");
+  }
+
+  window.toggleUser = function(id) {
+    const u = allUsers.find(x => x.id === id);
+    if (!u || !cleanNumber(u.whatsapp || u.mobile)) return;
+    if (selectedIds.has(id)) selectedIds.delete(id);
+    else selectedIds.add(id);
+    renderUsers(document.getElementById("searchUsers").value);
+    updateStats();
+  };
+
+  window.toggleSelectAll = function() {
+    const validUsers = allUsers.filter(u => cleanNumber(u.whatsapp || u.mobile));
+    const allSelected = validUsers.length > 0 && validUsers.every(u => selectedIds.has(u.id));
+    if (allSelected) {
+      validUsers.forEach(u => selectedIds.delete(u.id));
+      document.getElementById("btnSelectAll").classList.remove("active");
+    } else {
+      validUsers.forEach(u => selectedIds.add(u.id));
+      document.getElementById("btnSelectAll").classList.add("active");
+    }
+    renderUsers(document.getElementById("searchUsers").value);
+    updateStats();
+  };
+
+  function updateStats() {
+    document.getElementById("statTotal").textContent = allUsers.length;
+    document.getElementById("statValid").textContent = allUsers.filter(u => cleanNumber(u.whatsapp || u.mobile)).length;
+    document.getElementById("statSelected").textContent = selectedIds.size;
+    document.getElementById("statActiveToday").textContent = allUsers.filter(u => isToday(u.lastOpenAt)).length;
+    document.getElementById("selCountText").textContent = selectedIds.size + " users selected";
+  }
+
+  window.toggleActiveFilter = function() {
+    showOnlyActiveToday = !showOnlyActiveToday;
+    document.getElementById("btnFilterActive").classList.toggle("filter-active", showOnlyActiveToday);
+    renderUsers(document.getElementById("searchUsers").value);
+  };
+
+  window.refreshUsers = async function() {
+    document.getElementById("userList").innerHTML = '<div class="empty-msg">Loading users...</div>';
+    try {
+      const snap = await getDocs(collection(db, "users"));
+      allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderUsers();
+      updateStats();
+    } catch (e) {
+      document.getElementById("userList").innerHTML = '<div class="empty-msg">❌ Users load nahi hue: ' + e.message + '</div>';
+      showToast("❌ Firestore se users load nahi hue", "error");
+    }
+  };
+
+  document.getElementById("searchUsers").addEventListener("input", (e) => renderUsers(e.target.value));
+
+  document.getElementById("msgBox").addEventListener("input", function() {
+    document.getElementById("charCount").textContent = this.value.length;
+  });
+
+  async function sendOne(number, message) {
+    const res = await fetch(ULTRAMSG_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({ token: ULTRAMSG_TOKEN, to: "91" + number, body: message })
+    });
+    const data = await res.json();
+    if (data.sent === false || data.error) throw new Error(data.error || "send failed");
+    return data;
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  window.sendBroadcast = async function() {
+    const msg = document.getElementById("msgBox").value.trim();
+    if (!msg) { showToast("⚠️ Pehle message likho", "error"); return; }
+    if (selectedIds.size === 0) { showToast("⚠️ Kam se kam ek user select karo", "error"); return; }
+
+    const targets = allUsers.filter(u => selectedIds.has(u.id));
+    const btn = document.getElementById("sendBtn");
+    btn.disabled = true;
+    btn.classList.add("loading");
+    document.getElementById("progressWrap").style.display = "block";
+    document.getElementById("log").innerHTML = "";
+    const total = targets.length;
+    let done = 0, ok = 0, fail = 0;
+
+    for (const u of targets) {
+      const num = cleanNumber(u.whatsapp || u.mobile);
+      const logEl = document.getElementById("log");
+      try {
+        if (!num) throw new Error("no valid number");
+        await sendOne(num, msg);
+        ok++;
+        logEl.insertAdjacentHTML("beforeend", `<div class="line ok">✅ ${u.name || num}<span>sent</span></div>`);
+      } catch (e) {
+        fail++;
+        logEl.insertAdjacentHTML("beforeend", `<div class="line fail">❌ ${u.name || num}<span>failed</span></div>`);
+      }
+      done++;
+      document.getElementById("progressFill").style.width = Math.round((done / total) * 100) + "%";
+      document.getElementById("progressText").textContent = `${done} / ${total} bheja gaya (✅ ${ok} · ❌ ${fail})`;
+      logEl.scrollTop = logEl.scrollHeight;
+      await sleep(1200); // rate-limit ke liye thoda gap
+    }
+
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    showToast(`✅ Broadcast complete! ${ok} sent, ${fail} failed`, fail > 0 ? "error" : "success");
+  };
+
+  window.__loadUsersOnce = window.refreshUsers;
+</script>
+
+<script>
+  window.tryLogin = function() {
+    const pass = document.getElementById("gatePass").value;
+    if (pass === "sarvanest@admin") {
+      document.getElementById("gate").style.display = "none";
+      document.getElementById("app").style.display = "block";
+      sessionStorage.setItem("sn_admin_ok", "1");
+      window.__loadUsersOnce();
+    } else {
+      document.getElementById("gateErr").style.display = "block";
+    }
+  };
+  document.getElementById("gatePass").addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+  document.getElementById("gatePass").addEventListener("input", () => document.getElementById("gateErr").style.display = "none");
+
+  window.doLogout = function() {
+    sessionStorage.removeItem("sn_admin_ok");
+    document.getElementById("app").style.display = "none";
+    document.getElementById("gate").style.display = "flex";
+    document.getElementById("gatePass").value = "";
+  };
+
+  if (sessionStorage.getItem("sn_admin_ok") === "1") {
+    document.getElementById("gate").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    setTimeout(() => window.__loadUsersOnce && window.__loadUsersOnce(), 300);
+  }
+</script>
+
+</body>
+</html>
